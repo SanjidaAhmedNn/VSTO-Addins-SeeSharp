@@ -15,4 +15,9 @@ Public Class Ribbon1
         Dim form As New Form2
         form.Show()
     End Sub
+
+    Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
+        Dim form As New Form3
+        form.Show()
+    End Sub
 End Class

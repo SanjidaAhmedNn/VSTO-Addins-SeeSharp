@@ -45,6 +45,7 @@
         Me.Group1 = Me.Factory.CreateRibbonGroup
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
+        Me.Button3 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.SuspendLayout()
@@ -60,6 +61,7 @@
         '
         Me.Group1.Items.Add(Me.Button1)
         Me.Group1.Items.Add(Me.Button2)
+        Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
         '
@@ -72,6 +74,11 @@
         '
         Me.Button2.Label = "Flip Design 2"
         Me.Button2.Name = "Button2"
+        '
+        'Button3
+        '
+        Me.Button3.Label = "Transpose"
+        Me.Button3.Name = "Button3"
         '
         'Ribbon1
         '
@@ -90,6 +97,7 @@
     Friend WithEvents Group1 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button1 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button2 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
