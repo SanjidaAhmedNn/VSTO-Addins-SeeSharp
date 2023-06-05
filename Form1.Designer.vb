@@ -267,7 +267,7 @@ Partial Class Form1
         Me.CheckBox1.Location = New System.Drawing.Point(12, 299)
         Me.CheckBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(335, 29)
+        Me.CheckBox1.Size = New System.Drawing.Size(276, 29)
         Me.CheckBox1.TabIndex = 103
         Me.CheckBox1.Text = "Create a copy of the original worksheet"
         Me.CheckBox1.UseVisualStyleBackColor = True

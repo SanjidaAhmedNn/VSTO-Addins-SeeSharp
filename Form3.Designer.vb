@@ -35,6 +35,8 @@ Partial Class Form3
         Me.Label1 = New System.Windows.Forms.Label()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.RadioButton5 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.RadioButton4 = New System.Windows.Forms.RadioButton()
@@ -48,20 +50,18 @@ Partial Class Form3
         Me.panel2 = New VSTO_Addins.CustomPanel()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.panel1 = New VSTO_Addins.CustomPanel()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox3.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox1.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PictureBox8
@@ -156,6 +156,7 @@ Partial Class Form3
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(16, 32)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -216,6 +217,29 @@ Partial Class Form3
         Me.CustomGroupBox5.Size = New System.Drawing.Size(251, 78)
         Me.CustomGroupBox5.TabIndex = 0
         Me.CustomGroupBox5.TabStop = False
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(226, 7)
+        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(22, 20)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 135
+        Me.PictureBox2.TabStop = False
+        '
+        'TextBox2
+        '
+        Me.TextBox2.BackColor = System.Drawing.Color.White
+        Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TextBox2.Location = New System.Drawing.Point(121, 7)
+        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.TextBox2.Multiline = True
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(127, 20)
+        Me.TextBox2.TabIndex = 135
         '
         'RadioButton5
         '
@@ -387,28 +411,6 @@ Partial Class Form3
         Me.panel1.Size = New System.Drawing.Size(239, 92)
         Me.panel1.TabIndex = 0
         '
-        'TextBox2
-        '
-        Me.TextBox2.BackColor = System.Drawing.Color.White
-        Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TextBox2.Location = New System.Drawing.Point(121, 7)
-        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.TextBox2.Multiline = True
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(127, 20)
-        Me.TextBox2.TabIndex = 135
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(226, 6)
-        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(22, 20)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 135
-        Me.PictureBox2.TabStop = False
-        '
         'Form3
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -436,6 +438,7 @@ Partial Class Form3
         Me.CustomGroupBox4.ResumeLayout(False)
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox5.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox3.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
         Me.CustomGroupBox6.PerformLayout()
@@ -443,7 +446,6 @@ Partial Class Form3
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox1.ResumeLayout(False)
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
