@@ -30,6 +30,7 @@ Public Class Form1
     End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+
         Dim selectedRange As Range = excelApp.Selection
 
         Dim rowCount As Integer = selectedRange.Rows.Count

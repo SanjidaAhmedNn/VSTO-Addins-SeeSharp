@@ -50,9 +50,9 @@ Partial Class Form4
         Me.RadioButton1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton1.Location = New System.Drawing.Point(8, 19)
         Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(147, 21)
+        Me.RadioButton1.Size = New System.Drawing.Size(152, 21)
         Me.RadioButton1.TabIndex = 0
-        Me.RadioButton1.Text = "Open new workbook"
+        Me.RadioButton1.Text = "Open New Workbook"
         Me.RadioButton1.UseVisualStyleBackColor = True
         '
         'RadioButton2
@@ -61,20 +61,21 @@ Partial Class Form4
         Me.RadioButton2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton2.Location = New System.Drawing.Point(8, 53)
         Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(168, 21)
+        Me.RadioButton2.Size = New System.Drawing.Size(170, 21)
         Me.RadioButton2.TabIndex = 1
-        Me.RadioButton2.Text = "Open existing workbook"
+        Me.RadioButton2.Text = "Open Existing Workbook"
         Me.RadioButton2.UseVisualStyleBackColor = True
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(35, 85)
+        Me.Label1.Location = New System.Drawing.Point(77, 84)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(102, 17)
+        Me.Label1.Size = New System.Drawing.Size(83, 17)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Select the range"
+        Me.Label1.Text = "Select Range"
+        Me.Label1.Visible = False
         '
         'PictureBox8
         '
@@ -172,6 +173,7 @@ Partial Class Form4
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 135
         Me.PictureBox2.TabStop = False
+        Me.PictureBox2.Visible = False
         '
         'TextBox3
         '
@@ -184,16 +186,18 @@ Partial Class Form4
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(179, 26)
         Me.TextBox3.TabIndex = 134
+        Me.TextBox3.Visible = False
         '
         'PictureBox3
         '
         Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(12, 84)
+        Me.PictureBox3.Location = New System.Drawing.Point(52, 84)
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(19, 19)
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox3.TabIndex = 136
         Me.PictureBox3.TabStop = False
+        Me.PictureBox3.Visible = False
         '
         'GroupBox1
         '
@@ -222,6 +226,8 @@ Partial Class Form4
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(398, 187)
         Me.Controls.Add(Me.GroupBox1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form4"
         Me.Text = " New workbook"
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()

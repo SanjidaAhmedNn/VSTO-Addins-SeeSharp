@@ -59,6 +59,7 @@ Public Class Form3
 
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
         Me.Visible = False
+        'TextBox1.Text = selectedRange.Address
 
         Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
         selectedRange.Select()
@@ -116,7 +117,7 @@ Public Class Form3
 
         ' Get the newly copied worksheet (which is the last one) and rename it
         copiedWorksheet = CType(excelApp.ActiveWorkbook.Sheets(excelApp.ActiveWorkbook.Sheets.Count), Excel.Worksheet)
-            copiedWorksheet.Name = "CopiedSheet" ' Your desired name
+            'copiedWorksheet.Name = "CopiedSheet" ' Your desired name
 
             Me.Visible = False
 
@@ -146,5 +147,19 @@ Public Class Form3
         TextBox2.Text = selectedRange.Address
     End Sub
 
+    Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
 
+    End Sub
+
+    Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+
+    End Sub
+
+    Private Sub btn_OK_MouseHover(sender As Object, e As EventArgs) Handles btn_OK.MouseHover
+
+    End Sub
+
+    Private Sub CustomGroupBox2_Enter(sender As Object, e As EventArgs) Handles CustomGroupBox2.Enter
+
+    End Sub
 End Class

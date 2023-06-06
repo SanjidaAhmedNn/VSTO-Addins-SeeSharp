@@ -39,6 +39,13 @@ Public Class Form4
             PictureBox2.Enabled = False
             TextBox3.Text = ""
 
+
+            'For hiding the visibilty of the selection range of existing workbook
+            Me.PictureBox3.Visible = True
+            Me.Label1.Visible = True
+            Me.TextBox3.Visible = True
+            Me.PictureBox2.Visible = True
+
             excelApp = Globals.ThisAddIn.Application
             Dim workbook As Excel.Workbook = excelApp.Workbooks.Add
             Dim Worksheet As Excel.Worksheet = CType(workbook.Sheets.Add(workbook.Sheets(1), Type.Missing, 1, Excel.XlSheetType.xlWorksheet), Excel.Worksheet)
@@ -120,6 +127,13 @@ Public Class Form4
             PictureBox8.Enabled = False
             TextBox1.Text = ""
 
+            'For the visibilty of the selection range
+            Me.PictureBox3.Visible = True
+            Me.Label1.Visible = True
+            Me.TextBox3.Visible = True
+            Me.PictureBox2.Visible = True
+
+
 
         End If
 
@@ -128,5 +142,9 @@ Public Class Form4
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
         TextBox3.Enabled = True
         PictureBox2.Enabled = True
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+
     End Sub
 End Class

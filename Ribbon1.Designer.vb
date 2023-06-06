@@ -43,6 +43,7 @@
     Private Sub InitializeComponent()
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
+        Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
@@ -59,11 +60,17 @@
         '
         'Group1
         '
+        Me.Group1.Items.Add(Me.Button4)
         Me.Group1.Items.Add(Me.Button1)
         Me.Group1.Items.Add(Me.Button2)
         Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
+        '
+        'Button4
+        '
+        Me.Button4.Label = "Button4"
+        Me.Button4.Name = "Button4"
         '
         'Button1
         '
@@ -98,6 +105,7 @@
     Friend WithEvents Button1 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button2 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

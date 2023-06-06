@@ -410,6 +410,8 @@ Partial Class Form2
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.Label1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form2"
         Me.Text = "Form2"
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()

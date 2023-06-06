@@ -33,5 +33,10 @@ Public Class CustomGroupBox
 
     End Sub
 
+    Private Sub InitializeComponent()
+        Me.SuspendLayout()
+        Me.ResumeLayout(False)
 
+    End Sub
 End Class
+

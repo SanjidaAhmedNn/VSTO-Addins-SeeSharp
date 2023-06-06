@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form3
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Form3
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form3))
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
@@ -67,7 +67,7 @@ Partial Class Form3
         'PictureBox8
         '
         Me.PictureBox8.Image = CType(resources.GetObject("PictureBox8.Image"), System.Drawing.Image)
-        Me.PictureBox8.Location = New System.Drawing.Point(224, 33)
+        Me.PictureBox8.Location = New System.Drawing.Point(239, 42)
         Me.PictureBox8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox8.Name = "PictureBox8"
         Me.PictureBox8.Size = New System.Drawing.Size(26, 24)
@@ -78,10 +78,10 @@ Partial Class Form3
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(402, 134)
+        Me.PictureBox7.Location = New System.Drawing.Point(430, 140)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(41, 65)
+        Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
         Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox7.TabIndex = 125
         Me.PictureBox7.TabStop = False
@@ -94,7 +94,7 @@ Partial Class Form3
         Me.btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_OK.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_OK.Location = New System.Drawing.Point(402, 332)
+        Me.btn_OK.Location = New System.Drawing.Point(400, 349)
         Me.btn_OK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_OK.Name = "btn_OK"
         Me.btn_OK.Size = New System.Drawing.Size(62, 26)
@@ -111,7 +111,7 @@ Partial Class Form3
         Me.btn_cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btn_cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_cancel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_cancel.Location = New System.Drawing.Point(476, 332)
+        Me.btn_cancel.Location = New System.Drawing.Point(474, 349)
         Me.btn_cancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_cancel.Name = "btn_cancel"
         Me.btn_cancel.Size = New System.Drawing.Size(62, 26)
@@ -124,7 +124,7 @@ Partial Class Form3
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
-        Me.ComboBox1.Location = New System.Drawing.Point(18, 334)
+        Me.ComboBox1.Location = New System.Drawing.Point(16, 351)
         Me.ComboBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
@@ -134,7 +134,7 @@ Partial Class Form3
         'CheckBox1
         '
         Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(17, 299)
+        Me.CheckBox1.Location = New System.Drawing.Point(16, 314)
         Me.CheckBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(273, 29)
@@ -145,7 +145,7 @@ Partial Class Form3
         'PictureBox4
         '
         Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(188, 34)
+        Me.PictureBox4.Location = New System.Drawing.Point(204, 42)
         Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox4.Name = "PictureBox4"
         Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
@@ -158,17 +158,17 @@ Partial Class Form3
         Me.TextBox1.BackColor = System.Drawing.Color.White
         Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TextBox1.Location = New System.Drawing.Point(16, 32)
+        Me.TextBox1.Location = New System.Drawing.Point(15, 42)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(235, 26)
+        Me.TextBox1.Size = New System.Drawing.Size(253, 26)
         Me.TextBox1.TabIndex = 118
         '
         'CheckBox2
         '
         Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(18, 155)
+        Me.CheckBox2.Location = New System.Drawing.Point(18, 165)
         Me.CheckBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(134, 28)
@@ -178,9 +178,9 @@ Partial Class Form3
         '
         'Label1
         '
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(15, 9)
+        Me.Label1.Location = New System.Drawing.Point(17, 15)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(101, 20)
@@ -192,7 +192,7 @@ Partial Class Form3
         Me.CustomGroupBox4.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox4.Controls.Add(Me.CustomGroupBox5)
         Me.CustomGroupBox4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox4.Location = New System.Drawing.Point(17, 189)
+        Me.CustomGroupBox4.Location = New System.Drawing.Point(19, 200)
         Me.CustomGroupBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox4.Name = "CustomGroupBox4"
         Me.CustomGroupBox4.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -247,10 +247,10 @@ Partial Class Form3
         Me.RadioButton5.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton5.Location = New System.Drawing.Point(8, 51)
         Me.RadioButton5.Name = "RadioButton5"
-        Me.RadioButton5.Size = New System.Drawing.Size(114, 21)
+        Me.RadioButton5.Size = New System.Drawing.Size(116, 21)
         Me.RadioButton5.TabIndex = 100
         Me.RadioButton5.TabStop = True
-        Me.RadioButton5.Text = "New workbook"
+        Me.RadioButton5.Text = "New Workbook"
         Me.RadioButton5.UseVisualStyleBackColor = True
         '
         'RadioButton1
@@ -260,10 +260,10 @@ Partial Class Form3
         Me.RadioButton1.Location = New System.Drawing.Point(8, 6)
         Me.RadioButton1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(75, 21)
+        Me.RadioButton1.Size = New System.Drawing.Size(77, 21)
         Me.RadioButton1.TabIndex = 93
         Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "New cell"
+        Me.RadioButton1.Text = "New Cell"
         Me.RadioButton1.UseVisualStyleBackColor = True
         '
         'RadioButton4
@@ -273,10 +273,10 @@ Partial Class Form3
         Me.RadioButton4.Location = New System.Drawing.Point(8, 28)
         Me.RadioButton4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.RadioButton4.Name = "RadioButton4"
-        Me.RadioButton4.Size = New System.Drawing.Size(115, 21)
+        Me.RadioButton4.Size = New System.Drawing.Size(117, 21)
         Me.RadioButton4.TabIndex = 92
         Me.RadioButton4.TabStop = True
-        Me.RadioButton4.Text = "New worksheet"
+        Me.RadioButton4.Text = "New Worksheet"
         Me.RadioButton4.UseVisualStyleBackColor = True
         '
         'CustomGroupBox3
@@ -284,7 +284,7 @@ Partial Class Form3
         Me.CustomGroupBox3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox3.Controls.Add(Me.CustomGroupBox6)
         Me.CustomGroupBox3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox3.Location = New System.Drawing.Point(16, 64)
+        Me.CustomGroupBox3.Location = New System.Drawing.Point(18, 75)
         Me.CustomGroupBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox3.Name = "CustomGroupBox3"
         Me.CustomGroupBox3.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -316,10 +316,10 @@ Partial Class Form3
         Me.RadioButton3.Location = New System.Drawing.Point(8, 9)
         Me.RadioButton3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(91, 21)
+        Me.RadioButton3.Size = New System.Drawing.Size(93, 21)
         Me.RadioButton3.TabIndex = 93
         Me.RadioButton3.TabStop = True
-        Me.RadioButton3.Text = "Values only"
+        Me.RadioButton3.Text = "Values Only"
         Me.RadioButton3.UseVisualStyleBackColor = True
         '
         'RadioButton2
@@ -362,14 +362,14 @@ Partial Class Form3
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox2.Controls.Add(Me.panel2)
         Me.CustomGroupBox2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(298, 193)
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(324, 193)
         Me.CustomGroupBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox2.Size = New System.Drawing.Size(240, 122)
         Me.CustomGroupBox2.TabIndex = 132
         Me.CustomGroupBox2.TabStop = False
-        Me.CustomGroupBox2.Text = "Expected Output"
+        Me.CustomGroupBox2.Text = "Output Range"
         '
         'panel2
         '
@@ -389,7 +389,7 @@ Partial Class Form3
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox1.Controls.Add(Me.panel1)
         Me.CustomGroupBox1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox1.Location = New System.Drawing.Point(297, 12)
+        Me.CustomGroupBox1.Location = New System.Drawing.Point(323, 12)
         Me.CustomGroupBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox1.Name = "CustomGroupBox1"
         Me.CustomGroupBox1.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -404,7 +404,7 @@ Partial Class Form3
         Me.panel1.BackColor = System.Drawing.Color.White
         Me.panel1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.panel1.BorderWidth = 0
+        Me.panel1.BorderWidth = 1
         Me.panel1.Location = New System.Drawing.Point(1, 30)
         Me.panel1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.panel1.Name = "panel1"
@@ -415,7 +415,7 @@ Partial Class Form3
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(557, 374)
+        Me.ClientSize = New System.Drawing.Size(600, 399)
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.CustomGroupBox2)
@@ -430,6 +430,8 @@ Partial Class Form3
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.Label1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form3"
         Me.Text = "Transpose"
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
