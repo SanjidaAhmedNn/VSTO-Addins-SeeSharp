@@ -2,6 +2,10 @@
 
 Public Class Ribbon1
 
+    Dim excelApp As Excel.Application
+    Dim workbook As Excel.Workbook
+    Dim worksheet As Excel.Worksheet
+
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
     End Sub
@@ -17,7 +21,16 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
-        Dim form As New Form3
-        form.Show()
+        Dim MyForm3 As New Form3
+
+        excelApp = Globals.ThisAddIn.Application
+        Workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm3.TextBox1.Text = selection.Address
+        MyForm3.Show()
+
     End Sub
 End Class
