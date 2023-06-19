@@ -305,11 +305,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-<<<<<<< HEAD
-    <None Include="VSTO Addins_1_TemporaryKey.pfx" />
-=======
     <None Include="VSTO Addins_TemporaryKey.pfx" />
->>>>>>> 15762bfc7e20f460b277e6262466985b350a4acb
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -345,17 +341,15 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-<<<<<<< HEAD
-    <ManifestCertificateThumbprint>07BD5DC9208A8640B4A8EA99836DDB51BB00A898</ManifestCertificateThumbprint>
-=======
-    <ManifestCertificateThumbprint>2A227C5F0C3FC839D0A3B08452B1A7B2064AD4E8</ManifestCertificateThumbprint>
->>>>>>> 15762bfc7e20f460b277e6262466985b350a4acb
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup>
     <MyType>Windows</MyType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>B8E6B945BAE1A313AAB0D91E2B0A1DDC94506FDA</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a Visual Basic project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
