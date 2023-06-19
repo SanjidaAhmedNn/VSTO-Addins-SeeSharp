@@ -153,10 +153,18 @@ Public Class Form3
 
     Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
         'formLoaded = True
         Dim myPanel As New Panel()
         ComboBox1.Text = "Softeko"
         Me.TextBox2.Text = MyVar
+
+        ComboBox2.Items.Clear()
+
+        For Each sheet As Excel.Worksheet In workbook.Sheets
+            ComboBox2.Items.Add(sheet.Name)
+        Next
+
     End Sub
 
 
@@ -276,7 +284,7 @@ Public Class Form3
         Me.Visible = False
 
         Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        selectedRange.Select()
+        'selectedRange.Select()
         Me.Visible = True
 
         ' Put the selected range's address into the TextBox.
@@ -411,4 +419,37 @@ Public Class Form3
 
         End Try
     End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+
+
+        Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+            worksheet.Range(TextBox1.Text).Select()
+            Call Display()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.Sheets(ComboBox2.SelectedItem)
+            worksheet.Activate()
+
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a cell", Type:=8)
+
+            TextBox2.Text = userInput.Address
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
 End Class

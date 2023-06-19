@@ -36,6 +36,7 @@ Partial Class Form3
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.RadioButton5 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
@@ -206,6 +207,7 @@ Partial Class Form3
         Me.CustomGroupBox5.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox5.Controls.Add(Me.PictureBox2)
+        Me.CustomGroupBox5.Controls.Add(Me.ComboBox2)
         Me.CustomGroupBox5.Controls.Add(Me.TextBox2)
         Me.CustomGroupBox5.Controls.Add(Me.RadioButton5)
         Me.CustomGroupBox5.Controls.Add(Me.RadioButton1)
@@ -228,6 +230,14 @@ Partial Class Form3
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 135
         Me.PictureBox2.TabStop = False
+        '
+        'ComboBox2
+        '
+        Me.ComboBox2.FormattingEnabled = True
+        Me.ComboBox2.Location = New System.Drawing.Point(121, 28)
+        Me.ComboBox2.Name = "ComboBox2"
+        Me.ComboBox2.Size = New System.Drawing.Size(127, 25)
+        Me.ComboBox2.TabIndex = 135
         '
         'TextBox2
         '
@@ -479,4 +489,5 @@ Partial Class Form3
     Friend WithEvents RadioButton5 As Windows.Forms.RadioButton
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents TextBox2 As Windows.Forms.TextBox
+    Friend WithEvents ComboBox2 As Windows.Forms.ComboBox
 End Class

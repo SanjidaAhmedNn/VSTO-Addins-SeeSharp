@@ -21,10 +21,11 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
+
         Dim MyForm3 As New Form3
 
         excelApp = Globals.ThisAddIn.Application
-        Workbook = excelApp.ActiveWorkbook
+        workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
@@ -34,7 +35,7 @@ Public Class Ribbon1
 
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As RibbonControlEventArgs) Handles Button5.Click
+    Private Sub Button5_Click(sender As Object, e As RibbonControlEventArgs)
         Dim form As New Form5
         form.Show()
     End Sub
