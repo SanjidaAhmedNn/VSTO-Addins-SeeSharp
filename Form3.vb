@@ -59,9 +59,9 @@ Public Class Form3
                     Dim cell As Excel.Range = rng.Cells(i, j)
                     Dim font As Excel.Font = cell.Font
 
-                    Dim fontStyle As FontStyle = FontStyle.Regular
-                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+                    Dim fontStyle As FontStyle = fontStyle.Regular
+                    If cell.Font.Bold Then fontStyle = fontStyle Or fontStyle.Bold
+                    If cell.Font.Italic Then fontStyle = fontStyle Or fontStyle.Italic
 
 
                     Dim fontSize As Single = Convert.ToSingle(font.Size)
@@ -116,9 +116,9 @@ Public Class Form3
                         Dim cell As Excel.Range = rng.Cells(i, j)
                         Dim font As Excel.Font = cell.Font
 
-                        Dim fontStyle As FontStyle = FontStyle.Regular
-                        If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                        If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+                        Dim fontStyle As FontStyle = fontStyle.Regular
+                        If cell.Font.Bold Then fontStyle = fontStyle Or fontStyle.Bold
+                        If cell.Font.Italic Then fontStyle = fontStyle Or fontStyle.Italic
 
                         Dim fontSize As Single = Convert.ToSingle(font.Size)
 
