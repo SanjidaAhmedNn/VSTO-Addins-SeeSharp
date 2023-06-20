@@ -11,6 +11,8 @@ Public Class Form3
     Dim excelApp As Excel.Application
     Dim workbook As Excel.Workbook
     Dim worksheet As Excel.Worksheet
+    Dim worksheet1 As Excel.Worksheet
+    Dim worksheet2 As Excel.Worksheet
 
     Private Sub Display()
         panel1.Controls.Clear()
@@ -164,6 +166,13 @@ Public Class Form3
         For Each sheet As Excel.Worksheet In workbook.Sheets
             ComboBox2.Items.Add(sheet.Name)
         Next
+        ComboBox2.Items.Add("Add New")
+        ComboBox2.SelectedItem = workbook.ActiveSheet.Name
+
+        ComboBox3.Items.Clear()
+        ComboBox3.Items.Add("This Workbook")
+        ComboBox3.Items.Add("New Workbook")
+        ComboBox3.SelectedItem = "This Workbook"
 
     End Sub
 
@@ -188,26 +197,13 @@ Public Class Form3
         btn_cancel.BackColor = Color.FromArgb(76, 111, 174)
     End Sub
 
-    Private Sub RadioButton5_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton5.CheckedChanged
-        If RadioButton5.Checked = True Then
-
-            TextBox2.Location = New System.Drawing.Point(121, 47)
-            PictureBox2.Location = New System.Drawing.Point(226, 47)
-
-            Dim form As New Form4()
-            form.Show()
-            Me.Hide()
-
-        End If
-    End Sub
-
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
-        Me.Visible = False
+
         'TextBox1.Text = selectedRange.Address
 
         Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
         selectedRange.Select()
-        Me.Visible = True
+
 
         ' Put the selected range's address into the TextBox.
         TextBox1.Text = selectedRange.Address
@@ -215,9 +211,9 @@ Public Class Form3
 
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
         excelApp = Globals.ThisAddIn.Application
-        Me.Hide()
+
         Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        Me.Show()
+
 
         Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
 
@@ -239,53 +235,17 @@ Public Class Form3
         Me.TextBox1.Focus()
     End Sub
 
-    Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
-        If RadioButton4.Checked = True Then
 
-
-            excelApp = Globals.ThisAddIn.Application
-
-            TextBox2.Location = New System.Drawing.Point(121, 27)
-            PictureBox2.Location = New System.Drawing.Point(226, 27)
-
-
-            Dim copiedWorksheet As Excel.Worksheet
-
-            Dim activeSheet As Excel.Worksheet = CType(excelApp.ActiveWorkbook.ActiveSheet, Excel.Worksheet)
-
-            ' worksheet = CType(workbook.ActiveSheet, Excel.Worksheet)
-
-            ' Copy the active sheet. In this case, it's copied to the end.
-            'activeSheet.Copy(After:=activeSheet)
-            copiedWorksheet = excelApp.ActiveWorkbook.Worksheets.Add(After:=activeSheet)
-
-            ' Get the newly copied worksheet (which is the last one) and rename it
-            copiedWorksheet = CType(excelApp.ActiveWorkbook.Sheets(excelApp.ActiveWorkbook.Sheets.Count), Excel.Worksheet)
-            'copiedWorksheet.Name = "CopiedSheet" ' Your desired name
-
-            Me.Visible = False
-
-            Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            selectedRange.Select()
-            Me.Visible = True
-
-            ' Put the selected range's address into the TextBox.
-            TextBox2.Text = selectedRange.Address
-        End If
-    End Sub
-
-    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs)
         TextBox2.Location = New System.Drawing.Point(121, 7)
         PictureBox2.Location = New System.Drawing.Point(226, 7)
 
     End Sub
 
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
-        Me.Visible = False
 
         Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        'selectedRange.Select()
-        Me.Visible = True
+        'selectedRange.Select(
 
         ' Put the selected range's address into the TextBox.
         TextBox2.Text = selectedRange.Address
@@ -297,18 +257,14 @@ Public Class Form3
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        If (RadioButton2.Checked = True Or RadioButton3.Checked = True) And (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) Then
+        If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-
-            Dim worksheet2 As Excel.Worksheet
 
             Dim rng As Excel.Range
-            rng = worksheet.Range(TextBox1.Text)
+            rng = worksheet1.Range(TextBox1.Text)
 
             Dim rng2 As Excel.Range
+            rng2 = worksheet2.Range(TextBox2.Text)
 
             Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
@@ -326,13 +282,6 @@ Public Class Form3
 
             Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
             Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-            If RadioButton1.Checked = True Then
-                rng2 = worksheet.Range(TextBox2.Text)
-            ElseIf RadioButton4.Checked = True Then
-                worksheet2 = workbook.Worksheets.Add
-                rng2 = worksheet2.Range(TextBox1.Text)
-            End If
 
 
             For i = LBound(Arr, 1) To UBound(Arr, 1)
@@ -426,8 +375,8 @@ Public Class Form3
         Try
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-            worksheet.Range(TextBox1.Text).Select()
+            worksheet1 = workbook.ActiveSheet
+            worksheet1.Range(TextBox1.Text).Select()
             Call Display()
         Catch ex As Exception
 
@@ -441,15 +390,28 @@ Public Class Form3
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.Sheets(ComboBox2.SelectedItem)
-            worksheet.Activate()
+            If ComboBox2.SelectedItem = "Add New" Then
+                worksheet2 = workbook.Sheets.Add
+            Else
+                worksheet2 = workbook.Sheets(ComboBox2.SelectedItem)
+                worksheet2.Activate()
+            End If
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a cell", Type:=8)
-
-            TextBox2.Text = userInput.Address
         Catch ex As Exception
 
         End Try
     End Sub
 
+    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+
+        Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+            worksheet.Range(TextBox2.Text).Select()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
 End Class
