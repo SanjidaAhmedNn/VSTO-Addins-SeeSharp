@@ -25,6 +25,14 @@ Public Class Form3
         Dim rng As Excel.Range
         rng = worksheet.Range(TextBox1.Text)
 
+        If rng.Rows.Count > 50 Then
+            rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(50, rng.Columns.Count))
+        End If
+
+        If rng.Columns.Count > 50 Then
+            rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(rng.Rows.Count, 50))
+        End If
+
         Dim r As Integer
         Dim c As Integer
 
@@ -199,40 +207,60 @@ Public Class Form3
 
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
 
-        'TextBox1.Text = selectedRange.Address
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
 
-        Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        selectedRange.Select()
+        Dim worksheet2 As Excel.Worksheet
 
+        Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+        Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
 
-        ' Put the selected range's address into the TextBox.
-        TextBox1.Text = selectedRange.Address
+        Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet2 = workbook.Worksheets(sheetName)
+            worksheet2.Activate()
+        Catch ex As Exception
+
+        End Try
+
+        rng.Select()
+
+        TextBox1.Text = rng.Address
+        TextBox1.Focus()
+
     End Sub
 
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
+
         excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+
+        Dim worksheet2 As Excel.Worksheet
 
         Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-
-
         Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
 
-        ' Select the range
+        Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet2 = workbook.Worksheets(sheetName)
+            worksheet2.Activate()
+        Catch ex As Exception
+
+        End Try
+
         rng.Select()
 
-        ' Expand the selection downwards
         rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-        'rng = Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-        rng.Select()
-
-        ' Expand the selection to the right
         rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
-        rng.Select()
 
-        ' Get the address of the selected range
-        Dim selectedRangeAddress As String = excelApp.Selection.Address
-        Me.TextBox1.Text = selectedRangeAddress
+        rng.Select()
+        Me.TextBox1.Text = rng.Address
         Me.TextBox1.Focus()
+
     End Sub
 
 
@@ -245,10 +273,9 @@ Public Class Form3
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
 
         Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        'selectedRange.Select(
-
-        ' Put the selected range's address into the TextBox.
         TextBox2.Text = selectedRange.Address
+        TextBox2.Focus()
+
     End Sub
 
     Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
@@ -372,15 +399,11 @@ Public Class Form3
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
 
-        Try
-            excelApp = Globals.ThisAddIn.Application
+        excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet1 = workbook.ActiveSheet
             worksheet1.Range(TextBox1.Text).Select()
             Call Display()
-        Catch ex As Exception
-
-        End Try
 
     End Sub
 
