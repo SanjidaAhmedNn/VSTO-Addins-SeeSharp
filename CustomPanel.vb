@@ -27,6 +27,7 @@ Public Class CustomPanel
         End Get
         Set(ByVal value As Color)
             Me.bColor = value
+
             Me.Refresh()
         End Set
     End Property
