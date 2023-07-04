@@ -1,7 +1,7 @@
 ﻿Partial Class Ribbon1
     Inherits Microsoft.Office.Tools.Ribbon.RibbonBase
 
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Public Sub New(ByVal container As System.ComponentModel.IContainer)
         MyClass.New()
 
@@ -12,7 +12,7 @@
 
     End Sub
 
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Public Sub New()
         MyBase.New(Globals.Factory.GetRibbonFactory())
 
@@ -22,7 +22,7 @@
     End Sub
 
     'Component overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -39,17 +39,14 @@
     'NOTE: The following procedure is required by the Component Designer
     'It can be modified using the Component Designer.
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()>
+    <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Ribbon1))
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
-        Me.Button5 = Me.Factory.CreateRibbonButton
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
-        Me.Button6 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.SuspendLayout()
@@ -63,9 +60,6 @@
         '
         'Group1
         '
-        Me.Group1.Items.Add(Me.Button6)
-        Me.Group1.Items.Add(Me.Button5)
-        Me.Group1.Items.Add(Me.Button5)
         Me.Group1.Items.Add(Me.Button4)
         Me.Group1.Items.Add(Me.Button1)
         Me.Group1.Items.Add(Me.Button2)
@@ -93,11 +87,6 @@
         Me.Button3.Label = "Transpose"
         Me.Button3.Name = "Button3"
         '
-        'Button6
-        '
-        Me.Button6.Label = "Transform"
-        Me.Button6.Name = "Button6"
-        '
         'Ribbon1
         '
         Me.Name = "Ribbon1"
@@ -121,7 +110,7 @@ End Class
 
 Partial Class ThisRibbonCollection
 
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Friend ReadOnly Property Ribbon1() As Ribbon1
         Get
             Return Me.GetRibbon(Of Ribbon1)()

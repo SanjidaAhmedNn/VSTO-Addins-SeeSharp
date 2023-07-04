@@ -78,7 +78,7 @@ Partial Class Form3
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(408, 144)
+        Me.PictureBox7.Location = New System.Drawing.Point(430, 140)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
         Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
@@ -94,7 +94,7 @@ Partial Class Form3
         Me.btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_OK.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_OK.Location = New System.Drawing.Point(428, 349)
+        Me.btn_OK.Location = New System.Drawing.Point(400, 349)
         Me.btn_OK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_OK.Name = "btn_OK"
         Me.btn_OK.Size = New System.Drawing.Size(62, 26)
@@ -122,10 +122,9 @@ Partial Class Form3
         'ComboBox1
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
-        Me.ComboBox1.Location = New System.Drawing.Point(15, 351)
+        Me.ComboBox1.Location = New System.Drawing.Point(16, 351)
         Me.ComboBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
@@ -135,10 +134,10 @@ Partial Class Form3
         'CheckBox1
         '
         Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(15, 314)
+        Me.CheckBox1.Location = New System.Drawing.Point(16, 314)
         Me.CheckBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(273, 28)
+        Me.CheckBox1.Size = New System.Drawing.Size(273, 29)
         Me.CheckBox1.TabIndex = 121
         Me.CheckBox1.Text = "Create a copy of the original worksheet"
         Me.CheckBox1.UseVisualStyleBackColor = True
@@ -157,7 +156,6 @@ Partial Class Form3
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(15, 42)
@@ -170,7 +168,7 @@ Partial Class Form3
         'CheckBox2
         '
         Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(15, 165)
+        Me.CheckBox2.Location = New System.Drawing.Point(18, 165)
         Me.CheckBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(134, 28)
@@ -181,8 +179,8 @@ Partial Class Form3
         'Label1
         '
         Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(15, 15)
+        Me.Label1.ForeColor = System.Drawing.Color.Black
+        Me.Label1.Location = New System.Drawing.Point(17, 15)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(101, 20)
@@ -194,7 +192,7 @@ Partial Class Form3
         Me.CustomGroupBox4.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox4.Controls.Add(Me.CustomGroupBox5)
         Me.CustomGroupBox4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox4.Location = New System.Drawing.Point(15, 200)
+        Me.CustomGroupBox4.Location = New System.Drawing.Point(19, 200)
         Me.CustomGroupBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox4.Name = "CustomGroupBox4"
         Me.CustomGroupBox4.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -286,7 +284,7 @@ Partial Class Form3
         Me.CustomGroupBox3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox3.Controls.Add(Me.CustomGroupBox6)
         Me.CustomGroupBox3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox3.Location = New System.Drawing.Point(15, 75)
+        Me.CustomGroupBox3.Location = New System.Drawing.Point(18, 75)
         Me.CustomGroupBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox3.Name = "CustomGroupBox3"
         Me.CustomGroupBox3.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -364,7 +362,7 @@ Partial Class Form3
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox2.Controls.Add(Me.panel2)
         Me.CustomGroupBox2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(303, 199)
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(324, 193)
         Me.CustomGroupBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -391,7 +389,7 @@ Partial Class Form3
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox1.Controls.Add(Me.panel1)
         Me.CustomGroupBox1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox1.Location = New System.Drawing.Point(303, 16)
+        Me.CustomGroupBox1.Location = New System.Drawing.Point(323, 12)
         Me.CustomGroupBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox1.Name = "CustomGroupBox1"
         Me.CustomGroupBox1.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -432,8 +430,6 @@ Partial Class Form3
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.Label1)
-        Me.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form3"

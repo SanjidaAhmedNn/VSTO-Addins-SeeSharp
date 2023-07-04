@@ -203,10 +203,6 @@ Public Class Form1
     Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
 
     End Sub
-
-    Private Sub panel2_Paint(sender As Object, e As PaintEventArgs) Handles panel2.Paint
-
-    End Sub
 End Class
 
 
