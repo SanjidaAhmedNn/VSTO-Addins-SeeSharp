@@ -11,8 +11,18 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As RibbonControlEventArgs) Handles Button1.Click
-        Dim form As New Form1
-        form.Show()
+
+        Dim MyForm1 As New Form1
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm1.TextBox1.Text = selection.Address
+        MyForm1.Show()
+
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
