@@ -45,8 +45,4 @@ Public Class Ribbon1
 
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As RibbonControlEventArgs)
-        Dim form As New Form5
-        form.Show()
-    End Sub
 End Class
