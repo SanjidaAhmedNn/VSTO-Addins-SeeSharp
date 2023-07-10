@@ -447,6 +447,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(626, 379)
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.CustomGroupBox3)
