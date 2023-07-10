@@ -45,7 +45,7 @@
         Me.Group1 = Me.Factory.CreateRibbonGroup
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Button1 = Me.Factory.CreateRibbonButton
-        Me.Button2 = Me.Factory.CreateRibbonButton
+        Me.Transform = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
@@ -62,7 +62,7 @@
         '
         Me.Group1.Items.Add(Me.Button4)
         Me.Group1.Items.Add(Me.Button1)
-        Me.Group1.Items.Add(Me.Button2)
+        Me.Group1.Items.Add(Me.Transform)
         Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
@@ -77,10 +77,10 @@
         Me.Button1.Label = "Flip Design 1"
         Me.Button1.Name = "Button1"
         '
-        'Button2
+        'Transform
         '
-        Me.Button2.Label = "Flip Design 2"
-        Me.Button2.Name = "Button2"
+        Me.Transform.Label = "Transform"
+        Me.Transform.Name = "Transform"
         '
         'Button3
         '
@@ -103,7 +103,7 @@
     Friend WithEvents Tab1 As Microsoft.Office.Tools.Ribbon.RibbonTab
     Friend WithEvents Group1 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button1 As Microsoft.Office.Tools.Ribbon.RibbonButton
-    Friend WithEvents Button2 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Transform As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class

@@ -1,77 +1,40 @@
-﻿Imports System.Drawing
-Imports System.Drawing.Drawing2D
-Imports System.Windows.Forms
+﻿Imports System.Windows.Forms
+Imports System.Drawing
 
 Public Class CustomButton
     Inherits Button
 
-    Public Property BorderColor As Color = Color.Red
-    Public Property BorderThickness As Integer = 1
-    Public Property HoverColor As Color = Color.LightBlue
-    Public Property PressedColor As Color = Color.DarkBlue
-    Public Property HoverTextColor As Color = Color.Black
-    Public Property PressedTextColor As Color = Color.White
+    Private _borderColor As Color = Color.Black
+    Private _borderWidth As Integer = 1
 
-    Private IsMouseOver As Boolean = False
-    Private IsMouseDown As Boolean = False
+    Public Property BorderColor As Color
+        Get
+            Return _borderColor
+        End Get
+        Set(ByVal value As Color)
+            _borderColor = value
+            Me.Invalidate() ' Forces control to be redrawn
+        End Set
+    End Property
 
-    Protected Overrides Sub OnMouseEnter(e As EventArgs)
-        IsMouseOver = True
-        Invalidate()  ' Redraw the button
-    End Sub
-
-    Protected Overrides Sub OnMouseLeave(e As EventArgs)
-        IsMouseOver = False
-        IsMouseDown = False
-        Invalidate()  ' Redraw the button
-    End Sub
-
-    Protected Overrides Sub OnMouseDown(mevent As MouseEventArgs)
-        IsMouseDown = True
-        Invalidate()  ' Redraw the button
-    End Sub
-
-    Protected Overrides Sub OnMouseUp(mevent As MouseEventArgs)
-        IsMouseDown = False
-        Invalidate()  ' Redraw the button
-    End Sub
+    Public Property BorderWidth As Integer
+        Get
+            Return _borderWidth
+        End Get
+        Set(ByVal value As Integer)
+            _borderWidth = value
+            Me.Invalidate() ' Forces control to be redrawn
+        End Set
+    End Property
 
     Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
-        ' Default color
-        Dim currentColor As Color = Me.BackColor
-        Dim currentTextColor As Color = Me.ForeColor
+        MyBase.OnPaint(e)
 
-        If IsMouseOver Then
-            ' Change to hover color if mouse is over the button
-            currentColor = HoverColor
-            currentTextColor = HoverTextColor
-        End If
+        ' Create border using BorderColor and BorderWidth properties
+        Dim borderPen As New Pen(_borderColor, _borderWidth)
+        Dim borderRectangle As New Rectangle(0, 0, Me.ClientSize.Width - 1, Me.ClientSize.Height - 1)
 
-        If IsMouseDown Then
-            ' Change to pressed color if mouse is down
-            currentColor = PressedColor
-            currentTextColor = PressedTextColor
-        End If
-
-        ' Draw the button with the current color
-        e.Graphics.Clear(currentColor)
-
-        Dim buttonPath As GraphicsPath = New GraphicsPath()
-        Dim myRectangle As Rectangle = ClientRectangle
-        myRectangle.Inflate(0, -1)
-        buttonPath.AddRectangle(myRectangle)
-        Region = New Region(buttonPath)
-
-        Dim borderPen As Pen = New Pen(BorderColor, BorderThickness)
-        Dim borderRectangle As Rectangle = DisplayRectangle
-        borderRectangle.Inflate(-1 * BorderThickness, -1 * BorderThickness)
-
+        ' Draw border
         e.Graphics.DrawRectangle(borderPen, borderRectangle)
-
-        ' Draw the text with the current text color
-        TextRenderer.DrawText(e.Graphics, Me.Text, Me.Font, borderRectangle, currentTextColor)
-
-        ' MyBase.OnPaint(e)  ' Comment this line out
     End Sub
 End Class
-
