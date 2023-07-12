@@ -529,12 +529,10 @@ Public Class Form1
 
                     Formulas(i, j) = cell.Formula
 
-                    Dim font As Excel.Font = cell.Font
-
-                    Dim fontStyle As FontStyle = FontStyle.Regular
+                Dim font As Excel.Font = cell.Font
 
 
-                    FontNames(i, j) = font.Name
+                FontNames(i, j) = font.Name
                     FontBolds(i, j) = cell.Font.Bold
                     Fontitalics(i, j) = cell.Font.Italic
 
@@ -584,23 +582,16 @@ Public Class Form1
                                 Dim x As Integer = i - 1
                                 Dim y As Integer = rng.Columns.Count - j + 1 - 1
 
-                                Dim fontStyle As FontStyle = FontStyle.Regular
-
-                                If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
-                                If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
-
-
-                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                            rng2.Cells(i, j).Font.Name = FontNames(x, y)
                                 rng2.Cells(i, j).Font.Size = FontSizes(x, y)
 
                                 If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
                                 If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
 
 
-                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
 
-
-                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
 
                             End If
 
