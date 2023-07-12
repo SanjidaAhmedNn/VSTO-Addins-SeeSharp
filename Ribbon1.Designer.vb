@@ -43,12 +43,13 @@
     Private Sub InitializeComponent()
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
+        Me.Button6 = Me.Factory.CreateRibbonButton
         Me.Button5 = Me.Factory.CreateRibbonButton
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
-        Me.Button6 = Me.Factory.CreateRibbonButton
+        Me.Button7 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.SuspendLayout()
@@ -62,6 +63,7 @@
         '
         'Group1
         '
+        Me.Group1.Items.Add(Me.Button7)
         Me.Group1.Items.Add(Me.Button6)
         Me.Group1.Items.Add(Me.Button5)
         Me.Group1.Items.Add(Me.Button4)
@@ -70,6 +72,11 @@
         Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
+        '
+        'Button6
+        '
+        Me.Button6.Label = "Unmerge"
+        Me.Button6.Name = "Button6"
         '
         'Button5
         '
@@ -98,10 +105,10 @@
         Me.Button3.Label = "Transpose"
         Me.Button3.Name = "Button3"
         '
-        'Button6
+        'Button7
         '
-        Me.Button6.Label = "Unmerge"
-        Me.Button6.Name = "Button6"
+        Me.Button7.Label = "Button7"
+        Me.Button7.Name = "Button7"
         '
         'Ribbon1
         '
@@ -124,6 +131,7 @@
     Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button5 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button6 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button7 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
