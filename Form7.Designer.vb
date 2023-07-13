@@ -279,6 +279,7 @@ Partial Class Form7
         '
         'TextBox3
         '
+        Me.TextBox3.Enabled = False
         Me.TextBox3.Location = New System.Drawing.Point(143, 52)
         Me.TextBox3.Multiline = True
         Me.TextBox3.Name = "TextBox3"
