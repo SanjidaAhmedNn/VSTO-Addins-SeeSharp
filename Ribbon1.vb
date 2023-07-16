@@ -21,6 +21,8 @@ Public Class Ribbon1
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
         MyForm1.TextBox1.Text = selection.Address
+        MyForm1.ComboBox1.SelectedIndex = -1
+
         MyForm1.Show()
 
     End Sub
