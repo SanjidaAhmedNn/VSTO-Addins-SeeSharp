@@ -43,4 +43,10 @@ Public Class Ribbon1
 
         form.Show()
     End Sub
+
+    Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
+        Dim form As New Form12HideRanges
+
+        form.Show()
+    End Sub
 End Class

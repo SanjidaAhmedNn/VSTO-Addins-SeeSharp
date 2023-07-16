@@ -213,7 +213,7 @@ Partial Class Form11SwapRanges
         Me.PictureBox7.Location = New System.Drawing.Point(437, 145)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(38, 49)
+        Me.PictureBox7.Size = New System.Drawing.Size(43, 49)
         Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox7.TabIndex = 157
         Me.PictureBox7.TabStop = False
