@@ -22,6 +22,7 @@ Public Class Ribbon1
 
         MyForm1.TextBox1.Text = selection.Address
         MyForm1.ComboBox1.SelectedIndex = -1
+        MyForm1.ComboBox1.Text = "SOFTEKO"
 
         MyForm1.Show()
 

@@ -472,15 +472,39 @@ Public Class Form1
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        Dim ErrorCode As Integer
         Try
+
+
+            If TextBox1.Text = "" Then
+                MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TextBox1.Focus()
+                Exit Sub
+            End If
+
+            If TextBox2.Text = "" Then
+                MessageBox.Show("Select a Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TextBox2.Focus()
+                Exit Sub
+            End If
+
+            If RadioButton2.Checked = False And RadioButton3.Checked = False Then
+                MessageBox.Show("Select a Flip Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                workSheet.Activate()
+                rng.Select()
+                Exit Sub
+            ElseIf RadioButton1.Checked = False And RadioButton4.Checked = False Then
+                MessageBox.Show("Select a Flip Option.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                workSheet.Activate()
+                rng.Select()
+                Exit Sub
+            End If
+
             If CheckBox1.Checked = True Then
                 workSheet.Copy(After:=workBook.Sheets(workSheet.Name))
+                workSheet2.Activate()
             End If
-            ErrorCode = 1
-            Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
-            ErrorCode = 2
+            Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
             rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
 
@@ -630,20 +654,12 @@ Public Class Form1
                 Me.Close()
 
             Else
-                MsgBox("Choose Flip Type and Flip Option Properly.")
+
             End If
 
         Catch ex As Exception
 
-            If ErrorCode = 1 Then
-                MsgBox("Select Source Range Properly.")
-            ElseIf ErrorCode = 2 Then
-                MsgBox("Select Destination Range properly.")
-            End If
-
         End Try
-
-
 
     End Sub
 
@@ -729,9 +745,9 @@ Public Class Form1
         Try
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
-            workSheet = workBook.ActiveSheet
+            workSheet2 = workBook.ActiveSheet
 
-            rng2 = workSheet.Range(TextBox2.Text)
+            rng2 = workSheet2.Range(TextBox2.Text)
             rng2.Select()
 
         Catch ex As Exception
