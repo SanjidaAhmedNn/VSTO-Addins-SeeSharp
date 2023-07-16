@@ -37,4 +37,10 @@ Public Class Ribbon1
 
         form.Show()
     End Sub
+
+    Private Sub Button8_Click(sender As Object, e As RibbonControlEventArgs) Handles Button8.Click
+        Dim form As New Form11SwapRanges
+
+        form.Show()
+    End Sub
 End Class
