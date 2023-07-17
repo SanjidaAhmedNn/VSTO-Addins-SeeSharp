@@ -167,37 +167,37 @@ Public Class Form3
     End Sub
 
 
-    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    ' Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Try
+    'Try
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
+    '       excelApp = Globals.ThisAddIn.Application
+    '       workbook = excelApp.ActiveWorkbook
 
-            Dim myPanel As New Panel()
-            ComboBox1.Text = "Softeko"
-            Me.TextBox2.Text = MyVar
+    'Dim myPanel As New Panel()
+    '       ComboBox1.Text = "Softeko"
+    'Me.TextBox2.Text = MyVar
 
-            Me.KeyPreview = True
+    'Me.KeyPreview = True
 
-            ComboBox2.Items.Clear()
+    '     ComboBox2.Items.Clear()
 
-            For Each sheet As Excel.Worksheet In workbook.Sheets
-                ComboBox2.Items.Add(sheet.Name)
-            Next
-            ComboBox2.Items.Add("Add New")
-            ComboBox2.SelectedItem = workbook.ActiveSheet.Name
+    'For Each sheet As Excel.Worksheet In workbook.Sheets
+    '           ComboBox2.Items.Add(sheet.Name)
+    'Next
+    '       ComboBox2.Items.Add("Add New")
+    '       ComboBox2.SelectedItem = workbook.ActiveSheet.Name
 
-            ComboBox3.Items.Clear()
-            ComboBox3.Items.Add("This Workbook")
-            ComboBox3.Items.Add("Existing Workbook")
-            ComboBox3.Items.Add("New Workbook")
-            ComboBox3.SelectedItem = "This Workbook"
+    '       ComboBox3.Items.Clear()
+    '      ComboBox3.Items.Add("This Workbook")
+    '      ComboBox3.Items.Add("Existing Workbook")
+    '       ComboBox3.Items.Add("New Workbook")
+    '       ComboBox3.SelectedItem = "This Workbook"
 
-        Catch ex As Exception
+    'Catch ex As Exception
 
-        End Try
-    End Sub
+    'End Try
+    ' End Sub
 
 
     Private Sub btn_OK_MouseEnter(sender As Object, e As EventArgs) Handles btn_OK.MouseEnter
@@ -302,7 +302,7 @@ Public Class Form3
                 sheetName = Split(sheetName, "!")(0)
                 worksheet2 = workbook.Worksheets(sheetName)
                 worksheet2.Activate()
-                ComboBox2.SelectedItem = sheetName
+                '   ComboBox2.SelectedItem = sheetName
             Catch ex As Exception
 
             End Try
@@ -510,25 +510,25 @@ Public Class Form3
 
     End Sub
 
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+    ' Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
 
-        Try
+    'Try
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            If ComboBox2.SelectedItem = "Add New" Then
-                worksheet2 = workbook.Sheets.Add(After:=workbook.Sheets(workbook.Sheets.Count))
-                ComboBox2.Items(ComboBox2.FindStringExact("Add New")) = worksheet2.Name
-                ComboBox2.Items.Add("Add New")
-            Else
-                worksheet2 = workbook.Sheets(ComboBox2.SelectedItem)
-                worksheet2.Activate()
-            End If
-            ComboBox2.Focus()
-        Catch ex As Exception
+    '      excelApp = Globals.ThisAddIn.Application
+    '     workbook = excelApp.ActiveWorkbook
+    'If ComboBox2.SelectedItem = "Add New" Then
+    '             worksheet2 = workbook.Sheets.Add(After:=workbook.Sheets(workbook.Sheets.Count))
+    '            ComboBox2.Items(ComboBox2.FindStringExact("Add New")) = worksheet2.Name
+    '           ComboBox2.Items.Add("Add New")
+    ' Else
+    '            worksheet2 = workbook.Sheets(ComboBox2.SelectedItem)
+    '           worksheet2.Activate()
+    'End If
+    '        ComboBox2.Focus()
+    'Catch ex As Exception
 
-        End Try
-    End Sub
+    'End Try
+    'End Sub
 
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
@@ -558,36 +558,36 @@ Public Class Form3
 
     End Sub
 
-    Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
+    ' Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
 
-        Try
+    'Try
 
-            If ComboBox3.SelectedItem = "Existing Workbook" Then
-                Dim openFileDialog1 As New OpenFileDialog()
+    'If ComboBox3.SelectedItem = "Existing Workbook" Then
+    'Dim openFileDialog1 As New OpenFileDialog()
 
-                openFileDialog1.Filter = "All Files (*.*)|*.*"
-                openFileDialog1.FilterIndex = 1
+    '         openFileDialog1.Filter = "All Files (*.*)|*.*"
+    '        openFileDialog1.FilterIndex = 1
 
-                Dim userClickedOK As DialogResult = openFileDialog1.ShowDialog()
+    'Dim userClickedOK As DialogResult = openFileDialog1.ShowDialog()
 
-                If userClickedOK = DialogResult.OK Then
+    'If userClickedOK = DialogResult.OK Then
 
-                    Dim filePath As String = openFileDialog1.FileName
-                    Dim workbookName As String = System.IO.Path.GetFileName(filePath)
+    'Dim filePath As String = openFileDialog1.FileName
+    'Dim workbookName As String = System.IO.Path.GetFileName(filePath)
 
-                    workbook = excelApp.Workbooks.Open(filePath)
+    '              workbook = excelApp.Workbooks.Open(filePath)
 
-                    excelApp.Visible = True
+    '             excelApp.Visible = True
 
-                    ComboBox3.Focus()
-                    Call Form3_Load(sender, e)
-                End If
+    '             ComboBox3.Focus()
+    ' Call Form3_Load(sender, e)
+    'End If
 
-            End If
+    'End If
 
-        Catch ex As Exception
+    'Catch ex As Exception
 
-        End Try
-    End Sub
+    'End Try
+    ' End Sub
 
 End Class

@@ -359,6 +359,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="VSTO Addins_1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -391,10 +392,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>VSTO Addins_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>82669B20E918BEA68F15AB867914FC1958D7C139</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A9539C0FC7AE741F5F6CC6941DFE8CD0E555936D</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

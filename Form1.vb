@@ -669,7 +669,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox10.Click
+    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
 
         FocuesdTextBox = 2
         Try
@@ -917,7 +917,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox10.KeyDown
+    Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
 
         If e.KeyCode = Keys.Enter Then
 
@@ -1060,7 +1060,7 @@ Public Class Form1
         FocuesdTextBox = 1
     End Sub
 
-    Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox10.GotFocus
+    Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
         FocuesdTextBox = 2
     End Sub
 
