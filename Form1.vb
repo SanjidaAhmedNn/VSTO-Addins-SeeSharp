@@ -669,76 +669,41 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
 
-        FocuesdTextBox = 2
-        Try
+    'Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
+    'FocuesdTextBox = 2
+    'Try
 
-            Me.Hide()
+    'Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
+    'excelApp = Globals.ThisAddIn.Application
+    'workBook = excelApp.ActiveWorkbook
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng2 = userInput
-
-
-            Dim sheetName As String
-            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
-            workSheet2 = workBook.Worksheets(sheetName)
-            workSheet2.Activate()
-
-            rng2.Select()
-
-            TextBox2.Text = rng2.Address
-
-            Me.Show()
-            TextBox2.Focus()
-
-        Catch ex As Exception
-
-            Me.Show()
-            TextBox2.Focus()
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
-        FocuesdTextBox = 2
-        Try
-
-            Me.Hide()
-
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng2 = userInput
+    'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+    'rng2 = userInput
 
 
-            Dim sheetName As String
-            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
-            workSheet2 = workBook.Worksheets(sheetName)
-            workSheet2.Activate()
+    'Dim sheetName As String
+    'sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+    'sheetName = Split(sheetName, "!")(0)
+    'workSheet2 = workBook.Worksheets(sheetName)
+    'workSheet2.Activate()
 
-            rng2.Select()
+    'rng2.Select()
 
-            TextBox2.Text = rng2.Address
+    'TextBox2.Text = rng2.Address
 
-            Me.Show()
-            TextBox2.Focus()
+    'Me.Show()
+    'TextBox2.Focus()
 
-        Catch ex As Exception
+    'Catch ex As Exception
 
-            Me.Show()
-            TextBox2.Focus()
+    'Me.Show()
+    'TextBox2.Focus()
 
-        End Try
+    'End Try
 
-    End Sub
+    'End Sub
 
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
@@ -917,15 +882,15 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
+    'Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox10.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+    'If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+    'Call btn_OK_Click(sender, e)
 
-        End If
+    'End If
 
-    End Sub
+    'End Sub
 
     Private Sub PictureBox9_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
 
@@ -1060,9 +1025,9 @@ Public Class Form1
         FocuesdTextBox = 1
     End Sub
 
-    Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
-        FocuesdTextBox = 2
-    End Sub
+    'Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox10.GotFocus
+    'FocuesdTextBox = 2
+    'End Sub
 
     Private Sub PictureBox9_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
         FocuesdTextBox = 2
