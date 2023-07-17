@@ -295,6 +295,7 @@ Partial Class Form13
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(107, 19)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -344,7 +345,7 @@ Partial Class Form13
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Label1)
         Me.Name = "Form13"
-        Me.Text = "Form13_HideRanges2"
+        Me.Text = "HideRanges2"
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox5.PerformLayout()
         Me.CustomGroupBox4.ResumeLayout(False)
