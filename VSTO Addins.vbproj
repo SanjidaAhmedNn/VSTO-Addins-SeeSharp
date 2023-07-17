@@ -220,6 +220,30 @@
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.Designer.vb">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form11SwapRanges.Designer.vb">
+      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form11SwapRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form12HideRanges.Designer.vb">
+      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form12HideRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form13.Designer.vb">
+      <DependentUpon>Form13.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form13.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -244,6 +268,18 @@
     <Compile Include="Form7.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form8.Designer.vb">
+      <DependentUpon>Form8.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form8.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form9.Designer.vb">
+      <DependentUpon>Form9.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form9.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -262,6 +298,18 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form10Unmerge Cells with Value.resx">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form11SwapRanges.resx">
+      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form12HideRanges.resx">
+      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form13.resx">
+      <DependentUpon>Form13.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
@@ -273,6 +321,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form7.resx">
       <DependentUpon>Form7.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form8.resx">
+      <DependentUpon>Form8.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form9.resx">
+      <DependentUpon>Form9.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
@@ -305,7 +359,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -341,7 +394,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>6BBA77046B262928B79E53B637797BFB063EEB4B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>82669B20E918BEA68F15AB867914FC1958D7C139</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
