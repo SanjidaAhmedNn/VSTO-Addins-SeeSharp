@@ -44,8 +44,9 @@
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
         Me.Group2 = Me.Factory.CreateRibbonGroup
-        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
         Me.DropDown1 = Me.Factory.CreateRibbonDropDown
+        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
+        Me.Button8 = Me.Factory.CreateRibbonButton
         Me.Button7 = Me.Factory.CreateRibbonButton
         Me.Button6 = Me.Factory.CreateRibbonButton
         Me.Button5 = Me.Factory.CreateRibbonButton
@@ -57,7 +58,6 @@
         Me.SplitButton1 = Me.Factory.CreateRibbonSplitButton
         Me.Button9 = Me.Factory.CreateRibbonButton
         Me.Button10 = Me.Factory.CreateRibbonButton
-        Me.Button8 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -92,15 +92,21 @@
         Me.Group2.Label = "Group2"
         Me.Group2.Name = "Group2"
         '
-        'ComboBox1
-        '
-        Me.ComboBox1.Label = "ComboBox1"
-        Me.ComboBox1.Name = "ComboBox1"
-        '
         'DropDown1
         '
         Me.DropDown1.Label = "DropDown1"
         Me.DropDown1.Name = "DropDown1"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Label = "ComboBox1"
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Text = Nothing
+        '
+        'Button8
+        '
+        Me.Button8.Label = "Form 11"
+        Me.Button8.Name = "Button8"
         '
         'Button7
         '
@@ -163,11 +169,6 @@
         Me.Button10.Label = "Clear"
         Me.Button10.Name = "Button10"
         Me.Button10.ShowImage = True
-        '
-        'Button8
-        '
-        Me.Button8.Label = "Form 11"
-        Me.Button8.Name = "Button8"
         '
         'Ribbon1
         '

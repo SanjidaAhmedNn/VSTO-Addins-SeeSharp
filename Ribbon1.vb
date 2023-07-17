@@ -1,4 +1,5 @@
-﻿Imports Microsoft.Office.Tools.Ribbon
+﻿Imports Microsoft.Office.Interop.Excel
+Imports Microsoft.Office.Tools.Ribbon
 
 Public Class Ribbon1
 
@@ -58,4 +59,34 @@ Public Class Ribbon1
 
     End Sub
 
+    Private Sub Button8_Click(sender As Object, e As RibbonControlEventArgs) Handles Button8.Click
+        Dim MyForm11 As New Form11SwapRanges
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm11.TextBox1.Text = selection.Address
+
+        'Call Display Sub
+
+        'Call setup Sub
+
+
+        MyForm11.Show()
+
+
+
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
+
+    End Sub
+
+    Private Sub Button6_Click(sender As Object, e As RibbonControlEventArgs) Handles Button6.Click
+
+    End Sub
 End Class
