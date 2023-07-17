@@ -260,10 +260,10 @@ Partial Class Form3
         Me.RadioButton1.Location = New System.Drawing.Point(8, 6)
         Me.RadioButton1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(71, 21)
+        Me.RadioButton1.Size = New System.Drawing.Size(77, 21)
         Me.RadioButton1.TabIndex = 93
         Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "New Ce"
+        Me.RadioButton1.Text = "New Cell"
         Me.RadioButton1.UseVisualStyleBackColor = True
         '
         'RadioButton4
