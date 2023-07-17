@@ -44,6 +44,7 @@ Partial Class Form12HideRanges
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.RadioButton4 = New System.Windows.Forms.RadioButton()
+        Me.Label2 = New System.Windows.Forms.Label()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -145,6 +146,7 @@ Partial Class Form12HideRanges
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(15, 38)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -325,11 +327,21 @@ Partial Class Form12HideRanges
         Me.RadioButton4.Text = "Column-wise"
         Me.RadioButton4.UseVisualStyleBackColor = True
         '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(246, 332)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(57, 35)
+        Me.Label2.TabIndex = 134
+        Me.Label2.Text = "1677737838r840tikl;fk,.vv.m gv"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Form12HideRanges
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(561, 379)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.CustomGroupBox1)
@@ -382,4 +394,5 @@ Partial Class Form12HideRanges
     Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents TextBox1 As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
+    Friend WithEvents Label2 As Windows.Forms.Label
 End Class
