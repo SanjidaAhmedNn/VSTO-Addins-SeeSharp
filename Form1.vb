@@ -669,42 +669,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
-
-        FocuesdTextBox = 2
-        Try
-
-            Me.Hide()
-
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng2 = userInput
-
-
-            Dim sheetName As String
-            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
-            workSheet2 = workBook.Worksheets(sheetName)
-            workSheet2.Activate()
-
-            rng2.Select()
-
-            TextBox2.Text = rng2.Address
-
-            Me.Show()
-            TextBox2.Focus()
-
-        Catch ex As Exception
-
-            Me.Show()
-            TextBox2.Focus()
-
-        End Try
-
-    End Sub
-
     Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
         FocuesdTextBox = 2
         Try
