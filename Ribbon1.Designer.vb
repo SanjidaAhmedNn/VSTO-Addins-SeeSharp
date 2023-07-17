@@ -43,9 +43,7 @@
     Private Sub InitializeComponent()
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
-        Me.Group2 = Me.Factory.CreateRibbonGroup
-        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
-        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
+        Me.Button8 = Me.Factory.CreateRibbonButton
         Me.Button7 = Me.Factory.CreateRibbonButton
         Me.Button6 = Me.Factory.CreateRibbonButton
         Me.Button5 = Me.Factory.CreateRibbonButton
@@ -53,11 +51,13 @@
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Transform = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
+        Me.Group2 = Me.Factory.CreateRibbonGroup
         Me.Menu1 = Me.Factory.CreateRibbonMenu
         Me.SplitButton1 = Me.Factory.CreateRibbonSplitButton
         Me.Button9 = Me.Factory.CreateRibbonButton
         Me.Button10 = Me.Factory.CreateRibbonButton
-        Me.Button8 = Me.Factory.CreateRibbonButton
+        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
+        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -84,23 +84,10 @@
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
         '
-        'Group2
+        'Button8
         '
-        Me.Group2.Items.Add(Me.Menu1)
-        Me.Group2.Items.Add(Me.DropDown1)
-        Me.Group2.Items.Add(Me.ComboBox1)
-        Me.Group2.Label = "Group2"
-        Me.Group2.Name = "Group2"
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.Label = "ComboBox1"
-        Me.ComboBox1.Name = "ComboBox1"
-        '
-        'DropDown1
-        '
-        Me.DropDown1.Label = "DropDown1"
-        Me.DropDown1.Name = "DropDown1"
+        Me.Button8.Label = "Form 11"
+        Me.Button8.Name = "Button8"
         '
         'Button7
         '
@@ -139,6 +126,14 @@
         Me.Button3.Label = "Transpose"
         Me.Button3.Name = "Button3"
         '
+        'Group2
+        '
+        Me.Group2.Items.Add(Me.Menu1)
+        Me.Group2.Items.Add(Me.DropDown1)
+        Me.Group2.Items.Add(Me.ComboBox1)
+        Me.Group2.Label = "Group2"
+        Me.Group2.Name = "Group2"
+        '
         'Menu1
         '
         Me.Menu1.Items.Add(Me.SplitButton1)
@@ -164,10 +159,16 @@
         Me.Button10.Name = "Button10"
         Me.Button10.ShowImage = True
         '
-        'Button8
+        'DropDown1
         '
-        Me.Button8.Label = "Form 11"
-        Me.Button8.Name = "Button8"
+        Me.DropDown1.Label = "DropDown1"
+        Me.DropDown1.Name = "DropDown1"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Label = "ComboBox1"
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Text = Nothing
         '
         'Ribbon1
         '
