@@ -42,11 +42,11 @@ Public Class Form1
 
     End Function
 
-    Public Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer)
+    Public Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
 
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-        Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
+        Dim Starters As String() = New String() {"=", "(", ",", ":", " ", "+", "-", "*", "/", "^", ")"}
 
         Dim Arr() As String
 
@@ -137,13 +137,10 @@ Public Class Form1
 
         For Each Ref In Refs
             Work = True
-            If InStr(1, Ref, "!") > 0 Then
-                SheetName = Split(Ref, "!")(0)
-                If SheetName = activesheet.Name Then
-                    Ref = Split(Ref, "!")(0)
-                    Work = True
-                Else
-                    Work = False
+            If sheet1.Name <> sheet2.Name Then
+                If InStr(1, Ref, "!") > 0 Then
+                    SheetName = Split(Ref, "!")(0)
+                    Ref = Replace(Ref, SheetName, sheet2.Name)
                 End If
             End If
 
@@ -634,7 +631,7 @@ Public Class Form1
 
                         If RadioButton4.Checked = True Then
                             If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1)
+                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1, workSheet, workSheet2)
                             Else
                                 rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
                             End If
@@ -682,7 +679,7 @@ Public Class Form1
 
                         If RadioButton4.Checked = True Then
                             If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2)
+                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2, workSheet, workSheet2)
                             Else
                                 rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
                             End If
