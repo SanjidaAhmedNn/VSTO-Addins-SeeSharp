@@ -2012,4 +2012,8 @@ Public Class Form7
             TextBox3.Enabled = False
         End If
     End Sub
+
+    Private Sub Form7_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

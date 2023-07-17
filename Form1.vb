@@ -7,6 +7,7 @@ Imports System.Reflection
 Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Diagnostics
+Imports System.Text.RegularExpressions
 
 Public Class Form1
     Dim WithEvents excelApp As Excel.Application
@@ -19,12 +20,33 @@ Public Class Form1
 
     Dim opened As Integer
     Dim FocuesdTextBox As Integer
+    Public Function IsValidExcelCellReference(cellReference As String) As Boolean
+
+        ' Regular expression pattern for a cell reference.
+        ' This pattern will match references like A1, $A$1, etc.
+        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+
+        ' Regular expression pattern for an Excel reference.
+        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+
+        ' Create a regex object with the pattern.
+        Dim regex As New Regex(referencePattern)
+
+        ' Test the input string against the regex pattern.
+        If regex.IsMatch(cellReference) Then
+            Return True
+        Else
+            Return False
+        End If
+
+    End Function
 
     Public Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer)
 
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-        Dim Starters As String() = New String() {"=", "(", ",", ":", " ", "+", "-", "*", "/", "^", ")"}
+        Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
 
         Dim Arr() As String
 
@@ -73,9 +95,18 @@ Public Class Form1
 
         Index = -1
 
+        Dim C1 As Boolean
+        Dim C2 As Boolean
+        Dim C3 As Boolean
+
         For i = LBound(Arr) To UBound(Arr)
+
             If Arr(i) <> "" Then
-                If Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57 Then
+                C1 = Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57
+                C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
+                C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
+
+                If (C1 And (C2 Or C3)) Then
                     Index = Index + 1
                     ReDim Preserve Refs(Index)
                     Refs(Index) = Arr(i)
@@ -136,6 +167,18 @@ Public Class Form1
                         colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
                         Ref2 = Replace(Ref, colName, colName2)
                         Formula = Replace(Formula, Ref, Ref2)
+                        expRange = activesheet.Range(Ref2)
+                        rowNum = expRange.Row
+                        colNum = expRange.Column
+                        rowNum2 = rowNum + distance1
+                        colNum2 = colNum + distance2
+                        rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
+                        rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
+                        colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
+                        colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
+                        Ref3 = Replace(Ref2, rowName, rowName2)
+                        Ref3 = Replace(Ref3, colName, colName2)
+                        Formula = Replace(Formula, Ref2, Ref3)
                     End If
                 ElseIf Type = 2 Then
                     rowNum = expRange.Row
@@ -147,20 +190,20 @@ Public Class Form1
                         rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
                         Ref2 = Replace(Ref, rowName, rowName2)
                         Formula = Replace(Formula, Ref, Ref2)
+                        expRange = activesheet.Range(Ref2)
+                        rowNum = expRange.Row
+                        colNum = expRange.Column
+                        rowNum2 = rowNum + distance1
+                        colNum2 = colNum + distance2
+                        rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
+                        rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
+                        colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
+                        colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
+                        Ref3 = Replace(Ref2, rowName, rowName2)
+                        Ref3 = Replace(Ref3, colName, colName2)
+                        Formula = Replace(Formula, Ref2, Ref3)
                     End If
                 End If
-                expRange = activesheet.Range(Ref2)
-                rowNum = expRange.Row
-                colNum = expRange.Column
-                rowNum2 = rowNum + distance1
-                colNum2 = colNum + distance2
-                rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
-                rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
-                colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
-                colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
-                Ref3 = Replace(Ref2, rowName, rowName2)
-                Ref3 = Replace(Ref3, colName, colName2)
-                Formula = Replace(Formula, Ref2, Ref3)
             End If
         Next Ref
 
@@ -242,7 +285,7 @@ Public Class Form1
 
             panel1.AutoScroll = True
 
-            If (RadioButton1.Checked = True Or RadioButton4.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
+            If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
 
                 If RadioButton3.Checked = True Then
 
@@ -472,11 +515,15 @@ Public Class Form1
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        Try
 
-
-            If TextBox1.Text = "" Then
+        If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TextBox1.Focus()
+                Exit Sub
+            End If
+
+            If IsValidExcelCellReference(TextBox1.Text) = False Then
+                MessageBox.Show("Select a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
                 Exit Sub
             End If
@@ -487,12 +534,19 @@ Public Class Form1
                 Exit Sub
             End If
 
+            If IsValidExcelCellReference(TextBox2.Text) = False Then
+                MessageBox.Show("Select a Valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TextBox2.Focus()
+                Exit Sub
+            End If
+
             If RadioButton2.Checked = False And RadioButton3.Checked = False Then
                 MessageBox.Show("Select a Flip Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
-            ElseIf RadioButton1.Checked = False And RadioButton4.Checked = False Then
+
+            ElseIf RadioButton1.Checked = False And RadioButton4.Checked = False And RadioButton5.Checked = False Then
                 MessageBox.Show("Select a Flip Option.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 workSheet.Activate()
                 rng.Select()
@@ -529,6 +583,7 @@ Public Class Form1
             Dim Red2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
             Dim Green2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
             Dim Blue2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
             For i = LBound(FontSizes, 1) To UBound(FontSizes, 1)
                 For j = LBound(FontSizes, 2) To UBound(FontSizes, 2)
 
@@ -568,140 +623,117 @@ Public Class Form1
             Next
 
 
-            If (RadioButton1.Checked = True Or RadioButton4.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
-                If RadioButton3.Checked = True Then
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-                            If RadioButton1.Checked = True Then
-                                rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+        If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
+            If RadioButton3.Checked = True Then
+                For i = 1 To rng.Rows.Count
+                    For j = 1 To rng.Columns.Count
+
+                        If RadioButton1.Checked = True Then
+                            rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                        End If
+
+                        If RadioButton4.Checked = True Then
+                            If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1)
+                            Else
+                                rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
                             End If
+                        End If
 
-                            If RadioButton4.Checked = True Then
-                                If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1)
-                                Else
-                                    rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
-                                End If
+                        If RadioButton5.Checked = True Then
+                            If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                rng2.Cells(i, j).Formula = Formulas(i - 1, rng.Columns.Count - j + 1 - 1)
+                            Else
+                                rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
                             End If
+                        End If
 
-                            If CheckBox2.Checked = True Then
-                                Dim x As Integer = i - 1
-                                Dim y As Integer = rng.Columns.Count - j + 1 - 1
+                        If CheckBox2.Checked = True Then
+                            Dim x As Integer = i - 1
+                            Dim y As Integer = rng.Columns.Count - j + 1 - 1
 
-                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+                            rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                            rng2.Cells(i, j).Font.Size = FontSizes(x, y)
 
-                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+                            If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                            If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
 
 
-                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
 
-                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
 
-                            End If
+                        End If
 
-                        Next
                     Next
-
-                End If
-
-
-                If RadioButton2.Checked = True Then
-
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-
-                            If RadioButton1.Checked = True Then
-                                rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                            End If
-
-                            If RadioButton4.Checked = True Then
-                                If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2)
-                                Else
-                                    rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                                End If
-                            End If
-
-                            If CheckBox2.Checked = True Then
-                                Dim x As Integer = rng.Rows.Count - i + 1 - 1
-                                Dim y As Integer = j - 1
-
-                                Dim fontStyle As FontStyle = FontStyle.Regular
-
-                                If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
-                                If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
-
-
-                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
-
-                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
-
-
-                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
-                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
-
-                            End If
-
-                        Next
-                    Next
-
-                End If
-
-                Me.Close()
-
-            Else
+                Next
 
             End If
 
-        Catch ex As Exception
 
-        End Try
+            If RadioButton2.Checked = True Then
+
+                For i = 1 To rng.Rows.Count
+                    For j = 1 To rng.Columns.Count
+
+                        If RadioButton1.Checked = True Then
+                            rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                        End If
+
+                        If RadioButton4.Checked = True Then
+                            If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2)
+                            Else
+                                rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                            End If
+                        End If
+
+                        If RadioButton5.Checked = True Then
+                            If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                rng2.Cells(i, j).Formula = Formulas(rng.Rows.Count - i + 1 - 1, j - 1)
+                            Else
+                                rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                            End If
+                        End If
+
+                        If CheckBox2.Checked = True Then
+                            Dim x As Integer = rng.Rows.Count - i + 1 - 1
+                            Dim y As Integer = j - 1
+
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+
+                            If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
+                            If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
+
+
+                            rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                            rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+
+                            If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                            If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+
+
+                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+
+                        End If
+
+                    Next
+                Next
+
+            End If
+
+            Me.Close()
+
+        Else
+
+        End If
 
     End Sub
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
 
         Me.Close()
-
-    End Sub
-
-    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
-
-        FocuesdTextBox = 2
-        Try
-
-            Me.Hide()
-
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng2 = userInput
-
-
-            Dim sheetName As String
-            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
-            workSheet2 = workBook.Worksheets(sheetName)
-            workSheet2.Activate()
-
-            rng2.Select()
-
-            TextBox2.Text = rng2.Address
-
-            Me.Show()
-            TextBox2.Focus()
-
-        Catch ex As Exception
-
-            Me.Show()
-            TextBox2.Focus()
-
-        End Try
 
     End Sub
 
@@ -764,6 +796,7 @@ Public Class Form1
             Process.Start(url)
 
         End If
+
     End Sub
 
     Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -937,10 +970,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
-
-    End Sub
-
     Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
 
         If e.KeyCode = Keys.Enter Then
@@ -1068,4 +1097,113 @@ Public Class Form1
         FocuesdTextBox = 2
     End Sub
 
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+    Private Sub btn_OK_MouseHover(sender As Object, e As EventArgs) Handles btn_OK.MouseHover
+
+        btn_OK.BackColor = Color.FromArgb(65, 105, 225)
+        btn_OK.ForeColor = Color.FromArgb(255, 255, 255)
+    End Sub
+
+    Private Sub btn_OK_MouseLeave(sender As Object, e As EventArgs) Handles btn_OK.MouseLeave
+
+        btn_OK.BackColor = Color.FromArgb(255, 255, 255)
+        btn_OK.ForeColor = Color.FromArgb(70, 70, 70)
+
+    End Sub
+
+    Private Sub btn_cancel_MouseHover(sender As Object, e As EventArgs) Handles btn_cancel.MouseHover
+
+        btn_cancel.BackColor = Color.FromArgb(65, 105, 225)
+        btn_cancel.ForeColor = Color.FromArgb(255, 255, 255)
+
+    End Sub
+
+    Private Sub btn_cancel_MouseLeave(sender As Object, e As EventArgs) Handles btn_cancel.MouseLeave
+
+        btn_cancel.BackColor = Color.FromArgb(255, 255, 255)
+        btn_cancel.ForeColor = Color.FromArgb(70, 70, 70)
+
+    End Sub
+
+    Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub RadioButton5_GotFocus(sender As Object, e As EventArgs) Handles RadioButton5.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub PictureBox5_GotFocus(sender As Object, e As EventArgs) Handles PictureBox5.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+
+    Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+
+    Private Sub PictureBox3_GotFocus(sender As Object, e As EventArgs) Handles PictureBox3.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub PictureBox6_GotFocus(sender As Object, e As EventArgs) Handles PictureBox6.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub RadioButton3_GotFocus(sender As Object, e As EventArgs) Handles RadioButton3.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+
+    Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub ComboBox1_GotFocus(sender As Object, e As EventArgs) Handles ComboBox1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub CustomGroupBox1_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub CustomGroupBox2_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox2.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub panel1_GotFocus(sender As Object, e As EventArgs) Handles panel1.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub panel2_GotFocus(sender As Object, e As EventArgs) Handles panel2.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub btn_OK_GotFocus(sender As Object, e As EventArgs) Handles btn_OK.GotFocus
+        FocuesdTextBox = 0
+    End Sub
+
+    Private Sub btn_cancel_GotFocus(sender As Object, e As EventArgs) Handles btn_cancel.GotFocus
+        FocuesdTextBox = 0
+    End Sub
 End Class
