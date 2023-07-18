@@ -9,6 +9,7 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Diagnostics
 Imports System.Text.RegularExpressions
 
+
 Public Class Form1
     Dim WithEvents excelApp As Excel.Application
     Dim workBook As Excel.Workbook
@@ -41,12 +42,154 @@ Public Class Form1
         End If
 
     End Function
+    Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)
 
-    Public Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
+        Dim Result As Boolean
+
+        Dim sr1 As Integer
+        Dim sr2 As Integer
+
+        Dim er1 As Integer
+        Dim er2 As Integer
+
+        Dim sc1 As Integer
+        Dim sc2 As Integer
+
+        Dim ec1 As Integer
+        Dim ec2 As Integer
+
+        sr1 = rng1.Cells(1, 1).Row
+        sc1 = rng1.Cells(1, 1).Column
+
+        er1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row
+        ec1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column
+
+        sr2 = rng2.Cells(1, 1).Row
+        sc2 = rng2.Cells(1, 1).Column
+
+        er2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Row
+        ec2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Column
+
+        If sr1 >= sr2 And sc1 >= sc2 And er1 <= er2 And ec1 <= ec2 Then
+            Result = True
+        Else
+            Result = False
+        End If
+
+        IsWithin = Result
+
+    End Function
+    Private Function ReplaceNotInRange(input As String, find As String, replaceWith As String) As String
+        ' Build the regex pattern to exclude range notation 
+        Dim pattern As String = String.Format("(?<!:)\b{0}\b(?!:)", Regex.Escape(find))
+
+        ' Create a Regex object.
+        Dim reg As New Regex(pattern)
+
+        ' Call the Regex.Replace method to replace matching text.
+        Return reg.Replace(input, replaceWith)
+    End Function
+    Private Function ReplaceReference(Ref As String, rng As Excel.Range, rng2 As Excel.Range, type As Integer)
+
+        If InStr(1, Ref, "!") > 0 Then
+            ReplaceReference = Ref
+        Else
+
+            Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
+
+            Dim colNum As Integer
+            Dim rowNum As Integer
+            Dim colNum2 As Integer
+            Dim rowNum2 As Integer
+            Dim colName As String
+            Dim rowName As String
+            Dim colName2 As String
+            Dim rowName2 As String
+            Dim expRange As Excel.Range
+            Dim Ext As Integer
+            Dim Ext2 As Integer
+            Dim Ref2 As String
+            Dim Ref3 As String
+            Dim distance1 As Integer
+            Dim distance2 As Integer
+
+            distance1 = rng2.Cells(1, 1).Row - rng.Cells(1, 1).Row
+            distance2 = rng2.Cells(1, 1).Column - rng.Cells(1, 1).Column
+
+            expRange = activesheet.Range(Ref)
+
+            If type = 1 Then
+                colNum = expRange.Column
+                colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
+                Ext = colNum - rng.Cells(1, 1).Column + 1
+                Ext2 = rng.Columns.Count - Ext + 1
+                colNum2 = rng.Cells(1, 1).Column - 1 + Ext2
+                colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
+                Ref2 = Replace(Ref, colName, colName2)
+                expRange = activesheet.Range(Ref2)
+                rowNum = expRange.Row
+                colNum = expRange.Column
+                rowNum2 = rowNum + distance1
+                colNum2 = colNum + distance2
+                rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
+                rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
+                colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
+                colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
+                Ref3 = Replace(Ref2, rowName, rowName2)
+                Ref3 = Replace(Ref3, colName, colName2)
+            Else
+                rowNum = expRange.Row
+                rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
+                Ext = rowNum - rng.Cells(1, 1).Row + 1
+                Ext2 = rng.Rows.Count - Ext + 1
+                rowNum2 = rng.Cells(1, 1).Row - 1 + Ext2
+                rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
+                Ref2 = Replace(Ref, rowName, rowName2)
+                expRange = activesheet.Range(Ref2)
+                rowNum = expRange.Row
+                colNum = expRange.Column
+                rowNum2 = rowNum + distance1
+                colNum2 = colNum + distance2
+                rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
+                rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
+                colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
+                colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
+                Ref3 = Replace(Ref2, rowName, rowName2)
+                Ref3 = Replace(Ref3, colName, colName2)
+            End If
+
+
+            ReplaceReference = Ref3
+        End If
+
+    End Function
+    Private Function ReplaceRange(Ref As String, rng As Excel.Range, rng2 As Excel.Range, Type As Integer)
+
+        If InStr(1, Ref, "!") > 0 Then
+            ReplaceRange = Ref
+        Else
+            Dim Ref1 As String
+            Dim Ref2 As String
+
+            Dim R1() As String
+            R1 = Split(Ref, ":")
+            Ref1 = R1(0)
+            Ref2 = R1(1)
+
+            Ref1 = ReplaceReference(Ref1, rng, rng2, Type)
+            Ref2 = ReplaceReference(Ref2, rng, rng2, Type)
+
+            Dim NewRef As String
+            NewRef = Ref1 & ":" & Ref2
+
+            ReplaceRange = NewRef
+        End If
+    End Function
+    Private Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
 
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-        Dim Starters As String() = New String() {"=", "(", ",", ":", " ", "+", "-", "*", "/", "^", ")"}
+        Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
 
         Dim Arr() As String
 
@@ -114,94 +257,68 @@ Public Class Form1
             End If
         Next i
 
-        Dim Work As Boolean
-        Dim SheetName As String
-        Dim colNum As Integer
-        Dim rowNum As Integer
-        Dim colNum2 As Integer
-        Dim rowNum2 As Integer
-        Dim colName As String
-        Dim rowName As String
-        Dim colName2 As String
-        Dim rowName2 As String
         Dim expRange As Excel.Range
-        Dim Ext As Integer
-        Dim Ext2 As Integer
-        Dim Ref2 As String
-        Dim Ref3 As String
-        Dim distance1 As Integer
-        Dim distance2 As Integer
-
-        distance1 = rng2.Cells(1, 1).Row - Rng.Cells(1, 1).Row
-        distance2 = rng2.Cells(1, 1).Column - Rng.Cells(1, 1).Column
 
         For Each Ref In Refs
-            Work = True
-            If sheet1.Name <> sheet2.Name Then
-                If InStr(1, Ref, "!") > 0 Then
-                    SheetName = Split(Ref, "!")(0)
-                    Ref = Replace(Ref, SheetName, sheet2.Name)
+
+            If InStr(1, Ref, ":") = 0 Then
+                If InStr(1, Ref, "!") = 0 Then
+                    expRange = activesheet.Range(Ref)
+                Else
+                    Dim exp() As String
+                    exp = Split(Ref, "!")
+                    expRange = activesheet.Range(exp(0))
                 End If
-            End If
-
-            If InStr(1, Ref, ":") > 0 Then
-                Dim FirstCell As String
-                Dim LastCell As String
-                FirstCell = Split(Ref, ":")(0)
-                LastCell = Split(Ref, ":")(1)
-
-            End If
-
-            If Work = True Then
-                expRange = activesheet.Range(Ref)
-                If Type = 1 Then
-                    colNum = expRange.Column
-                    If colNum >= Rng.Cells(1, 1).Column And colNum <= Rng.Cells(1, Rng.Columns.Count).Column Then
-                        colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
-                        Ext = colNum - Rng.Cells(1, 1).Column + 1
-                        Ext2 = Rng.Columns.Count - Ext + 1
-                        colNum2 = Rng.Cells(1, 1).Column - 1 + Ext2
-                        colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
-                        Ref2 = Replace(Ref, colName, colName2)
-                        Formula = Replace(Formula, Ref, Ref2)
-                        expRange = activesheet.Range(Ref2)
-                        rowNum = expRange.Row
-                        colNum = expRange.Column
-                        rowNum2 = rowNum + distance1
-                        colNum2 = colNum + distance2
-                        rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
-                        rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
-                        colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
-                        colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
-                        Ref3 = Replace(Ref2, rowName, rowName2)
-                        Ref3 = Replace(Ref3, colName, colName2)
-                        Formula = Replace(Formula, Ref2, Ref3)
+                If IsWithin(expRange, Rng) = True Then
+                    Dim Ref2 As String
+                    Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
+                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
+                Else
+                    If sheet1.Name <> sheet2.Name Then
+                        Dim Ref2 As String
+                        Ref2 = sheet1.Name & "!" & Ref
+                        Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                     End If
-                ElseIf Type = 2 Then
-                    rowNum = expRange.Row
-                    If rowNum >= Rng.Cells(1, 1).Row And rowNum <= Rng.Cells(Rng.Rows.Count, 1).Row Then
-                        rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
-                        Ext = rowNum - Rng.Cells(1, 1).Row + 1
-                        Ext2 = Rng.Rows.Count - Ext + 1
-                        rowNum2 = Rng.Cells(1, 1).Row - 1 + Ext2
-                        rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
-                        Ref2 = Replace(Ref, rowName, rowName2)
+                End If
+            Else
+                If InStr(1, Ref, "!") = 0 Then
+                    expRange = activesheet.Range(Ref)
+                Else
+                    Dim e1() As String
+                    Dim exp1() As String
+                    Dim exp2() As String
+
+                    e1 = Split(Ref, ":")
+                    Dim S1 As String = e1(0)
+                    Dim S2 As String = e1(1)
+
+                    exp1 = Split(S1, "!")
+                    exp2 = Split(S2, "!")
+
+                    Dim S3 As String = exp1(1)
+                    Dim S4 As String = exp2(1)
+
+                    expRange = activesheet.Range(S3 & ":" & S4)
+                End If
+                If IsWithin(expRange, Rng) = True Then
+                    Dim Ref2 As String
+                    Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
+                    Formula = Replace(Formula, Ref, Ref2)
+                Else
+                    If sheet1.Name <> sheet2.Name Then
+                        Dim R1() As String
+                        R1 = Split(Ref, ":")
+                        Dim Rf1 As String
+                        Dim Rf2 As String
+                        Rf1 = R1(0)
+                        Rf2 = R1(1)
+                        Dim Ref2 As String
+                        Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
                         Formula = Replace(Formula, Ref, Ref2)
-                        expRange = activesheet.Range(Ref2)
-                        rowNum = expRange.Row
-                        colNum = expRange.Column
-                        rowNum2 = rowNum + distance1
-                        colNum2 = colNum + distance2
-                        rowName = Split(activesheet.Cells(rowNum, 1).Address, "$")(2)
-                        rowName2 = Split(activesheet.Cells(rowNum2, 1).Address, "$")(2)
-                        colName = Split(activesheet.Cells(1, colNum).Address, "$")(1)
-                        colName2 = Split(activesheet.Cells(1, colNum2).Address, "$")(1)
-                        Ref3 = Replace(Ref2, rowName, rowName2)
-                        Ref3 = Replace(Ref3, colName, colName2)
-                        Formula = Replace(Formula, Ref2, Ref3)
                     End If
                 End If
             End If
+
         Next Ref
 
         ReplaceFormula = Formula
