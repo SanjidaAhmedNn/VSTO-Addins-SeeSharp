@@ -49,4 +49,10 @@ Public Class Ribbon1
 
         form.Show()
     End Sub
+
+    Private Sub Button11_Click(sender As Object, e As RibbonControlEventArgs) Handles Button11.Click
+        Dim form As New Form13HideAllExceptSelectedRange
+
+        form.Show()
+    End Sub
 End Class
