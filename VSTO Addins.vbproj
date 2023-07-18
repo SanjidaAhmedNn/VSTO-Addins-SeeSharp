@@ -238,10 +238,10 @@
     <Compile Include="Form12HideRanges.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form13.Designer.vb">
-      <DependentUpon>Form13.vb</DependentUpon>
+    <Compile Include="Form13HideAllExceptSelectedRange.Designer.vb">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form13.vb">
+    <Compile Include="Form13HideAllExceptSelectedRange.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form2.Designer.vb">
@@ -302,8 +302,8 @@
     <EmbeddedResource Include="Form12HideRanges.resx">
       <DependentUpon>Form12HideRanges.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form13.resx">
-      <DependentUpon>Form13.vb</DependentUpon>
+    <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
