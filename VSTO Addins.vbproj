@@ -244,6 +244,12 @@
     <Compile Include="Form13HideAllExceptSelectedRange.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form14SpecifyScrollArea.Designer.vb">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form14SpecifyScrollArea.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -309,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
       <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>

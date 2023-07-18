@@ -55,4 +55,10 @@ Public Class Ribbon1
 
         form.Show()
     End Sub
+
+    Private Sub Button12_Click(sender As Object, e As RibbonControlEventArgs) Handles Button12.Click
+        Dim form As New Form14SpecifyScrollArea
+
+        form.Show()
+    End Sub
 End Class
