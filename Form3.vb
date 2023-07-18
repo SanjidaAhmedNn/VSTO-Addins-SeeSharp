@@ -15,6 +15,28 @@ Public Class Form3
     Dim worksheet As Excel.Worksheet
     Dim worksheet1 As Excel.Worksheet
     Dim worksheet2 As Excel.Worksheet
+    Private Function Overlap(rng1 As Excel.Range, rng2 As Excel.Range, Sheet1 As Excel.Worksheet, Sheet2 As Excel.Worksheet)
+
+        Dim Result As Boolean
+        If Sheet1.Name <> Sheet2.Name Then
+            Result = False
+        Else
+            Dim X1 As Boolean
+            Dim X2 As Boolean
+            X1 = (rng2.Cells(1, 1).Row >= rng1.Cells(1, 1).Row) And (rng2.Cells(1, 1).Row <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row)
+            X2 = (rng2.Cells(1, 1).Column >= rng1.Cells(1, 1).Column And rng2.Cells(1, 1).Column <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column)
+
+            If X1 And X2 Then
+                Result = True
+            Else
+                Result = False
+            End If
+
+        End If
+
+        Overlap = Result
+
+    End Function
 
     Private Sub Display()
 

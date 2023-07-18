@@ -22,69 +22,81 @@ Public Class Form1
     Dim opened As Integer
     Dim FocuesdTextBox As Integer
     Public Function IsValidExcelCellReference(cellReference As String) As Boolean
+        Try
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
-        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+            ' Regular expression pattern for a cell reference.
+            ' This pattern will match references like A1, $A$1, etc.
+            Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
 
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+            ' Regular expression pattern for an Excel reference.
+            ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+            Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+            ' Create a regex object with the pattern.
+            Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
+            ' Test the input string against the regex pattern.
+            If regex.IsMatch(cellReference) Then
+                Return True
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Function
     Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)
 
-        Dim Result As Boolean
+        Try
 
-        Dim sr1 As Integer
-        Dim sr2 As Integer
+            Dim Result As Boolean
 
-        Dim er1 As Integer
-        Dim er2 As Integer
+            Dim sr1 As Integer
+            Dim sr2 As Integer
 
-        Dim sc1 As Integer
-        Dim sc2 As Integer
+            Dim er1 As Integer
+            Dim er2 As Integer
 
-        Dim ec1 As Integer
-        Dim ec2 As Integer
+            Dim sc1 As Integer
+            Dim sc2 As Integer
 
-        sr1 = rng1.Cells(1, 1).Row
-        sc1 = rng1.Cells(1, 1).Column
+            Dim ec1 As Integer
+            Dim ec2 As Integer
 
-        er1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row
-        ec1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column
+            sr1 = rng1.Cells(1, 1).Row
+            sc1 = rng1.Cells(1, 1).Column
 
-        sr2 = rng2.Cells(1, 1).Row
-        sc2 = rng2.Cells(1, 1).Column
+            er1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row
+            ec1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column
 
-        er2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Row
-        ec2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Column
+            sr2 = rng2.Cells(1, 1).Row
+            sc2 = rng2.Cells(1, 1).Column
 
-        If sr1 >= sr2 And sc1 >= sc2 And er1 <= er2 And ec1 <= ec2 Then
-            Result = True
-        Else
-            Result = False
-        End If
+            er2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Row
+            ec2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Column
 
-        IsWithin = Result
+            If sr1 >= sr2 And sc1 >= sc2 And er1 <= er2 And ec1 <= ec2 Then
+                Result = True
+            Else
+                Result = False
+            End If
+
+            IsWithin = Result
+
+        Catch ex As Exception
+
+        End Try
 
     End Function
     Private Function ReplaceNotInRange(input As String, find As String, replaceWith As String) As String
+
         ' Build the regex pattern to exclude range notation 
         Dim pattern As String = String.Format("(?<!:)\b{0}\b(?!:)", Regex.Escape(find))
 
-        ' Create a Regex object.
-        Dim reg As New Regex(pattern)
+            ' Create a Regex object.
+            Dim reg As New Regex(pattern)
 
         ' Call the Regex.Replace method to replace matching text.
         Return reg.Replace(input, replaceWith)
@@ -161,167 +173,168 @@ Public Class Form1
 
             ReplaceReference = Ref3
         End If
-
     End Function
     Private Function ReplaceRange(Ref As String, rng As Excel.Range, rng2 As Excel.Range, Type As Integer)
 
         If InStr(1, Ref, "!") > 0 Then
-            ReplaceRange = Ref
-        Else
-            Dim Ref1 As String
-            Dim Ref2 As String
+                ReplaceRange = Ref
+            Else
+                Dim Ref1 As String
+                Dim Ref2 As String
 
-            Dim R1() As String
-            R1 = Split(Ref, ":")
-            Ref1 = R1(0)
-            Ref2 = R1(1)
+                Dim R1() As String
+                R1 = Split(Ref, ":")
+                Ref1 = R1(0)
+                Ref2 = R1(1)
 
-            Ref1 = ReplaceReference(Ref1, rng, rng2, Type)
-            Ref2 = ReplaceReference(Ref2, rng, rng2, Type)
+                Ref1 = ReplaceReference(Ref1, rng, rng2, Type)
+                Ref2 = ReplaceReference(Ref2, rng, rng2, Type)
 
-            Dim NewRef As String
-            NewRef = Ref1 & ":" & Ref2
+                Dim NewRef As String
+                NewRef = Ref1 & ":" & Ref2
 
-            ReplaceRange = NewRef
-        End If
+                ReplaceRange = NewRef
+            End If
+
     End Function
     Private Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
 
+
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-        Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
+            Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
 
-        Dim Arr() As String
+            Dim Arr() As String
 
-        Dim Index As Integer
-        Index = -1
-
-
-        Dim Arr1() As Integer
-
-        Dim Index1 As Integer
-        Index1 = -1
-
-        Dim Refs() As String
-
-        Dim i As Integer
-        Dim j As Integer
+            Dim Index As Integer
+            Index = -1
 
 
-        For i = 1 To Len(Formula)
-            For j = LBound(Starters) To UBound(Starters)
-                If Mid(Formula, i, 1) = Starters(j) Then
-                    Index1 = Index1 + 1
-                    ReDim Preserve Arr1(Index1)
-                    Arr1(Index1) = i
-                    Exit For
+            Dim Arr1() As Integer
+
+            Dim Index1 As Integer
+            Index1 = -1
+
+            Dim Refs() As String
+
+            Dim i As Integer
+            Dim j As Integer
+
+
+            For i = 1 To Len(Formula)
+                For j = LBound(Starters) To UBound(Starters)
+                    If Mid(Formula, i, 1) = Starters(j) Then
+                        Index1 = Index1 + 1
+                        ReDim Preserve Arr1(Index1)
+                        Arr1(Index1) = i
+                        Exit For
+                    End If
+                Next j
+            Next i
+
+            Index1 = Index1 + 1
+            ReDim Preserve Arr1(Index1)
+            Arr1(Index1) = Len(Formula) + 1
+
+            Dim Start As Integer
+            Dim Ending As Integer
+            Dim Ref As String
+
+            For i = LBound(Arr1) To UBound(Arr1) - 1
+                Index = Index + 1
+                Start = Arr1(i)
+                Ending = Arr1(i + 1)
+                Ref = Mid(Formula, Start + 1, Ending - Start - 1)
+                ReDim Preserve Arr(Index)
+                Arr(Index) = Ref
+            Next i
+
+            Index = -1
+
+            Dim C1 As Boolean
+            Dim C2 As Boolean
+            Dim C3 As Boolean
+
+            For i = LBound(Arr) To UBound(Arr)
+
+                If Arr(i) <> "" Then
+                    C1 = Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57
+                    C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
+                    C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
+
+                    If (C1 And (C2 Or C3)) Then
+                        Index = Index + 1
+                        ReDim Preserve Refs(Index)
+                        Refs(Index) = Arr(i)
+                    End If
                 End If
-            Next j
-        Next i
+            Next i
 
-        Index1 = Index1 + 1
-        ReDim Preserve Arr1(Index1)
-        Arr1(Index1) = Len(Formula) + 1
+            Dim expRange As Excel.Range
 
-        Dim Start As Integer
-        Dim Ending As Integer
-        Dim Ref As String
+            For Each Ref In Refs
 
-        For i = LBound(Arr1) To UBound(Arr1) - 1
-            Index = Index + 1
-            Start = Arr1(i)
-            Ending = Arr1(i + 1)
-            Ref = Mid(Formula, Start + 1, Ending - Start - 1)
-            ReDim Preserve Arr(Index)
-            Arr(Index) = Ref
-        Next i
-
-        Index = -1
-
-        Dim C1 As Boolean
-        Dim C2 As Boolean
-        Dim C3 As Boolean
-
-        For i = LBound(Arr) To UBound(Arr)
-
-            If Arr(i) <> "" Then
-                C1 = Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57
-                C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
-                C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
-
-                If (C1 And (C2 Or C3)) Then
-                    Index = Index + 1
-                    ReDim Preserve Refs(Index)
-                    Refs(Index) = Arr(i)
+                If InStr(1, Ref, ":") = 0 Then
+                    If InStr(1, Ref, "!") = 0 Then
+                        expRange = activesheet.Range(Ref)
+                    Else
+                        Dim exp() As String
+                        exp = Split(Ref, "!")
+                    expRange = activesheet.Range(exp(1))
                 End If
-            End If
-        Next i
-
-        Dim expRange As Excel.Range
-
-        For Each Ref In Refs
-
-            If InStr(1, Ref, ":") = 0 Then
-                If InStr(1, Ref, "!") = 0 Then
-                    expRange = activesheet.Range(Ref)
-                Else
-                    Dim exp() As String
-                    exp = Split(Ref, "!")
-                    expRange = activesheet.Range(exp(0))
-                End If
-                If IsWithin(expRange, Rng) = True Then
-                    Dim Ref2 As String
-                    Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
-                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
-                Else
-                    If sheet1.Name <> sheet2.Name Then
+                    If IsWithin(expRange, Rng) = True Then
                         Dim Ref2 As String
-                        Ref2 = sheet1.Name & "!" & Ref
+                        Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
                         Formula = ReplaceNotInRange(Formula, Ref, Ref2)
+                    Else
+                        If sheet1.Name <> sheet2.Name Then
+                            Dim Ref2 As String
+                            Ref2 = sheet1.Name & "!" & Ref
+                            Formula = ReplaceNotInRange(Formula, Ref, Ref2)
+                        End If
                     End If
-                End If
-            Else
-                If InStr(1, Ref, "!") = 0 Then
-                    expRange = activesheet.Range(Ref)
                 Else
-                    Dim e1() As String
-                    Dim exp1() As String
-                    Dim exp2() As String
+                    If InStr(1, Ref, "!") = 0 Then
+                        expRange = activesheet.Range(Ref)
+                    Else
+                        Dim e1() As String
+                        Dim exp1() As String
+                        Dim exp2() As String
 
-                    e1 = Split(Ref, ":")
-                    Dim S1 As String = e1(0)
-                    Dim S2 As String = e1(1)
+                        e1 = Split(Ref, ":")
+                        Dim S1 As String = e1(0)
+                        Dim S2 As String = e1(1)
 
-                    exp1 = Split(S1, "!")
-                    exp2 = Split(S2, "!")
+                        exp1 = Split(S1, "!")
+                        exp2 = Split(S2, "!")
 
-                    Dim S3 As String = exp1(1)
-                    Dim S4 As String = exp2(1)
+                        Dim S3 As String = exp1(1)
+                        Dim S4 As String = exp2(1)
 
-                    expRange = activesheet.Range(S3 & ":" & S4)
-                End If
-                If IsWithin(expRange, Rng) = True Then
-                    Dim Ref2 As String
-                    Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
-                    Formula = Replace(Formula, Ref, Ref2)
-                Else
-                    If sheet1.Name <> sheet2.Name Then
-                        Dim R1() As String
-                        R1 = Split(Ref, ":")
-                        Dim Rf1 As String
-                        Dim Rf2 As String
-                        Rf1 = R1(0)
-                        Rf2 = R1(1)
+                        expRange = activesheet.Range(S3 & ":" & S4)
+                    End If
+                    If IsWithin(expRange, Rng) = True Then
                         Dim Ref2 As String
-                        Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
+                        Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
                         Formula = Replace(Formula, Ref, Ref2)
+                    Else
+                        If sheet1.Name <> sheet2.Name Then
+                            Dim R1() As String
+                            R1 = Split(Ref, ":")
+                            Dim Rf1 As String
+                            Dim Rf2 As String
+                            Rf1 = R1(0)
+                            Rf2 = R1(1)
+                            Dim Ref2 As String
+                            Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
+                            Formula = Replace(Formula, Ref, Ref2)
+                        End If
                     End If
                 End If
-            End If
 
-        Next Ref
+            Next Ref
 
-        ReplaceFormula = Formula
+            ReplaceFormula = Formula
 
     End Function
 
@@ -504,9 +517,8 @@ Public Class Form1
     End Sub
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
-        FocuesdTextBox = 1
         Try
-
+            FocuesdTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -544,9 +556,9 @@ Public Class Form1
     End Sub
 
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
-        FocuesdTextBox = 1
-        Try
 
+        Try
+            FocuesdTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -598,39 +610,49 @@ Public Class Form1
     End Sub
 
     Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+        Try
+            Call Display()
+        Catch ex As Exception
 
-        Call Display()
-
+        End Try
     End Sub
 
     Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
+        Try
+            Call Display()
+        Catch ex As Exception
 
-        Call Display()
-
+        End Try
     End Sub
 
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
+        Try
+            Call Display()
+        Catch ex As Exception
 
-        Call Display()
-
+        End Try
     End Sub
 
     Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
+        Try
+            Call Display()
+        Catch ex As Exception
 
-        Call Display()
-
+        End Try
     End Sub
 
     Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
+        Try
+            Call Display()
+        Catch ex As Exception
 
-        Call Display()
-
+        End Try
     End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+        Try
 
-
-        If TextBox1.Text = "" Then
+            If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
                 Exit Sub
@@ -737,124 +759,129 @@ Public Class Form1
             Next
 
 
-        If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
-            If RadioButton3.Checked = True Then
-                For i = 1 To rng.Rows.Count
-                    For j = 1 To rng.Columns.Count
+            If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
+                If RadioButton3.Checked = True Then
+                    For i = 1 To rng.Rows.Count
+                        For j = 1 To rng.Columns.Count
 
-                        If RadioButton1.Checked = True Then
-                            rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
-                        End If
-
-                        If RadioButton4.Checked = True Then
-                            If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1, workSheet, workSheet2)
-                            Else
-                                rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                            If RadioButton1.Checked = True Then
+                                rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
                             End If
-                        End If
 
-                        If RadioButton5.Checked = True Then
-                            If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                rng2.Cells(i, j).Formula = Formulas(i - 1, rng.Columns.Count - j + 1 - 1)
-                            Else
-                                rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                            If RadioButton4.Checked = True Then
+                                If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1, workSheet, workSheet2)
+                                Else
+                                    rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                End If
                             End If
-                        End If
 
-                        If CheckBox2.Checked = True Then
-                            Dim x As Integer = i - 1
-                            Dim y As Integer = rng.Columns.Count - j + 1 - 1
+                            If RadioButton5.Checked = True Then
+                                If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                    rng2.Cells(i, j).Formula = Formulas(i - 1, rng.Columns.Count - j + 1 - 1)
+                                Else
+                                    rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                End If
+                            End If
 
-                            rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                            rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+                            If CheckBox2.Checked = True Then
+                                Dim x As Integer = i - 1
+                                Dim y As Integer = rng.Columns.Count - j + 1 - 1
 
-                            If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                            If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+
+                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
 
 
-                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
 
-                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
 
-                        End If
+                            End If
 
+                        Next
                     Next
-                Next
+
+                End If
+
+
+                If RadioButton2.Checked = True Then
+
+                    For i = 1 To rng.Rows.Count
+                        For j = 1 To rng.Columns.Count
+
+                            If RadioButton1.Checked = True Then
+                                rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                            End If
+
+                            If RadioButton4.Checked = True Then
+                                If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2, workSheet, workSheet2)
+                                Else
+                                    rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                                End If
+                            End If
+
+                            If RadioButton5.Checked = True Then
+                                If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                    rng2.Cells(i, j).Formula = Formulas(rng.Rows.Count - i + 1 - 1, j - 1)
+                                Else
+                                    rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                                End If
+                            End If
+
+                            If CheckBox2.Checked = True Then
+                                Dim x As Integer = rng.Rows.Count - i + 1 - 1
+                                Dim y As Integer = j - 1
+
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+
+                                If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
+                                If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
+
+
+                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+
+                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+
+
+                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+
+                            End If
+
+                        Next
+                    Next
+
+                End If
+
+                Me.Close()
+
+            Else
 
             End If
 
+        Catch ex As Exception
 
-            If RadioButton2.Checked = True Then
-
-                For i = 1 To rng.Rows.Count
-                    For j = 1 To rng.Columns.Count
-
-                        If RadioButton1.Checked = True Then
-                            rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                        End If
-
-                        If RadioButton4.Checked = True Then
-                            If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2, workSheet, workSheet2)
-                            Else
-                                rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                            End If
-                        End If
-
-                        If RadioButton5.Checked = True Then
-                            If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                rng2.Cells(i, j).Formula = Formulas(rng.Rows.Count - i + 1 - 1, j - 1)
-                            Else
-                                rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                            End If
-                        End If
-
-                        If CheckBox2.Checked = True Then
-                            Dim x As Integer = rng.Rows.Count - i + 1 - 1
-                            Dim y As Integer = j - 1
-
-                            Dim fontStyle As FontStyle = FontStyle.Regular
-
-                            If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
-                            If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
-
-
-                            rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                            rng2.Cells(i, j).Font.Size = FontSizes(x, y)
-
-                            If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                            If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
-
-
-                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
-                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
-
-                        End If
-
-                    Next
-                Next
-
-            End If
-
-            Me.Close()
-
-        Else
-
-        End If
-
+        End Try
     End Sub
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
+        Try
+            Me.Close()
+        Catch ex As Exception
 
-        Me.Close()
-
+        End Try
     End Sub
 
     Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
-        FocuesdTextBox = 2
-        Try
 
+        Try
+            FocuesdTextBox = 2
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -903,13 +930,16 @@ Public Class Form1
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        Try
+            If ComboBox1.SelectedItem = "SOFTEKO" And opened >= 1 Then
 
-        If ComboBox1.SelectedItem = "SOFTEKO" And opened >= 1 Then
+                Dim url As String = "https://www.softeko.co"
+                Process.Start(url)
 
-            Dim url As String = "https://www.softeko.co"
-            Process.Start(url)
+            End If
+        Catch ex As Exception
 
-        End If
+        End Try
 
     End Sub
 
