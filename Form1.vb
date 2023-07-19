@@ -22,29 +22,25 @@ Public Class Form1
     Dim opened As Integer
     Dim FocuesdTextBox As Integer
     Public Function IsValidExcelCellReference(cellReference As String) As Boolean
-        Try
 
-            ' Regular expression pattern for a cell reference.
-            ' This pattern will match references like A1, $A$1, etc.
-            Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+        ' Regular expression pattern for a cell reference.
+        ' This pattern will match references like A1, $A$1, etc.
+        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
 
-            ' Regular expression pattern for an Excel reference.
-            ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-            Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        ' Regular expression pattern for an Excel reference.
+        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-            ' Create a regex object with the pattern.
-            Dim regex As New Regex(referencePattern)
+        ' Create a regex object with the pattern.
+        Dim regex As New Regex(referencePattern)
 
-            ' Test the input string against the regex pattern.
-            If regex.IsMatch(cellReference) Then
-                Return True
-            Else
-                Return False
-            End If
+        ' Test the input string against the regex pattern.
+        If regex.IsMatch(cellReference) Then
+            Return True
+        Else
+            Return False
+        End If
 
-        Catch ex As Exception
-
-        End Try
 
     End Function
     Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)

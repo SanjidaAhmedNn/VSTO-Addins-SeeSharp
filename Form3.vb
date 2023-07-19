@@ -10,20 +10,36 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Windows.Forms.Application
 
 Public Class Form3
-    Dim excelApp As Excel.Application
-    Dim workbook As Excel.Workbook
-    Dim workbook2 As Excel.Workbook
-    Dim worksheet As Excel.Worksheet
-    Dim worksheet1 As Excel.Worksheet
-    Dim worksheet2 As Excel.Worksheet
-    Private Function DoRangesIntersect(excelApp As Excel.Application, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
+    Public WithEvents excelApp As Excel.Application
+    Public workbook As Excel.Workbook
+    Public workbook2 As Excel.Workbook
+    Public worksheet As Excel.Worksheet
+    Public worksheet1 As Excel.Worksheet
+    Public worksheet2 As Excel.Worksheet
+    Public rng As Excel.Range
+    Public rng2 As Excel.Range
+    Public FocuesdTextBox As Integer
+    Public Opened As Integer
+    Public GB5 As Integer
+    Public GB6 As Integer
+    Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
-        Dim intersectRange As Range = excelApp.Intersect(rng1, rng2)
-
-        If intersectRange Is Nothing Then
+        If sheet1.Name <> sheet2.Name Then
             Return False
+
         Else
-            Return True
+            Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
+
+            Dim rng3 As Excel.Range = activesheet.Range(rng1.Address)
+            Dim rng4 As Excel.Range = activesheet.Range(rng2.Address)
+
+            Dim intersectRange As Range = excelApp.Intersect(rng3, rng4)
+
+            If intersectRange Is Nothing Then
+                Return False
+            Else
+                Return True
+            End If
         End If
 
     End Function
@@ -35,26 +51,19 @@ Public Class Form3
             panel1.Controls.Clear()
             panel2.Controls.Clear()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-
-            Dim rng As Excel.Range
-            rng = worksheet.Range(TextBox1.Text)
+            Dim displayRng As Excel.Range
 
             If rng.Rows.Count > 50 Then
-                rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(50, rng.Columns.Count))
-            End If
-
-            If rng.Columns.Count > 50 Then
-                rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(rng.Rows.Count, 50))
+                displayRng = rng.Rows("1:50")
+            Else
+                displayRng = rng
             End If
 
             Dim r As Integer
             Dim c As Integer
 
-            r = rng.Rows.Count
-            c = rng.Columns.Count
+            r = displayRng.Rows.Count
+            c = displayRng.Columns.Count
 
             Dim height As Integer
             Dim width As Integer
@@ -71,10 +80,10 @@ Public Class Form3
                 width = panel1.Width / 4
             End If
 
-            For i = 1 To rng.Rows.Count
-                For j = 1 To rng.Columns.Count
+            For i = 1 To displayRng.Rows.Count
+                For j = 1 To displayRng.Columns.Count
                     Dim label As New System.Windows.Forms.Label
-                    label.Text = rng.Cells(i, j).Value
+                    label.Text = displayRng.Cells(i, j).Value
                     label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
                     label.Height = height
                     label.Width = width
@@ -83,12 +92,11 @@ Public Class Form3
 
                     If CheckBox2.Checked = True Then
 
-                        Dim cell As Excel.Range = rng.Cells(i, j)
+                        Dim cell As Excel.Range = displayRng.Cells(i, j)
                         Dim font As Excel.Font = cell.Font
                         Dim fontStyle As FontStyle = FontStyle.Regular
                         If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
                         If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
 
                         Dim fontSize As Single = Convert.ToSingle(font.Size)
 
@@ -128,10 +136,10 @@ Public Class Form3
                     width = panel2.Width / 4
                 End If
 
-                For i = 1 To rng.Rows.Count
-                    For j = 1 To rng.Columns.Count
+                For i = 1 To displayRng.Rows.Count
+                    For j = 1 To displayRng.Columns.Count
                         Dim label As New System.Windows.Forms.Label
-                        label.Text = rng.Cells(i, j).Value
+                        label.Text = displayRng.Cells(i, j).Value
                         label.Location = New System.Drawing.Point((i - 1) * width, (j - 1) * height)
                         label.Height = height
                         label.Width = width
@@ -139,7 +147,7 @@ Public Class Form3
                         label.TextAlign = ContentAlignment.MiddleCenter
 
                         If CheckBox2.Checked = True Then
-                            Dim cell As Excel.Range = rng.Cells(i, j)
+                            Dim cell As Excel.Range = displayRng.Cells(i, j)
                             Dim font As Excel.Font = cell.Font
                             Dim fontStyle As FontStyle = FontStyle.Regular
                             If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
@@ -175,6 +183,49 @@ Public Class Form3
         Catch ex As Exception
 
         End Try
+
+    End Sub
+
+    Private Sub DestinationChange()
+
+        If RadioButton1.Checked = True Then
+            TextBox2.Enabled = True
+            PictureBox2.Enabled = True
+        Else
+            TextBox2.Clear()
+            TextBox2.Enabled = False
+            PictureBox2.Enabled = False
+        End If
+
+        If RadioButton4.Checked = True Then
+
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            Dim ws As Excel.Worksheet = CType(workbook.Worksheets.Add(), Excel.Worksheet)
+            ws.Name = "Transpose Sheet"
+            worksheet2 = ws
+            rng2 = worksheet2.Range("A1")
+
+        End If
+
+        If RadioButton5.Checked = True Then
+            Me.Visible = False
+            Dim MyForm4 As New Form4
+            MyForm4.excelApp = Me.excelApp
+            MyForm4.workbook = Me.workbook
+            MyForm4.worksheet = Me.worksheet
+            MyForm4.rng = Me.rng
+            MyForm4.Opened = Me.Opened
+            MyForm4.FocuesdTextBox = Me.FocuesdTextBox
+            If Me.RadioButton3.Checked = True Then
+                MyForm4.GB6 = 3
+            ElseIf Me.RadioButton2.Checked = True Then
+                MyForm4.GB6 = 2
+            End If
+            MyForm4.GB5 = 3
+            MyForm4.Show()
+
+        End If
 
     End Sub
 
@@ -266,31 +317,32 @@ Public Class Form3
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
 
         Try
+            FocuesdTextBox = 1
+            Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
 
-            Dim worksheet2 As Excel.Worksheet
-
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
+            rng = userInput
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
-                worksheet2 = workbook.Worksheets(sheetName)
-                worksheet2.Activate()
-            Catch ex As Exception
-
-            End Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
 
             rng.Select()
 
             TextBox1.Text = rng.Address
+
+            Me.Show()
             TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -299,25 +351,21 @@ Public Class Form3
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
+            FocuesdTextBox = 1
+            Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
 
-            Dim worksheet2 As Excel.Worksheet
-
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
+            rng = userInput
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
-                worksheet2 = workbook.Worksheets(sheetName)
-                worksheet2.Activate()
-                '   ComboBox2.SelectedItem = sheetName
-            Catch ex As Exception
 
-            End Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
 
             rng.Select()
 
@@ -326,9 +374,14 @@ Public Class Form3
 
             rng.Select()
             Me.TextBox1.Text = rng.Address
+
+            Me.Show()
             Me.TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -351,12 +404,33 @@ Public Class Form3
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
 
         Try
+            FocuesdTextBox = 2
+            Me.Hide()
 
-            Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            TextBox2.Text = selectedRange.Address
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            rng2 = userInput
+
+
+            Dim sheetName As String
+            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet2 = workbook.Worksheets(sheetName)
+            worksheet2.Activate()
+
+            rng2.Select()
+
+            TextBox2.Text = rng2.Address
+
+            Me.Show()
             TextBox2.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox2.Focus()
 
         End Try
 
@@ -510,11 +584,14 @@ Public Class Form3
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet1 = workbook.ActiveSheet
-            worksheet1.Range(TextBox1.Text).Select()
-            Call Display()
+            If TextBox1.Text <> "" Then
+                excelApp = Globals.ThisAddIn.Application
+                workbook = excelApp.ActiveWorkbook
+                worksheet1 = workbook.ActiveSheet
+                rng = worksheet1.Range(TextBox1.Text)
+                rng.Select()
+                Call Display()
+            End If
 
         Catch ex As Exception
 
@@ -522,33 +599,15 @@ Public Class Form3
 
     End Sub
 
-    ' Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-
-    'Try
-
-    '      excelApp = Globals.ThisAddIn.Application
-    '     workbook = excelApp.ActiveWorkbook
-    'If ComboBox2.SelectedItem = "Add New" Then
-    '             worksheet2 = workbook.Sheets.Add(After:=workbook.Sheets(workbook.Sheets.Count))
-    '            ComboBox2.Items(ComboBox2.FindStringExact("Add New")) = worksheet2.Name
-    '           ComboBox2.Items.Add("Add New")
-    ' Else
-    '            worksheet2 = workbook.Sheets(ComboBox2.SelectedItem)
-    '           worksheet2.Activate()
-    'End If
-    '        ComboBox2.Focus()
-    'Catch ex As Exception
-
-    'End Try
-    'End Sub
-
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
         Try
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-            worksheet.Range(TextBox2.Text).Select()
+            If TextBox2.Text <> "" Then
+                excelApp = Globals.ThisAddIn.Application
+                workbook = excelApp.ActiveWorkbook
+                worksheet = workbook.ActiveSheet
+                worksheet.Range(TextBox2.Text).Select()
+            End If
 
         Catch ex As Exception
 
@@ -570,17 +629,95 @@ Public Class Form3
 
     End Sub
 
-    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub Form3_Activated(sender As Object, e As EventArgs) Handles Me.Activated
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.Worksheets("Sheet1")
-        worksheet2 = workbook.Worksheets("Sheet2")
+        Try
 
-        Dim rng1 As Excel.Range = worksheet.Range("A1:C5")
-        Dim rng2 As Excel.Range = worksheet2.Range("A1:C5")
+            excelApp = Globals.ThisAddIn.Application
 
-        MsgBox(DoRangesIntersect(excelApp, rng1, rng2))
+            AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
+
+            Opened = Opened + 1
+
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
+
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            Dim selectedRange As Excel.Range
+            selectedRange = excelApp.Selection
+            If FocuesdTextBox = 1 Then
+                TextBox1.Text = selectedRange.Address
+                worksheet = workbook.ActiveSheet
+                rng = selectedRange
+                TextBox1.Focus()
+            ElseIf FocuesdTextBox = 2 Then
+                TextBox2.Text = selectedRange.Address
+                worksheet2 = workbook.ActiveSheet
+                rng2 = selectedRange
+                TextBox2.Focus()
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
+        Try
+            If ComboBox1.SelectedItem = "SOFTEKO" And Opened >= 1 Then
+
+                Dim url As String = "https://www.softeko.co"
+                Process.Start(url)
+
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
+
+        Try
+
+            Call DestinationChange()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton1_CheckedChanged_1(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+
+        Try
+
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton5_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton5.CheckedChanged
+
+        Try
+
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 

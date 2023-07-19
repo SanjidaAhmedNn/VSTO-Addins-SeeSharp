@@ -12,10 +12,18 @@ Public Module MyModule
 End Module
 
 Public Class Form4
-    Dim excelApp As Excel.Application
-    Dim form As New Form3
-
-
+    Public WithEvents excelApp As Excel.Application
+    Public workbook As Excel.Workbook
+    Public workbook2 As Excel.Workbook
+    Public worksheet As Excel.Worksheet
+    Public worksheet1 As Excel.Worksheet
+    Public worksheet2 As Excel.Worksheet
+    Public rng As Excel.Range
+    Public rng2 As Excel.Range
+    Public FocuesdTextBox As Integer
+    Public Opened As Integer
+    Public GB5 As Integer
+    Public GB6 As Integer
 
     Private Sub Form4_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         RadioButton1.Checked = False
@@ -28,32 +36,12 @@ Public Class Form4
     'Worksheet.Name = "New Worksheet"
     Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
 
-        If RadioButton1.Checked = True Then
-
-            TextBox1.Enabled = True
-            PictureBox8.Enabled = True
-
-            TextBox2.Enabled = False
-            PictureBox1.Enabled = False
-            TextBox3.Enabled = False
-            PictureBox2.Enabled = False
-            TextBox3.Text = ""
-
-
-            'For hiding the visibilty of the selection range of existing workbook
-            Me.PictureBox3.Visible = True
-            Me.Label1.Visible = True
-            Me.TextBox3.Visible = True
-            Me.PictureBox2.Visible = True
-
-            excelApp = Globals.ThisAddIn.Application
-            Dim workbook As Excel.Workbook = excelApp.Workbooks.Add
-            Dim Worksheet As Excel.Worksheet = CType(workbook.Sheets.Add(workbook.Sheets(1), Type.Missing, 1, Excel.XlSheetType.xlWorksheet), Excel.Worksheet)
-
-            'Worksheet.Name = "New Worksheet"
-
-        End If
+        workbook2 = excelApp.Workbooks.Add()
+        excelApp.Visible = True
         TextBox1.Focus()
+        System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook)
+        System.Runtime.InteropServices.Marshal.ReleaseComObject(ExcelApp)
+
     End Sub
 
 
@@ -99,9 +87,16 @@ Public Class Form4
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim form As New Form3()
-        form.Show()
+
         Me.Hide()
+
+        Dim MyForm3 As New Form3
+        MyForm3.rng = Me.rng
+        MyForm3.workbook = Me.workbook
+        MyForm3.workbook2 = Me.workbook2
+        MyForm3.TextBox1.Text = MyForm3.rng.Address
+        MyForm3.Show()
+
     End Sub
 
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
