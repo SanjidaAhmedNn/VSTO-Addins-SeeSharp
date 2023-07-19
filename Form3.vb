@@ -18,10 +18,10 @@ Public Class Form3
     Public worksheet2 As Excel.Worksheet
     Public rng As Excel.Range
     Public rng2 As Excel.Range
-    Public FocuesdTextBox As Integer
+    Public FocusedTextBox As Integer
     Public Opened As Integer
-    Public GB5 As Integer
     Public GB6 As Integer
+    Public Form4Open As Integer
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then
@@ -208,7 +208,7 @@ Public Class Form3
 
         End If
 
-        If RadioButton5.Checked = True Then
+        If RadioButton5.Checked = True And Form4Open <> 1 Then
             Me.Visible = False
             Dim MyForm4 As New Form4
             MyForm4.excelApp = Me.excelApp
@@ -216,13 +216,14 @@ Public Class Form3
             MyForm4.worksheet = Me.worksheet
             MyForm4.rng = Me.rng
             MyForm4.Opened = Me.Opened
-            MyForm4.FocuesdTextBox = Me.FocuesdTextBox
+            MyForm4.FocusedTextBox = Me.FocusedTextBox
             If Me.RadioButton3.Checked = True Then
                 MyForm4.GB6 = 3
             ElseIf Me.RadioButton2.Checked = True Then
                 MyForm4.GB6 = 2
             End If
-            MyForm4.GB5 = 3
+            Form4Open = 1
+            MyForm4.Form4Open = Me.Form4Open
             MyForm4.Show()
 
         End If
@@ -317,7 +318,7 @@ Public Class Form3
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
 
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -351,7 +352,7 @@ Public Class Form3
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -404,7 +405,7 @@ Public Class Form3
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
 
         Try
-            FocuesdTextBox = 2
+            FocusedTextBox = 2
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -653,12 +654,12 @@ Public Class Form3
             excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
-            If FocuesdTextBox = 1 Then
+            If FocusedTextBox = 1 Then
                 TextBox1.Text = selectedRange.Address
                 worksheet = workbook.ActiveSheet
                 rng = selectedRange
                 TextBox1.Focus()
-            ElseIf FocuesdTextBox = 2 Then
+            ElseIf FocusedTextBox = 2 Then
                 TextBox2.Text = selectedRange.Address
                 worksheet2 = workbook.ActiveSheet
                 rng2 = selectedRange
@@ -721,36 +722,243 @@ Public Class Form3
 
     End Sub
 
-    ' Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
+    Private Sub PictureBox8_GotFocus(sender As Object, e As EventArgs) Handles PictureBox8.GotFocus
 
-    'Try
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
 
-    'If ComboBox3.SelectedItem = "Existing Workbook" Then
-    'Dim openFileDialog1 As New OpenFileDialog()
+        End Try
 
-    '         openFileDialog1.Filter = "All Files (*.*)|*.*"
-    '        openFileDialog1.FilterIndex = 1
+    End Sub
 
-    'Dim userClickedOK As DialogResult = openFileDialog1.ShowDialog()
+    Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
 
-    'If userClickedOK = DialogResult.OK Then
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
 
-    'Dim filePath As String = openFileDialog1.FileName
-    'Dim workbookName As String = System.IO.Path.GetFileName(filePath)
+        End Try
 
-    '              workbook = excelApp.Workbooks.Open(filePath)
+    End Sub
 
-    '             excelApp.Visible = True
+    Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
 
-    '             ComboBox3.Focus()
-    ' Call Form3_Load(sender, e)
-    'End If
 
-    'End If
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
 
-    'Catch ex As Exception
+        End Try
 
-    'End Try
-    ' End Sub
+    End Sub
+
+    Private Sub TextBox2_GotFocus(sender As Object, e As EventArgs) Handles TextBox2.GotFocus
+
+        Try
+            FocusedTextBox = 2
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
+
+        Try
+            FocusedTextBox = 2
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton3_GotFocus(sender As Object, e As EventArgs) Handles RadioButton3.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox5_GotFocus(sender As Object, e As EventArgs) Handles PictureBox5.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox3_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox3.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+
+    Private Sub CustomGroupBox6_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox6.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CustomGroupBox5_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox5.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton5_GotFocus(sender As Object, e As EventArgs) Handles RadioButton5.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CheckBox2_GotFocus(sender As Object, e As EventArgs) Handles CheckBox2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub ComboBox1_GotFocus(sender As Object, e As EventArgs) Handles ComboBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox1_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CustomGroupBox2_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox4_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox4.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub panel1_GotFocus(sender As Object, e As EventArgs) Handles panel1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub panel2_GotFocus(sender As Object, e As EventArgs) Handles panel2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub PictureBox7_Click(sender As Object, e As EventArgs) Handles PictureBox7.Click
+
+    End Sub
+
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btn_OK_GotFocus(sender As Object, e As EventArgs) Handles btn_OK.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btn_cancel_GotFocus(sender As Object, e As EventArgs) Handles btn_cancel.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
 
 End Class

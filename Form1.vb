@@ -20,7 +20,7 @@ Public Class Form1
     Dim selectedRange As Excel.Range
 
     Dim opened As Integer
-    Dim FocuesdTextBox As Integer
+    Dim FocusedTextBox As Integer
     Public Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         ' Regular expression pattern for a cell reference.
@@ -45,9 +45,7 @@ Public Class Form1
     End Function
     Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)
 
-        Try
-
-            Dim Result As Boolean
+        Dim Result As Boolean
 
             Dim sr1 As Integer
             Dim sr2 As Integer
@@ -81,9 +79,6 @@ Public Class Form1
 
             IsWithin = Result
 
-        Catch ex As Exception
-
-        End Try
 
     End Function
     Private Function ReplaceNotInRange(input As String, find As String, replaceWith As String) As String
@@ -514,7 +509,7 @@ Public Class Form1
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -554,7 +549,7 @@ Public Class Form1
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
 
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -877,7 +872,7 @@ Public Class Form1
     Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
 
         Try
-            FocuesdTextBox = 2
+            FocusedTextBox = 2
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
@@ -961,12 +956,12 @@ Public Class Form1
             excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
-            If FocuesdTextBox = 1 Then
+            If FocusedTextBox = 1 Then
                 TextBox1.Text = selectedRange.Address
                 workSheet = workBook.ActiveSheet
                 rng = selectedRange
                 TextBox1.Focus()
-            ElseIf FocuesdTextBox = 2 Then
+            ElseIf FocusedTextBox = 2 Then
                 TextBox2.Text = selectedRange.Address
                 workSheet2 = workBook.ActiveSheet
                 rng2 = selectedRange
@@ -1338,7 +1333,7 @@ Public Class Form1
     Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
 
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
 
         Catch ex As Exception
 
@@ -1348,7 +1343,7 @@ Public Class Form1
 
     Private Sub TextBox2_GotFocus(sender As Object, e As EventArgs) Handles TextBox2.GotFocus
         Try
-            FocuesdTextBox = 2
+            FocusedTextBox = 2
 
         Catch ex As Exception
 
@@ -1357,7 +1352,7 @@ Public Class Form1
 
     Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
         Catch ex As Exception
 
         End Try
@@ -1365,7 +1360,7 @@ Public Class Form1
 
     Private Sub PictureBox8_GotFocus(sender As Object, e As EventArgs) Handles PictureBox8.GotFocus
         Try
-            FocuesdTextBox = 1
+            FocusedTextBox = 1
 
         Catch ex As Exception
 
@@ -1374,7 +1369,7 @@ Public Class Form1
 
     Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
         Try
-            FocuesdTextBox = 2
+            FocusedTextBox = 2
         Catch ex As Exception
 
         End Try
@@ -1382,7 +1377,7 @@ Public Class Form1
 
     Private Sub PictureBox9_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
         Try
-            FocuesdTextBox = 2
+            FocusedTextBox = 2
 
         Catch ex As Exception
 
@@ -1438,7 +1433,7 @@ Public Class Form1
 
     Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1446,7 +1441,7 @@ Public Class Form1
 
     Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1454,7 +1449,7 @@ Public Class Form1
 
     Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1462,7 +1457,7 @@ Public Class Form1
 
     Private Sub RadioButton5_GotFocus(sender As Object, e As EventArgs) Handles RadioButton5.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1470,7 +1465,7 @@ Public Class Form1
 
     Private Sub PictureBox5_GotFocus(sender As Object, e As EventArgs) Handles PictureBox5.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1479,7 +1474,7 @@ Public Class Form1
 
     Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1488,7 +1483,7 @@ Public Class Form1
 
     Private Sub PictureBox3_GotFocus(sender As Object, e As EventArgs) Handles PictureBox3.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1496,7 +1491,7 @@ Public Class Form1
 
     Private Sub PictureBox6_GotFocus(sender As Object, e As EventArgs) Handles PictureBox6.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1504,7 +1499,7 @@ Public Class Form1
 
     Private Sub RadioButton3_GotFocus(sender As Object, e As EventArgs) Handles RadioButton3.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1513,7 +1508,7 @@ Public Class Form1
 
     Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1521,7 +1516,7 @@ Public Class Form1
 
     Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1529,7 +1524,7 @@ Public Class Form1
 
     Private Sub ComboBox1_GotFocus(sender As Object, e As EventArgs) Handles ComboBox1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1537,7 +1532,7 @@ Public Class Form1
 
     Private Sub CustomGroupBox1_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1545,7 +1540,7 @@ Public Class Form1
 
     Private Sub CustomGroupBox2_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox2.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1553,7 +1548,7 @@ Public Class Form1
 
     Private Sub panel1_GotFocus(sender As Object, e As EventArgs) Handles panel1.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1561,7 +1556,7 @@ Public Class Form1
 
     Private Sub panel2_GotFocus(sender As Object, e As EventArgs) Handles panel2.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1569,7 +1564,7 @@ Public Class Form1
 
     Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1577,7 +1572,7 @@ Public Class Form1
 
     Private Sub btn_OK_GotFocus(sender As Object, e As EventArgs) Handles btn_OK.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
@@ -1585,7 +1580,7 @@ Public Class Form1
 
     Private Sub btn_cancel_GotFocus(sender As Object, e As EventArgs) Handles btn_cancel.GotFocus
         Try
-            FocuesdTextBox = 0
+            FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
