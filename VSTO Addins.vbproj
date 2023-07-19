@@ -250,6 +250,12 @@
     <Compile Include="Form14SpecifyScrollArea.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form15CompareCells.Designer.vb">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form15CompareCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -318,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
       <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form15CompareCells.resx">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>

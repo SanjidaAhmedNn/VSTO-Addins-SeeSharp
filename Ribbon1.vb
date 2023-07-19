@@ -58,7 +58,13 @@ Public Class Ribbon1
 
     Private Sub Button12_Click(sender As Object, e As RibbonControlEventArgs) Handles Button12.Click
         Dim form As New Form14SpecifyScrollArea
-
         form.Show()
+    End Sub
+
+    Private Sub Button13_Click(sender As Object, e As RibbonControlEventArgs) Handles Button13.Click
+
+        Dim form As New Form15CompareCells
+        form.Show()
+
     End Sub
 End Class
