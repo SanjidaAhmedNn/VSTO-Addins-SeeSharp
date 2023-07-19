@@ -7,6 +7,7 @@ Imports System.Threading
 Imports System.Diagnostics
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports System.Windows.Forms.Application
 
 Public Class Form3
     Dim excelApp As Excel.Application
@@ -15,26 +16,15 @@ Public Class Form3
     Dim worksheet As Excel.Worksheet
     Dim worksheet1 As Excel.Worksheet
     Dim worksheet2 As Excel.Worksheet
-    Private Function Overlap(rng1 As Excel.Range, rng2 As Excel.Range, Sheet1 As Excel.Worksheet, Sheet2 As Excel.Worksheet)
+    Private Function DoRangesIntersect(excelApp As Excel.Application, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
-        Dim Result As Boolean
-        If Sheet1.Name <> Sheet2.Name Then
-            Result = False
+        Dim intersectRange As Range = excelApp.Intersect(rng1, rng2)
+
+        If intersectRange Is Nothing Then
+            Return False
         Else
-            Dim X1 As Boolean
-            Dim X2 As Boolean
-            X1 = (rng2.Cells(1, 1).Row >= rng1.Cells(1, 1).Row) And (rng2.Cells(1, 1).Row <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row)
-            X2 = (rng2.Cells(1, 1).Column >= rng1.Cells(1, 1).Column And rng2.Cells(1, 1).Column <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column)
-
-            If X1 And X2 Then
-                Result = True
-            Else
-                Result = False
-            End If
-
+            Return True
         End If
-
-        Overlap = Result
 
     End Function
 
@@ -581,6 +571,16 @@ Public Class Form3
     End Sub
 
     Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.Worksheets("Sheet1")
+        worksheet2 = workbook.Worksheets("Sheet2")
+
+        Dim rng1 As Excel.Range = worksheet.Range("A1:C5")
+        Dim rng2 As Excel.Range = worksheet2.Range("A1:C5")
+
+        MsgBox(DoRangesIntersect(excelApp, rng1, rng2))
 
     End Sub
 

@@ -944,113 +944,167 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+        Try
 
-        excelApp = Globals.ThisAddIn.Application
+            excelApp = Globals.ThisAddIn.Application
 
-        AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
+            AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
-        opened = opened + 1
+            opened = opened + 1
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
 
-        excelApp = Globals.ThisAddIn.Application
-        Dim selectedRange As Excel.Range
-        selectedRange = excelApp.Selection
-        If FocuesdTextBox = 1 Then
-            TextBox1.Text = selectedRange.Address
-            workSheet = workBook.ActiveSheet
-            rng = selectedRange
-            TextBox1.Focus()
-        ElseIf FocuesdTextBox = 2 Then
-            TextBox2.Text = selectedRange.Address
-            workSheet2 = workBook.ActiveSheet
-            rng2 = selectedRange
-            TextBox2.Focus()
-        End If
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            Dim selectedRange As Excel.Range
+            selectedRange = excelApp.Selection
+            If FocuesdTextBox = 1 Then
+                TextBox1.Text = selectedRange.Address
+                workSheet = workBook.ActiveSheet
+                rng = selectedRange
+                TextBox1.Focus()
+            ElseIf FocuesdTextBox = 2 Then
+                TextBox2.Text = selectedRange.Address
+                workSheet2 = workBook.ActiveSheet
+                rng2 = selectedRange
+                TextBox2.Focus()
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
 
     Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
 
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
+        Try
 
-        If e.KeyCode = Keys.Enter Then
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
 
     Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
@@ -1066,179 +1120,277 @@ Public Class Form1
 
     Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
 
-            Call btn_OK_Click(sender, e)
+            If e.KeyCode = Keys.Enter Then
 
-        End If
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub PictureBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox6.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub PictureBox9_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
 
     Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
     Private Sub panel1_KeyDown(sender As Object, e As KeyEventArgs) Handles panel1.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
 
     Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub panel2_KeyDown(sender As Object, e As KeyEventArgs) Handles panel2.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub btn_OK_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_OK.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
 
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub btn_cancel_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_cancel.KeyDown
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-        If e.KeyCode = Keys.Enter Then
+                Call btn_OK_Click(sender, e)
 
-            Call btn_OK_Click(sender, e)
+            End If
 
-        End If
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
-        If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-            Call btn_OK_Click(sender, e)
+                Call btn_OK_Click(sender, e)
 
-        End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
 
-        FocuesdTextBox = 1
+        Try
+            FocuesdTextBox = 1
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub TextBox2_GotFocus(sender As Object, e As EventArgs) Handles TextBox2.GotFocus
-        FocuesdTextBox = 2
+        Try
+            FocuesdTextBox = 2
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
-        FocuesdTextBox = 1
+        Try
+            FocuesdTextBox = 1
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox8_GotFocus(sender As Object, e As EventArgs) Handles PictureBox8.GotFocus
-        FocuesdTextBox = 1
+        Try
+            FocuesdTextBox = 1
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox10_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
-        FocuesdTextBox = 2
+        Try
+            FocuesdTextBox = 2
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox9_GotFocus(sender As Object, e As EventArgs) Handles PictureBox9.GotFocus
-        FocuesdTextBox = 2
+        Try
+            FocuesdTextBox = 2
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -1247,107 +1399,199 @@ Public Class Form1
 
     Private Sub btn_OK_MouseHover(sender As Object, e As EventArgs) Handles btn_OK.MouseHover
 
-        btn_OK.BackColor = Color.FromArgb(65, 105, 225)
-        btn_OK.ForeColor = Color.FromArgb(255, 255, 255)
+        Try
+
+            btn_OK.BackColor = Color.FromArgb(65, 105, 225)
+            btn_OK.ForeColor = Color.FromArgb(255, 255, 255)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub btn_OK_MouseLeave(sender As Object, e As EventArgs) Handles btn_OK.MouseLeave
+        Try
 
-        btn_OK.BackColor = Color.FromArgb(255, 255, 255)
-        btn_OK.ForeColor = Color.FromArgb(70, 70, 70)
+            btn_OK.BackColor = Color.FromArgb(255, 255, 255)
+            btn_OK.ForeColor = Color.FromArgb(70, 70, 70)
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub btn_cancel_MouseHover(sender As Object, e As EventArgs) Handles btn_cancel.MouseHover
 
-        btn_cancel.BackColor = Color.FromArgb(65, 105, 225)
-        btn_cancel.ForeColor = Color.FromArgb(255, 255, 255)
+        Try
+            btn_cancel.BackColor = Color.FromArgb(65, 105, 225)
+            btn_cancel.ForeColor = Color.FromArgb(255, 255, 255)
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub btn_cancel_MouseLeave(sender As Object, e As EventArgs) Handles btn_cancel.MouseLeave
 
-        btn_cancel.BackColor = Color.FromArgb(255, 255, 255)
-        btn_cancel.ForeColor = Color.FromArgb(70, 70, 70)
+        Try
+            btn_cancel.BackColor = Color.FromArgb(255, 255, 255)
+            btn_cancel.ForeColor = Color.FromArgb(70, 70, 70)
 
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton5_GotFocus(sender As Object, e As EventArgs) Handles RadioButton5.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox5_GotFocus(sender As Object, e As EventArgs) Handles PictureBox5.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
 
     Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
 
     Private Sub PictureBox3_GotFocus(sender As Object, e As EventArgs) Handles PictureBox3.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox6_GotFocus(sender As Object, e As EventArgs) Handles PictureBox6.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RadioButton3_GotFocus(sender As Object, e As EventArgs) Handles RadioButton3.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
 
     Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ComboBox1_GotFocus(sender As Object, e As EventArgs) Handles ComboBox1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub CustomGroupBox1_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub CustomGroupBox2_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox2.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub panel1_GotFocus(sender As Object, e As EventArgs) Handles panel1.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub panel2_GotFocus(sender As Object, e As EventArgs) Handles panel2.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub btn_OK_GotFocus(sender As Object, e As EventArgs) Handles btn_OK.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub btn_cancel_GotFocus(sender As Object, e As EventArgs) Handles btn_cancel.GotFocus
-        FocuesdTextBox = 0
+        Try
+            FocuesdTextBox = 0
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class
