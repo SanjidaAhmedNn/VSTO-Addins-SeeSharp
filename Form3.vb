@@ -209,6 +209,8 @@ Public Class Form3
         End If
 
         If RadioButton5.Checked = True And Form4Open <> 1 Then
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
             Me.Visible = False
             Dim MyForm4 As New Form4
             MyForm4.excelApp = Me.excelApp
@@ -437,10 +439,6 @@ Public Class Form3
 
     End Sub
 
-    Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
-
-    End Sub
-
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
@@ -537,6 +535,8 @@ Public Class Form3
                         Next
                     Next
                 End If
+
+                Me.Close()
 
             End If
 
@@ -961,4 +961,9 @@ Public Class Form3
 
     End Sub
 
+    Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
+
+        Me.Close()
+
+    End Sub
 End Class

@@ -77,13 +77,13 @@ Public Class Form4
     'Worksheet.Name = "New Worksheet"
     Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
 
-        workbook2 = excelApp.Workbooks.Add()
-        excelApp.Visible = True
-        TextBox1.Focus()
+        If RadioButton1.Checked = True Then
+            workbook2 = excelApp.Workbooks.Add()
+            Me.Show()
+            Me.TextBox1.Focus()
+        End If
 
         Call Setup()
-        System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook)
-        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp)
 
     End Sub
 
@@ -204,24 +204,8 @@ Public Class Form4
     End Sub
 
     Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
-        If RadioButton2.Checked = True Then
 
-            TextBox2.Enabled = True
-            PictureBox1.Enabled = True
-
-            TextBox1.Enabled = False
-            PictureBox8.Enabled = False
-            TextBox1.Text = ""
-
-            'For the visibilty of the selection range
-            Me.PictureBox3.Visible = True
-            Me.Label1.Visible = True
-            Me.TextBox3.Visible = True
-            Me.PictureBox2.Visible = True
-
-
-
-        End If
+        Call Setup()
 
     End Sub
 
@@ -324,14 +308,105 @@ Public Class Form4
     End Sub
 
     Private Sub TextBox2_GotFocus(sender As Object, e As EventArgs) Handles TextBox2.GotFocus
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
 
-        ThisFocusedTextBox = 2
+        End Try
 
     End Sub
 
     Private Sub TextBox3_GotFocus(sender As Object, e As EventArgs) Handles TextBox3.GotFocus
 
         ThisFocusedTextBox = 3
+
+    End Sub
+
+    Private Sub PictureBox8_GotFocus(sender As Object, e As EventArgs) Handles PictureBox8.GotFocus
+
+        Try
+            ThisFocusedTextBox = 1
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
+
+        Try
+            ThisFocusedTextBox = 3
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox3_GotFocus(sender As Object, e As EventArgs) Handles PictureBox3.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Button1_GotFocus(sender As Object, e As EventArgs) Handles Button1.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Button2_GotFocus(sender As Object, e As EventArgs) Handles Button2.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Button3_GotFocus(sender As Object, e As EventArgs) Handles Button3.GotFocus
+
+        Try
+            ThisFocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 End Class
