@@ -67,4 +67,11 @@ Public Class Ribbon1
         form.Show()
 
     End Sub
+
+    Private Sub Button14_Click(sender As Object, e As RibbonControlEventArgs) Handles Button14.Click
+
+        Dim form As New Form16PasteintoVisibleRange
+        form.Show()
+
+    End Sub
 End Class
