@@ -10,18 +10,22 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Windows.Forms.Application
 
 Public Class Form3
+
     Public WithEvents excelApp As Excel.Application
+
     Public workbook As Excel.Workbook
     Public workbook2 As Excel.Workbook
+
     Public worksheet As Excel.Worksheet
-    Public worksheet1 As Excel.Worksheet
     Public worksheet2 As Excel.Worksheet
+
     Public rng As Excel.Range
     Public rng2 As Excel.Range
-    Public FocusedTextBox As Integer
+    Public FocusedTextBox As Integer = 0
     Public Opened As Integer
     Public GB6 As Integer
-    Public Form4Open As Integer
+    Public Form4Open As Integer = 0
+
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then
@@ -189,28 +193,27 @@ Public Class Form3
     Private Sub DestinationChange()
 
         If RadioButton1.Checked = True Then
-            TextBox2.Enabled = True
-            PictureBox2.Enabled = True
+            TextBox2.Location = New System.Drawing.Point(121, 7)
+            PictureBox2.Location = New System.Drawing.Point(226, 7)
+            TextBox2.Focus()
         Else
             TextBox2.Clear()
-            TextBox2.Enabled = False
-            PictureBox2.Enabled = False
         End If
 
         If RadioButton4.Checked = True Then
+            TextBox2.Location = New System.Drawing.Point(121, 10)
+            PictureBox2.Location = New System.Drawing.Point(226, 10)
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
             Dim ws As Excel.Worksheet = CType(workbook.Worksheets.Add(), Excel.Worksheet)
+            MsgBox(ws.Name)
             ws.Name = "Transpose Sheet"
-            worksheet2 = ws
-            rng2 = worksheet2.Range("A1")
-
+            TextBox2.Focus()
+        Else
+            TextBox2.Clear()
         End If
 
         If RadioButton5.Checked = True And Form4Open <> 1 Then
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
+
             Me.Visible = False
             Dim MyForm4 As New Form4
             MyForm4.excelApp = Me.excelApp
@@ -323,8 +326,6 @@ Public Class Form3
             FocusedTextBox = 1
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
             rng = userInput
@@ -357,12 +358,9 @@ Public Class Form3
             FocusedTextBox = 1
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
             rng = userInput
-
 
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
@@ -410,12 +408,9 @@ Public Class Form3
             FocusedTextBox = 2
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
             rng2 = userInput
-
 
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
@@ -441,108 +436,94 @@ Public Class Form3
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        Try
+        If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
-            If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
+            If CheckBox1.Checked = True Then
+                worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
+            End If
 
 
-                Dim rng As Excel.Range
-                rng = worksheet1.Range(TextBox1.Text)
+            Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
-                Dim rng2 As Excel.Range
-                rng2 = worksheet2.Range(TextBox2.Text)
+            For i = LBound(Arr, 1) To UBound(Arr, 1)
+                For j = LBound(Arr, 2) To UBound(Arr, 2)
+                    If RadioButton3.Checked = True Then
+                        Arr(i, j) = rng.Cells(i + 1, j + 1)
+                    ElseIf RadioButton2.Checked = True Then
+                        Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
+                    End If
+                Next
+            Next
 
-                If CheckBox1.Checked = True Then
-                    worksheet1.Copy(After:=workbook.Sheets(worksheet1.Name))
-                End If
 
-                worksheet2.Activate()
+            For i = 1 To rng.Rows.Count
+                For j = 1 To rng.Columns.Count
+                    rng2.Cells(j, i) = Arr(i - 1, j - 1)
+                Next
+            Next
 
-                Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+            If CheckBox2.Checked = True Then
+
+                Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
+
+                Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
 
                 For i = LBound(Arr, 1) To UBound(Arr, 1)
                     For j = LBound(Arr, 2) To UBound(Arr, 2)
-                        If RadioButton3.Checked = True Then
-                            Arr(i, j) = rng.Cells(i + 1, j + 1)
-                        ElseIf RadioButton2.Checked = True Then
-                            Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                        End If
+                        Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
+                        Dim font As Excel.Font = cell.Font
+                        FontNames(i, j) = CStr(cell.Font.Name)
+                        FontSizes(i, j) = Convert.ToSingle(font.Size)
+                        Bolds(i, j) = cell.Font.Bold
+                        Italics(i, j) = cell.Font.Italic
+                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                        Reds1(i, j) = colorValue1 Mod 256
+                        Greens1(i, j) = (colorValue1 \ 256) Mod 256
+                        Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
+                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                        Reds2(i, j) = colorValue2 Mod 256
+                        Greens2(i, j) = (colorValue2 \ 256) Mod 256
+                        Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
                     Next
                 Next
-
 
                 For i = 1 To rng.Rows.Count
                     For j = 1 To rng.Columns.Count
-                        rng2.Cells(j, i) = Arr(i - 1, j - 1)
+                        With rng2.Cells(j, i).Font
+                            .Name = FontNames(i - 1, j - 1)
+                            .Size = FontSizes(i - 1, j - 1)
+                            .Bold = Bolds(i - 1, j - 1)
+                            .Italic = Italics(i - 1, j - 1)
+                        End With
+
+                        Dim red1 As Integer = Reds1(i - 1, j - 1)
+                        Dim green1 As Integer = Greens1(i - 1, j - 1)
+                        Dim blue1 As Integer = Blues1(i - 1, j - 1)
+                        rng2.Cells(j, i).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                        Dim red2 As Integer = Reds2(i - 1, j - 1)
+                        Dim green2 As Integer = Greens2(i - 1, j - 1)
+                        Dim blue2 As Integer = Blues2(i - 1, j - 1)
+                        rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                     Next
                 Next
-
-                If CheckBox2.Checked = True Then
-
-                    Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-                    Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
-
-                    Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-                    Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-
-                    Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                    Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                    Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-
-                    For i = LBound(Arr, 1) To UBound(Arr, 1)
-                        For j = LBound(Arr, 2) To UBound(Arr, 2)
-                            Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
-                            Dim font As Excel.Font = cell.Font
-                            FontNames(i, j) = CStr(cell.Font.Name)
-                            FontSizes(i, j) = Convert.ToSingle(font.Size)
-                            Bolds(i, j) = cell.Font.Bold
-                            Italics(i, j) = cell.Font.Italic
-                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                            Reds1(i, j) = colorValue1 Mod 256
-                            Greens1(i, j) = (colorValue1 \ 256) Mod 256
-                            Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
-                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                            Reds2(i, j) = colorValue2 Mod 256
-                            Greens2(i, j) = (colorValue2 \ 256) Mod 256
-                            Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
-                        Next
-                    Next
-
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-                            With rng2.Cells(j, i).Font
-                                .Name = FontNames(i - 1, j - 1)
-                                .Size = FontSizes(i - 1, j - 1)
-                                .Bold = Bolds(i - 1, j - 1)
-                                .Italic = Italics(i - 1, j - 1)
-                            End With
-
-                            Dim red1 As Integer = Reds1(i - 1, j - 1)
-                            Dim green1 As Integer = Greens1(i - 1, j - 1)
-                            Dim blue1 As Integer = Blues1(i - 1, j - 1)
-                            rng2.Cells(j, i).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                            Dim red2 As Integer = Reds2(i - 1, j - 1)
-                            Dim green2 As Integer = Greens2(i - 1, j - 1)
-                            Dim blue2 As Integer = Blues2(i - 1, j - 1)
-                            rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                        Next
-                    Next
-                End If
-
-                Me.Close()
-
             End If
 
-        Catch ex As Exception
+            Me.Close()
 
-        End Try
+        End If
 
     End Sub
 
@@ -584,12 +565,9 @@ Public Class Form3
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         Try
-
             If TextBox1.Text <> "" Then
-                excelApp = Globals.ThisAddIn.Application
-                workbook = excelApp.ActiveWorkbook
-                worksheet1 = workbook.ActiveSheet
-                rng = worksheet1.Range(TextBox1.Text)
+                worksheet = workbook.ActiveSheet
+                rng = worksheet.Range(TextBox1.Text)
                 rng.Select()
                 Call Display()
             End If
@@ -604,10 +582,8 @@ Public Class Form3
 
         Try
             If TextBox2.Text <> "" Then
-                excelApp = Globals.ThisAddIn.Application
-                workbook = excelApp.ActiveWorkbook
-                worksheet = workbook.ActiveSheet
-                worksheet.Range(TextBox2.Text).Select()
+                worksheet2 = workbook.ActiveSheet
+                worksheet2.Range(TextBox2.Text).Select()
             End If
 
         Catch ex As Exception
@@ -634,8 +610,6 @@ Public Class Form3
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
-
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
             Opened = Opened + 1
@@ -651,14 +625,15 @@ Public Class Form3
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
+
             If FocusedTextBox = 1 Then
                 TextBox1.Text = selectedRange.Address
                 worksheet = workbook.ActiveSheet
                 rng = selectedRange
                 TextBox1.Focus()
+
             ElseIf FocusedTextBox = 2 Then
                 TextBox2.Text = selectedRange.Address
                 worksheet2 = workbook.ActiveSheet
@@ -848,6 +823,7 @@ Public Class Form3
     Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
         Try
             FocusedTextBox = 0
+
         Catch ex As Exception
 
         End Try

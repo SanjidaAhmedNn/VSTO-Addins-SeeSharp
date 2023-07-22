@@ -220,7 +220,6 @@ Partial Class Form3
         '
         'PictureBox2
         '
-        Me.PictureBox2.Enabled = False
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
         Me.PictureBox2.Location = New System.Drawing.Point(226, 7)
         Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -233,7 +232,6 @@ Partial Class Form3
         'TextBox2
         '
         Me.TextBox2.BackColor = System.Drawing.Color.White
-        Me.TextBox2.Enabled = False
         Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox2.Location = New System.Drawing.Point(121, 7)

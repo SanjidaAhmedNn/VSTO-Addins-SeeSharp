@@ -95,11 +95,13 @@ Public Class Form4
 
         Me.Hide()
         Dim openFileDialog As New OpenFileDialog()
+        openFileDialog.Title = "Open Your File"
         openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
 
         If openFileDialog.ShowDialog() = DialogResult.OK Then
             Dim filePath As String = openFileDialog.FileName
             workbook2 = excelApp.Workbooks.Open(filePath)
+            TextBox2.Text = filePath
             excelApp.Visible = True
         End If
 
@@ -114,12 +116,8 @@ Public Class Form4
             ThisFocusedTextBox = 1
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook2 = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
             rng2 = userInput
-
 
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
@@ -174,10 +172,7 @@ Public Class Form4
             ThisFocusedTextBox = 3
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook2 = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell", Type:=8)
             rng2 = userInput
 
 
@@ -230,8 +225,6 @@ Public Class Form4
         Try
 
             If TextBox3.Text <> "" Then
-                excelApp = Globals.ThisAddIn.Application
-                workbook2 = excelApp.ActiveWorkbook
                 worksheet2 = workbook2.ActiveSheet
                 rng2 = worksheet2.Range(TextBox3.Text)
                 rng2.Select()
@@ -246,7 +239,6 @@ Public Class Form4
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
@@ -262,7 +254,6 @@ Public Class Form4
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
 
@@ -289,8 +280,6 @@ Public Class Form4
         Try
 
             If TextBox1.Text <> "" Then
-                excelApp = Globals.ThisAddIn.Application
-                workbook2 = excelApp.ActiveWorkbook
                 worksheet2 = workbook2.ActiveSheet
                 rng2 = worksheet2.Range(TextBox1.Text)
                 rng2.Select()
