@@ -268,6 +268,12 @@
     <Compile Include="Form17DivideNames.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form18_CombineRanges.Designer.vb">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -345,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form17DivideNames.resx">
       <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form18_CombineRanges.resx">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
