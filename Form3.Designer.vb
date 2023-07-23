@@ -228,6 +228,7 @@ Partial Class Form3
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 135
         Me.PictureBox2.TabStop = False
+        Me.PictureBox2.Visible = False
         '
         'TextBox2
         '
@@ -238,8 +239,9 @@ Partial Class Form3
         Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextBox2.Multiline = True
         Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(127, 20)
+        Me.TextBox2.Size = New System.Drawing.Size(107, 20)
         Me.TextBox2.TabIndex = 135
+        Me.TextBox2.Visible = False
         '
         'RadioButton5
         '

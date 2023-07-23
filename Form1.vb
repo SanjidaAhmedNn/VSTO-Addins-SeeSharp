@@ -21,7 +21,28 @@ Public Class Form1
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
-    Public Function IsValidExcelCellReference(cellReference As String) As Boolean
+    Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
+
+        If sheet1.Name <> sheet2.Name Then
+            Return False
+
+        Else
+            Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
+
+            Dim rng3 As Excel.Range = activesheet.Range(rng1.Address)
+            Dim rng4 As Excel.Range = activesheet.Range(rng2.Address)
+
+            Dim intersectRange As Range = excelApp.Intersect(rng3, rng4)
+
+            If intersectRange Is Nothing Then
+                Return False
+            Else
+                Return True
+            End If
+        End If
+
+    End Function
+    Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
