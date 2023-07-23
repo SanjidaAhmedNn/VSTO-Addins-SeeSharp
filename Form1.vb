@@ -662,6 +662,7 @@ Public Class Form1
     End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+
         Try
 
             If TextBox1.Text = "" Then
@@ -706,177 +707,248 @@ Public Class Form1
                 workSheet2.Activate()
             End If
 
-            Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
-
             rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
 
             rng2.Select()
 
-            For i = LBound(Arr, 1) To UBound(Arr, 1)
-                For j = LBound(Arr, 2) To UBound(Arr, 2)
-                    Arr(i, j) = rng.Cells(i + 1, j + 1).Value
-                Next
-            Next
-
-            Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-            Dim HasFormulas(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-            Dim Formulas(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-            Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
-
-            Dim FontBolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-            Dim Fontitalics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-            Dim Red1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-            Dim Green1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-            Dim Blue1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-            Dim Red2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-            Dim Green2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-            Dim Blue2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-            For i = LBound(FontSizes, 1) To UBound(FontSizes, 1)
-                For j = LBound(FontSizes, 2) To UBound(FontSizes, 2)
-
-                    Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
-                    If cell.HasFormula Then
-                        HasFormulas(i, j) = True
-                    Else
-                        HasFormulas(i, j) = False
-                    End If
-
-                    Formulas(i, j) = cell.Formula
-                    Dim font As Excel.Font = cell.Font
-                    FontNames(i, j) = font.Name
-                    FontBolds(i, j) = cell.Font.Bold
-                    Fontitalics(i, j) = cell.Font.Italic
-
-
-                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-                    FontSizes(i, j) = fontSize
-
-                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                    Dim red1 As Integer = colorValue1 Mod 256
-                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                    Red1s(i, j) = red1
-                    Green1s(i, j) = green1
-                    Blue1s(i, j) = blue1
-                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                    Dim red2 As Integer = colorValue2 Mod 256
-                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                    Red2s(i, j) = red2
-                    Green2s(i, j) = green2
-                    Blue2s(i, j) = blue2
-
-                Next
-            Next
-
 
             If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
-                If RadioButton3.Checked = True Then
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
 
-                            If RadioButton1.Checked = True Then
-                                rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
-                            End If
+                If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = False Then
 
-                            If RadioButton4.Checked = True Then
-                                If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1, workSheet, workSheet2)
-                                Else
-                                    rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                    If RadioButton3.Checked = True Then
+
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+
+                                If RadioButton1.Checked = True Then
+                                    rng2.Cells(i, j).Value = rng.Cells(i, rng.Columns.Count - j + 1).Value
+
                                 End If
-                            End If
 
-                            If RadioButton5.Checked = True Then
-                                If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
-                                    rng2.Cells(i, j).Formula = Formulas(i - 1, rng.Columns.Count - j + 1 - 1)
-                                Else
-                                    rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                If RadioButton4.Checked = True Then
+                                    If rng.Cells(i, rng.Columns.Count - j + 1).HasFormula = True Then
+                                        rng2.Cells(i, j).Formula = ReplaceFormula(rng.Cells(i, rng.Columns.Count - j + 1).Formula, rng, rng2, 1, workSheet, workSheet2)
+                                    Else
+                                        rng2.Cells(i, j).Value = rng.Cells(i, rng.Columns.Count - j + 1).Value
+                                    End If
                                 End If
-                            End If
 
-                            If CheckBox2.Checked = True Then
-                                Dim x As Integer = i - 1
-                                Dim y As Integer = rng.Columns.Count - j + 1 - 1
+                                If RadioButton5.Checked = True Then
+                                    If rng.Cells(i, rng.Columns.Count - j + 1).HasFormula = True Then
+                                        rng2.Cells(i, j).Formula = rng.Cells(i, rng.Columns.Count - j + 1).Formula
+                                    Else
+                                        rng2.Cells(i, j).Value = rng.Cells(i, rng.Columns.Count - j + 1).Value
+                                    End If
+                                End If
 
-                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+                                If CheckBox2.Checked = True Then
+                                    rng.Cells(i, rng.Columns.Count - j + 1).Copy
+                                    rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                End If
+                            Next
+                        Next
+                    End If
 
-                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
 
+                    If RadioButton2.Checked = True Then
 
-                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
 
-                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+                                If RadioButton1.Checked = True Then
+                                    rng2.Cells(i, j).Value = rng.Cells(rng.Rows.Count - i + 1, j).Value
 
-                            End If
+                                End If
 
+                                If RadioButton4.Checked = True Then
+                                    If rng.Cells(rng.Rows.Count - i + 1, j).HasFormula = True Then
+                                        rng2.Cells(i, j).Formula = ReplaceFormula(rng.Cells(rng.Rows.Count - i + 1, j).Formula, rng, rng2, 1, workSheet, workSheet2)
+                                    Else
+                                        rng2.Cells(i, j).Value = rng.Cells(rng.Rows.Count - i + 1, j).Value
+                                    End If
+                                End If
+
+                                If RadioButton5.Checked = True Then
+                                    If rng.Cells(rng.Rows.Count - i + 1, j).HasFormula = True Then
+                                        rng2.Cells(i, j).Formula = rng.Cells(rng.Rows.Count - i + 1, j).Formula
+                                    Else
+                                        rng2.Cells(i, j).Value = rng.Cells(rng.Rows.Count - i + 1, j).Value
+                                    End If
+                                End If
+
+                                If CheckBox2.Checked = True Then
+                                    rng.Cells(rng.Rows.Count - i + 1, j).Copy
+                                    rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                End If
+                            Next
+                        Next
+                    End If
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                Else
+
+                    Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    For i = LBound(Arr, 1) To UBound(Arr, 1)
+                        For j = LBound(Arr, 2) To UBound(Arr, 2)
+                            Arr(i, j) = rng.Cells(i + 1, j + 1).Value
                         Next
                     Next
 
-                End If
+                    Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                    Dim HasFormulas(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Formulas(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                    Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
 
+                    Dim FontBolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Fontitalics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Red1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Green1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Blue1s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Red2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Green2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Blue2s(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
 
-                If RadioButton2.Checked = True Then
+                    For i = LBound(FontSizes, 1) To UBound(FontSizes, 1)
+                        For j = LBound(FontSizes, 2) To UBound(FontSizes, 2)
 
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-
-                            If RadioButton1.Checked = True Then
-                                rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                            Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
+                            If cell.HasFormula Then
+                                HasFormulas(i, j) = True
+                            Else
+                                HasFormulas(i, j) = False
                             End If
 
-                            If RadioButton4.Checked = True Then
-                                If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                    rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2, workSheet, workSheet2)
-                                Else
-                                    rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                                End If
-                            End If
-
-                            If RadioButton5.Checked = True Then
-                                If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
-                                    rng2.Cells(i, j).Formula = Formulas(rng.Rows.Count - i + 1 - 1, j - 1)
-                                Else
-                                    rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
-                                End If
-                            End If
-
-                            If CheckBox2.Checked = True Then
-                                Dim x As Integer = rng.Rows.Count - i + 1 - 1
-                                Dim y As Integer = j - 1
-
-                                Dim fontStyle As FontStyle = FontStyle.Regular
-
-                                If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
-                                If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
+                            Formulas(i, j) = cell.Formula
+                            Dim font As Excel.Font = cell.Font
+                            FontNames(i, j) = font.Name
+                            FontBolds(i, j) = cell.Font.Bold
+                            Fontitalics(i, j) = cell.Font.Italic
 
 
-                                rng2.Cells(i, j).Font.Name = FontNames(x, y)
-                                rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                            FontSizes(i, j) = fontSize
 
-                                If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
-                                If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
-
-
-                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
-                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
-
-                            End If
+                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                            Dim red1 As Integer = colorValue1 Mod 256
+                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                            Red1s(i, j) = red1
+                            Green1s(i, j) = green1
+                            Blue1s(i, j) = blue1
+                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                            Dim red2 As Integer = colorValue2 Mod 256
+                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                            Red2s(i, j) = red2
+                            Green2s(i, j) = green2
+                            Blue2s(i, j) = blue2
 
                         Next
                     Next
+                    If RadioButton3.Checked = True Then
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
 
+                                If RadioButton1.Checked = True Then
+                                    rng2.Cells(i, j).Value = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                End If
+
+                                If RadioButton4.Checked = True Then
+                                    If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                        rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(i - 1, rng.Columns.Count - j + 1 - 1), rng, rng2, 1, workSheet, workSheet2)
+                                    Else
+                                        rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                    End If
+                                End If
+
+                                If RadioButton5.Checked = True Then
+                                    If HasFormulas(i - 1, rng.Columns.Count - j + 1 - 1) = True Then
+                                        rng2.Cells(i, j).Formula = Formulas(i - 1, rng.Columns.Count - j + 1 - 1)
+                                    Else
+                                        rng2.Cells(i, j) = Arr(i - 1, rng.Columns.Count - j + 1 - 1)
+                                    End If
+                                End If
+
+                                If CheckBox2.Checked = True Then
+                                    Dim x As Integer = i - 1
+                                    Dim y As Integer = rng.Columns.Count - j + 1 - 1
+
+                                    rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                                    rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+
+                                    If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                                    If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+
+
+                                    rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+
+                                    rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+
+                                End If
+
+                            Next
+                        Next
+
+                    End If
+
+
+                    If RadioButton2.Checked = True Then
+
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+
+                                If RadioButton1.Checked = True Then
+                                    rng2.Cells(i, j).Value = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                                End If
+
+                                If RadioButton4.Checked = True Then
+                                    If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                        rng2.Cells(i, j).Formula = ReplaceFormula(Formulas(rng.Rows.Count - i + 1 - 1, j - 1), rng, rng2, 2, workSheet, workSheet2)
+                                    Else
+                                        rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                                    End If
+                                End If
+
+                                If RadioButton5.Checked = True Then
+                                    If HasFormulas(rng.Rows.Count - i + 1 - 1, j - 1) = True Then
+                                        rng2.Cells(i, j).Formula = Formulas(rng.Rows.Count - i + 1 - 1, j - 1)
+                                    Else
+                                        rng2.Cells(i, j) = Arr(rng.Rows.Count - i + 1 - 1, j - 1)
+                                    End If
+                                End If
+
+                                If CheckBox2.Checked = True Then
+                                    Dim x As Integer = rng.Rows.Count - i + 1 - 1
+                                    Dim y As Integer = j - 1
+
+                                    Dim fontStyle As FontStyle = FontStyle.Regular
+
+                                    If FontBolds(x, y) Then fontStyle = fontStyle Or FontStyle.Bold
+                                    If Fontitalics(x, y) Then fontStyle = fontStyle Or FontStyle.Italic
+
+
+                                    rng2.Cells(i, j).Font.Name = FontNames(x, y)
+                                    rng2.Cells(i, j).Font.Size = FontSizes(x, y)
+
+                                    If FontBolds(x, y) Then rng2.Cells(i, j).Font.Bold = True
+                                    If Fontitalics(x, y) Then rng2.Cells(i, j).Font.Italic = True
+
+
+                                    rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(Red1s(x, y), Green1s(x, y), Blue1s(x, y))
+                                    rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(Red2s(x, y), Green2s(x, y), Blue2s(x, y))
+
+                                End If
+
+                            Next
+                        Next
+
+                    End If
                 End If
 
                 Me.Close()
 
-            Else
-
             End If
-
         Catch ex As Exception
 
         End Try

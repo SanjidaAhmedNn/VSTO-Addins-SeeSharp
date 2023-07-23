@@ -485,6 +485,7 @@ Public Class Form3
                             Next
                         End If
                     End If
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                 Else
 
                     Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
