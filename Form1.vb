@@ -720,10 +720,8 @@ Public Class Form1
 
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
-
                                 If RadioButton1.Checked = True Then
                                     rng2.Cells(i, j).Value = rng.Cells(i, rng.Columns.Count - j + 1).Value
-
                                 End If
 
                                 If RadioButton4.Checked = True Then
@@ -784,7 +782,7 @@ Public Class Form1
                             Next
                         Next
                     End If
-                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
                 Else
 
                     Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
@@ -1477,9 +1475,6 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
 
     Private Sub btn_OK_MouseHover(sender As Object, e As EventArgs) Handles btn_OK.MouseHover
 

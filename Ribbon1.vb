@@ -60,6 +60,10 @@ Public Class Ribbon1
         MyForm3.workbook2 = workbook
         MyForm3.worksheet2 = worksheet
 
+        MyForm3.FocusedTextBox = 0
+        MyForm3.Form4Open = 0
+        MyForm3.Workbook2Opened = False
+
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
         MyForm3.TextBox1.Text = selection.Address
