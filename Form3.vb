@@ -7,34 +7,44 @@ Imports System.Threading
 Imports System.Diagnostics
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports System.Windows.Forms.Application
 
 Public Class Form3
-    Dim excelApp As Excel.Application
-    Dim workbook As Excel.Workbook
-    Dim workbook2 As Excel.Workbook
-    Dim worksheet As Excel.Worksheet
-    Dim worksheet1 As Excel.Worksheet
-    Dim worksheet2 As Excel.Worksheet
-    Private Function Overlap(rng1 As Excel.Range, rng2 As Excel.Range, Sheet1 As Excel.Worksheet, Sheet2 As Excel.Worksheet)
 
-        Dim Result As Boolean
-        If Sheet1.Name <> Sheet2.Name Then
-            Result = False
+    Public WithEvents excelApp As Excel.Application
+
+    Public workbook As Excel.Workbook
+    Public workbook2 As Excel.Workbook
+
+    Public worksheet As Excel.Worksheet
+    Public worksheet2 As Excel.Worksheet
+
+    Public rng As Excel.Range
+    Public rng2 As Excel.Range
+    Public FocusedTextBox As Integer = 0
+    Public Opened As Integer
+    Public GB6 As Integer
+    Public Form4Open As Integer = 0
+
+    Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
+
+        If sheet1.Name <> sheet2.Name Then
+            Return False
+
         Else
-            Dim X1 As Boolean
-            Dim X2 As Boolean
-            X1 = (rng2.Cells(1, 1).Row >= rng1.Cells(1, 1).Row) And (rng2.Cells(1, 1).Row <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row)
-            X2 = (rng2.Cells(1, 1).Column >= rng1.Cells(1, 1).Column And rng2.Cells(1, 1).Column <= rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column)
+            Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-            If X1 And X2 Then
-                Result = True
+            Dim rng3 As Excel.Range = activesheet.Range(rng1.Address)
+            Dim rng4 As Excel.Range = activesheet.Range(rng2.Address)
+
+            Dim intersectRange As Range = excelApp.Intersect(rng3, rng4)
+
+            If intersectRange Is Nothing Then
+                Return False
             Else
-                Result = False
+                Return True
             End If
-
         End If
-
-        Overlap = Result
 
     End Function
 
@@ -45,26 +55,19 @@ Public Class Form3
             panel1.Controls.Clear()
             panel2.Controls.Clear()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-
-            Dim rng As Excel.Range
-            rng = worksheet.Range(TextBox1.Text)
+            Dim displayRng As Excel.Range
 
             If rng.Rows.Count > 50 Then
-                rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(50, rng.Columns.Count))
-            End If
-
-            If rng.Columns.Count > 50 Then
-                rng = worksheet.Range(rng.Cells(1, 1), rng.Cells(rng.Rows.Count, 50))
+                displayRng = rng.Rows("1:50")
+            Else
+                displayRng = rng
             End If
 
             Dim r As Integer
             Dim c As Integer
 
-            r = rng.Rows.Count
-            c = rng.Columns.Count
+            r = displayRng.Rows.Count
+            c = displayRng.Columns.Count
 
             Dim height As Integer
             Dim width As Integer
@@ -81,10 +84,10 @@ Public Class Form3
                 width = panel1.Width / 4
             End If
 
-            For i = 1 To rng.Rows.Count
-                For j = 1 To rng.Columns.Count
+            For i = 1 To displayRng.Rows.Count
+                For j = 1 To displayRng.Columns.Count
                     Dim label As New System.Windows.Forms.Label
-                    label.Text = rng.Cells(i, j).Value
+                    label.Text = displayRng.Cells(i, j).Value
                     label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
                     label.Height = height
                     label.Width = width
@@ -93,12 +96,11 @@ Public Class Form3
 
                     If CheckBox2.Checked = True Then
 
-                        Dim cell As Excel.Range = rng.Cells(i, j)
+                        Dim cell As Excel.Range = displayRng.Cells(i, j)
                         Dim font As Excel.Font = cell.Font
                         Dim fontStyle As FontStyle = FontStyle.Regular
                         If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
                         If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
 
                         Dim fontSize As Single = Convert.ToSingle(font.Size)
 
@@ -138,10 +140,10 @@ Public Class Form3
                     width = panel2.Width / 4
                 End If
 
-                For i = 1 To rng.Rows.Count
-                    For j = 1 To rng.Columns.Count
+                For i = 1 To displayRng.Rows.Count
+                    For j = 1 To displayRng.Columns.Count
                         Dim label As New System.Windows.Forms.Label
-                        label.Text = rng.Cells(i, j).Value
+                        label.Text = displayRng.Cells(i, j).Value
                         label.Location = New System.Drawing.Point((i - 1) * width, (j - 1) * height)
                         label.Height = height
                         label.Width = width
@@ -149,7 +151,7 @@ Public Class Form3
                         label.TextAlign = ContentAlignment.MiddleCenter
 
                         If CheckBox2.Checked = True Then
-                            Dim cell As Excel.Range = rng.Cells(i, j)
+                            Dim cell As Excel.Range = displayRng.Cells(i, j)
                             Dim font As Excel.Font = cell.Font
                             Dim fontStyle As FontStyle = FontStyle.Regular
                             If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
@@ -185,6 +187,51 @@ Public Class Form3
         Catch ex As Exception
 
         End Try
+
+    End Sub
+
+    Private Sub DestinationChange()
+
+        If RadioButton1.Checked = True Then
+            TextBox2.Location = New System.Drawing.Point(121, 7)
+            PictureBox2.Location = New System.Drawing.Point(226, 7)
+            TextBox2.Focus()
+        Else
+            TextBox2.Clear()
+        End If
+
+        If RadioButton4.Checked = True Then
+            TextBox2.Location = New System.Drawing.Point(121, 10)
+            PictureBox2.Location = New System.Drawing.Point(226, 10)
+
+            Dim ws As Excel.Worksheet = CType(workbook.Worksheets.Add(), Excel.Worksheet)
+            MsgBox(ws.Name)
+            ws.Name = "Transpose Sheet"
+            TextBox2.Focus()
+        Else
+            TextBox2.Clear()
+        End If
+
+        If RadioButton5.Checked = True And Form4Open <> 1 Then
+
+            Me.Visible = False
+            Dim MyForm4 As New Form4
+            MyForm4.excelApp = Me.excelApp
+            MyForm4.workbook = Me.workbook
+            MyForm4.worksheet = Me.worksheet
+            MyForm4.rng = Me.rng
+            MyForm4.Opened = Me.Opened
+            MyForm4.FocusedTextBox = Me.FocusedTextBox
+            If Me.RadioButton3.Checked = True Then
+                MyForm4.GB6 = 3
+            ElseIf Me.RadioButton2.Checked = True Then
+                MyForm4.GB6 = 2
+            End If
+            Form4Open = 1
+            MyForm4.Form4Open = Me.Form4Open
+            MyForm4.Show()
+
+        End If
 
     End Sub
 
@@ -276,31 +323,30 @@ Public Class Form3
     Private Sub PictureBox8_Click(sender As Object, e As EventArgs) Handles PictureBox8.Click
 
         Try
+            FocusedTextBox = 1
+            Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-
-            Dim worksheet2 As Excel.Worksheet
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
+            rng = userInput
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
-                worksheet2 = workbook.Worksheets(sheetName)
-                worksheet2.Activate()
-            Catch ex As Exception
-
-            End Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
 
             rng.Select()
 
             TextBox1.Text = rng.Address
+
+            Me.Show()
             TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -309,25 +355,18 @@ Public Class Form3
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
+            FocusedTextBox = 1
+            Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-
-            Dim worksheet2 As Excel.Worksheet
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            Dim rng As Microsoft.Office.Interop.Excel.Range = userInput
+            rng = userInput
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
-                worksheet2 = workbook.Worksheets(sheetName)
-                worksheet2.Activate()
-                '   ComboBox2.SelectedItem = sheetName
-            Catch ex As Exception
-
-            End Try
+            Dim sheetName As String
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
 
             rng.Select()
 
@@ -336,9 +375,14 @@ Public Class Form3
 
             rng.Select()
             Me.TextBox1.Text = rng.Address
+
+            Me.Show()
             Me.TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -361,123 +405,125 @@ Public Class Form3
     Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
 
         Try
+            FocusedTextBox = 2
+            Me.Hide()
 
-            Dim selectedRange As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            TextBox2.Text = selectedRange.Address
+
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
+            rng2 = userInput
+
+            Dim sheetName As String
+            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+            worksheet2 = workbook.Worksheets(sheetName)
+            worksheet2.Activate()
+
+            rng2.Select()
+
+            TextBox2.Text = rng2.Address
+
+            Me.Show()
             TextBox2.Focus()
 
         Catch ex As Exception
 
+            Me.Show()
+            TextBox2.Focus()
+
         End Try
-
-    End Sub
-
-    Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
 
     End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        Try
+        If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
-            If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
+            If CheckBox1.Checked = True Then
+                worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
+            End If
 
 
-                Dim rng As Excel.Range
-                rng = worksheet1.Range(TextBox1.Text)
+            Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
-                Dim rng2 As Excel.Range
-                rng2 = worksheet2.Range(TextBox2.Text)
+            For i = LBound(Arr, 1) To UBound(Arr, 1)
+                For j = LBound(Arr, 2) To UBound(Arr, 2)
+                    If RadioButton3.Checked = True Then
+                        Arr(i, j) = rng.Cells(i + 1, j + 1)
+                    ElseIf RadioButton2.Checked = True Then
+                        Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
+                    End If
+                Next
+            Next
 
-                If CheckBox1.Checked = True Then
-                    worksheet1.Copy(After:=workbook.Sheets(worksheet1.Name))
-                End If
 
-                worksheet2.Activate()
+            For i = 1 To rng.Rows.Count
+                For j = 1 To rng.Columns.Count
+                    rng2.Cells(j, i) = Arr(i - 1, j - 1)
+                Next
+            Next
 
-                Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+            If CheckBox2.Checked = True Then
+
+                Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
+
+                Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
 
                 For i = LBound(Arr, 1) To UBound(Arr, 1)
                     For j = LBound(Arr, 2) To UBound(Arr, 2)
-                        If RadioButton3.Checked = True Then
-                            Arr(i, j) = rng.Cells(i + 1, j + 1)
-                        ElseIf RadioButton2.Checked = True Then
-                            Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                        End If
+                        Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
+                        Dim font As Excel.Font = cell.Font
+                        FontNames(i, j) = CStr(cell.Font.Name)
+                        FontSizes(i, j) = Convert.ToSingle(font.Size)
+                        Bolds(i, j) = cell.Font.Bold
+                        Italics(i, j) = cell.Font.Italic
+                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                        Reds1(i, j) = colorValue1 Mod 256
+                        Greens1(i, j) = (colorValue1 \ 256) Mod 256
+                        Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
+                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                        Reds2(i, j) = colorValue2 Mod 256
+                        Greens2(i, j) = (colorValue2 \ 256) Mod 256
+                        Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
                     Next
                 Next
-
 
                 For i = 1 To rng.Rows.Count
                     For j = 1 To rng.Columns.Count
-                        rng2.Cells(j, i) = Arr(i - 1, j - 1)
+                        With rng2.Cells(j, i).Font
+                            .Name = FontNames(i - 1, j - 1)
+                            .Size = FontSizes(i - 1, j - 1)
+                            .Bold = Bolds(i - 1, j - 1)
+                            .Italic = Italics(i - 1, j - 1)
+                        End With
+
+                        Dim red1 As Integer = Reds1(i - 1, j - 1)
+                        Dim green1 As Integer = Greens1(i - 1, j - 1)
+                        Dim blue1 As Integer = Blues1(i - 1, j - 1)
+                        rng2.Cells(j, i).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                        Dim red2 As Integer = Reds2(i - 1, j - 1)
+                        Dim green2 As Integer = Greens2(i - 1, j - 1)
+                        Dim blue2 As Integer = Blues2(i - 1, j - 1)
+                        rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                     Next
                 Next
-
-                If CheckBox2.Checked = True Then
-
-                    Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-                    Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
-
-                    Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-                    Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-
-                    Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                    Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                    Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                    Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-
-                    For i = LBound(Arr, 1) To UBound(Arr, 1)
-                        For j = LBound(Arr, 2) To UBound(Arr, 2)
-                            Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
-                            Dim font As Excel.Font = cell.Font
-                            FontNames(i, j) = CStr(cell.Font.Name)
-                            FontSizes(i, j) = Convert.ToSingle(font.Size)
-                            Bolds(i, j) = cell.Font.Bold
-                            Italics(i, j) = cell.Font.Italic
-                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                            Reds1(i, j) = colorValue1 Mod 256
-                            Greens1(i, j) = (colorValue1 \ 256) Mod 256
-                            Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
-                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                            Reds2(i, j) = colorValue2 Mod 256
-                            Greens2(i, j) = (colorValue2 \ 256) Mod 256
-                            Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
-                        Next
-                    Next
-
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-                            With rng2.Cells(j, i).Font
-                                .Name = FontNames(i - 1, j - 1)
-                                .Size = FontSizes(i - 1, j - 1)
-                                .Bold = Bolds(i - 1, j - 1)
-                                .Italic = Italics(i - 1, j - 1)
-                            End With
-
-                            Dim red1 As Integer = Reds1(i - 1, j - 1)
-                            Dim green1 As Integer = Greens1(i - 1, j - 1)
-                            Dim blue1 As Integer = Blues1(i - 1, j - 1)
-                            rng2.Cells(j, i).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                            Dim red2 As Integer = Reds2(i - 1, j - 1)
-                            Dim green2 As Integer = Greens2(i - 1, j - 1)
-                            Dim blue2 As Integer = Blues2(i - 1, j - 1)
-                            rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                        Next
-                    Next
-                End If
-
             End If
 
-        Catch ex As Exception
+            Me.Close()
 
-        End Try
+        End If
 
     End Sub
 
@@ -519,12 +565,12 @@ Public Class Form3
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         Try
-
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet1 = workbook.ActiveSheet
-            worksheet1.Range(TextBox1.Text).Select()
-            Call Display()
+            If TextBox1.Text <> "" Then
+                worksheet = workbook.ActiveSheet
+                rng = worksheet.Range(TextBox1.Text)
+                rng.Select()
+                Call Display()
+            End If
 
         Catch ex As Exception
 
@@ -532,33 +578,13 @@ Public Class Form3
 
     End Sub
 
-    ' Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-
-    'Try
-
-    '      excelApp = Globals.ThisAddIn.Application
-    '     workbook = excelApp.ActiveWorkbook
-    'If ComboBox2.SelectedItem = "Add New" Then
-    '             worksheet2 = workbook.Sheets.Add(After:=workbook.Sheets(workbook.Sheets.Count))
-    '            ComboBox2.Items(ComboBox2.FindStringExact("Add New")) = worksheet2.Name
-    '           ComboBox2.Items.Add("Add New")
-    ' Else
-    '            worksheet2 = workbook.Sheets(ComboBox2.SelectedItem)
-    '           worksheet2.Activate()
-    'End If
-    '        ComboBox2.Focus()
-    'Catch ex As Exception
-
-    'End Try
-    'End Sub
-
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
         Try
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-            worksheet.Range(TextBox2.Text).Select()
+            If TextBox2.Text <> "" Then
+                worksheet2 = workbook.ActiveSheet
+                worksheet2.Range(TextBox2.Text).Select()
+            End If
 
         Catch ex As Exception
 
@@ -580,40 +606,340 @@ Public Class Form3
 
     End Sub
 
-    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub Form3_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+
+        Try
+
+            AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
+
+            Opened = Opened + 1
+
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
+
+        Try
+
+            Dim selectedRange As Excel.Range
+            selectedRange = excelApp.Selection
+
+            If FocusedTextBox = 1 Then
+                TextBox1.Text = selectedRange.Address
+                worksheet = workbook.ActiveSheet
+                rng = selectedRange
+                TextBox1.Focus()
+
+            ElseIf FocusedTextBox = 2 Then
+                TextBox2.Text = selectedRange.Address
+                worksheet2 = workbook.ActiveSheet
+                rng2 = selectedRange
+                TextBox2.Focus()
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
-    ' Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
 
-    'Try
+        Try
+            If ComboBox1.SelectedItem = "SOFTEKO" And Opened >= 1 Then
 
-    'If ComboBox3.SelectedItem = "Existing Workbook" Then
-    'Dim openFileDialog1 As New OpenFileDialog()
+                Dim url As String = "https://www.softeko.co"
+                Process.Start(url)
 
-    '         openFileDialog1.Filter = "All Files (*.*)|*.*"
-    '        openFileDialog1.FilterIndex = 1
+            End If
+        Catch ex As Exception
 
-    'Dim userClickedOK As DialogResult = openFileDialog1.ShowDialog()
+        End Try
 
-    'If userClickedOK = DialogResult.OK Then
+    End Sub
 
-    'Dim filePath As String = openFileDialog1.FileName
-    'Dim workbookName As String = System.IO.Path.GetFileName(filePath)
+    Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
 
-    '              workbook = excelApp.Workbooks.Open(filePath)
+        Try
 
-    '             excelApp.Visible = True
+            Call DestinationChange()
+        Catch ex As Exception
 
-    '             ComboBox3.Focus()
-    ' Call Form3_Load(sender, e)
-    'End If
+        End Try
 
-    'End If
+    End Sub
 
-    'Catch ex As Exception
+    Private Sub RadioButton1_CheckedChanged_1(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
 
-    'End Try
-    ' End Sub
+        Try
 
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton5_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton5.CheckedChanged
+
+        Try
+
+            Call DestinationChange()
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox8_GotFocus(sender As Object, e As EventArgs) Handles PictureBox8.GotFocus
+
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
+
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
+
+
+        Try
+            FocusedTextBox = 1
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub TextBox2_GotFocus(sender As Object, e As EventArgs) Handles TextBox2.GotFocus
+
+        Try
+            FocusedTextBox = 2
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox2_GotFocus(sender As Object, e As EventArgs) Handles PictureBox2.GotFocus
+
+        Try
+            FocusedTextBox = 2
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton3_GotFocus(sender As Object, e As EventArgs) Handles RadioButton3.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton2_GotFocus(sender As Object, e As EventArgs) Handles RadioButton2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox5_GotFocus(sender As Object, e As EventArgs) Handles PictureBox5.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub PictureBox1_GotFocus(sender As Object, e As EventArgs) Handles PictureBox1.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox3_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox3.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+
+    Private Sub CustomGroupBox6_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox6.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CustomGroupBox5_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox5.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub RadioButton4_GotFocus(sender As Object, e As EventArgs) Handles RadioButton4.GotFocus
+        Try
+            FocusedTextBox = 0
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton5_GotFocus(sender As Object, e As EventArgs) Handles RadioButton5.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CheckBox2_GotFocus(sender As Object, e As EventArgs) Handles CheckBox2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub ComboBox1_GotFocus(sender As Object, e As EventArgs) Handles ComboBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox1_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CustomGroupBox2_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CustomGroupBox4_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox4.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub panel1_GotFocus(sender As Object, e As EventArgs) Handles panel1.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub panel2_GotFocus(sender As Object, e As EventArgs) Handles panel2.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub PictureBox7_Click(sender As Object, e As EventArgs) Handles PictureBox7.Click
+
+    End Sub
+
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btn_OK_GotFocus(sender As Object, e As EventArgs) Handles btn_OK.GotFocus
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btn_cancel_GotFocus(sender As Object, e As EventArgs) Handles btn_cancel.GotFocus
+
+        Try
+            FocusedTextBox = 0
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
+
+        Me.Close()
+
+    End Sub
 End Class
