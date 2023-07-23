@@ -262,6 +262,12 @@
     <Compile Include="Form16PasteintoVisibleRange.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form17DivideNames.Designer.vb">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form17DivideNames.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -336,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
       <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form17DivideNames.resx">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>

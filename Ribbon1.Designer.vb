@@ -43,10 +43,6 @@
     Private Sub InitializeComponent()
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
-        Me.Group2 = Me.Factory.CreateRibbonGroup
-        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
-        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
-        Me.Group3 = Me.Factory.CreateRibbonGroup
         Me.Button8 = Me.Factory.CreateRibbonButton
         Me.Button7 = Me.Factory.CreateRibbonButton
         Me.Button6 = Me.Factory.CreateRibbonButton
@@ -55,14 +51,19 @@
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
+        Me.Group2 = Me.Factory.CreateRibbonGroup
         Me.Menu1 = Me.Factory.CreateRibbonMenu
         Me.SplitButton1 = Me.Factory.CreateRibbonSplitButton
         Me.Button9 = Me.Factory.CreateRibbonButton
         Me.Button10 = Me.Factory.CreateRibbonButton
+        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
+        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
+        Me.Group3 = Me.Factory.CreateRibbonGroup
         Me.Button11 = Me.Factory.CreateRibbonButton
         Me.Button12 = Me.Factory.CreateRibbonButton
         Me.Button13 = Me.Factory.CreateRibbonButton
         Me.Button14 = Me.Factory.CreateRibbonButton
+        Me.Button15 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -90,34 +91,6 @@
         Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
-        '
-        'Group2
-        '
-        Me.Group2.Items.Add(Me.Menu1)
-        Me.Group2.Items.Add(Me.DropDown1)
-        Me.Group2.Items.Add(Me.ComboBox1)
-        Me.Group2.Label = "Group2"
-        Me.Group2.Name = "Group2"
-        '
-        'DropDown1
-        '
-        Me.DropDown1.Label = "DropDown1"
-        Me.DropDown1.Name = "DropDown1"
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.Label = "ComboBox1"
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Text = Nothing
-        '
-        'Group3
-        '
-        Me.Group3.Items.Add(Me.Button11)
-        Me.Group3.Items.Add(Me.Button12)
-        Me.Group3.Items.Add(Me.Button13)
-        Me.Group3.Items.Add(Me.Button14)
-        Me.Group3.Label = "Test"
-        Me.Group3.Name = "Group3"
         '
         'Button8
         '
@@ -161,6 +134,14 @@
         Me.Button3.Label = "Transpose"
         Me.Button3.Name = "Button3"
         '
+        'Group2
+        '
+        Me.Group2.Items.Add(Me.Menu1)
+        Me.Group2.Items.Add(Me.DropDown1)
+        Me.Group2.Items.Add(Me.ComboBox1)
+        Me.Group2.Label = "Group2"
+        Me.Group2.Name = "Group2"
+        '
         'Menu1
         '
         Me.Menu1.Items.Add(Me.SplitButton1)
@@ -186,6 +167,27 @@
         Me.Button10.Name = "Button10"
         Me.Button10.ShowImage = True
         '
+        'DropDown1
+        '
+        Me.DropDown1.Label = "DropDown1"
+        Me.DropDown1.Name = "DropDown1"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Label = "ComboBox1"
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Text = Nothing
+        '
+        'Group3
+        '
+        Me.Group3.Items.Add(Me.Button11)
+        Me.Group3.Items.Add(Me.Button12)
+        Me.Group3.Items.Add(Me.Button13)
+        Me.Group3.Items.Add(Me.Button14)
+        Me.Group3.Items.Add(Me.Button15)
+        Me.Group3.Label = "Test"
+        Me.Group3.Name = "Group3"
+        '
         'Button11
         '
         Me.Button11.Label = "Form 13"
@@ -205,6 +207,11 @@
         '
         Me.Button14.Label = "Form 16"
         Me.Button14.Name = "Button14"
+        '
+        'Button15
+        '
+        Me.Button15.Label = "Form 17"
+        Me.Button15.Name = "Button15"
         '
         'Ribbon1
         '
@@ -245,6 +252,7 @@
     Friend WithEvents Button12 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button13 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button14 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button15 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
