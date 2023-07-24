@@ -75,7 +75,6 @@ Partial Class Form4
         Me.Label1.Size = New System.Drawing.Size(83, 17)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Select Range"
-        Me.Label1.Visible = False
         '
         'PictureBox8
         '
@@ -173,7 +172,6 @@ Partial Class Form4
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 135
         Me.PictureBox2.TabStop = False
-        Me.PictureBox2.Visible = False
         '
         'TextBox3
         '
@@ -186,7 +184,6 @@ Partial Class Form4
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(179, 26)
         Me.TextBox3.TabIndex = 134
-        Me.TextBox3.Visible = False
         '
         'PictureBox3
         '
@@ -197,7 +194,6 @@ Partial Class Form4
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox3.TabIndex = 136
         Me.PictureBox3.TabStop = False
-        Me.PictureBox3.Visible = False
         '
         'GroupBox1
         '
