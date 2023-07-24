@@ -54,12 +54,8 @@ Partial Class Form18_CombineRanges
         Me.Selection = New System.Windows.Forms.PictureBox()
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
-        Me.CustomGroupBox8 = New VSTO_Addins.CustomGroupBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox10 = New System.Windows.Forms.PictureBox()
-        Me.RadioButton8 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton9 = New System.Windows.Forms.RadioButton()
+        Me.ComboBox3 = New System.Windows.Forms.ComboBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -72,10 +68,6 @@ Partial Class Form18_CombineRanges
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.CustomGroupBox4.SuspendLayout()
-        Me.CustomGroupBox8.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'CustomGroupBox5
@@ -105,7 +97,7 @@ Partial Class Form18_CombineRanges
         '
         Me.CheckBox1.AutoSize = True
         Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(15, 314)
+        Me.CheckBox1.Location = New System.Drawing.Point(16, 259)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(122, 21)
         Me.CheckBox1.TabIndex = 135
@@ -117,7 +109,7 @@ Partial Class Form18_CombineRanges
         Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox6.Controls.Add(Me.CustomPanel2)
         Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox6.Location = New System.Drawing.Point(342, 310)
+        Me.CustomGroupBox6.Location = New System.Drawing.Point(342, 280)
         Me.CustomGroupBox6.Name = "CustomGroupBox6"
         Me.CustomGroupBox6.Size = New System.Drawing.Size(302, 190)
         Me.CustomGroupBox6.TabIndex = 139
@@ -138,7 +130,7 @@ Partial Class Form18_CombineRanges
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(469, 230)
+        Me.PictureBox7.Location = New System.Drawing.Point(471, 217)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
         Me.PictureBox7.Size = New System.Drawing.Size(60, 60)
@@ -151,7 +143,7 @@ Partial Class Form18_CombineRanges
         Me.Button2.BackColor = System.Drawing.Color.White
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Button2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(504, 533)
+        Me.Button2.Location = New System.Drawing.Point(508, 497)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(62, 26)
         Me.Button2.TabIndex = 141
@@ -163,7 +155,7 @@ Partial Class Form18_CombineRanges
         Me.Button1.BackColor = System.Drawing.Color.White
         Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(581, 534)
+        Me.Button1.Location = New System.Drawing.Point(581, 497)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(62, 26)
         Me.Button1.TabIndex = 140
@@ -174,7 +166,7 @@ Partial Class Form18_CombineRanges
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(15, 535)
+        Me.ComboBox1.Location = New System.Drawing.Point(15, 497)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
         Me.ComboBox1.TabIndex = 137
@@ -184,7 +176,7 @@ Partial Class Form18_CombineRanges
         '
         Me.CheckBox2.AutoSize = True
         Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(15, 507)
+        Me.CheckBox2.Location = New System.Drawing.Point(15, 462)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
         Me.CheckBox2.TabIndex = 136
@@ -288,7 +280,7 @@ Partial Class Form18_CombineRanges
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox2.Controls.Add(Me.CustomGroupBox3)
         Me.CustomGroupBox2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(15, 340)
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(15, 292)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Size = New System.Drawing.Size(286, 108)
         Me.CustomGroupBox2.TabIndex = 147
@@ -384,7 +376,7 @@ Partial Class Form18_CombineRanges
         '
         Me.CheckBox3.AutoSize = True
         Me.CheckBox3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox3.Location = New System.Drawing.Point(15, 457)
+        Me.CheckBox3.Location = New System.Drawing.Point(15, 408)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(137, 21)
         Me.CheckBox3.TabIndex = 148
@@ -395,7 +387,7 @@ Partial Class Form18_CombineRanges
         '
         Me.CheckBox4.AutoSize = True
         Me.CheckBox4.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox4.Location = New System.Drawing.Point(15, 482)
+        Me.CheckBox4.Location = New System.Drawing.Point(15, 435)
         Me.CheckBox4.Name = "CheckBox4"
         Me.CheckBox4.Size = New System.Drawing.Size(84, 21)
         Me.CheckBox4.TabIndex = 149
@@ -437,84 +429,34 @@ Partial Class Form18_CombineRanges
         Me.TextBox1.Size = New System.Drawing.Size(286, 25)
         Me.TextBox1.TabIndex = 225
         '
-        'CustomGroupBox4
+        'ComboBox3
         '
-        Me.CustomGroupBox4.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox4.Controls.Add(Me.CustomGroupBox8)
-        Me.CustomGroupBox4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox4.Location = New System.Drawing.Point(15, 225)
-        Me.CustomGroupBox4.Name = "CustomGroupBox4"
-        Me.CustomGroupBox4.Size = New System.Drawing.Size(289, 82)
-        Me.CustomGroupBox4.TabIndex = 228
-        Me.CustomGroupBox4.TabStop = False
-        Me.CustomGroupBox4.Text = "Combination Options"
+        Me.ComboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox3.Font = New System.Drawing.Font("Segoe UI", 9.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox3.FormattingEnabled = True
+        Me.ComboBox3.Items.AddRange(New Object() {"Into Left Column", "Into Right Column"})
+        Me.ComboBox3.Location = New System.Drawing.Point(164, 230)
+        Me.ComboBox3.Name = "ComboBox3"
+        Me.ComboBox3.Size = New System.Drawing.Size(137, 23)
+        Me.ComboBox3.TabIndex = 229
         '
-        'CustomGroupBox8
+        'Label3
         '
-        Me.CustomGroupBox8.BackColor = System.Drawing.Color.White
-        Me.CustomGroupBox8.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox8.Controls.Add(Me.PictureBox1)
-        Me.CustomGroupBox8.Controls.Add(Me.PictureBox10)
-        Me.CustomGroupBox8.Controls.Add(Me.RadioButton8)
-        Me.CustomGroupBox8.Controls.Add(Me.RadioButton9)
-        Me.CustomGroupBox8.Location = New System.Drawing.Point(1, 22)
-        Me.CustomGroupBox8.Name = "CustomGroupBox8"
-        Me.CustomGroupBox8.Size = New System.Drawing.Size(288, 60)
-        Me.CustomGroupBox8.TabIndex = 0
-        Me.CustomGroupBox8.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(252, 34)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 230
-        Me.PictureBox1.TabStop = False
-        '
-        'PictureBox10
-        '
-        Me.PictureBox10.Image = CType(resources.GetObject("PictureBox10.Image"), System.Drawing.Image)
-        Me.PictureBox10.Location = New System.Drawing.Point(252, 8)
-        Me.PictureBox10.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox10.Name = "PictureBox10"
-        Me.PictureBox10.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox10.TabIndex = 229
-        Me.PictureBox10.TabStop = False
-        '
-        'RadioButton8
-        '
-        Me.RadioButton8.AutoSize = True
-        Me.RadioButton8.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton8.Location = New System.Drawing.Point(8, 32)
-        Me.RadioButton8.Name = "RadioButton8"
-        Me.RadioButton8.Size = New System.Drawing.Size(130, 21)
-        Me.RadioButton8.TabIndex = 1
-        Me.RadioButton8.TabStop = True
-        Me.RadioButton8.Text = "Into Right Column"
-        Me.RadioButton8.UseVisualStyleBackColor = True
-        '
-        'RadioButton9
-        '
-        Me.RadioButton9.AutoSize = True
-        Me.RadioButton9.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton9.Location = New System.Drawing.Point(8, 6)
-        Me.RadioButton9.Name = "RadioButton9"
-        Me.RadioButton9.Size = New System.Drawing.Size(121, 21)
-        Me.RadioButton9.TabIndex = 0
-        Me.RadioButton9.TabStop = True
-        Me.RadioButton9.Text = "Into Left Column"
-        Me.RadioButton9.UseVisualStyleBackColor = True
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(15, 230)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(139, 17)
+        Me.Label3.TabIndex = 228
+        Me.Label3.Text = "Combination Option :"
         '
         'Form18_CombineRanges
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(669, 579)
-        Me.Controls.Add(Me.CustomGroupBox4)
+        Me.ClientSize = New System.Drawing.Size(669, 547)
+        Me.Controls.Add(Me.ComboBox3)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Selection)
         Me.Controls.Add(Me.AutoSelection)
         Me.Controls.Add(Me.TextBox1)
@@ -551,11 +493,6 @@ Partial Class Form18_CombineRanges
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.CustomGroupBox4.ResumeLayout(False)
-        Me.CustomGroupBox8.ResumeLayout(False)
-        Me.CustomGroupBox8.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -588,13 +525,9 @@ Partial Class Form18_CombineRanges
     Friend WithEvents Selection As Windows.Forms.PictureBox
     Friend WithEvents AutoSelection As Windows.Forms.PictureBox
     Friend WithEvents TextBox1 As Windows.Forms.TextBox
-    Friend WithEvents CustomGroupBox4 As CustomGroupBox
-    Friend WithEvents CustomGroupBox8 As CustomGroupBox
-    Friend WithEvents RadioButton8 As Windows.Forms.RadioButton
-    Friend WithEvents RadioButton9 As Windows.Forms.RadioButton
     Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox3 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
-    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
-    Friend WithEvents PictureBox10 As Windows.Forms.PictureBox
+    Friend WithEvents ComboBox3 As Windows.Forms.ComboBox
+    Friend WithEvents Label3 As Windows.Forms.Label
 End Class
