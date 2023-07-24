@@ -477,6 +477,7 @@ Public Class Form3
             If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
                 rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Columns.Count, rng.Rows.Count))
+                Dim rng2Address As String = rng2.Address
 
                 If CheckBox1.Checked = True Then
                     worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
@@ -489,6 +490,7 @@ Public Class Form3
                                 For j = 1 To rng.Columns.Count
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                                 Next
                             Next
                         Else
@@ -496,6 +498,7 @@ Public Class Form3
                                 For j = 1 To rng.Columns.Count
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                                 Next
                             Next
                         End If

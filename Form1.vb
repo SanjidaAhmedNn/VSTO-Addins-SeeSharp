@@ -182,7 +182,6 @@ Public Class Form1
                 Ref3 = Replace(Ref3, colName, colName2)
             End If
 
-
             ReplaceReference = Ref3
         End If
     End Function
@@ -211,142 +210,142 @@ Public Class Form1
     End Function
     Private Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
 
-
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-            Dim Starters As String() = New String() {"=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
+        Dim Starters As String() = New String() {"--", "=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
 
-            Dim Arr() As String
+        Dim Arr() As String
 
-            Dim Index As Integer
-            Index = -1
+        Dim Index As Integer
+        Index = -1
 
+        Dim Arr1() As Integer
 
-            Dim Arr1() As Integer
+        Dim Index1 As Integer
+        Index1 = -1
 
-            Dim Index1 As Integer
-            Index1 = -1
+        Dim Refs() As String
 
-            Dim Refs() As String
+        Dim i As Integer
+        Dim j As Integer
 
-            Dim i As Integer
-            Dim j As Integer
-
-
-            For i = 1 To Len(Formula)
-                For j = LBound(Starters) To UBound(Starters)
-                    If Mid(Formula, i, 1) = Starters(j) Then
-                        Index1 = Index1 + 1
-                        ReDim Preserve Arr1(Index1)
-                        Arr1(Index1) = i
-                        Exit For
-                    End If
-                Next j
-            Next i
-
-            Index1 = Index1 + 1
-            ReDim Preserve Arr1(Index1)
-            Arr1(Index1) = Len(Formula) + 1
-
-            Dim Start As Integer
-            Dim Ending As Integer
-            Dim Ref As String
-
-            For i = LBound(Arr1) To UBound(Arr1) - 1
-                Index = Index + 1
-                Start = Arr1(i)
-                Ending = Arr1(i + 1)
-                Ref = Mid(Formula, Start + 1, Ending - Start - 1)
-                ReDim Preserve Arr(Index)
-                Arr(Index) = Ref
-            Next i
-
-            Index = -1
-
-            Dim C1 As Boolean
-            Dim C2 As Boolean
-            Dim C3 As Boolean
-
-            For i = LBound(Arr) To UBound(Arr)
-
-                If Arr(i) <> "" Then
-                    C1 = Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57
-                    C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
-                    C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
-
-                    If (C1 And (C2 Or C3)) Then
-                        Index = Index + 1
-                        ReDim Preserve Refs(Index)
-                        Refs(Index) = Arr(i)
-                    End If
+        For i = 1 To Len(Formula)
+            For j = LBound(Starters) To UBound(Starters)
+                If Mid(Formula, i, 1) = Starters(j) Then
+                    Index1 = Index1 + 1
+                    ReDim Preserve Arr1(Index1)
+                    Arr1(Index1) = i
+                    Exit For
                 End If
-            Next i
+            Next j
+        Next i
 
-            Dim expRange As Excel.Range
+        Index1 = Index1 + 1
+        ReDim Preserve Arr1(Index1)
+        Arr1(Index1) = Len(Formula) + 1
 
-            For Each Ref In Refs
+        Dim Start As Integer
+        Dim Ending As Integer
+        Dim Ref As String
 
-                If InStr(1, Ref, ":") = 0 Then
-                    If InStr(1, Ref, "!") = 0 Then
-                        expRange = activesheet.Range(Ref)
-                    Else
-                        Dim exp() As String
-                        exp = Split(Ref, "!")
+        For i = LBound(Arr1) To UBound(Arr1) - 1
+            Index = Index + 1
+            Start = Arr1(i)
+            Ending = Arr1(i + 1)
+            Ref = Mid(Formula, Start + 1, Ending - Start - 1)
+            ReDim Preserve Arr(Index)
+            Arr(Index) = Ref
+        Next i
+
+        Index = -1
+
+        Dim C1 As Boolean
+        Dim C2 As Boolean
+        Dim C3 As Boolean
+        Dim C4 As Boolean
+
+        For i = LBound(Arr) To UBound(Arr)
+
+            If Arr(i) <> "" Then
+                C1 = Asc(Mid(Arr(i), Len(Arr(i)), 1)) >= 48 And Asc(Mid(Arr(i), Len(Arr(i)), 1)) <= 57
+                C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
+                C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
+                C4 = Mid(Arr(i), 1, 1) = "$"
+
+                If (C1 And (C2 Or C3 Or C4)) Then
+                    Index = Index + 1
+                    ReDim Preserve Refs(Index)
+                    Refs(Index) = Arr(i)
+                End If
+            End If
+        Next i
+
+        Dim expRange As Excel.Range
+
+        For Each Ref In Refs
+
+            If InStr(1, Ref, ":") = 0 Then
+                If InStr(1, Ref, "!") = 0 Then
+                    expRange = activesheet.Range(Ref)
+                Else
+                    Dim exp() As String
+                    exp = Split(Ref, "!")
                     expRange = activesheet.Range(exp(1))
                 End If
-                    If IsWithin(expRange, Rng) = True Then
-                        Dim Ref2 As String
-                        Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
-                        Formula = ReplaceNotInRange(Formula, Ref, Ref2)
-                    Else
-                        If sheet1.Name <> sheet2.Name Then
-                            Dim Ref2 As String
-                            Ref2 = sheet1.Name & "!" & Ref
-                            Formula = ReplaceNotInRange(Formula, Ref, Ref2)
-                        End If
-                    End If
+                If IsWithin(expRange, Rng) = True Then
+                    Dim Ref2 As String
+                    Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
+                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                 Else
-                    If InStr(1, Ref, "!") = 0 Then
-                        expRange = activesheet.Range(Ref)
-                    Else
-                        Dim e1() As String
-                        Dim exp1() As String
-                        Dim exp2() As String
-
-                        e1 = Split(Ref, ":")
-                        Dim S1 As String = e1(0)
-                        Dim S2 As String = e1(1)
-
-                        exp1 = Split(S1, "!")
-                        exp2 = Split(S2, "!")
-
-                        Dim S3 As String = exp1(1)
-                        Dim S4 As String = exp2(1)
-
-                        expRange = activesheet.Range(S3 & ":" & S4)
-                    End If
-                    If IsWithin(expRange, Rng) = True Then
+                    If sheet1.Name <> sheet2.Name Then
                         Dim Ref2 As String
-                        Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
-                        Formula = Replace(Formula, Ref, Ref2)
-                    Else
-                        If sheet1.Name <> sheet2.Name Then
-                            Dim R1() As String
-                            R1 = Split(Ref, ":")
-                            Dim Rf1 As String
-                            Dim Rf2 As String
-                            Rf1 = R1(0)
-                            Rf2 = R1(1)
-                            Dim Ref2 As String
-                            Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
-                            Formula = Replace(Formula, Ref, Ref2)
-                        End If
+                        Ref2 = "'" & sheet1.Name & "'" & "!" & Ref
+                        MsgBox(Ref2)
+                        Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                     End If
                 End If
+            Else
+                If InStr(1, Ref, "!") = 0 Then
+                    expRange = activesheet.Range(Ref)
+                Else
+                    Dim e1() As String
+                    Dim exp1() As String
+                    Dim exp2() As String
 
-            Next Ref
+                    e1 = Split(Ref, ":")
+                    Dim S1 As String = e1(0)
+                    Dim S2 As String = e1(1)
 
-            ReplaceFormula = Formula
+                    exp1 = Split(S1, "!")
+                    exp2 = Split(S2, "!")
+
+                    Dim S3 As String = exp1(1)
+                    Dim S4 As String = exp2(1)
+
+                    expRange = activesheet.Range(S3 & ":" & S4)
+                End If
+                If IsWithin(expRange, Rng) = True Then
+                    Dim Ref2 As String
+                    Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
+                    Formula = Replace(Formula, Ref, Ref2)
+                Else
+                    If sheet1.Name <> sheet2.Name Then
+                        Dim R1() As String
+                        R1 = Split(Ref, ":")
+                        Dim Rf1 As String
+                        Dim Rf2 As String
+                        Rf1 = R1(0)
+                        Rf2 = R1(1)
+                        Dim Ref2 As String
+                        Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
+                        Formula = Replace(Formula, Ref, Ref2)
+                    End If
+                End If
+            End If
+
+        Next Ref
+
+        ReplaceFormula = Formula
 
     End Function
 
@@ -579,7 +578,6 @@ Public Class Form1
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
             rng = userInput
 
-
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
@@ -707,17 +705,20 @@ Public Class Form1
                 workSheet2.Activate()
             End If
 
+
             rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
+            Dim rng2Address As String = rng2.Address
 
             rng2.Select()
 
+            Dim i As Integer
+            Dim j As Integer
 
             If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
 
                 If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = False Then
 
                     If RadioButton3.Checked = True Then
-
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
                                 If RadioButton1.Checked = True Then
@@ -739,15 +740,16 @@ Public Class Form1
                                         rng2.Cells(i, j).Value = rng.Cells(i, rng.Columns.Count - j + 1).Value
                                     End If
                                 End If
-
                                 If CheckBox2.Checked = True Then
-                                    rng.Cells(i, rng.Columns.Count - j + 1).Copy
+                                    rng.Cells(i, rng.Columns.Count - j + 1).Copy()
                                     rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                    rng2 = workSheet2.Range(rng2Address)
                                 End If
+                                excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                             Next
                         Next
-                    End If
 
+                    End If
 
                     If RadioButton2.Checked = True Then
 
@@ -778,7 +780,9 @@ Public Class Form1
                                 If CheckBox2.Checked = True Then
                                     rng.Cells(rng.Rows.Count - i + 1, j).Copy
                                     rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                    rng2 = workSheet2.Range(rng2Address)
                                 End If
+                                excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                             Next
                         Next
                     End If
