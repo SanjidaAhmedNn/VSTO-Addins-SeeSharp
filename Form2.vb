@@ -8,7 +8,7 @@ Public Class Form2
 
     End Sub
 
-    Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
     End Sub
 End Class
