@@ -244,6 +244,12 @@
     <Compile Include="Form13.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form13HideAllExceptSelectedRange.Designer.vb">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form13HideAllExceptSelectedRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -310,6 +316,9 @@
     <EmbeddedResource Include="Form13.resx">
       <DependentUpon>Form13.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
@@ -359,7 +368,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="VSTO Addins_1_TemporaryKey.pfx" />
     <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -396,7 +404,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>170F88674F6C2D7D612AB875A6FA4B52F592D8D5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>DE8B8670BDF610E008FE7DD587CD73A99977FE97</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
