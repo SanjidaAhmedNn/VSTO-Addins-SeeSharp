@@ -842,7 +842,7 @@ Public Class Form7
                             x = 1
                             y = iColumn + j
                             Dim label As New System.Windows.Forms.Label
-                            If x <= BreakPoints(i - 1) Then
+                            If y <= BreakPoints(i - 1) Then
                                 label.Text = rng.Cells(x, y).Value
                             Else
                                 label.Text = ""
@@ -900,7 +900,7 @@ Public Class Form7
                             x = 1
                             y = iColumn + i
                             Dim label As New System.Windows.Forms.Label
-                            If x <= BreakPoints(j - 1) Then
+                            If y <= BreakPoints(j - 1) Then
                                 label.Text = rng.Cells(x, y).Value
                             Else
                                 label.Text = ""
@@ -1114,6 +1114,8 @@ Public Class Form7
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
+        Dim worksheet2 As Excel.Worksheet = worksheet
+
         rng = worksheet.Range(TextBox1.Text)
 
         If RadioButton9.Checked = True Then
@@ -1241,7 +1243,9 @@ Public Class Form7
 
                             ElseIf CheckBox1.Checked = True Then
                                 rng.Cells(i, j).Copy()
-                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                 rng2 = worksheet2.Range(rng2Address)
                                 count = count + 1
 
@@ -1266,7 +1270,9 @@ Public Class Form7
 
                             ElseIf CheckBox1.Checked = True Then
                                 rng.Cells(i, j).Copy()
-                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                 rng2 = worksheet2.Range(rng2Address)
                                 count = count + 1
 
@@ -1395,7 +1401,9 @@ Public Class Form7
 
                             ElseIf CheckBox1.Checked = True Then
                                 rng.Cells(i, j).Copy()
-                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                 rng2 = worksheet2.Range(rng2Address)
                                 count = count + 1
                             End If
@@ -1412,12 +1420,14 @@ Public Class Form7
                             Dim y As Integer = count
 
                             If CheckBox1.Checked = False Then
-                                rng2.Cells(x, y).Value = rng(i, j)
+                                rng2.Cells(x, y).Value = rng.Cells(i, j).Value
                                 count = count + 1
 
                             ElseIf CheckBox1.Checked = True Then
                                 rng.Cells(i, j).Copy()
-                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                 rng2 = worksheet2.Range(rng2Address)
                                 count = count + 1
                             End If
@@ -1557,14 +1567,16 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + j
                                 y = 1
-                                If x <= rng.Rows.Count Then
+                                If x <= BreakPoints(i - 1) Then
                                     If CheckBox1.Checked = False Then
-                                        rng2.Cells(i, j).Value = rng(x, y)
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
                                     ElseIf CheckBox1.Checked = True Then
 
                                         rng.Cells(x, y).Copy()
-                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                         rng2 = worksheet2.Range(rng2Address)
 
                                     End If
@@ -1583,14 +1595,16 @@ Public Class Form7
                                 x = iRow + i
                                 y = 1
 
-                                If x <= rng.Rows.Count Then
+                                If x <= BreakPoints(j - 1) Then
                                     If CheckBox1.Checked = False Then
-                                        rng2.Cells(i, j).Value = rng(x, y)
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
                                     ElseIf CheckBox1.Checked = True Then
 
                                         rng.Cells(x, y).Copy()
-                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                         rng2 = worksheet2.Range(rng2Address)
 
                                     End If
@@ -1609,7 +1623,7 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + j
                                 y = 1
-                                If x <= UBound(Arr, 1) + 1 Then
+                                If x <= BreakPoints(i - 1) Then
                                     rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                     If CheckBox1.Checked = True Then
@@ -1653,7 +1667,7 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + i
                                 y = 1
-                                If x <= UBound(Arr, 1) + 1 Then
+                                If x <= BreakPoints(j - 1) Then
                                     rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                     If CheckBox1.Checked = True Then
@@ -1712,15 +1726,19 @@ Public Class Form7
                                 Dim y As Integer
                                 x = (c * (i - 1)) + j
                                 y = 1
-                                If CheckBox1.Checked = False Then
-                                    rng2.Cells(i, j).Value = rng(x, y)
+                                If x <= rng.Rows.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
-                                ElseIf CheckBox1.Checked = True Then
+                                    ElseIf CheckBox1.Checked = True Then
 
-                                    rng.Cells(x, y).Copy()
-                                    rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteAll)
-                                    rng2 = worksheet2.Range(rng2Address)
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
 
+                                    End If
                                 End If
                             Next
                         Next
@@ -1771,7 +1789,7 @@ Public Class Form7
                         c = Int(r / Int(TextBox2.Text))
                     Else
                         c = Int(r / Int(TextBox2.Text)) + 1
-                        End If
+                    End If
                     r = Int(TextBox2.Text)
 
                     rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
@@ -1790,12 +1808,14 @@ Public Class Form7
                                 If x <= rng.Rows.Count Then
 
                                     If CheckBox1.Checked = False Then
-                                        rng2.Cells(i, j).Value = rng(x, y)
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
                                     ElseIf CheckBox1.Checked = True Then
 
                                         rng.Cells(x, y).Copy()
-                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                         rng2 = worksheet2.Range(rng2Address)
 
                                     End If
@@ -1847,30 +1867,36 @@ Public Class Form7
 
                 End If
 
-                Else
-                    MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Exit Sub
+            Else
+                MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
 
+            End If
+
+        ElseIf X4 Then
+
+            If X7 And (X5 Or X6) Then
+
+                Dim BreakPoints() As Integer
+                BreakPoints = GetBreakPoints(rng, 1)
+
+                Dim lengths() As Integer
+                lengths = GetLengths(BreakPoints)
+
+                If X5 Then
+                    r = UBound(BreakPoints) + 1
+                    c = MaxValue(lengths)
+                ElseIf X6 Then
+                    c = UBound(BreakPoints) + 1
+                    r = MaxValue(lengths)
                 End If
 
-            ElseIf X4 Then
+                rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                Dim rng2Address As String = rng2.Address
+                worksheet2.Activate()
+                rng2.Select()
 
-                If X7 And (X5 Or X6) Then
-
-                    Dim BreakPoints() As Integer
-                    BreakPoints = GetBreakPoints(rng, 1)
-
-                    Dim lengths() As Integer
-                    lengths = GetLengths(BreakPoints)
-
-                    If X5 Then
-                        r = UBound(BreakPoints) + 1
-                        c = MaxValue(lengths)
-                    ElseIf X6 Then
-                        c = UBound(BreakPoints) + 1
-                        r = MaxValue(lengths)
-                    End If
-
+                If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
                     If X5 Then
                         Dim iColumn As Integer
                         iColumn = 0
@@ -1880,7 +1906,64 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + j
-                                If y <= UBound(Arr, 2) + 1 Then
+                                If y <= BreakPoints(i - 1) Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                            iColumn = BreakPoints(i - 1)
+                        Next
+                    ElseIf X6 Then
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + i
+                                If y <= BreakPoints(j - 1) Then
+
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+
+                                End If
+                            Next
+                            iColumn = BreakPoints(j - 1)
+                        Next
+                    End If
+
+                Else
+                    If X5 Then
+
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For i = 1 To r
+                            For j = 1 To c
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + j
+                                If y <= BreakPoints(i - 1) Then
                                     rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                     If CheckBox1.Checked = True Then
@@ -1924,7 +2007,7 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + i
-                                If y <= UBound(Arr, 2) + 1 Then
+                                If y <= BreakPoints(j - 1) Then
                                     rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                     If CheckBox1.Checked = True Then
@@ -1959,17 +2042,48 @@ Public Class Form7
                             iColumn = BreakPoints(j - 1)
                         Next
                     End If
+                End If
 
-                ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
+            ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
 
-                    If X5 Then
-                        If c Mod Int(TextBox2.Text) = 0 Then
-                            r = Int(c / Int(TextBox2.Text))
-                        Else
-                            r = Int(c / Int(TextBox2.Text)) + 1
-                        End If
-                        c = Int(TextBox2.Text)
+                If X5 Then
+                    If c Mod Int(TextBox2.Text) = 0 Then
+                        r = Int(c / Int(TextBox2.Text))
+                    Else
+                        r = Int(c / Int(TextBox2.Text)) + 1
+                    End If
+                    c = Int(TextBox2.Text)
 
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                        For i = 1 To r
+                            For j = 1 To c
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (c * (i - 1)) + j
+
+                                If y <= rng.Columns.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+
+                                End If
+                            Next
+                        Next
+                    Else
                         For i = 1 To r
                             For j = 1 To c
                                 Dim x As Integer
@@ -2009,15 +2123,45 @@ Public Class Form7
                                 End If
                             Next
                         Next
+                    End If
 
-                    ElseIf X6 Then
-                        If c Mod Int(TextBox2.Text) = 0 Then
-                            c = Int(c / Int(TextBox2.Text))
-                        Else
-                            c = Int(c / Int(TextBox2.Text)) + 1
-                        End If
-                        r = Int(TextBox2.Text)
+                ElseIf X6 Then
+                    If c Mod Int(TextBox2.Text) = 0 Then
+                        c = Int(c / Int(TextBox2.Text))
+                    Else
+                        c = Int(c / Int(TextBox2.Text)) + 1
+                    End If
+                    r = Int(TextBox2.Text)
 
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (r * (j - 1)) + i
+                                If y <= rng.Columns.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+                                End If
+                            Next
+                        Next
+                    Else
                         For j = 1 To c
                             For i = 1 To r
                                 Dim x As Integer
@@ -2059,10 +2203,11 @@ Public Class Form7
                         Next
 
                     End If
+                End If
 
-                Else
-                    MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Exit Sub
+            Else
+                MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
                 End If
 
             Else

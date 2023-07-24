@@ -263,6 +263,7 @@ Public Class Form1
         Dim C2 As Boolean
         Dim C3 As Boolean
         Dim C4 As Boolean
+        Dim C5 As Boolean
 
         For i = LBound(Arr) To UBound(Arr)
 
@@ -271,8 +272,9 @@ Public Class Form1
                 C2 = Asc(Mid(Arr(i), 1, 1)) >= 65 And Asc(Mid(Arr(i), 1, 1)) <= 90
                 C3 = Asc(Mid(Arr(i), 1, 1)) >= 97 And Asc(Mid(Arr(i), 1, 1)) <= 122
                 C4 = Mid(Arr(i), 1, 1) = "$"
+                C5 = InStr(1, Arr(i), "!") = 0
 
-                If (C1 And (C2 Or C3 Or C4)) Then
+                If (C1 And (C2 Or C3 Or C4) And C5) Then
                     Index = Index + 1
                     ReDim Preserve Refs(Index)
                     Refs(Index) = Arr(i)
@@ -285,13 +287,7 @@ Public Class Form1
         For Each Ref In Refs
 
             If InStr(1, Ref, ":") = 0 Then
-                If InStr(1, Ref, "!") = 0 Then
-                    expRange = activesheet.Range(Ref)
-                Else
-                    Dim exp() As String
-                    exp = Split(Ref, "!")
-                    expRange = activesheet.Range(exp(1))
-                End If
+                expRange = activesheet.Range(Ref)
                 If IsWithin(expRange, Rng) = True Then
                     Dim Ref2 As String
                     Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
@@ -300,7 +296,6 @@ Public Class Form1
                     If sheet1.Name <> sheet2.Name Then
                         Dim Ref2 As String
                         Ref2 = "'" & sheet1.Name & "'" & "!" & Ref
-                        MsgBox(Ref2)
                         Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                     End If
                 End If
