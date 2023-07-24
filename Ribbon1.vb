@@ -81,4 +81,9 @@ Public Class Ribbon1
         form.Show()
 
     End Sub
+
+    Private Sub Button16_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button16.Click
+        Dim form As New Form18_CombineRanges
+        form.Show()
+    End Sub
 End Class
