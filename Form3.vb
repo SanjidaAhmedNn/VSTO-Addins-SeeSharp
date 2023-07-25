@@ -51,7 +51,6 @@ Public Class Form3
 
 
     End Function
-
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then

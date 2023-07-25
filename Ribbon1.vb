@@ -12,7 +12,7 @@ Public Class Ribbon1
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As RibbonControlEventArgs) Handles Button1.Click
+    Private Sub Flip_Click(sender As Object, e As RibbonControlEventArgs) Handles Button1.Click
 
         Dim MyForm1 As New Form1
 
@@ -30,7 +30,7 @@ Public Class Ribbon1
 
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Transform.Click
+    Private Sub Transform_Click(sender As Object, e As RibbonControlEventArgs) Handles Transform.Click
 
         Dim MyForm7 As New Form7
 
@@ -45,7 +45,7 @@ Public Class Ribbon1
 
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
+    Private Sub Transpose_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
 
 
         Dim MyForm3 As New Form3
@@ -74,4 +74,18 @@ Public Class Ribbon1
 
     End Sub
 
+    Private Sub Unmerge_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
+
+        Dim MyForm10 As New Form10
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm10.TextBox1.Text = selection.Address
+        MyForm10.Show()
+
+    End Sub
 End Class

@@ -66,49 +66,30 @@ Public Class Form1
     End Function
     Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)
 
-        Dim Result As Boolean
+        Dim excelApp As Excel.Application = Globals.ThisAddIn.Application
 
-            Dim sr1 As Integer
-            Dim sr2 As Integer
+        ' Use Intersect method to check if range1 is within range2
+        Dim intersectRange As Excel.Range = excelApp.Intersect(rng2, rng1)
 
-            Dim er1 As Integer
-            Dim er2 As Integer
+        ' If intersectRange is nothing, then range1 is not within range2
+        If intersectRange Is Nothing Then
+            Return False
+            ' If the address of intersectRange is same as range1, then range1 is within range2
+        ElseIf intersectRange.Address = rng2.Address Then
+            Return True
+        End If
 
-            Dim sc1 As Integer
-            Dim sc2 As Integer
-
-            Dim ec1 As Integer
-            Dim ec2 As Integer
-
-            sr1 = rng1.Cells(1, 1).Row
-            sc1 = rng1.Cells(1, 1).Column
-
-            er1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Row
-            ec1 = rng1.Cells(rng1.Rows.Count, rng1.Columns.Count).Column
-
-            sr2 = rng2.Cells(1, 1).Row
-            sc2 = rng2.Cells(1, 1).Column
-
-            er2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Row
-            ec2 = rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Column
-
-            If sr1 >= sr2 And sc1 >= sc2 And er1 <= er2 And ec1 <= ec2 Then
-                Result = True
-            Else
-                Result = False
-            End If
-
-            IsWithin = Result
-
+        ' Default return value
+        Return False
 
     End Function
     Private Function ReplaceNotInRange(input As String, find As String, replaceWith As String) As String
 
-        ' Build the regex pattern to exclude range notation 
-        Dim pattern As String = String.Format("(?<!:)\b{0}\b(?!:)", Regex.Escape(find))
+        ' Build the regex pattern to exclude range notation and exclamation mark
+        Dim pattern As String = String.Format("(?<![!{0}:]){0}(?![:{0}])", Regex.Escape(find))
 
-            ' Create a Regex object.
-            Dim reg As New Regex(pattern)
+        ' Create a Regex object.
+        Dim reg As New Regex(pattern)
 
         ' Call the Regex.Replace method to replace matching text.
         Return reg.Replace(input, replaceWith)
@@ -285,59 +266,41 @@ Public Class Form1
         Dim expRange As Excel.Range
 
         For Each Ref In Refs
-
             If InStr(1, Ref, ":") = 0 Then
                 expRange = activesheet.Range(Ref)
-                If IsWithin(expRange, Rng) = True Then
-                    Dim Ref2 As String
-                    Ref2 = ReplaceReference(Ref, Rng, rng2, Type)
-                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
-                Else
+                If IsWithin(Rng, expRange) = False Then
                     If sheet1.Name <> sheet2.Name Then
-                        Dim Ref2 As String
-                        Ref2 = "'" & sheet1.Name & "'" & "!" & Ref
+                        Dim Ref2 As String = "'" & sheet1.Name & "'" & "!" & Ref
                         Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                     End If
+                Else
+                    Dim Ref2 As String = ReplaceReference(Ref, Rng, rng2, Type)
+                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                 End If
             Else
-                If InStr(1, Ref, "!") = 0 Then
-                    expRange = activesheet.Range(Ref)
-                Else
-                    Dim e1() As String
-                    Dim exp1() As String
-                    Dim exp2() As String
+                expRange = activesheet.Range(Ref)
 
-                    e1 = Split(Ref, ":")
-                    Dim S1 As String = e1(0)
-                    Dim S2 As String = e1(1)
-
-                    exp1 = Split(S1, "!")
-                    exp2 = Split(S2, "!")
-
-                    Dim S3 As String = exp1(1)
-                    Dim S4 As String = exp2(1)
-
-                    expRange = activesheet.Range(S3 & ":" & S4)
-                End If
-                If IsWithin(expRange, Rng) = True Then
-                    Dim Ref2 As String
-                    Ref2 = ReplaceRange(Ref, Rng, rng2, Type)
-                    Formula = Replace(Formula, Ref, Ref2)
-                Else
+                If IsWithin(Rng, expRange) = False Then
                     If sheet1.Name <> sheet2.Name Then
-                        Dim R1() As String
-                        R1 = Split(Ref, ":")
-                        Dim Rf1 As String
-                        Dim Rf2 As String
-                        Rf1 = R1(0)
-                        Rf2 = R1(1)
-                        Dim Ref2 As String
-                        Ref2 = sheet1.Name & "!" & Rf1 & ":" & sheet1.Name & "!" & Rf2
-                        Formula = Replace(Formula, Ref, Ref2)
+                        Dim ex() As String
+                        ex = Split(Ref, ":")
+                        Dim ex1 As String = ex(0)
+                        Dim ex2 As String = ex(1)
+                        Dim Ref2 As String = "'" & sheet1.Name & "'" & "!" & ex1 & ":" & "'" & sheet1.Name & "'" & "!" & ex2
+                        Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                     End If
+                Else
+                    Dim ex() As String
+                    ex = Split(Ref, ":")
+                    Dim ex1 As String = ex(0)
+                    Dim ex2 As String = ex(1)
+                    Dim ex3 As String = ReplaceReference(ex1, Rng, rng2, Type)
+                    Dim ex4 As String = ReplaceReference(ex2, Rng, rng2, Type)
+                    Dim Ref2 As String = ex3 & ":" & ex4
+                    Formula = ReplaceNotInRange(Formula, Ref, Ref2)
                 End If
-            End If
 
+            End If
         Next Ref
 
         ReplaceFormula = Formula
@@ -1024,7 +987,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
 
             excelApp = Globals.ThisAddIn.Application
@@ -1475,7 +1438,7 @@ Public Class Form1
     End Sub
 
 
-    Private Sub btn_OK_MouseHover(sender As Object, e As EventArgs) Handles btn_OK.MouseHover
+    Private Sub btn_OK_Enter(sender As Object, e As EventArgs) Handles btn_OK.MouseEnter
 
         Try
 
@@ -1497,7 +1460,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub btn_cancel_MouseHover(sender As Object, e As EventArgs) Handles btn_cancel.MouseHover
+    Private Sub btn_cancel_MouseEnter(sender As Object, e As EventArgs) Handles btn_cancel.MouseEnter
 
         Try
             btn_cancel.BackColor = Color.FromArgb(65, 105, 225)
@@ -1672,4 +1635,5 @@ Public Class Form1
 
         End Try
     End Sub
+
 End Class
