@@ -5,6 +5,7 @@ Imports Microsoft.Office.Interop.Excel
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Drawing
 Imports System.ComponentModel
+Imports System.Linq.Expressions
 
 Public Class Form13HideAllExceptSelectedRange
     Dim WithEvents excelApp As Excel.Application
@@ -26,6 +27,8 @@ Public Class Form13HideAllExceptSelectedRange
 
 
 
+
+
     End Sub
 
     Private Sub txtSourceRange_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange.TextChanged
@@ -38,15 +41,16 @@ Public Class Form13HideAllExceptSelectedRange
 
 
             inputRng = worksheet.Range(txtSourceRange.Text)
-            inputRng.Select()
+            txtSourceRange.Focus()
 
-            Call Display()
-
+            'inputRng.Select()
 
 
         Catch ex As Exception
 
         End Try
+
+
     End Sub
 
     Private Sub pctBoxSelectRange_Click(sender As Object, e As EventArgs) Handles pctBoxSelectRange.Click
@@ -59,6 +63,7 @@ Public Class Form13HideAllExceptSelectedRange
 
 
             inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", Type:=8)
+
 
 
 
@@ -104,6 +109,7 @@ Public Class Form13HideAllExceptSelectedRange
             Next
 
             If rngCount = 0 Then
+
                 Call singleRng()
             Else
                 Call multiRng()
@@ -129,15 +135,9 @@ Public Class Form13HideAllExceptSelectedRange
             worksheet = workbook.ActiveSheet
             inputWsName = worksheet.Name
 
-            'If checkBoxCopyWorksheet.Checked = True Then
 
-            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-            '    outWorksheet.Range("A1").Select()
-            '    'worksheet = workbook.Sheets(inputWsName)
-            '    'worksheet.Activate()
 
-            'End If
+
 
 
             Dim firstRow, lastRow, firstColumn, lastColumn As Integer
@@ -149,7 +149,18 @@ Public Class Form13HideAllExceptSelectedRange
             firstColumn = selectedRng.Column
             lastColumn = firstColumn + selectedRng.Columns.Count - 1
 
+            'Single rows Or Columns validation
+            If selectedRng.Rows.Count <= 3 And selectedRng.Columns.Count <= 3 Then
+                Dim answer As MsgBoxResult
+                answer = MsgBox("You are about to hide all cells except " & selectedRng.Rows.Count & " Rows and " & selectedRng.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                If answer = MsgBoxResult.Yes Then
+                    GoTo Proceed
+                Else
+                    GoTo break
+                End If
+            End If
 
+Proceed:
             worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(firstRow - 1, 1)).EntireRow.Hidden = True
 
             If worksheet.Range(worksheet.Cells(lastRow, firstColumn), worksheet.Cells(1048576, firstColumn).end(Excel.XlDirection.xlUp)).Rows.Count = 1 Then
@@ -188,6 +199,7 @@ Public Class Form13HideAllExceptSelectedRange
 
             End If
 
+break:
 
             Me.Dispose()
 
@@ -216,17 +228,7 @@ Public Class Form13HideAllExceptSelectedRange
             worksheet = workbook.ActiveSheet
 
 
-            'If checkBoxCopyWorksheet.Checked = True Then
 
-            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-
-            '    outWorksheet.Range("A1").Select()
-
-            'End If
-
-            'worksheet = workbook.Sheets(WsName)
-            'worksheet.Activate()
 
 
             Dim arrRng As String() = Split(txtSourceRange.Text, ",")
@@ -238,8 +240,15 @@ Public Class Form13HideAllExceptSelectedRange
 
 
                 If i > UBound(arrRng) Then
-                    worksheet.Range(worksheet.Cells(followingRows + 1, visColumns), worksheet.Cells(followingRows + 1, visColumns)).EntireRow.Hidden = False
-                    worksheet.Range(worksheet.Cells(followingRows + 1, visColumns), worksheet.Cells(followingRows + 1, visColumns).end(Excel.XlDirection.xlDown)).EntireRow.Hidden = True
+
+                    If worksheet.Range(worksheet.Cells(followingRows, visColumns), worksheet.Cells(1048576, visColumns).end(Excel.XlDirection.xlUp)).Rows.Count = 1 Then
+
+                        worksheet.Range(worksheet.Cells(followingRows, visColumns), worksheet.Cells(followingRows, visColumns)).EntireRow.Hidden = False
+                    Else
+                        worksheet.Range(worksheet.Cells(followingRows + 1, visColumns), worksheet.Cells(followingRows, visColumns).end(Excel.XlDirection.xlDown)).EntireRow.Hidden = True
+
+                    End If
+
                     Exit For
                 End If
 
@@ -250,12 +259,27 @@ Public Class Form13HideAllExceptSelectedRange
                 If i = 0 Then
                     worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
                     worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(1, visColumns - 1)).EntireColumn.Hidden = True
-                    worksheet.Range(worksheet.Cells(1, followingColumns + 1), worksheet.Cells(visRows, followingColumns + 1).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
 
+                    If worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, 16384).End(XlDirection.xlToLeft)).Columns.Count = 1 Then
+
+                        worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, followingColumns)).EntireColumn.Hidden = False
+                    Else
+                        worksheet.Range(worksheet.Cells(visRows, followingColumns + 1), worksheet.Cells(visRows, followingColumns).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
+
+                    End If
 
                 Else
                     worksheet.Range(worksheet.Cells(followingRows + 1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
                     worksheet.Range(worksheet.Cells(visRows, 1), worksheet.Cells(visRows, visColumns - 1)).EntireColumn.Hidden = True
+
+                    If worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, 16384).End(XlDirection.xlToLeft)).Columns.Count = 1 Then
+
+                        worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, followingColumns)).EntireColumn.Hidden = False
+                    Else
+                        worksheet.Range(worksheet.Cells(visRows, followingColumns + 1), worksheet.Cells(visRows, followingColumns).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
+
+                    End If
+
 
                 End If
 
@@ -355,6 +379,16 @@ Public Class Form13HideAllExceptSelectedRange
 
 
     End Sub
+    Private Sub txtSourceRange_GotFocus(sender As Object, e As EventArgs) Handles txtSourceRange.GotFocus
+        Try
+
+            FocusedTxtBox = 1
+
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
     Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         Try
 
@@ -374,32 +408,28 @@ Public Class Form13HideAllExceptSelectedRange
             excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
+            txtSourceRange.Focus()
+
+
+
+
             If FocusedTxtBox = 1 Then
+
                 txtSourceRange.Text = selectedRange.Address
                 worksheet = workbook.ActiveSheet
                 inputRng = selectedRange
                 txtSourceRange.Focus()
 
+
             End If
 
-        Catch ex As Exception
-
-        End Try
-
-
-
-
-
-    End Sub
-
-    Private Sub txtSourceRange_GotFocus(sender As Object, e As EventArgs) Handles txtSourceRange.GotFocus
-        Try
-
-            FocusedTxtBox = 1
-
 
         Catch ex As Exception
 
+
         End Try
+
     End Sub
+
+
 End Class
