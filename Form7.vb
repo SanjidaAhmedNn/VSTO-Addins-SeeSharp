@@ -683,7 +683,7 @@ Public Class Form7
                         Next
                     End If
 
-                ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
+                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
                         If r Mod Int(TextBox2.Text) = 0 Then
@@ -987,7 +987,7 @@ Public Class Form7
                         Next
                     End If
 
-                ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
+                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
                         If c Mod Int(TextBox2.Text) = 0 Then
@@ -1947,7 +1947,7 @@ Public Class Form7
                         End If
                     End If
 
-                ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
+                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
                         If r Mod Int(TextBox2.Text) = 0 Then
@@ -2453,7 +2453,7 @@ Public Class Form7
                         End If
                     End If
 
-                ElseIf (X8 And TextBox2.Text <> "") And (X5 Or X6) Then
+                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
                         If c Mod Int(TextBox2.Text) = 0 Then
