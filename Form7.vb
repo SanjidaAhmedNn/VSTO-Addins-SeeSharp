@@ -1150,6 +1150,7 @@ Public Class Form7
 
     End Sub
     Private Sub Form7_Load(sender As Object, e As EventArgs) Handles Me.Load
+
         Try
 
             excelApp = Globals.ThisAddIn.Application
@@ -2974,6 +2975,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
@@ -3034,6 +3036,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub Button1_KeyDown(sender As Object, e As KeyEventArgs) Handles Button1.KeyDown

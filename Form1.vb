@@ -666,7 +666,7 @@ Public Class Form1
 
             rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
             Dim rng2Address As String = rng2.Address
-
+            workSheet2.Activate()
             rng2.Select()
 
             Dim i As Integer

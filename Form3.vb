@@ -94,8 +94,8 @@ Public Class Form3
             r = displayRng.Rows.Count
             c = displayRng.Columns.Count
 
-            Dim height As Integer
-            Dim width As Integer
+            Dim height As Single
+            Dim width As Single
 
             If r <= 6 Then
                 height = panel1.Height / r
@@ -482,6 +482,9 @@ Public Class Form3
                     worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
                 End If
 
+                worksheet2.Activate()
+                rng2.Select()
+
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
                     If RadioButton3.Checked = True Then
                         If CheckBox2.Checked = True Then
@@ -605,6 +608,7 @@ Public Class Form3
                 Me.Close()
 
             End If
+
         Catch ex As Exception
 
         End Try
