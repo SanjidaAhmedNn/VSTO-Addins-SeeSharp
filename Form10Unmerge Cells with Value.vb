@@ -11,13 +11,15 @@ Imports System.Text.RegularExpressions
 Public Class Form10
 
     Dim WithEvents excelApp As Excel.Application
+
     Dim workBook As Excel.Workbook
     Dim workbook2 As Excel.Workbook
+
     Dim workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+
     Dim rng As Excel.Range
     Dim rng2 As Excel.Range
-    Dim selectedRange As Excel.Range
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
@@ -90,12 +92,7 @@ Public Class Form10
         Try
             CustomPanel1.Controls.Clear()
             CustomPanel2.Controls.Clear()
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-            workSheet = workBook.ActiveSheet
-            Dim Rng As Excel.Range
-            Rng = workSheet.Range(TextBox1.Text)
-            Rng.Select()
+
 
             Dim displayRng As Excel.Range
 
@@ -306,6 +303,11 @@ Public Class Form10
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
+            End If
+
+            If CheckBox2.Checked = True Then
+                workSheet.Copy(After:=workBook.Sheets(workSheet.Name))
+                workSheet2.Activate()
             End If
 
             rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))

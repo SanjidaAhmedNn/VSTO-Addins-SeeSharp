@@ -88,4 +88,19 @@ Public Class Ribbon1
         MyForm10.Show()
 
     End Sub
+
+    Private Sub Merge_Click(sender As Object, e As RibbonControlEventArgs) Handles Button5.Click
+
+        Dim MyForm8 As New Form8
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm8.TextBox1.Text = selection.Address
+        MyForm8.Show()
+
+    End Sub
 End Class
