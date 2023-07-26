@@ -14,6 +14,7 @@ Public Class Form13HideAllExceptSelectedRange
     Dim outWorksheet As Excel.Worksheet
     Dim inputRng As Excel.Range
     Dim FocusedTxtBox As Integer
+    Dim selectedRange As Excel.Range
 
     Private Sub Form13HideAllExceptSelectedRange_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -43,7 +44,6 @@ Public Class Form13HideAllExceptSelectedRange
             inputRng = worksheet.Range(txtSourceRange.Text)
             txtSourceRange.Focus()
 
-            'inputRng.Select()
 
 
         Catch ex As Exception
@@ -60,17 +60,18 @@ Public Class Form13HideAllExceptSelectedRange
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
+            selectedRange = excelApp.Selection
+            txtSourceRange.Focus()
 
-
-            inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", Type:=8)
-
-
-
-
+            inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", selectedRange.Address, Type:=8)
             inputRng.Select()
-
             txtSourceRange.Text = inputRng.Address
             txtSourceRange.Focus()
+
+
+
+
+
 
         Catch ex As Exception
 
@@ -406,8 +407,9 @@ break:
         Try
 
             excelApp = Globals.ThisAddIn.Application
-            Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
+            selectedRange.Select()
+
             txtSourceRange.Focus()
 
 
