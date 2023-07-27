@@ -23,6 +23,471 @@ Public Class Form8
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
+    Private Function SearchAlongRow(Rng, r, C, Value)
+
+        Dim i As Integer = 1
+
+        Dim search As Boolean = True
+
+        Dim Type1 As Type
+        Dim Type2 As Type
+
+        While search = True
+
+            If Rng.Cells(r, C + i).Value Is Nothing Then
+                Type1 = GetType(String)
+            Else
+                Type1 = Rng.Cells(r, C + i).Value.GetType()
+            End If
+
+            If Rng.Cells(r, C).Value Is Nothing Then
+                Type2 = GetType(String)
+            Else
+                Type2 = Rng.Cells(r, C).Value.GetType()
+            End If
+
+            If Type1.Equals(Type2) Then
+                If Rng.Cells(r, C + i).Value = Rng.Cells(r, C).value And (C + i) <= Rng.Columns.Count And Rng.Cells(r, C).MergeCells = False And Rng.Cells(r, C + i).MergeCells = False Then
+                    i = i + 1
+                    search = True
+                Else
+                    search = False
+                End If
+            Else
+                search = False
+            End If
+
+        End While
+
+        SearchAlongRow = i
+
+    End Function
+    Private Function SearchAlongColumn(Rng, r, C, Value)
+
+        Dim i As Integer = 1
+
+        Dim search As Boolean = True
+
+        Dim Type1 As Type
+        Dim Type2 As Type
+
+        While search = True
+
+            If Rng.Cells(r + i, C).Value Is Nothing Then
+                Type1 = GetType(String)
+            Else
+                Type1 = Rng.Cells(r + i, C).Value.GetType()
+            End If
+
+            If Rng.Cells(r, C).Value Is Nothing Then
+                Type2 = GetType(String)
+            Else
+                Type2 = Rng.Cells(r, C).Value.GetType()
+            End If
+
+            If Type1.Equals(Type2) Then
+                If Rng.Cells(r + i, C).value = Rng.Cells(r, C).value And (r + i) <= Rng.Rows.Count And Rng.Cells(r, C).MergeCells = False And Rng.Cells(r + i, C).MergeCells = False Then
+                    i = i + 1
+                    search = True
+                Else
+                    search = False
+                End If
+            Else
+                search = False
+            End If
+
+        End While
+
+        SearchAlongColumn = i
+
+    End Function
+
+    Private Function FindInArray(i, j, Arr)
+
+        Dim Result As Boolean = False
+        Dim count As Integer
+
+        For Count = LBound(Arr, 1) To UBound(Arr, 1)
+            If Arr(Count, 0) = i And Arr(Count, 1) = j Then
+                Result = True
+                Exit For
+            End If
+        Next Count
+
+        FindInArray = Result
+
+    End Function
+    Private Function SearchAlongColumn2(Rng, r, C, Value, Arr)
+
+        Dim i As Integer = 1
+
+        Dim search As Boolean
+
+        Dim Type1 As Type
+        Dim Type2 As Type
+
+        While search = True
+
+            If Rng.Cells(r + i, C).Value Is Nothing Then
+                Type1 = GetType(String)
+            Else
+                Type1 = Rng.Cells(r + i, C).Value.GetType()
+            End If
+
+            If Rng.Cells(r, C).Value Is Nothing Then
+                Type2 = GetType(String)
+            Else
+                Type2 = Rng.Cells(r, C).Value.GetType()
+            End If
+
+            If Type1.Equals(Type2) Then
+                If Rng.Cells(r + i, C).value = Rng.Cells(r, C).value And (r + i) <= Rng.Rows.Count And FindInArray(r, C, Arr) = False And FindInArray(r + i, C, Arr) = False And Rng.Cells(r, C).MergeCells = False And Rng.Cells(r + i, C).MergeCells = False Then
+                    i = i + 1
+                    search = True
+                Else
+                    search = False
+                End If
+            Else
+                search = False
+            End If
+
+        End While
+
+        SearchAlongColumn2 = i
+
+    End Function
+    Private Function SearchAlongRow2(Rng, r, C, Value, Arr)
+
+        Dim i As Integer = 1
+
+        Dim search As Boolean
+
+        Dim Type1 As Type
+        Dim Type2 As Type
+
+        While search = True
+
+            If Rng.Cells(r, C + i).Value Is Nothing Then
+                Type1 = GetType(String)
+            Else
+                Type1 = Rng.Cells(r, C + i).Value.GetType()
+            End If
+
+            If Rng.Cells(r, C).Value Is Nothing Then
+                Type2 = GetType(String)
+            Else
+                Type2 = Rng.Cells(r, C).Value.GetType()
+            End If
+
+            If Type1.Equals(Type2) Then
+                If Rng.Cells(r, C + i).value = Rng.Cells(r, C).value And (C + i) <= Rng.Columns.Count And FindInArray(r, C, Arr) = False And FindInArray(r, C + i, Arr) = False And Rng.Cells(r, C).MergeCells = False And Rng.Cells(r, C + i).MergeCells = False Then
+                    i = i + 1
+                    search = True
+                Else
+                    search = False
+                End If
+            Else
+                search = False
+            End If
+
+        End While
+
+        SearchAlongRow2 = i
+
+    End Function
+
+    Private Function SearchDiagonally(Rng, r, c)
+
+    End Function
+
+    Private Sub Display()
+
+        CustomPanel1.Controls.Clear()
+        CustomPanel2.Controls.Clear()
+
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+
+        Dim Rng As Excel.Range = workSheet.Range(TextBox1.Text)
+            Dim displayRng As Excel.Range
+            Rng.Select()
+
+            If Rng.Rows.Count > 50 Then
+                displayRng = workSheet.Range(Rng.Cells(1, 1), Rng.Cells(50, Rng.Columns.Count))
+            Else
+                displayRng = workSheet.Range(Rng.Cells(1, 1), Rng.Cells(Rng.Rows.Count, Rng.Columns.Count))
+            End If
+
+            Dim r As Integer = displayRng.Rows.Count
+            Dim C As Integer = displayRng.Columns.Count
+
+            Dim height As Single
+            Dim width As Single
+
+            If r <= 6 Then
+                height = CustomPanel1.Height / r
+            Else
+                height = CustomPanel1.Height / 6
+            End If
+
+            If C <= 4 Then
+                width = CustomPanel1.Width / C
+            Else
+                width = CustomPanel1.Width / 4
+            End If
+
+        Dim i As Integer
+        Dim j As Integer
+
+        For i = 1 To r
+            For j = 1 To C
+                Dim label As New System.Windows.Forms.Label
+                label.Text = displayRng.Cells(i, j).Value
+                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                label.Height = height
+                label.Width = width
+                label.BorderStyle = BorderStyle.FixedSingle
+                label.TextAlign = ContentAlignment.MiddleCenter
+
+                If CheckBox1.Checked = True Then
+                    Dim cell As Excel.Range = displayRng.Cells(i, j)
+                    Dim font As Excel.Font = cell.Font
+
+                    Dim fontStyle As FontStyle = FontStyle.Regular
+                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                        Dim red1 As Integer = colorValue1 Mod 256
+                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                    End If
+                    If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                        Dim red2 As Integer = colorValue2 Mod 256
+                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                    End If
+                End If
+                CustomPanel1.Controls.Add(label)
+            Next
+        Next
+
+        CustomPanel1.AutoScroll = True
+
+        If RadioButton1.Checked = True Or RadioButton2.Checked = True Or RadioButton3.Checked = True Then
+
+            If RadioButton1.Checked = True Then
+                For i = 1 To r
+                    For j = 1 To C
+                        Dim rowEqual As Integer = SearchAlongRow(displayRng, i, j, displayRng.Cells(i, j))
+                        Dim newWidth As Single = width * rowEqual
+                        Dim label As New System.Windows.Forms.Label
+                        label.Text = displayRng.Cells(i, j).Value
+                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                        label.Height = height
+                        label.Width = newWidth
+                        label.BorderStyle = BorderStyle.FixedSingle
+                        label.TextAlign = ContentAlignment.MiddleCenter
+
+
+                        If CheckBox1.Checked = True Then
+                            Dim cell As Excel.Range = displayRng.Cells(i, j)
+                            Dim font As Excel.Font = cell.Font
+
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            End If
+                            If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+                        End If
+
+                        j = j + rowEqual - 1
+
+                        CustomPanel2.Controls.Add(label)
+                    Next
+                Next
+
+            ElseIf RadioButton2.Checked = True = True Then
+
+                For j = 1 To C
+                    For i = 1 To r
+                        Dim columnEqual As Integer = SearchAlongColumn(displayRng, i, j, displayRng.Cells(i, j))
+                        Dim newHeight As Single = height * columnEqual
+                        Dim label As New System.Windows.Forms.Label
+                        label.Text = displayRng.Cells(i, j).Value
+                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                        label.Height = newHeight
+                        label.Width = width
+                        label.BorderStyle = BorderStyle.FixedSingle
+                        label.TextAlign = ContentAlignment.MiddleCenter
+
+
+                        If CheckBox1.Checked = True Then
+                            Dim cell As Excel.Range = displayRng.Cells(i, j)
+                            Dim font As Excel.Font = cell.Font
+
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            End If
+                            If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+                        End If
+                        i = i + columnEqual - 1
+                        CustomPanel2.Controls.Add(label)
+                    Next
+                Next
+
+            ElseIf RadioButton3.Checked = True Then
+
+                Dim Arr2(r * C - 1, 1) As Object
+
+                Dim k As Integer = -1
+
+                For i = 1 To r
+                    For j = 1 To C
+                        Dim rowEqual As Integer = SearchAlongRow(displayRng, i, j, displayRng.Cells(i, j))
+                        If rowEqual > 1 Then
+                            For m = 0 To rowEqual - 1
+                                k = k + 1
+                                Arr2(k, 0) = i
+                                Arr2(k, 1) = j + m
+                            Next m
+                        End If
+
+                        Dim newWidth As Single = width * rowEqual
+
+                        Dim label As New System.Windows.Forms.Label
+                        label.Text = displayRng.Cells(i, j).Value
+                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                        label.Height = height
+                        label.Width = newWidth
+                        label.BorderStyle = BorderStyle.FixedSingle
+                        label.TextAlign = ContentAlignment.MiddleCenter
+                        j = j + rowEqual - 1
+
+                        If CheckBox1.Checked = True Then
+                            Dim cell As Excel.Range = displayRng.Cells(i, j)
+                            Dim font As Excel.Font = cell.Font
+
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            End If
+                            If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+                        End If
+                        CustomPanel2.Controls.Add(label)
+                    Next
+                Next
+
+                For j = 1 To C
+                    For i = 1 To r
+                        If FindInArray(i, j, Arr2) = False Then
+                            Dim columnEqual As Integer = SearchAlongColumn2(displayRng, i, j, displayRng.Cells(i, j), Arr2)
+                            Dim newHeight As Single = height * columnEqual
+                            Dim label As New System.Windows.Forms.Label
+                            label.Text = displayRng.Cells(i, j).Value
+                            label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                            label.Height = newHeight
+                            label.Width = width
+                            label.BorderStyle = BorderStyle.FixedSingle
+                            label.TextAlign = ContentAlignment.MiddleCenter
+                            i = i + columnEqual - 1
+
+                            If CheckBox1.Checked = True Then
+                                Dim cell As Excel.Range = displayRng.Cells(i, j)
+                                Dim font As Excel.Font = cell.Font
+
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+                                If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                                If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                                label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                                End If
+                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                End If
+                            End If
+                            CustomPanel2.Controls.Add(label)
+                        End If
+                    Next i
+                Next j
+
+            End If
+
+            CustomPanel2.AutoScroll = True
+
+        End If
+
+    End Sub
 
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -73,4 +538,23 @@ Public Class Form8
 
     End Sub
 
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+        Try
+            excelApp = Globals.ThisAddIn.Application
+            workBook = excelApp.ActiveWorkbook
+            workSheet = workBook.ActiveSheet
+
+            rng = workSheet.Range(TextBox1.Text)
+            rng.Select()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+
+        Call Display()
+
+    End Sub
 End Class
