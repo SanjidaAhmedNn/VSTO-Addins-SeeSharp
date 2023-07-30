@@ -23,7 +23,20 @@ Public Class Form8
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
-    Private Function SearchAlongRow(Rng, r, C, Value)
+    Function FindMinValue(arr() As Integer) As Integer
+
+        Dim min As Integer = arr(0)
+
+        For Each num In arr
+            If num < min Then
+                min = num
+            End If
+        Next
+
+        Return min
+
+    End Function
+    Private Function SearchAlongRow(Rng As Excel.Range, r As Integer, C As Integer)
 
         Dim i As Integer = 1
 
@@ -62,7 +75,7 @@ Public Class Form8
         SearchAlongRow = i
 
     End Function
-    Private Function SearchAlongColumn(Rng, r, C, Value)
+    Private Function SearchAlongColumn(Rng As Excel.Range, r As Integer, C As Integer)
 
         Dim i As Integer = 1
 
@@ -107,12 +120,12 @@ Public Class Form8
         Dim Result As Boolean = False
         Dim count As Integer
 
-        For Count = LBound(Arr, 1) To UBound(Arr, 1)
-            If Arr(Count, 0) = i And Arr(Count, 1) = j Then
+        For count = LBound(Arr, 1) To UBound(Arr, 1)
+            If Arr(count, 0) = i And Arr(count, 1) = j Then
                 Result = True
                 Exit For
             End If
-        Next Count
+        Next count
 
         FindInArray = Result
 
@@ -195,8 +208,35 @@ Public Class Form8
         SearchAlongRow2 = i
 
     End Function
+    Private Function FindConsecutive(Arr)
 
-    Private Function SearchDiagonally(Rng, r, c)
+        For i = LBound(Arr) To UBound(Arr)
+
+
+        Next
+    End Function
+
+    Private Function SearchDiagonally(Rng As Excel.Range, r As Integer, c As Integer)
+
+        Dim rowEqual As Integer = SearchAlongRow(Rng, r, c)
+
+        Dim j As Integer
+
+        Dim columnEquals() As Integer
+        ReDim columnEquals(rowEqual - 1)
+
+        For j = 1 To rowEqual
+            columnEquals(j - 1) = SearchAlongColumn(Rng, r, c + j - 1)
+        Next
+
+        Dim columnEqual As Integer = FindMinValue(columnEquals)
+
+        Dim Output(1) As Integer
+
+        Output(0) = rowEqual
+        Output(1) = columnEqual
+
+        SearchDiagonally = Output
 
     End Function
 
@@ -288,7 +328,7 @@ Public Class Form8
             If RadioButton1.Checked = True Then
                 For i = 1 To r
                     For j = 1 To C
-                        Dim rowEqual As Integer = SearchAlongRow(displayRng, i, j, displayRng.Cells(i, j))
+                        Dim rowEqual As Integer = SearchAlongRow(displayRng, i, j)
                         Dim newWidth As Single = width * rowEqual
                         Dim label As New System.Windows.Forms.Label
                         label.Text = displayRng.Cells(i, j).Value
@@ -336,7 +376,7 @@ Public Class Form8
 
                 For j = 1 To C
                     For i = 1 To r
-                        Dim columnEqual As Integer = SearchAlongColumn(displayRng, i, j, displayRng.Cells(i, j))
+                        Dim columnEqual As Integer = SearchAlongColumn(displayRng, i, j)
                         Dim newHeight As Single = height * columnEqual
                         Dim label As New System.Windows.Forms.Label
                         label.Text = displayRng.Cells(i, j).Value
@@ -380,75 +420,38 @@ Public Class Form8
 
             ElseIf RadioButton3.Checked = True Then
 
-                Dim Arr2(r * C - 1, 1) As Object
-
-                Dim k As Integer = -1
+                Dim Arr((r * C - 1), 1) As Object
+                Dim count As Integer = 0
 
                 For i = 1 To r
                     For j = 1 To C
-                        Dim rowEqual As Integer = SearchAlongRow(displayRng, i, j, displayRng.Cells(i, j))
-                        If rowEqual > 1 Then
-                            For m = 0 To rowEqual - 1
-                                k = k + 1
-                                Arr2(k, 0) = i
-                                Arr2(k, 1) = j + m
-                            Next m
-                        End If
 
-                        Dim newWidth As Single = width * rowEqual
+                        If FindInArray(i, j, Arr) = False Then
 
-                        Dim label As New System.Windows.Forms.Label
-                        label.Text = displayRng.Cells(i, j).Value
-                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                        label.Height = height
-                        label.Width = newWidth
-                        label.BorderStyle = BorderStyle.FixedSingle
-                        label.TextAlign = ContentAlignment.MiddleCenter
-                        j = j + rowEqual - 1
+                            Dim rowEqual As Integer = SearchDiagonally(displayRng, i, j)(0)
+                            Dim columnEqual As Integer = SearchDiagonally(displayRng, i, j)(1)
 
-                        If CheckBox1.Checked = True Then
-                            Dim cell As Excel.Range = displayRng.Cells(i, j)
-                            Dim font As Excel.Font = cell.Font
-
-                            Dim fontStyle As FontStyle = FontStyle.Regular
-                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                Dim red1 As Integer = colorValue1 Mod 256
-                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            If rowEqual > 1 And columnEqual > 1 Then
+                                For m = 1 To rowEqual
+                                    For n = 1 To columnEqual
+                                        Arr(count, 0) = i + m - 1
+                                        Arr(count, 1) = j + n - 1
+                                        count = count + 1
+                                    Next
+                                Next
                             End If
-                            If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                Dim red2 As Integer = colorValue2 Mod 256
-                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                            End If
-                        End If
-                        CustomPanel2.Controls.Add(label)
-                    Next
-                Next
 
-                For j = 1 To C
-                    For i = 1 To r
-                        If FindInArray(i, j, Arr2) = False Then
-                            Dim columnEqual As Integer = SearchAlongColumn2(displayRng, i, j, displayRng.Cells(i, j), Arr2)
-                            Dim newHeight As Single = height * columnEqual
+                            Dim newWidth As Single = width * rowEqual
+                            Dim newHeight = height * columnEqual
+
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
                             label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
                             label.Height = newHeight
-                            label.Width = width
+                            label.Width = newWidth
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
-                            i = i + columnEqual - 1
+                            j = j + rowEqual - 1
 
                             If CheckBox1.Checked = True Then
                                 Dim cell As Excel.Range = displayRng.Cells(i, j)
@@ -478,8 +481,8 @@ Public Class Form8
                             End If
                             CustomPanel2.Controls.Add(label)
                         End If
-                    Next i
-                Next j
+                    Next
+                Next
 
             End If
 
