@@ -43,7 +43,7 @@ Partial Class Form18_CombineRanges
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.RadioButton4 = New System.Windows.Forms.RadioButton()
@@ -63,7 +63,7 @@ Partial Class Form18_CombineRanges
         Me.CustomGroupBox7.SuspendLayout()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox3.SuspendLayout()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -291,7 +291,7 @@ Partial Class Form18_CombineRanges
         '
         Me.CustomGroupBox3.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox3.Controls.Add(Me.PictureBox4)
+        Me.CustomGroupBox3.Controls.Add(Me.PictureBox1)
         Me.CustomGroupBox3.Controls.Add(Me.PictureBox3)
         Me.CustomGroupBox3.Controls.Add(Me.PictureBox2)
         Me.CustomGroupBox3.Controls.Add(Me.RadioButton4)
@@ -303,16 +303,16 @@ Partial Class Form18_CombineRanges
         Me.CustomGroupBox3.TabIndex = 0
         Me.CustomGroupBox3.TabStop = False
         '
-        'PictureBox4
+        'PictureBox1
         '
-        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(252, 60)
-        Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox4.TabIndex = 231
-        Me.PictureBox4.TabStop = False
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(252, 60)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 231
+        Me.PictureBox1.TabStop = False
         '
         'PictureBox3
         '
@@ -488,7 +488,7 @@ Partial Class Form18_CombineRanges
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox3.ResumeLayout(False)
         Me.CustomGroupBox3.PerformLayout()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -525,9 +525,9 @@ Partial Class Form18_CombineRanges
     Friend WithEvents Selection As Windows.Forms.PictureBox
     Friend WithEvents AutoSelection As Windows.Forms.PictureBox
     Friend WithEvents TextBox1 As Windows.Forms.TextBox
-    Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox3 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents ComboBox3 As Windows.Forms.ComboBox
     Friend WithEvents Label3 As Windows.Forms.Label
+    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
 End Class

@@ -575,8 +575,15 @@ Public Class Form1
 
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
+            workSheet = workBook.ActiveSheet
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+
+            'workSheet.Range("A1").Select()
+            'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
+            userInput = excelApp.InputBox("Select a range", Type:=8)
+
+
             rng = userInput
 
 

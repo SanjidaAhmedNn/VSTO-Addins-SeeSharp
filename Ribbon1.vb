@@ -86,4 +86,24 @@ Public Class Ribbon1
         Dim form As New Form18_CombineRanges
         form.Show()
     End Sub
+
+    Private Sub Button19_Click(sender As Object, e As RibbonControlEventArgs) Handles Button19.Click
+        Dim form As New Form21FillEmtyCells
+        form.Show()
+    End Sub
+
+    Private Sub Button20_Click(sender As Object, e As RibbonControlEventArgs) Handles Button20.Click
+        Dim form As New Form22_Merge_Duplicate_Rows
+        form.Show()
+    End Sub
+
+    Private Sub Button21_Click(sender As Object, e As RibbonControlEventArgs) Handles Button21.Click
+        Dim form As New Form23_Merge_Duplicate_Columns
+        form.Show()
+    End Sub
+
+    Private Sub Button22_Click(sender As Object, e As RibbonControlEventArgs) Handles Button22.Click
+        Dim form As New Form24_Split_Cells
+        form.Show()
+    End Sub
 End Class

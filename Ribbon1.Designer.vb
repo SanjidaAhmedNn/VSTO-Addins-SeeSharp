@@ -68,10 +68,16 @@
         Me.Button13 = Me.Factory.CreateRibbonButton
         Me.Button14 = Me.Factory.CreateRibbonButton
         Me.Button15 = Me.Factory.CreateRibbonButton
+        Me.Button19 = Me.Factory.CreateRibbonButton
+        Me.Button20 = Me.Factory.CreateRibbonButton
+        Me.Button21 = Me.Factory.CreateRibbonButton
+        Me.Group4 = Me.Factory.CreateRibbonGroup
+        Me.Button22 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
         Me.Group3.SuspendLayout()
+        Me.Group4.SuspendLayout()
         Me.SuspendLayout()
         '
         'Tab1
@@ -80,6 +86,7 @@
         Me.Tab1.Groups.Add(Me.Group1)
         Me.Tab1.Groups.Add(Me.Group2)
         Me.Tab1.Groups.Add(Me.Group3)
+        Me.Tab1.Groups.Add(Me.Group4)
         Me.Tab1.Label = "TabAddIns"
         Me.Tab1.Name = "Tab1"
         '
@@ -190,6 +197,9 @@
         Me.Group3.Items.Add(Me.Button13)
         Me.Group3.Items.Add(Me.Button14)
         Me.Group3.Items.Add(Me.Button15)
+        Me.Group3.Items.Add(Me.Button19)
+        Me.Group3.Items.Add(Me.Button20)
+        Me.Group3.Items.Add(Me.Button21)
         Me.Group3.Label = "Test"
         Me.Group3.Name = "Group3"
         '
@@ -244,6 +254,32 @@
         Me.Button15.Label = "Form 17"
         Me.Button15.Name = "Button15"
         '
+        'Button19
+        '
+        Me.Button19.Label = "Form 21 Fill Emty Cells"
+        Me.Button19.Name = "Button19"
+        '
+        'Button20
+        '
+        Me.Button20.Label = "Form 22 Merge Dupli"
+        Me.Button20.Name = "Button20"
+        '
+        'Button21
+        '
+        Me.Button21.Label = "Form 23 Merge Dupli Row"
+        Me.Button21.Name = "Button21"
+        '
+        'Group4
+        '
+        Me.Group4.Items.Add(Me.Button22)
+        Me.Group4.Label = "Group4"
+        Me.Group4.Name = "Group4"
+        '
+        'Button22
+        '
+        Me.Button22.Label = "Form 24 Split Range"
+        Me.Button22.Name = "Button22"
+        '
         'Ribbon1
         '
         Me.Name = "Ribbon1"
@@ -257,6 +293,8 @@
         Me.Group2.PerformLayout()
         Me.Group3.ResumeLayout(False)
         Me.Group3.PerformLayout()
+        Me.Group4.ResumeLayout(False)
+        Me.Group4.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -288,6 +326,11 @@
     Friend WithEvents Button16 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button17 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button18 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button19 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button20 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button21 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Group4 As Microsoft.Office.Tools.Ribbon.RibbonGroup
+    Friend WithEvents Button22 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

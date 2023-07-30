@@ -292,6 +292,30 @@
     <Compile Include="Form20.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form21FillEmtyCells.Designer.vb">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.Designer.vb">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.Designer.vb">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.Designer.vb">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form3.Designer.vb">
       <DependentUpon>Form3.vb</DependentUpon>
     </Compile>
@@ -376,6 +400,18 @@
     <EmbeddedResource Include="Form20.resx">
       <DependentUpon>Form20.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form21FillEmtyCells.resx">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_Split_Cells.resx">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>
     </EmbeddedResource>
@@ -458,7 +494,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F1EF689B524A44533074C3931BB19DD16C1BE1D3</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6ABEEB6C953983797B4C707EFFBA379177A93F03</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
