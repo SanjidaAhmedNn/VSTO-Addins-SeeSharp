@@ -316,6 +316,12 @@
     <Compile Include="Form24_Split_Cells.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form25_Split_Range.Designer.vb">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_Split_Range.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form3.Designer.vb">
       <DependentUpon>Form3.vb</DependentUpon>
     </Compile>
@@ -411,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form24_Split_Cells.resx">
       <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_Split_Range.resx">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>

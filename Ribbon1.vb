@@ -106,4 +106,9 @@ Public Class Ribbon1
         Dim form As New Form24_Split_Cells
         form.Show()
     End Sub
+
+    Private Sub Button23_Click(sender As Object, e As RibbonControlEventArgs) Handles Button23.Click
+        Dim form As New Form25_Split_Range
+        form.Show()
+    End Sub
 End Class

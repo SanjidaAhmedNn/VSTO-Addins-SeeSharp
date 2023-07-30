@@ -73,6 +73,7 @@
         Me.Button21 = Me.Factory.CreateRibbonButton
         Me.Group4 = Me.Factory.CreateRibbonGroup
         Me.Button22 = Me.Factory.CreateRibbonButton
+        Me.Button23 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -272,13 +273,19 @@
         'Group4
         '
         Me.Group4.Items.Add(Me.Button22)
+        Me.Group4.Items.Add(Me.Button23)
         Me.Group4.Label = "Group4"
         Me.Group4.Name = "Group4"
         '
         'Button22
         '
-        Me.Button22.Label = "Form 24 Split Range"
+        Me.Button22.Label = "Form 24 Split Cells"
         Me.Button22.Name = "Button22"
+        '
+        'Button23
+        '
+        Me.Button23.Label = "Form 25 Split Range"
+        Me.Button23.Name = "Button23"
         '
         'Ribbon1
         '
@@ -331,6 +338,7 @@
     Friend WithEvents Button21 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Group4 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button22 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button23 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
