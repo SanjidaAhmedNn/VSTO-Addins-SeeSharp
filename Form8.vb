@@ -130,11 +130,11 @@ Public Class Form8
         FindInArray = Result
 
     End Function
-    Private Function SearchAlongColumn2(Rng, r, C, Value, Arr)
+    Private Function SearchAlongColumn2(Rng, r, C, Arr)
 
         Dim i As Integer = 1
 
-        Dim search As Boolean
+        Dim search As Boolean = True
 
         Dim Type1 As Type
         Dim Type2 As Type
@@ -169,11 +169,11 @@ Public Class Form8
         SearchAlongColumn2 = i
 
     End Function
-    Private Function SearchAlongRow2(Rng, r, C, Value, Arr)
+    Private Function SearchAlongRow2(Rng, r, C, Arr)
 
         Dim i As Integer = 1
 
-        Dim search As Boolean
+        Dim search As Boolean = True
 
         Dim Type1 As Type
         Dim Type2 As Type
@@ -193,6 +193,7 @@ Public Class Form8
             End If
 
             If Type1.Equals(Type2) Then
+
                 If Rng.Cells(r, C + i).value = Rng.Cells(r, C).value And (C + i) <= Rng.Columns.Count And FindInArray(r, C, Arr) = False And FindInArray(r, C + i, Arr) = False And Rng.Cells(r, C).MergeCells = False And Rng.Cells(r, C + i).MergeCells = False Then
                     i = i + 1
                     search = True
@@ -208,13 +209,10 @@ Public Class Form8
         SearchAlongRow2 = i
 
     End Function
-    Private Function FindConsecutive(Arr)
 
-    End Function
+    Private Function SearchDiagonally(Rng, r, c, Arr)
 
-    Private Function SearchDiagonally(Rng As Excel.Range, r As Integer, c As Integer)
-
-        Dim rowEqual As Integer = SearchAlongRow(Rng, r, c)
+        Dim rowEqual As Integer = SearchAlongRow2(Rng, r, c, Arr)
 
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
@@ -231,11 +229,10 @@ Public Class Form8
 
         j = 0
 
-        While SearchAlongColumn(Rng, r, c + j) > 1 And j + 1 <= rowEqual
-
-            If activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn(Rng, r, c + j), j + 1)).Cells.Count >= TotalCells Then
-                Rng2 = activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn(Rng, r, c + j), j + 1))
-                Output(0) = SearchAlongColumn(Rng, r, c + j)
+        While SearchAlongColumn2(Rng, r, c + j, Arr) > 1 And j + 1 <= rowEqual
+            If activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn2(Rng, r, c + j, Arr), j + 1)).Cells.Count >= TotalCells Then
+                Rng2 = activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn2(Rng, r, c + j, Arr), j + 1))
+                Output(0) = SearchAlongColumn2(Rng, r, c + j, Arr)
                 Output(1) = j + 1
                 TotalCells = Rng2.Cells.Count
             End If
@@ -434,22 +431,23 @@ Public Class Form8
                     For j = 1 To C
 
                         If FindInArray(i, j, Arr) = False Then
+                            Dim rowEqual As Integer = SearchDiagonally(displayRng, i, j, Arr)(0)
+                            Dim columnEqual As Integer = SearchDiagonally(displayRng, i, j, Arr)(1)
 
-                            Dim rowEqual As Integer = SearchDiagonally(displayRng, i, j)(0)
-                            Dim columnEqual As Integer = SearchDiagonally(displayRng, i, j)(1)
-
-                            If rowEqual > 1 And columnEqual > 1 Then
+                            If rowEqual > 1 Or columnEqual > 1 Then
                                 For m = 1 To rowEqual
-                                    For n = 1 To rowEqual
+                                    For n = 1 To columnEqual
+
+                                        Arr(count, 0) = i + m - 1
+                                        Arr(count, 1) = j + n - 1
+                                        count = count + 1
 
                                     Next
                                 Next
-                                Arr(count, 0) = i
-                                Arr(count, 1) = j
                             End If
 
-                            Dim newWidth As Single = width * rowEqual
-                            Dim newHeight = height * columnEqual
+                            Dim newWidth As Single = width * columnEqual
+                            Dim newHeight = height * rowEqual
 
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
@@ -458,7 +456,6 @@ Public Class Form8
                             label.Width = newWidth
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
-
 
                             If CheckBox1.Checked = True Then
                                 Dim cell As Excel.Range = displayRng.Cells(i, j)
