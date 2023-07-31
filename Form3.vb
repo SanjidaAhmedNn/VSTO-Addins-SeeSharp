@@ -498,40 +498,29 @@ Public Class Form3
 
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
                     If RadioButton3.Checked = True Then
-                        If CheckBox2.Checked = True Then
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng.Cells(i, j).Copy
-                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteAll)
-                                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                                Next
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+                                rng.Cells(i, j).Copy
+                                rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
                             Next
-                        Else
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng.Cells(i, j).Copy
-                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                                Next
-                            Next
-                        End If
+                        Next
                     ElseIf RadioButton2.Checked = True Then
-                        If CheckBox2.Checked = True Then
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                                    rng.Cells(i, j).Copy
-                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                Next
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+                                rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
                             Next
-                        Else
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                                Next
-                            Next
-                        End If
+                        Next
                     End If
+
+                    If CheckBox2.Checked = True Then
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+                                rng.Cells(i, j).Copy
+                                rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                            Next
+                        Next
+                    End If
+
                     excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                 Else
 
