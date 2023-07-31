@@ -502,21 +502,24 @@ Public Class Form3
                             For j = 1 To rng.Columns.Count
                                 rng.Cells(i, j).Copy
                                 rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                If CheckBox2.Checked = True Then
+                                    rng.Cells(i, j).Copy
+                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                    rng2 = worksheet2.Range(rng2Address)
+                                End If
                             Next
                         Next
+
                     ElseIf RadioButton2.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
                                 rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                            Next
-                        Next
-                    End If
-
-                    If CheckBox2.Checked = True Then
-                        For i = 1 To rng.Rows.Count
-                            For j = 1 To rng.Columns.Count
-                                rng.Cells(i, j).Copy
-                                rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                If CheckBox2.Checked = True Then
+                                    rng.Cells(i, j).Copy
+                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                    rng2 = worksheet2.Range(rng2Address)
+                                End If
                             Next
                         Next
                     End If
