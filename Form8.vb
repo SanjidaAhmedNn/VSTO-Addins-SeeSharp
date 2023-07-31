@@ -210,31 +210,38 @@ Public Class Form8
     End Function
     Private Function FindConsecutive(Arr)
 
-        For i = LBound(Arr) To UBound(Arr)
-
-
-        Next
     End Function
 
     Private Function SearchDiagonally(Rng As Excel.Range, r As Integer, c As Integer)
 
         Dim rowEqual As Integer = SearchAlongRow(Rng, r, c)
 
-        Dim j As Integer
+        Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
 
-        Dim columnEquals() As Integer
-        ReDim columnEquals(rowEqual - 1)
-
-        For j = 1 To rowEqual
-            columnEquals(j - 1) = SearchAlongColumn(Rng, r, c + j - 1)
-        Next
-
-        Dim columnEqual As Integer = FindMinValue(columnEquals)
+        Dim Rng2 As Excel.Range
+        Rng2 = activesheet.Range(Rng.Cells(1, 1), Rng.Cells(1, rowEqual))
 
         Dim Output(1) As Integer
+        Output(0) = 1
+        Output(1) = rowEqual
 
-        Output(0) = rowEqual
-        Output(1) = columnEqual
+        Dim TotalCells As Integer = Rng2.Cells.Count
+
+        Dim j As Integer
+
+        j = 0
+
+        While SearchAlongColumn(Rng, r, c + j) > 1 And j + 1 <= rowEqual
+
+            If activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn(Rng, r, c + j), j + 1)).Cells.Count >= TotalCells Then
+                Rng2 = activesheet.Range(Rng.Cells(1, 1), Rng.Cells(SearchAlongColumn(Rng, r, c + j), j + 1))
+                Output(0) = SearchAlongColumn(Rng, r, c + j)
+                Output(1) = j + 1
+                TotalCells = Rng2.Cells.Count
+            End If
+            j = j + 1
+
+        End While
 
         SearchDiagonally = Output
 
@@ -420,7 +427,7 @@ Public Class Form8
 
             ElseIf RadioButton3.Checked = True Then
 
-                Dim Arr((r * C - 1), 1) As Object
+                Dim Arr(r * C - 1, 1) As Object
                 Dim count As Integer = 0
 
                 For i = 1 To r
@@ -433,12 +440,12 @@ Public Class Form8
 
                             If rowEqual > 1 And columnEqual > 1 Then
                                 For m = 1 To rowEqual
-                                    For n = 1 To columnEqual
-                                        Arr(count, 0) = i + m - 1
-                                        Arr(count, 1) = j + n - 1
-                                        count = count + 1
+                                    For n = 1 To rowEqual
+
                                     Next
                                 Next
+                                Arr(count, 0) = i
+                                Arr(count, 1) = j
                             End If
 
                             Dim newWidth As Single = width * rowEqual
@@ -451,7 +458,7 @@ Public Class Form8
                             label.Width = newWidth
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
-                            j = j + rowEqual - 1
+
 
                             If CheckBox1.Checked = True Then
                                 Dim cell As Excel.Range = displayRng.Cells(i, j)

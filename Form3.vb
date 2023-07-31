@@ -338,6 +338,11 @@ Public Class Form3
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet = workbook.Worksheets(sheetName)
             worksheet.Activate()
 
@@ -368,8 +373,14 @@ Public Class Form3
             rng = userInput
 
             Dim sheetName As String
+
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet = workbook.Worksheets(sheetName)
             worksheet.Activate()
 
@@ -379,6 +390,7 @@ Public Class Form3
             rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
 
             rng.Select()
+
             Me.TextBox1.Text = rng.Address
 
             Me.Show()
@@ -412,7 +424,6 @@ Public Class Form3
         Try
             FocusedTextBox = 2
             Me.Hide()
-
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
             rng2 = userInput
