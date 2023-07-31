@@ -431,6 +431,11 @@ Public Class Form3
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet2 = workbook.Worksheets(sheetName)
             worksheet2.Activate()
 
@@ -497,6 +502,7 @@ Public Class Form3
                 rng2.Select()
 
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
+
                     If RadioButton3.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
@@ -525,6 +531,7 @@ Public Class Form3
                     End If
 
                     excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
                 Else
 
                     Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object

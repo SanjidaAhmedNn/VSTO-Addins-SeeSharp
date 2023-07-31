@@ -2885,6 +2885,11 @@ Public Class Form7
                 Dim sheetName As String
                 sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
                 sheetName = Split(sheetName, "!")(0)
+
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+
                 worksheet = workbook.Worksheets(sheetName)
                 worksheet.Activate()
 
@@ -2919,6 +2924,11 @@ Public Class Form7
                 Dim sheetName As String
                 sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
                 sheetName = Split(sheetName, "!")(0)
+
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+
                 worksheet = workbook.Worksheets(sheetName)
                 worksheet.Activate()
             Catch ex As Exception
@@ -2948,15 +2958,37 @@ Public Class Form7
 
         Try
             FocusedTextBox = 3
+            Me.Hide()
+
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            rng2 = userInput
 
-            TextBox3.Text = userInput.Address
+
+            Dim sheetName As String
+            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            worksheet2 = workbook.Worksheets(sheetName)
+            worksheet2.Activate()
+
+            rng2.Select()
+
+            TextBox3.Text = rng2.Address
+
+            Me.Show()
             TextBox3.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox3.Focus()
 
         End Try
 

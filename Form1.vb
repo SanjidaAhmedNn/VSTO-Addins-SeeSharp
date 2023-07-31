@@ -500,6 +500,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -539,6 +544,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -938,6 +948,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet2 = workBook.Worksheets(sheetName)
             workSheet2.Activate()
 
