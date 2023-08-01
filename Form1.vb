@@ -569,7 +569,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+    Public Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         Try
             excelApp = Globals.ThisAddIn.Application
@@ -972,7 +972,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+    Public Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
         Try
             excelApp = Globals.ThisAddIn.Application
