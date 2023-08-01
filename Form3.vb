@@ -506,8 +506,7 @@ Public Class Form3
                     If RadioButton3.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
-                                rng.Cells(i, j).Copy
-                                rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2.Cells(j, i).Value = rng.Cells(i, j).Value
                                 rng2 = worksheet2.Range(rng2Address)
                                 If CheckBox2.Checked = True Then
                                     rng.Cells(i, j).Copy
