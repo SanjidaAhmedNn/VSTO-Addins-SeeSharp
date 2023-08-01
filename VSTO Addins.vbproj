@@ -238,12 +238,6 @@
     <Compile Include="Form12HideRanges.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form13.Designer.vb">
-      <DependentUpon>Form13.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form13.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
@@ -307,9 +301,6 @@
     <EmbeddedResource Include="Form12HideRanges.resx">
       <DependentUpon>Form12HideRanges.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form13.resx">
-      <DependentUpon>Form13.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
@@ -359,7 +350,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="VSTO Addins_1_TemporaryKey.pfx" />
+    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -392,10 +383,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>VSTO Addins_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>1EBFA239931CA306000DEEA549E2683A9C9EC8A5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>8AFAF769557E6C9AF5A52D2ADA87007C00AEB5E5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
