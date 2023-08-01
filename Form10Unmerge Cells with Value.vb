@@ -365,6 +365,11 @@ Public Class Form10
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -400,6 +405,11 @@ Public Class Form10
                 Dim sheetName As String
                 sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
                 sheetName = Split(sheetName, "!")(0)
+
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+
                 workSheet = workBook.Worksheets(sheetName)
                 workSheet.Activate()
             Catch ex As Exception
@@ -555,15 +565,37 @@ Public Class Form10
 
         Try
             FocusedTextBox = 3
+            Me.Hide()
+
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            rng2 = userInput
 
-            TextBox3.Text = userInput.Address
+
+            Dim sheetName As String
+            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet2 = workBook.Worksheets(sheetName)
+            workSheet2.Activate()
+
+            rng2.Select()
+
+            TextBox3.Text = rng2.Address
+
+            Me.Show()
             TextBox3.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox3.Focus()
 
         End Try
 
