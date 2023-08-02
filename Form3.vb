@@ -1065,8 +1065,11 @@ Public Class Form3
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
 
-        Me.Close()
+        Try
+            Me.Close()
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub btn_cancel_MouseEnter(sender As Object, e As EventArgs) Handles btn_cancel.MouseEnter
