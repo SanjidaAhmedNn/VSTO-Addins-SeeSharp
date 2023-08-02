@@ -244,10 +244,100 @@
     <Compile Include="Form13HideAllExceptSelectedRange.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form14SpecifyScrollArea.Designer.vb">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form14SpecifyScrollArea.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form15CompareCells.Designer.vb">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form15CompareCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.Designer.vb">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form17DivideNames.Designer.vb">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form17DivideNames.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.Designer.vb">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form19.Designer.vb">
+      <DependentUpon>Form19.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form19.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
     <Compile Include="Form2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form20.Designer.vb">
+      <DependentUpon>Form20.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form20.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.Designer.vb">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.Designer.vb">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.Designer.vb">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.Designer.vb">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form25_Split_Range.Designer.vb">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_Split_Range.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form26_split_text_bycharacters.Designer.vb">
+      <DependentUpon>Form26_split_text_bycharacters.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form26_split_text_bycharacters.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form27_Split_text_bystrings.Designer.vb">
+      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form27_Split_text_bystrings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form28_Split_text_bypattern.Designer.vb">
+      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form28_Split_text_bypattern.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form3.Designer.vb">
@@ -310,8 +400,53 @@
     <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
       <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form15CompareCells.resx">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form17DivideNames.resx">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form18_CombineRanges.resx">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form19.resx">
+      <DependentUpon>Form19.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form20.resx">
+      <DependentUpon>Form20.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form21FillEmtyCells.resx">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_Split_Cells.resx">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_Split_Range.resx">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form26_split_text_bycharacters.resx">
+      <DependentUpon>Form26_split_text_bycharacters.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form27_Split_text_bystrings.resx">
+      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form28_Split_text_bypattern.resx">
+      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>
@@ -395,7 +530,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>89115F2ECCB553BD718D43E013640409A3DAB898</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6ABEEB6C953983797B4C707EFFBA379177A93F03</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
