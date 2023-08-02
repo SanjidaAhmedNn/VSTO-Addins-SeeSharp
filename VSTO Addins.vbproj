@@ -340,6 +340,12 @@
     <Compile Include="Form28_Split_text_bypattern.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form3.Designer.vb">
       <DependentUpon>Form3.vb</DependentUpon>
     </Compile>
@@ -447,6 +453,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form28_Split_text_bypattern.resx">
       <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>

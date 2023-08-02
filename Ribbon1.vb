@@ -126,4 +126,9 @@ Public Class Ribbon1
         Dim form As New Form28_Split_text_bypattern
         form.Show()
     End Sub
+
+    Private Sub Button27_Click(sender As Object, e As RibbonControlEventArgs) Handles Button27.Click
+        Dim form As New Form29_Simple_Drop_down_List
+        form.Show()
+    End Sub
 End Class
