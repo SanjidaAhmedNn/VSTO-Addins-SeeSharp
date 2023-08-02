@@ -74,6 +74,10 @@
         Me.Group4 = Me.Factory.CreateRibbonGroup
         Me.Button22 = Me.Factory.CreateRibbonButton
         Me.Button23 = Me.Factory.CreateRibbonButton
+        Me.Menu2 = Me.Factory.CreateRibbonMenu
+        Me.Button24 = Me.Factory.CreateRibbonButton
+        Me.Button25 = Me.Factory.CreateRibbonButton
+        Me.Button26 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -274,6 +278,7 @@
         '
         Me.Group4.Items.Add(Me.Button22)
         Me.Group4.Items.Add(Me.Button23)
+        Me.Group4.Items.Add(Me.Menu2)
         Me.Group4.Label = "Group4"
         Me.Group4.Name = "Group4"
         '
@@ -286,6 +291,32 @@
         '
         Me.Button23.Label = "Form 25 Split Range"
         Me.Button23.Name = "Button23"
+        '
+        'Menu2
+        '
+        Me.Menu2.Items.Add(Me.Button24)
+        Me.Menu2.Items.Add(Me.Button25)
+        Me.Menu2.Items.Add(Me.Button26)
+        Me.Menu2.Label = "Split_26-27-28"
+        Me.Menu2.Name = "Menu2"
+        '
+        'Button24
+        '
+        Me.Button24.Label = "Form 26"
+        Me.Button24.Name = "Button24"
+        Me.Button24.ShowImage = True
+        '
+        'Button25
+        '
+        Me.Button25.Label = "Form 27"
+        Me.Button25.Name = "Button25"
+        Me.Button25.ShowImage = True
+        '
+        'Button26
+        '
+        Me.Button26.Label = "Form 28"
+        Me.Button26.Name = "Button26"
+        Me.Button26.ShowImage = True
         '
         'Ribbon1
         '
@@ -339,6 +370,10 @@
     Friend WithEvents Group4 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button22 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button23 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu2 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button24 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button25 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button26 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

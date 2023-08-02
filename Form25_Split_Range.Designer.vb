@@ -633,6 +633,7 @@ Partial Class Form25_Split_Range
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.TextBox1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form25_Split_Range"
         Me.Text = "Split Range"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()

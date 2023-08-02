@@ -111,4 +111,19 @@ Public Class Ribbon1
         Dim form As New Form25_Split_Range
         form.Show()
     End Sub
+
+    Private Sub Button24_Click(sender As Object, e As RibbonControlEventArgs) Handles Button24.Click
+        Dim form As New Form26_split_text_bycharacters
+        form.Show()
+    End Sub
+
+    Private Sub Button25_Click(sender As Object, e As RibbonControlEventArgs) Handles Button25.Click
+        Dim form As New Form27_Split_text_bystrings
+        form.Show()
+    End Sub
+
+    Private Sub Button26_Click(sender As Object, e As RibbonControlEventArgs) Handles Button26.Click
+        Dim form As New Form28_Split_text_bypattern
+        form.Show()
+    End Sub
 End Class
