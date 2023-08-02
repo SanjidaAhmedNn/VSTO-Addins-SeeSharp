@@ -39,10 +39,10 @@ Public Class Form13HideAllExceptSelectedRange
             worksheet = workbook.ActiveSheet
 
 
+            txtSourceRange.Focus()
 
 
             inputRng = worksheet.Range(txtSourceRange.Text)
-            txtSourceRange.Focus()
 
 
 
@@ -109,13 +109,23 @@ Public Class Form13HideAllExceptSelectedRange
 
             Next
 
+            Dim arrRng As String() = Split(txtSourceRange.Text, ",")
+            For i = 0 To UBound(arrRng) - 1
+                If Not worksheet.Range(arrRng(i)).Column = worksheet.Range(arrRng(i + 1)).Column And worksheet.Range(arrRng(i)).Columns.Count = worksheet.Range(arrRng(i + 1)).Columns.Count Then
+                    Dim columnMisMatchAnswer As MsgBoxResult
+                    columnMisMatchAnswer = MsgBox("To continue, the number of Columns must be same in each selection." & vbCrLf & "Please retry!", MsgBoxStyle.OkOnly, "Warning!")
+
+                    GoTo finish
+                End If
+            Next
+
             If rngCount = 0 Then
 
                 Call singleRng()
             Else
                 Call multiRng()
             End If
-
+finish:
 
             Me.Dispose()
 
@@ -123,6 +133,7 @@ Public Class Form13HideAllExceptSelectedRange
         Catch ex As Exception
 
         End Try
+
 
 
     End Sub
@@ -151,7 +162,7 @@ Public Class Form13HideAllExceptSelectedRange
             lastColumn = firstColumn + selectedRng.Columns.Count - 1
 
             'Single rows Or Columns validation
-            If selectedRng.Rows.Count <= 3 And selectedRng.Columns.Count <= 3 Then
+            If selectedRng.Rows.Count <= 2 And selectedRng.Columns.Count <= 2 Then
                 Dim answer As MsgBoxResult
                 answer = MsgBox("You are about to hide all cells except " & selectedRng.Rows.Count & " Rows and " & selectedRng.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
                 If answer = MsgBoxResult.Yes Then

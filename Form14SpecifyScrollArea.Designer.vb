@@ -30,7 +30,7 @@ Partial Class Form14SpecifyScrollArea
         Me.Btn_OK = New System.Windows.Forms.Button()
         Me.ComboBox = New System.Windows.Forms.ComboBox()
         Me.CheckBox = New System.Windows.Forms.CheckBox()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.GB_ExpectedOutput = New VSTO_Addins.CustomGroupBox()
         Me.GB_InputRange = New VSTO_Addins.CustomGroupBox()
@@ -120,15 +120,15 @@ Partial Class Form14SpecifyScrollArea
         Me.CheckBox.Text = "Create a copy of the original worksheet"
         Me.CheckBox.UseVisualStyleBackColor = True
         '
-        'TextBox1
+        'txtSourceRange
         '
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(120, 15)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(352, 25)
-        Me.TextBox1.TabIndex = 196
+        Me.txtSourceRange.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSourceRange.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSourceRange.Location = New System.Drawing.Point(120, 15)
+        Me.txtSourceRange.Name = "txtSourceRange"
+        Me.txtSourceRange.Size = New System.Drawing.Size(352, 25)
+        Me.txtSourceRange.TabIndex = 196
         '
         'Label1
         '
@@ -197,7 +197,7 @@ Partial Class Form14SpecifyScrollArea
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.ComboBox)
         Me.Controls.Add(Me.CheckBox)
-        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.txtSourceRange)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.GB_ExpectedOutput)
         Me.Controls.Add(Me.GB_InputRange)
@@ -221,7 +221,7 @@ Partial Class Form14SpecifyScrollArea
     Friend WithEvents Btn_OK As Windows.Forms.Button
     Friend WithEvents ComboBox As Windows.Forms.ComboBox
     Friend WithEvents CheckBox As Windows.Forms.CheckBox
-    Friend WithEvents TextBox1 As Windows.Forms.TextBox
+    Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents GB_ExpectedOutput As CustomGroupBox
     Friend WithEvents GB_InputRange As CustomGroupBox
