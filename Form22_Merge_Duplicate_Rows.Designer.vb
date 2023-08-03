@@ -36,6 +36,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CheckBox5 = New System.Windows.Forms.CheckBox()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.Info = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox10 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
@@ -53,10 +54,10 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomPanel1 = New VSTO_Addins.CustomPanel()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.CustomPanel2 = New VSTO_Addins.CustomPanel()
-        Me.Info = New System.Windows.Forms.PictureBox()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox10.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -64,7 +65,6 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomGroupBox1.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'AutoSelection
@@ -212,6 +212,16 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CheckBox4.Text = "Keep formatting"
         Me.CheckBox4.UseVisualStyleBackColor = True
         '
+        'Info
+        '
+        Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
+        Me.Info.Location = New System.Drawing.Point(302, 42)
+        Me.Info.Name = "Info"
+        Me.Info.Size = New System.Drawing.Size(20, 20)
+        Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Info.TabIndex = 272
+        Me.Info.TabStop = False
+        '
         'CustomGroupBox2
         '
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
@@ -348,7 +358,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(1, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(100, 40)
+        Me.Label2.Size = New System.Drawing.Size(99, 40)
         Me.Label2.TabIndex = 1
         Me.Label2.Text = "Column Name"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -409,16 +419,6 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomPanel2.Size = New System.Drawing.Size(300, 160)
         Me.CustomPanel2.TabIndex = 11
         '
-        'Info
-        '
-        Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
-        Me.Info.Location = New System.Drawing.Point(302, 42)
-        Me.Info.Name = "Info"
-        Me.Info.Size = New System.Drawing.Size(20, 20)
-        Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Info.TabIndex = 272
-        Me.Info.TabStop = False
-        '
         'Form22_Merge_Duplicate_Rows
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -447,6 +447,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox10.ResumeLayout(False)
         Me.CustomGroupBox10.PerformLayout()
@@ -455,7 +456,6 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomGroupBox1.ResumeLayout(False)
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

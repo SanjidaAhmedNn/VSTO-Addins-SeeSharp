@@ -45,6 +45,7 @@
         Me.Group1 = Me.Factory.CreateRibbonGroup
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Button1 = Me.Factory.CreateRibbonButton
+        Me.Button6 = Me.Factory.CreateRibbonButton
         Me.Transform = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
@@ -64,6 +65,7 @@
         '
         Me.Group1.Items.Add(Me.Button4)
         Me.Group1.Items.Add(Me.Button1)
+        Me.Group1.Items.Add(Me.Button6)
         Me.Group1.Items.Add(Me.Transform)
         Me.Group1.Items.Add(Me.Button3)
         Me.Group1.Items.Add(Me.Button2)
@@ -80,6 +82,11 @@
         '
         Me.Button1.Label = "Flip Design 1"
         Me.Button1.Name = "Button1"
+        '
+        'Button6
+        '
+        Me.Button6.Label = "Combine Rows"
+        Me.Button6.Name = "Button6"
         '
         'Transform
         '
@@ -122,6 +129,7 @@
     Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button2 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button5 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button6 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
