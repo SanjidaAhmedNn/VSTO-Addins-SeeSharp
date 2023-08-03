@@ -51,7 +51,6 @@ Public Class Form3
 
 
     End Function
-
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then
@@ -95,8 +94,8 @@ Public Class Form3
             r = displayRng.Rows.Count
             c = displayRng.Columns.Count
 
-            Dim height As Integer
-            Dim width As Integer
+            Dim height As Single
+            Dim width As Single
 
             If r <= 6 Then
                 height = panel1.Height / r
@@ -339,6 +338,11 @@ Public Class Form3
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet = workbook.Worksheets(sheetName)
             worksheet.Activate()
 
@@ -369,8 +373,14 @@ Public Class Form3
             rng = userInput
 
             Dim sheetName As String
+
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet = workbook.Worksheets(sheetName)
             worksheet.Activate()
 
@@ -380,6 +390,7 @@ Public Class Form3
             rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
 
             rng.Select()
+
             Me.TextBox1.Text = rng.Address
 
             Me.Show()
@@ -414,13 +425,17 @@ Public Class Form3
             FocusedTextBox = 2
             Me.Hide()
 
-
             Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
             rng2 = userInput
 
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             worksheet2 = workbook.Worksheets(sheetName)
             worksheet2.Activate()
 
@@ -477,46 +492,45 @@ Public Class Form3
             If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
                 rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Columns.Count, rng.Rows.Count))
+                Dim rng2Address As String = rng2.Address
 
                 If CheckBox1.Checked = True Then
                     worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
                 End If
 
+                worksheet2.Activate()
+                rng2.Select()
+
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
+
                     If RadioButton3.Checked = True Then
-                        If CheckBox2.Checked = True Then
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng.Cells(i, j).Copy
-                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteAll)
-                                Next
-                            Next
-                        Else
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng.Cells(i, j).Copy
-                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                Next
-                            Next
-                        End If
-                    ElseIf RadioButton2.Checked = True Then
-                        If CheckBox2.Checked = True Then
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+                                rng2.Cells(j, i).Value = rng.Cells(i, j).Value
+                                rng2 = worksheet2.Range(rng2Address)
+                                If CheckBox2.Checked = True Then
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                Next
+                                    rng2 = worksheet2.Range(rng2Address)
+                                End If
                             Next
-                        Else
-                            For i = 1 To rng.Rows.Count
-                                For j = 1 To rng.Columns.Count
-                                    rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
-                                Next
+                        Next
+
+                    ElseIf RadioButton2.Checked = True Then
+                        For i = 1 To rng.Rows.Count
+                            For j = 1 To rng.Columns.Count
+                                rng2.Cells(j, i).Value = "=" & rng.Cells(i, j).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
+                                If CheckBox2.Checked = True Then
+                                    rng.Cells(i, j).Copy
+                                    rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                    rng2 = worksheet2.Range(rng2Address)
+                                End If
                             Next
-                        End If
+                        Next
                     End If
+
                     excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
                 Else
 
                     Dim Arr(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
@@ -603,6 +617,7 @@ Public Class Form3
                 Me.Close()
 
             End If
+
         Catch ex As Exception
 
         End Try
@@ -1050,8 +1065,11 @@ Public Class Form3
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
 
-        Me.Close()
+        Try
+            Me.Close()
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub btn_cancel_MouseEnter(sender As Object, e As EventArgs) Handles btn_cancel.MouseEnter

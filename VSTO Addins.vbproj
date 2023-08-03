@@ -539,7 +539,11 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
+<<<<<<< HEAD
     <ManifestCertificateThumbprint>6ABEEB6C953983797B4C707EFFBA379177A93F03</ManifestCertificateThumbprint>
+=======
+    <ManifestCertificateThumbprint>6E6D53F08746AB85D96DD48EDA70F5F4F1277825</ManifestCertificateThumbprint>
+>>>>>>> origin/branch-17
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
