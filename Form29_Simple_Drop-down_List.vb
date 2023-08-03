@@ -15,19 +15,6 @@ Public Class Form29_Simple_Drop_down_List
 
     End Sub
 
-    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
-
-    End Sub
-
-    Private Sub ListBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox2.SelectedIndexChanged
-
-
-    End Sub
-
-    Private Sub ListBox2_MouseClick(sender As Object, e As MouseEventArgs) Handles ListBox2.MouseClick
-
-    End Sub
-
     Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
         ' Clear the list box
         ListBox2.Items.Clear()
@@ -100,10 +87,6 @@ Public Class Form29_Simple_Drop_down_List
         End If
     End Sub
 
-    Private Sub Form29_Simple_Drop_down_List_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
-
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
         excelApp = Globals.ThisAddIn.Application
         workBook = excelApp.ActiveWorkbook
@@ -154,15 +137,13 @@ Public Class Form29_Simple_Drop_down_List
         workBook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
 
-
-        workSheet.Range("A1").Select()
+        'workSheet.Range("A1").Select()
         'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-        Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
-        userInput = excelApp.InputBox("Select a range", Type:=8)
-
+        'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
+        Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1", Type:=8)
 
         src_rng = userInput
-
+        'MsgBox(src_rng)
 
         Dim sheetName As String
         sheetName = Split(src_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
@@ -192,28 +173,33 @@ Public Class Form29_Simple_Drop_down_List
         Label7.Visible = True
         Label7.Text = ListBox2.Items.Count
 
-
-
     End Sub
 
     Private Sub Selection_Click(sender As Object, e As EventArgs) Handles Selection.Click
         Try
+            TB_src_range = selectedRange
+            'FocusedTextBox = 1
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
-            userInput = excelApp.InputBox("Select a range", Type:=8)
+            'Dim userInput As String = excelApp.InputBox("Select a range", "Select range", "=$A$1")
 
+
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
             des_rng = userInput
-
 
             Dim sheetName As String
             sheetName = Split(des_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
-            workSheet2 = workBook.Worksheets(sheetName)
-            workSheet2.Activate()
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet = workBook.Worksheets(sheetName)
+            workSheet.Activate()
 
             des_rng.Select()
 
@@ -233,4 +219,30 @@ Public Class Form29_Simple_Drop_down_List
     Private Sub TB_dest_range_TextChanged(sender As Object, e As EventArgs) Handles TB_dest_range.TextChanged
 
     End Sub
+
+    Private Sub Form29_Load(sender As Object, e As EventArgs) Handles Me.Load
+        TB_src_range.Focus()
+        'selectedRange = excelApp.Selection
+    End Sub
+
+    Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Excel.Range)
+
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            Dim selectedRange As Excel.Range
+            selectedRange = excelApp.Selection
+
+            TB_dest_range.Text = selectedRange.Address
+            workSheet = workBook.ActiveSheet
+            src_rng = selectedRange
+            TB_dest_range.Focus()
+
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
 End Class
+
