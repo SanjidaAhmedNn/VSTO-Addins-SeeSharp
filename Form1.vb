@@ -619,7 +619,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
+    Public Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
         Try
             Call Display()
         Catch ex As Exception
@@ -627,7 +627,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+    Public Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
 

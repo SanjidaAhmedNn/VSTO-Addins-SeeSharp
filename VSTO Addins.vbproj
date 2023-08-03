@@ -386,7 +386,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>8AFAF769557E6C9AF5A52D2ADA87007C00AEB5E5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>7B7CD9EF4BBEE4F6E92FCCA09A3FDA9793F0B16F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

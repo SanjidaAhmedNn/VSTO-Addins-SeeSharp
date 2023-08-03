@@ -511,7 +511,7 @@ Partial Class Form1
     End Sub
 
     Friend WithEvents PictureBox9 As Windows.Forms.PictureBox
-    Friend WithEvents TextBox2 As Windows.Forms.TextBox
+    Public WithEvents TextBox2 As Windows.Forms.TextBox
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents PictureBox8 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
@@ -521,13 +521,13 @@ Partial Class Form1
     Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox6 As Windows.Forms.PictureBox
     Friend WithEvents RadioButton4 As Windows.Forms.RadioButton
-    Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
+    Public WithEvents RadioButton3 As Windows.Forms.RadioButton
     Friend WithEvents btn_OK As Windows.Forms.Button
     Friend WithEvents btn_cancel As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
     Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
     Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
-    Friend WithEvents TextBox1 As Windows.Forms.TextBox
+    Public WithEvents TextBox1 As Windows.Forms.TextBox
     Friend WithEvents CheckBox2 As Windows.Forms.CheckBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
@@ -538,7 +538,7 @@ Partial Class Form1
     Friend WithEvents CustomGroupBox6 As CustomGroupBox
     Friend WithEvents CustomGroupBox4 As CustomGroupBox
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
-    Friend WithEvents RadioButton1 As Windows.Forms.RadioButton
+    Public WithEvents RadioButton1 As Windows.Forms.RadioButton
     Friend WithEvents RadioButton5 As Windows.Forms.RadioButton
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
 End Class
