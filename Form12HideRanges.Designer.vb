@@ -340,7 +340,7 @@ Partial Class Form12HideRanges
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(565, 394)
+        Me.ClientSize = New System.Drawing.Size(565, 382)
         Me.Controls.Add(Me.GB_Input_Range)
         Me.Controls.Add(Me.GB_Expected_Output)
         Me.Controls.Add(Me.PictureBox7)

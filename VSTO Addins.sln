@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VSTO Addins", "VSTO Addins.vbproj", "{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "flipTest", "flipTest\flipTest.vbproj", "{66554816-7843-4C71-9B0E-9D8A98CDE2B9}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ExampleProject.Tests", "..\ExampleProject.Tests\ExampleProject.Tests.vbproj", "{5921885C-0372-4D31-B3C2-A605D09A1BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{66554816-7843-4C71-9B0E-9D8A98CDE2B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66554816-7843-4C71-9B0E-9D8A98CDE2B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66554816-7843-4C71-9B0E-9D8A98CDE2B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66554816-7843-4C71-9B0E-9D8A98CDE2B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5921885C-0372-4D31-B3C2-A605D09A1BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5921885C-0372-4D31-B3C2-A605D09A1BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5921885C-0372-4D31-B3C2-A605D09A1BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5921885C-0372-4D31-B3C2-A605D09A1BAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

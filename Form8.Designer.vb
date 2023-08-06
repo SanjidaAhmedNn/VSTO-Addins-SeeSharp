@@ -23,16 +23,13 @@ Partial Class Form8
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form8))
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.CustomPanel1 = New VSTO_Addins.CustomPanel()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
@@ -52,9 +49,9 @@ Partial Class Form8
         Me.PictureBox5 = New System.Windows.Forms.PictureBox()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
         Me.CustomGroupBox4.SuspendLayout()
@@ -65,18 +62,10 @@ Partial Class Form8
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'PictureBox4
-        '
-        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(247, 41)
-        Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox4.TabIndex = 143
-        Me.PictureBox4.TabStop = False
         '
         'CheckBox1
         '
@@ -88,17 +77,6 @@ Partial Class Form8
         Me.CheckBox1.TabIndex = 135
         Me.CheckBox1.Text = "Keep formatting"
         Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(434, 170)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 142
-        Me.PictureBox7.TabStop = False
         '
         'Button2
         '
@@ -128,6 +106,7 @@ Partial Class Form8
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
         Me.ComboBox1.Location = New System.Drawing.Point(12, 410)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
@@ -164,17 +143,6 @@ Partial Class Form8
         Me.Label1.Size = New System.Drawing.Size(91, 17)
         Me.Label1.TabIndex = 129
         Me.Label1.Text = "Source Range"
-        '
-        'PictureBox9
-        '
-        Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
-        Me.PictureBox9.Location = New System.Drawing.Point(210, 41)
-        Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox9.Name = "PictureBox9"
-        Me.PictureBox9.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox9.TabIndex = 145
-        Me.PictureBox9.TabStop = False
         '
         'CustomGroupBox5
         '
@@ -400,6 +368,39 @@ Partial Class Form8
         Me.RadioButton1.Text = "Row-wise merging"
         Me.RadioButton1.UseVisualStyleBackColor = True
         '
+        'PictureBox9
+        '
+        Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
+        Me.PictureBox9.Location = New System.Drawing.Point(210, 41)
+        Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox9.Name = "PictureBox9"
+        Me.PictureBox9.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox9.TabIndex = 145
+        Me.PictureBox9.TabStop = False
+        '
+        'PictureBox4
+        '
+        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
+        Me.PictureBox4.Location = New System.Drawing.Point(247, 41)
+        Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox4.Name = "PictureBox4"
+        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox4.TabIndex = 143
+        Me.PictureBox4.TabStop = False
+        '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
+        Me.PictureBox7.Location = New System.Drawing.Point(434, 170)
+        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox7.TabIndex = 142
+        Me.PictureBox7.TabStop = False
+        '
         'Form8
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -425,9 +426,6 @@ Partial Class Form8
         Me.MinimizeBox = False
         Me.Name = "Form8"
         Me.Text = "Merge Cells with Same Value"
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
         Me.CustomGroupBox4.ResumeLayout(False)
@@ -440,6 +438,9 @@ Partial Class Form8
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -450,13 +451,11 @@ Partial Class Form8
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents RadioButton10 As Windows.Forms.RadioButton
     Friend WithEvents RadioButton9 As Windows.Forms.RadioButton
-    Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
     Friend WithEvents CustomPanel1 As CustomPanel
     Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
     Friend WithEvents CustomGroupBox6 As CustomGroupBox
     Friend WithEvents CustomPanel2 As CustomPanel
-    Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
     Friend WithEvents Button2 As Windows.Forms.Button
     Friend WithEvents Button1 As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
@@ -470,7 +469,9 @@ Partial Class Form8
     Friend WithEvents RadioButton1 As Windows.Forms.RadioButton
     Friend WithEvents TextBox1 As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
-    Friend WithEvents PictureBox9 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
+    Friend WithEvents PictureBox9 As Windows.Forms.PictureBox
+    Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
+    Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
 End Class

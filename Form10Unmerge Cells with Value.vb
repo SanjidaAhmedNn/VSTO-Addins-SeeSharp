@@ -291,7 +291,6 @@ Public Class Form10
 
             If (RadioButton9.Checked = False And RadioButton10.Checked = False) Then
                 MessageBox.Show("Select a Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
@@ -299,7 +298,7 @@ Public Class Form10
 
             If (RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox3.Text) = False)) Then
                 MessageBox.Show("Enter a Valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
+                TextBox3.Focus()
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
@@ -315,9 +314,15 @@ Public Class Form10
 
             If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = True Then
                 rng2 = rng
+                If CheckBox1.Checked = False Then
+                    rng2.ClearFormats()
+                End If
             Else
                 rng.Copy()
-                rng2.PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                rng2.PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                If CheckBox1.Checked = True Then
+                    rng2.PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                End If
                 excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
             End If
 
@@ -340,10 +345,6 @@ Public Class Form10
                     End If
                 Next j
             Next i
-
-            If CheckBox1.Checked = False Then
-                rng2.ClearFormats()
-            End If
 
             Me.Close()
 
@@ -1064,6 +1065,14 @@ Public Class Form10
 
             Button2.BackColor = Color.FromArgb(255, 255, 255)
             Button2.ForeColor = Color.FromArgb(70, 70, 70)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Try
+            Me.Close()
         Catch ex As Exception
 
         End Try

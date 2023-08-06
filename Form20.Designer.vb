@@ -29,6 +29,10 @@ Partial Class Form20
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox8 = New VSTO_Addins.CustomGroupBox()
+        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
+        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton7 = New System.Windows.Forms.RadioButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox10 = New System.Windows.Forms.PictureBox()
         Me.RadioButton9 = New System.Windows.Forms.RadioButton()
@@ -60,15 +64,13 @@ Partial Class Form20
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.RadioButton7 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
-        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox8.SuspendLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -80,8 +82,6 @@ Partial Class Form20
         Me.CustomGroupBox1.SuspendLayout()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox6.SuspendLayout()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RadioButton8
@@ -158,6 +158,53 @@ Partial Class Form20
         Me.CustomGroupBox8.Size = New System.Drawing.Size(288, 100)
         Me.CustomGroupBox8.TabIndex = 0
         Me.CustomGroupBox8.TabStop = False
+        Me.CustomGroupBox8.Visible = False
+        '
+        'PictureBox6
+        '
+        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
+        Me.PictureBox6.Location = New System.Drawing.Point(252, 74)
+        Me.PictureBox6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox6.Name = "PictureBox6"
+        Me.PictureBox6.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox6.TabIndex = 234
+        Me.PictureBox6.TabStop = False
+        '
+        'PictureBox5
+        '
+        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"), System.Drawing.Image)
+        Me.PictureBox5.Location = New System.Drawing.Point(252, 51)
+        Me.PictureBox5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox5.Name = "PictureBox5"
+        Me.PictureBox5.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox5.TabIndex = 233
+        Me.PictureBox5.TabStop = False
+        '
+        'RadioButton10
+        '
+        Me.RadioButton10.AutoSize = True
+        Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton10.Location = New System.Drawing.Point(8, 72)
+        Me.RadioButton10.Name = "RadioButton10"
+        Me.RadioButton10.Size = New System.Drawing.Size(152, 21)
+        Me.RadioButton10.TabIndex = 232
+        Me.RadioButton10.TabStop = True
+        Me.RadioButton10.Text = "Into Buttom-right  cell"
+        Me.RadioButton10.UseVisualStyleBackColor = True
+        '
+        'RadioButton7
+        '
+        Me.RadioButton7.AutoSize = True
+        Me.RadioButton7.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton7.Location = New System.Drawing.Point(8, 50)
+        Me.RadioButton7.Name = "RadioButton7"
+        Me.RadioButton7.Size = New System.Drawing.Size(141, 21)
+        Me.RadioButton7.TabIndex = 231
+        Me.RadioButton7.TabStop = True
+        Me.RadioButton7.Text = "Into Buttom-left Cell"
+        Me.RadioButton7.UseVisualStyleBackColor = True
         '
         'PictureBox1
         '
@@ -519,52 +566,6 @@ Partial Class Form20
         Me.ComboBox1.TabIndex = 233
         Me.ComboBox1.Text = "SOFTEKO"
         '
-        'RadioButton7
-        '
-        Me.RadioButton7.AutoSize = True
-        Me.RadioButton7.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton7.Location = New System.Drawing.Point(8, 50)
-        Me.RadioButton7.Name = "RadioButton7"
-        Me.RadioButton7.Size = New System.Drawing.Size(141, 21)
-        Me.RadioButton7.TabIndex = 231
-        Me.RadioButton7.TabStop = True
-        Me.RadioButton7.Text = "Into Buttom-left Cell"
-        Me.RadioButton7.UseVisualStyleBackColor = True
-        '
-        'RadioButton10
-        '
-        Me.RadioButton10.AutoSize = True
-        Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton10.Location = New System.Drawing.Point(8, 72)
-        Me.RadioButton10.Name = "RadioButton10"
-        Me.RadioButton10.Size = New System.Drawing.Size(152, 21)
-        Me.RadioButton10.TabIndex = 232
-        Me.RadioButton10.TabStop = True
-        Me.RadioButton10.Text = "Into Buttom-right  cell"
-        Me.RadioButton10.UseVisualStyleBackColor = True
-        '
-        'PictureBox5
-        '
-        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"), System.Drawing.Image)
-        Me.PictureBox5.Location = New System.Drawing.Point(252, 51)
-        Me.PictureBox5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox5.Name = "PictureBox5"
-        Me.PictureBox5.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox5.TabIndex = 233
-        Me.PictureBox5.TabStop = False
-        '
-        'PictureBox6
-        '
-        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
-        Me.PictureBox6.Location = New System.Drawing.Point(252, 74)
-        Me.PictureBox6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox6.Name = "PictureBox6"
-        Me.PictureBox6.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox6.TabIndex = 234
-        Me.PictureBox6.TabStop = False
-        '
         'Form20
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -597,6 +598,8 @@ Partial Class Form20
         Me.CustomGroupBox4.ResumeLayout(False)
         Me.CustomGroupBox8.ResumeLayout(False)
         Me.CustomGroupBox8.PerformLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -610,8 +613,6 @@ Partial Class Form20
         Me.CustomGroupBox1.ResumeLayout(False)
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox6.ResumeLayout(False)
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

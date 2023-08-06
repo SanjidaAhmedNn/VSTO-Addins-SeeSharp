@@ -506,8 +506,7 @@ Public Class Form3
                     If RadioButton3.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
-                                rng.Cells(i, j).Copy
-                                rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2.Cells(j, i).Value = rng.Cells(i, j).Value
                                 rng2 = worksheet2.Range(rng2Address)
                                 If CheckBox2.Checked = True Then
                                     rng.Cells(i, j).Copy
@@ -1066,8 +1065,11 @@ Public Class Form3
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
 
-        Me.Close()
+        Try
+            Me.Close()
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub btn_cancel_MouseEnter(sender As Object, e As EventArgs) Handles btn_cancel.MouseEnter
