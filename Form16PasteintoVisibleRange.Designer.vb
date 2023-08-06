@@ -24,19 +24,19 @@ Partial Class Form16PasteintoVisibleRange
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form16PasteintoVisibleRange))
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.btnOK = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.btnCancel = New System.Windows.Forms.Button()
+        Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Selection = New System.Windows.Forms.PictureBox()
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox10 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.destinationSelection = New System.Windows.Forms.PictureBox()
+        Me.txtDestRange = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.RadioButton10 = New System.Windows.Forms.RadioButton()
         Me.RadioButton9 = New System.Windows.Forms.RadioButton()
@@ -47,7 +47,7 @@ Partial Class Form16PasteintoVisibleRange
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox10.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.destinationSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox5.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -62,17 +62,17 @@ Partial Class Form16PasteintoVisibleRange
         Me.CheckBox1.Text = "Keep formatting"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
-        'Button2
+        'btnOK
         '
-        Me.Button2.BackColor = System.Drawing.Color.White
-        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(447, 312)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(62, 26)
-        Me.Button2.TabIndex = 190
-        Me.Button2.Text = "OK"
-        Me.Button2.UseVisualStyleBackColor = False
+        Me.btnOK.BackColor = System.Drawing.Color.White
+        Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnOK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnOK.Location = New System.Drawing.Point(447, 312)
+        Me.btnOK.Name = "btnOK"
+        Me.btnOK.Size = New System.Drawing.Size(62, 26)
+        Me.btnOK.TabIndex = 190
+        Me.btnOK.Text = "OK"
+        Me.btnOK.UseVisualStyleBackColor = False
         '
         'ComboBox1
         '
@@ -105,27 +105,27 @@ Partial Class Form16PasteintoVisibleRange
         Me.Label1.TabIndex = 182
         Me.Label1.Text = "Source Range :"
         '
-        'Button1
+        'btnCancel
         '
-        Me.Button1.BackColor = System.Drawing.Color.White
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(528, 312)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(62, 26)
-        Me.Button1.TabIndex = 189
-        Me.Button1.Text = "Cancel"
-        Me.Button1.UseVisualStyleBackColor = False
+        Me.btnCancel.BackColor = System.Drawing.Color.White
+        Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancel.Location = New System.Drawing.Point(528, 312)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(62, 26)
+        Me.btnCancel.TabIndex = 189
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = False
         '
-        'TextBox1
+        'txtSourceRange
         '
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(15, 44)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(287, 25)
-        Me.TextBox1.TabIndex = 204
+        Me.txtSourceRange.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSourceRange.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSourceRange.Location = New System.Drawing.Point(15, 44)
+        Me.txtSourceRange.Name = "txtSourceRange"
+        Me.txtSourceRange.Size = New System.Drawing.Size(287, 25)
+        Me.txtSourceRange.TabIndex = 204
         '
         'Selection
         '
@@ -169,8 +169,8 @@ Partial Class Form16PasteintoVisibleRange
         Me.CustomGroupBox10.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox10.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox10.Controls.Add(Me.PictureBox2)
-        Me.CustomGroupBox10.Controls.Add(Me.PictureBox1)
-        Me.CustomGroupBox10.Controls.Add(Me.TextBox2)
+        Me.CustomGroupBox10.Controls.Add(Me.destinationSelection)
+        Me.CustomGroupBox10.Controls.Add(Me.txtDestRange)
         Me.CustomGroupBox10.Controls.Add(Me.Label3)
         Me.CustomGroupBox10.Controls.Add(Me.RadioButton10)
         Me.CustomGroupBox10.Controls.Add(Me.RadioButton9)
@@ -190,27 +190,27 @@ Partial Class Form16PasteintoVisibleRange
         Me.PictureBox2.TabIndex = 208
         Me.PictureBox2.TabStop = False
         '
-        'PictureBox1
+        'destinationSelection
         '
-        Me.PictureBox1.BackColor = System.Drawing.Color.White
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(245, 85)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(24, 23)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 207
-        Me.PictureBox1.TabStop = False
+        Me.destinationSelection.BackColor = System.Drawing.Color.White
+        Me.destinationSelection.Image = CType(resources.GetObject("destinationSelection.Image"), System.Drawing.Image)
+        Me.destinationSelection.Location = New System.Drawing.Point(245, 85)
+        Me.destinationSelection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.destinationSelection.Name = "destinationSelection"
+        Me.destinationSelection.Size = New System.Drawing.Size(24, 23)
+        Me.destinationSelection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.destinationSelection.TabIndex = 207
+        Me.destinationSelection.TabStop = False
         '
-        'TextBox2
+        'txtDestRange
         '
-        Me.TextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox2.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox2.Location = New System.Drawing.Point(26, 84)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(244, 25)
-        Me.TextBox2.TabIndex = 206
+        Me.txtDestRange.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtDestRange.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtDestRange.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDestRange.Location = New System.Drawing.Point(26, 84)
+        Me.txtDestRange.Name = "txtDestRange"
+        Me.txtDestRange.Size = New System.Drawing.Size(244, 25)
+        Me.txtDestRange.TabIndex = 206
         '
         'Label3
         '
@@ -277,14 +277,14 @@ Partial Class Form16PasteintoVisibleRange
         Me.Controls.Add(Me.Selection)
         Me.Controls.Add(Me.AutoSelection)
         Me.Controls.Add(Me.CustomGroupBox4)
-        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.txtSourceRange)
         Me.Controls.Add(Me.CheckBox1)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.CustomGroupBox5)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.btnCancel)
         Me.Name = "Form16PasteintoVisibleRange"
         Me.Text = "Paste into Visible Range"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -293,7 +293,7 @@ Partial Class Form16PasteintoVisibleRange
         Me.CustomGroupBox10.ResumeLayout(False)
         Me.CustomGroupBox10.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.destinationSelection, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -307,15 +307,15 @@ Partial Class Form16PasteintoVisibleRange
     Friend WithEvents CustomGroupBox10 As CustomGroupBox
     Friend WithEvents CustomGroupBox4 As CustomGroupBox
     Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
-    Friend WithEvents Button2 As Windows.Forms.Button
+    Friend WithEvents btnOK As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
     Friend WithEvents CheckBox2 As Windows.Forms.CheckBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
-    Friend WithEvents Button1 As Windows.Forms.Button
-    Friend WithEvents TextBox1 As Windows.Forms.TextBox
-    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
-    Friend WithEvents TextBox2 As Windows.Forms.TextBox
+    Friend WithEvents btnCancel As Windows.Forms.Button
+    Friend WithEvents txtSourceRange As Windows.Forms.TextBox
+    Friend WithEvents destinationSelection As Windows.Forms.PictureBox
+    Friend WithEvents txtDestRange As Windows.Forms.TextBox
     Friend WithEvents Selection As Windows.Forms.PictureBox
     Friend WithEvents AutoSelection As Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
