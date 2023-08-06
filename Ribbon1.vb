@@ -110,48 +110,13 @@ Public Class Ribbon1
 
         Dim MyForm22 As New Form22_Merge_Duplicate_Rows
 
-        MyForm22.excelApp = Globals.ThisAddIn.Application
-        MyForm22.workBook = MyForm22.excelApp.ActiveWorkbook
-        MyForm22.workSheet = MyForm22.workBook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(MyForm22.excelApp.Selection, Excel.Range)
-
-        MyForm22.rng = selection
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
         MyForm22.TextBox1.Text = selection.Address
-
-        Dim height As Single = MyForm22.Label3.Height
-        Dim width As Single = MyForm22.Label2.Width - 3.5
-
-        Dim i As Integer
-
-        For i = 1 To selection.Columns.Count
-
-            Dim label As New System.Windows.Forms.Label
-            label.Text = selection.Cells(1, i).Value
-            label.Location = New System.Drawing.Point(0, (i - 1) * height)
-            label.Height = height
-            label.Width = width
-            label.Font = New Font(label.Font.FontFamily, 9)
-            label.BorderStyle = BorderStyle.FixedSingle
-            label.TextAlign = ContentAlignment.MiddleCenter
-            label.BorderStyle = BorderStyle.None
-            label.TextAlign = ContentAlignment.MiddleLeft
-            MyForm22.CustomGroupBox7.Controls.Add(label)
-
-            Dim label2 As New System.Windows.Forms.Label
-            label2.Text = selection.Cells(2, i).Value
-            label2.Location = New System.Drawing.Point(width, (i - 1) * height)
-            label2.Height = height
-            label2.Width = width
-            label2.Font = New Font(label2.Font.FontFamily, 9)
-            label2.BorderStyle = BorderStyle.FixedSingle
-            label2.TextAlign = ContentAlignment.MiddleCenter
-            label2.BorderStyle = BorderStyle.None
-            label2.TextAlign = ContentAlignment.MiddleLeft
-            MyForm22.CustomGroupBox7.Controls.Add(label2)
-
-        Next
 
         MyForm22.Show()
 
