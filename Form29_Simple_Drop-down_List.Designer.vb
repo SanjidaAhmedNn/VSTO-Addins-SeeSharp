@@ -24,7 +24,7 @@ Partial Class Form29_Simple_Drop_down_List
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form29_Simple_Drop_down_List))
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Selection = New System.Windows.Forms.PictureBox()
+        Me.Selection_destination = New System.Windows.Forms.PictureBox()
         Me.TB_dest_range = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -44,7 +44,7 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Selection_Source = New System.Windows.Forms.PictureBox()
         Me.Info = New System.Windows.Forms.PictureBox()
         Me.TB_src_range = New System.Windows.Forms.TextBox()
-        CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Selection_destination, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection_Source, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -61,18 +61,18 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Label1.TabIndex = 342
         Me.Label1.Text = "Destination Range :"
         '
-        'Selection
+        'Selection_destination
         '
-        Me.Selection.BackColor = System.Drawing.Color.White
-        Me.Selection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Selection.Image = CType(resources.GetObject("Selection.Image"), System.Drawing.Image)
-        Me.Selection.Location = New System.Drawing.Point(253, 43)
-        Me.Selection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Selection.Name = "Selection"
-        Me.Selection.Size = New System.Drawing.Size(24, 25)
-        Me.Selection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Selection.TabIndex = 344
-        Me.Selection.TabStop = False
+        Me.Selection_destination.BackColor = System.Drawing.Color.White
+        Me.Selection_destination.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Selection_destination.Image = CType(resources.GetObject("Selection_destination.Image"), System.Drawing.Image)
+        Me.Selection_destination.Location = New System.Drawing.Point(253, 43)
+        Me.Selection_destination.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Selection_destination.Name = "Selection_destination"
+        Me.Selection_destination.Size = New System.Drawing.Size(24, 25)
+        Me.Selection_destination.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Selection_destination.TabIndex = 344
+        Me.Selection_destination.TabStop = False
         '
         'TB_dest_range
         '
@@ -307,14 +307,14 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Selection)
+        Me.Controls.Add(Me.Selection_destination)
         Me.Controls.Add(Me.TB_dest_range)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form29_Simple_Drop_down_List"
         Me.Text = "Simple Drop-down List"
-        CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Selection_destination, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox1.ResumeLayout(False)
         Me.CustomGroupBox1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -326,7 +326,7 @@ Partial Class Form29_Simple_Drop_down_List
     End Sub
 
     Friend WithEvents Label1 As Windows.Forms.Label
-    Friend WithEvents Selection As Windows.Forms.PictureBox
+    Friend WithEvents Selection_destination As Windows.Forms.PictureBox
     Friend WithEvents TB_dest_range As Windows.Forms.TextBox
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox

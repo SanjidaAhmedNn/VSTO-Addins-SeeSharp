@@ -540,7 +540,6 @@ Public Class Form1
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
-
             'workSheet.Range("A1").Select()
             'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
@@ -1662,18 +1661,5 @@ Public Class Form1
         End Try
     End Sub
 
-<<<<<<< HEAD
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-    End Sub
-
-    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
-
-    End Sub
-
-    Private Sub panel1_Paint(sender As Object, e As PaintEventArgs) Handles panel1.Paint
-
-    End Sub
-=======
->>>>>>> origin/branch-17
 End Class
