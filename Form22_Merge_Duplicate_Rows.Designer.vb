@@ -54,6 +54,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.CustomPanel2 = New VSTO_Addins.CustomPanel()
         Me.Info = New System.Windows.Forms.PictureBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -62,6 +63,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox1.SuspendLayout()
+        Me.CustomGroupBox7.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
         CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -357,6 +359,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         Me.CustomGroupBox7.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox7.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox7.Controls.Add(Me.Label6)
         Me.CustomGroupBox7.Location = New System.Drawing.Point(1, 38)
         Me.CustomGroupBox7.Name = "CustomGroupBox7"
         Me.CustomGroupBox7.Size = New System.Drawing.Size(307, 124)
@@ -419,6 +422,16 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.Info.TabIndex = 272
         Me.Info.TabStop = False
         '
+        'Label6
+        '
+        Me.Label6.BackColor = System.Drawing.Color.FromArgb(CType(CType(204, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Label6.ForeColor = System.Drawing.Color.Black
+        Me.Label6.Location = New System.Drawing.Point(-1, 2)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(307, 31)
+        Me.Label6.TabIndex = 0
+        Me.Label6.Text = "Label6"
+        '
         'Form22_Merge_Duplicate_Rows
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -453,6 +466,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox1.ResumeLayout(False)
+        Me.CustomGroupBox7.ResumeLayout(False)
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
         CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
@@ -492,4 +506,5 @@ Partial Class Form22_Merge_Duplicate_Rows
     Friend WithEvents CheckBox3 As Windows.Forms.CheckBox
     Friend WithEvents CheckBox4 As Windows.Forms.CheckBox
     Friend WithEvents Info As Windows.Forms.PictureBox
+    Friend WithEvents Label6 As Windows.Forms.Label
 End Class
