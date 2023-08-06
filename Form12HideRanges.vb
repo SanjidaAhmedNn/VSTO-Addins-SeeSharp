@@ -130,11 +130,35 @@ Public Class Form12HideRanges
 
             Dim topLeft, bottomRight As String
 
-            If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+
+
+            If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+                topLeft = selectedRange.Address
+                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+
+                topLeft = selectedRange.Address
+                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
                 bottomRight = selectedRange.End(XlDirection.xlToRight).Address
                 bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
                 selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+
+            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
+
+                topLeft = selectedRange.End(XlDirection.xlUp).Address
+                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
+                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
 
             ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
                 topLeft = selectedRange.End(XlDirection.xlUp).Address
@@ -149,6 +173,8 @@ Public Class Form12HideRanges
                 bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
                 bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
                 selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
 
             Else
                 topLeft = selectedRange.End(XlDirection.xlToLeft).Address
@@ -396,5 +422,7 @@ break3:
         End Try
     End Sub
 
-
+    Private Sub btn_Cancel_Click(sender As Object, e As EventArgs) Handles btn_Cancel.Click
+        Me.Dispose()
+    End Sub
 End Class
