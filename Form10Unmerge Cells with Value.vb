@@ -291,7 +291,6 @@ Public Class Form10
 
             If (RadioButton9.Checked = False And RadioButton10.Checked = False) Then
                 MessageBox.Show("Select a Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
@@ -299,7 +298,7 @@ Public Class Form10
 
             If (RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox3.Text) = False)) Then
                 MessageBox.Show("Enter a Valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
+                TextBox3.Focus()
                 workSheet.Activate()
                 rng.Select()
                 Exit Sub
@@ -315,9 +314,15 @@ Public Class Form10
 
             If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = True Then
                 rng2 = rng
+                If CheckBox1.Checked = False Then
+                    rng2.ClearFormats()
+                End If
             Else
                 rng.Copy()
-                rng2.PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                rng2.PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                If CheckBox1.Checked = True Then
+                    rng2.PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                End If
                 excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
             End If
 
@@ -341,10 +346,6 @@ Public Class Form10
                 Next j
             Next i
 
-            If CheckBox1.Checked = False Then
-                rng2.ClearFormats()
-            End If
-
             Me.Close()
 
         Catch ex As Exception
@@ -365,6 +366,11 @@ Public Class Form10
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -400,6 +406,11 @@ Public Class Form10
                 Dim sheetName As String
                 sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
                 sheetName = Split(sheetName, "!")(0)
+
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+
                 workSheet = workBook.Worksheets(sheetName)
                 workSheet.Activate()
             Catch ex As Exception
@@ -555,15 +566,37 @@ Public Class Form10
 
         Try
             FocusedTextBox = 3
+            Me.Hide()
+
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
 
             Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            rng2 = userInput
 
-            TextBox3.Text = userInput.Address
+
+            Dim sheetName As String
+            sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet2 = workBook.Worksheets(sheetName)
+            workSheet2.Activate()
+
+            rng2.Select()
+
+            TextBox3.Text = rng2.Address
+
+            Me.Show()
             TextBox3.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox3.Focus()
 
         End Try
 
@@ -1032,6 +1065,14 @@ Public Class Form10
 
             Button2.BackColor = Color.FromArgb(255, 255, 255)
             Button2.ForeColor = Color.FromArgb(70, 70, 70)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Try
+            Me.Close()
         Catch ex As Exception
 
         End Try

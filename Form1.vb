@@ -11,6 +11,7 @@ Imports System.Text.RegularExpressions
 
 
 Public Class Form1
+
     Dim WithEvents excelApp As Excel.Application
     Dim workBook As Excel.Workbook
     Dim workSheet As Excel.Worksheet
@@ -169,24 +170,24 @@ Public Class Form1
     Private Function ReplaceRange(Ref As String, rng As Excel.Range, rng2 As Excel.Range, Type As Integer)
 
         If InStr(1, Ref, "!") > 0 Then
-                ReplaceRange = Ref
-            Else
-                Dim Ref1 As String
-                Dim Ref2 As String
+            ReplaceRange = Ref
+        Else
+            Dim Ref1 As String
+            Dim Ref2 As String
 
-                Dim R1() As String
-                R1 = Split(Ref, ":")
-                Ref1 = R1(0)
-                Ref2 = R1(1)
+            Dim R1() As String
+            R1 = Split(Ref, ":")
+            Ref1 = R1(0)
+            Ref2 = R1(1)
 
-                Ref1 = ReplaceReference(Ref1, rng, rng2, Type)
-                Ref2 = ReplaceReference(Ref2, rng, rng2, Type)
+            Ref1 = ReplaceReference(Ref1, rng, rng2, Type)
+            Ref2 = ReplaceReference(Ref2, rng, rng2, Type)
 
-                Dim NewRef As String
-                NewRef = Ref1 & ":" & Ref2
+            Dim NewRef As String
+            NewRef = Ref1 & ":" & Ref2
 
-                ReplaceRange = NewRef
-            End If
+            ReplaceRange = NewRef
+        End If
 
     End Function
     Private Function ReplaceFormula(Formula As String, Rng As Excel.Range, rng2 As Excel.Range, Type As Integer, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet)
@@ -500,6 +501,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -539,6 +545,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
@@ -556,10 +567,9 @@ Public Class Form1
 
         End Try
 
-
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+    Public Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         Try
             excelApp = Globals.ThisAddIn.Application
@@ -609,7 +619,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
+    Public Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
         Try
             Call Display()
         Catch ex As Exception
@@ -617,7 +627,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+    Public Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
 
@@ -938,6 +948,11 @@ Public Class Form1
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
             sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
             workSheet2 = workBook.Worksheets(sheetName)
             workSheet2.Activate()
 
@@ -957,7 +972,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+    Public Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
 
         Try
             excelApp = Globals.ThisAddIn.Application
@@ -974,6 +989,7 @@ Public Class Form1
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
         Try
             If ComboBox1.SelectedItem = "SOFTEKO" And opened >= 1 Then
 
@@ -988,6 +1004,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+
         Try
 
             excelApp = Globals.ThisAddIn.Application
@@ -1353,6 +1370,7 @@ Public Class Form1
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub btn_cancel_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_cancel.KeyDown
@@ -1450,6 +1468,7 @@ Public Class Form1
     End Sub
 
     Private Sub btn_OK_MouseLeave(sender As Object, e As EventArgs) Handles btn_OK.MouseLeave
+
         Try
 
             btn_OK.BackColor = Color.FromArgb(255, 255, 255)
