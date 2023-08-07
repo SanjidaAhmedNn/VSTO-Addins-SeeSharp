@@ -509,7 +509,6 @@ Public Class Form1
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
-
             rng.Select()
 
             rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))

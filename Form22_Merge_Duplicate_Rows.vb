@@ -19,6 +19,8 @@ Public Class Form22_Merge_Duplicate_Rows
     Dim variables As New Dictionary(Of String, System.Windows.Forms.Label)
     Dim labels As New List(Of System.Windows.Forms.Label)()
     Dim labels2 As New List(Of System.Windows.Forms.Label)()
+    Dim labels3 As New List(Of System.Windows.Forms.Label)()
+    Dim comboBoxes As New List(Of System.Windows.Forms.ComboBox)()
     Dim clickedLabelNumber As Integer
     Dim EnteredLabelNumber As Integer
 
@@ -56,10 +58,11 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl.Text = rng.Cells(1, i).Value
             lbl.Location = New System.Drawing.Point(1, (i - 1) * height)
             lbl.Height = height
-            lbl.Width = Label2.Width - 3.5
+            lbl.Width = Label2.Width - 4
             lbl.Font = New Font("Segoe UI", 9.75F)
             lbl.TextAlign = ContentAlignment.MiddleCenter
             lbl.TextAlign = ContentAlignment.MiddleLeft
+            lbl.BorderStyle = BorderStyle.FixedSingle
             CustomGroupBox7.Controls.Add(lbl)
             labels.Add(lbl)
 
@@ -68,59 +71,262 @@ Public Class Form22_Merge_Duplicate_Rows
 
             Dim lbl2 As New System.Windows.Forms.Label
             lbl2.Text = rng.Cells(2, i).Value
-            lbl2.Location = New System.Drawing.Point(Label2.Width - 3.5, (i - 1) * height)
+            lbl2.Location = New System.Drawing.Point(Label2.Width - 4, (i - 1) * height)
             lbl2.Height = height
-            lbl2.Width = Label4.Width - 3.5
+            lbl2.Width = Label4.Width - 4.25
             lbl2.Font = New Font("Segoe UI", 9.75F)
             lbl2.TextAlign = ContentAlignment.MiddleCenter
             lbl2.TextAlign = ContentAlignment.MiddleLeft
+            lbl2.BorderStyle = BorderStyle.FixedSingle
             CustomGroupBox7.Controls.Add(lbl2)
             labels2.Add(lbl2)
 
+            AddHandler lbl2.Click, AddressOf Me.lbl2_Click
+            AddHandler lbl2.MouseEnter, AddressOf Me.lbl2_MouseEnter
+
+            Dim lbl3 As New System.Windows.Forms.Label
+            lbl3.Text = ""
+            lbl3.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8.75, (i - 1) * height)
+            lbl3.Height = height
+            lbl3.Width = Label5.Width
+            lbl3.Font = New Font("Segoe UI", 9.75F)
+            lbl3.TextAlign = ContentAlignment.MiddleCenter
+            lbl3.TextAlign = ContentAlignment.MiddleLeft
+            lbl3.BorderStyle = BorderStyle.FixedSingle
+            CustomGroupBox7.Controls.Add(lbl3)
+            labels3.Add(lbl3)
+
+            AddHandler lbl3.Click, AddressOf Me.lbl3_Click
+            AddHandler lbl3.MouseEnter, AddressOf Me.lbl3_MouseEnter
+
+            Dim comboBox As New System.Windows.Forms.ComboBox()
+
+            comboBox.DrawMode = DrawMode.OwnerDrawFixed
+            AddHandler comboBox.DrawItem, AddressOf ComboBox_DrawItem
+            AddHandler comboBox.MeasureItem, AddressOf ComboBox_MeasureItem
+            AddHandler comboBox.SelectedIndexChanged, AddressOf ComboBox_SelectedIndexChanged
+
+            comboBox.Items.Add("Header 1")
+            comboBox.Items.Add("Item 1.1")
+            comboBox.Items.Add("Item 1.2")
+            comboBox.Items.Add("Header 2")
+            comboBox.Items.Add("Item 2.1")
+            comboBox.Items.Add("Item 2.2")
+
+            comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
+            comboBox.Height = height - 5
+            comboBox.Width = Label5.Width - 0.5
+            comboBox.Visible = False
+
+            CustomGroupBox7.Controls.Add(comboBox)
+            comboBoxes.Add(comboBox)
+
         Next
 
+    End Sub
+
+    Private Sub ComboBox_DrawItem(ByVal sender As Object, ByVal e As DrawItemEventArgs)
+
+        Dim comboBox As System.Windows.Forms.ComboBox
+        comboBox = DirectCast(sender, System.Windows.Forms.ComboBox)
+
+        If e.Index = -1 Then
+            Return
+        End If
+
+        If e.Index >= 0 Then
+            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("Header")
+            If isHeader Then
+                e.Graphics.FillRectangle(Brushes.LightGray, e.Bounds)
+                e.Graphics.DrawString(comboBox.Items(e.Index).ToString(), e.Font, Brushes.Black, e.Bounds)
+            Else
+                e.DrawBackground()
+                e.Graphics.DrawString(comboBox.Items(e.Index).ToString(), e.Font, Brushes.Black, e.Bounds)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub ComboBox_MeasureItem(ByVal sender As Object, ByVal e As MeasureItemEventArgs)
+
+        Dim comboBox As System.Windows.Forms.ComboBox
+        comboBox = DirectCast(sender, System.Windows.Forms.ComboBox)
+
+        If e.Index >= 0 Then
+            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("Header")
+            If isHeader Then
+                e.ItemHeight = 20
+            Else
+                e.ItemHeight = 15
+            End If
+        End If
+
+    End Sub
+
+    Private Sub ComboBox_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
+
+        Dim comboBox As System.Windows.Forms.ComboBox
+        comboBox = DirectCast(sender, System.Windows.Forms.ComboBox)
+
+        If comboBox.SelectedIndex >= 0 Then
+            Dim isHeader As Boolean = comboBox.SelectedItem.StartsWith("Header")
+            If isHeader Then
+                comboBox.SelectedIndex = -1
+            Else
+                Dim clickedBoxNumber As Integer = comboBoxes.IndexOf(comboBox)
+                labels3(clickedBoxNumber).Text = comboBox.SelectedItem
+                labels3(clickedBoxNumber).Visible = True
+                comboBox.Visible = False
+            End If
+        End If
 
     End Sub
 
     Private Sub lbl_Click(sender As Object, e As EventArgs)
-
-        If clickedLabelNumber <> -1 Then
-            labels(clickedLabelNumber).BackColor = Color.FromArgb(255, 255, 255)
-            labels(clickedLabelNumber).ForeColor = Color.FromArgb(70, 70, 70)
-            labels2(clickedLabelNumber).BackColor = Color.FromArgb(255, 255, 255)
-            labels2(clickedLabelNumber).ForeColor = Color.FromArgb(70, 70, 70)
-        End If
 
         Dim clickedLabel As System.Windows.Forms.Label
         clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
 
         clickedLabelNumber = labels.IndexOf(clickedLabel)
 
-        clickedLabel.BackColor = Color.FromArgb(0, 120, 215)
-        clickedLabel.ForeColor = Color.FromArgb(255, 255, 255)
-        labels2(clickedLabelNumber).BackColor = Color.FromArgb(0, 120, 215)
-        labels2(clickedLabelNumber).ForeColor = Color.FromArgb(255, 255, 255)
+        clickedLabel.BackColor = Color.FromArgb(217, 217, 217)
+        labels2(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
+        labels3(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
 
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                comboBoxes(lNumber).Visible = False
+                labels3(lNumber).Visible = True
+            End If
+        Next
+
+        comboBoxes(clickedLabelNumber).Visible = True
+        labels3(clickedLabelNumber).Visible = False
 
     End Sub
     Private Sub lbl_MouseEnter(sender As Object, e As EventArgs)
-
-        If EnteredLabelNumber <> -1 And clickedLabelNumber <> EnteredLabelNumber Then
-            labels(EnteredLabelNumber).BackColor = Color.FromArgb(255, 255, 255)
-            labels(EnteredLabelNumber).ForeColor = Color.FromArgb(70, 70, 70)
-            labels2(EnteredLabelNumber).BackColor = Color.FromArgb(255, 255, 255)
-            labels2(EnteredLabelNumber).ForeColor = Color.FromArgb(70, 70, 70)
-        End If
 
         Dim clickedLabel As System.Windows.Forms.Label
         clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
 
         EnteredLabelNumber = labels.IndexOf(clickedLabel)
 
-        clickedLabel.BackColor = Color.FromArgb(229, 243, 255)
-        clickedLabel.ForeColor = Color.FromArgb(70, 70, 70)
-        labels2(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
-        labels2(EnteredLabelNumber).ForeColor = Color.FromArgb(70, 70, 70)
+        If (EnteredLabelNumber <> clickedLabelNumber) Then
+            clickedLabel.BackColor = Color.FromArgb(229, 243, 255)
+            labels2(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+            labels3(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+        End If
+
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> EnteredLabelNumber And lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+            End If
+        Next
+
+    End Sub
+    Private Sub lbl2_Click(sender As Object, e As EventArgs)
+
+        Dim clickedLabel As System.Windows.Forms.Label
+        clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
+
+        clickedLabelNumber = labels2.IndexOf(clickedLabel)
+
+        clickedLabel.BackColor = Color.FromArgb(217, 217, 217)
+        labels(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
+        labels3(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
+
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                comboBoxes(lNumber).Visible = False
+                labels3(lNumber).Visible = True
+            End If
+        Next
+
+        comboBoxes(clickedLabelNumber).Visible = True
+        labels3(clickedLabelNumber).Visible = False
+
+    End Sub
+    Private Sub lbl2_MouseEnter(sender As Object, e As EventArgs)
+
+        Dim clickedLabel As System.Windows.Forms.Label
+        clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
+
+        EnteredLabelNumber = labels2.IndexOf(clickedLabel)
+
+        If (EnteredLabelNumber <> clickedLabelNumber) Then
+            clickedLabel.BackColor = Color.FromArgb(229, 243, 255)
+            labels(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+            labels3(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+        End If
+
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> EnteredLabelNumber And lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+            End If
+        Next
+
+    End Sub
+    Private Sub lbl3_Click(sender As Object, e As EventArgs)
+
+        Dim clickedLabel As System.Windows.Forms.Label
+        clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
+
+        clickedLabelNumber = labels3.IndexOf(clickedLabel)
+
+        clickedLabel.BackColor = Color.FromArgb(217, 217, 217)
+        labels(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
+        labels2(clickedLabelNumber).BackColor = Color.FromArgb(217, 217, 217)
+
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                comboBoxes(lNumber).Visible = False
+                labels3(lNumber).Visible = True
+            End If
+        Next
+
+        comboBoxes(clickedLabelNumber).Visible = True
+        labels3(clickedLabelNumber).Visible = False
+
+    End Sub
+    Private Sub lbl3_MouseEnter(sender As Object, e As EventArgs)
+
+        Dim clickedLabel As System.Windows.Forms.Label
+        clickedLabel = DirectCast(sender, System.Windows.Forms.Label)
+
+        EnteredLabelNumber = labels3.IndexOf(clickedLabel)
+
+        If (EnteredLabelNumber <> clickedLabelNumber) Then
+            clickedLabel.BackColor = Color.FromArgb(229, 243, 255)
+            labels(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+            labels2(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
+        End If
+
+        For Each label As System.Windows.Forms.Label In labels
+            Dim lNumber As Integer = labels.IndexOf(label)
+            If lNumber <> EnteredLabelNumber And lNumber <> clickedLabelNumber Then
+                labels(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels2(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+                labels3(lNumber).BackColor = Color.FromArgb(255, 255, 255)
+            End If
+        Next
 
     End Sub
 
