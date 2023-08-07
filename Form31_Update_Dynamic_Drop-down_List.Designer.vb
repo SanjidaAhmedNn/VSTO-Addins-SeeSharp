@@ -27,14 +27,13 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox10 = New VSTO_Addins.CustomGroupBox()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.RadioButton10 = New System.Windows.Forms.RadioButton()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.CB_backup = New System.Windows.Forms.CheckBox()
         Me.Btn_OK = New System.Windows.Forms.Button()
         Me.Btn_Cancel = New System.Windows.Forms.Button()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
@@ -94,6 +93,13 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         Me.CustomGroupBox10.Size = New System.Drawing.Size(308, 148)
         Me.CustomGroupBox10.TabIndex = 0
         Me.CustomGroupBox10.TabStop = False
+        '
+        'TextBox3
+        '
+        Me.TextBox3.Location = New System.Drawing.Point(25, 33)
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(263, 25)
+        Me.TextBox3.TabIndex = 209
         '
         'PictureBox2
         '
@@ -161,30 +167,12 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         Me.RadioButton3.Text = "Same as the source range"
         Me.RadioButton3.UseVisualStyleBackColor = True
         '
-        'TextBox3
-        '
-        Me.TextBox3.Location = New System.Drawing.Point(25, 33)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(263, 25)
-        Me.TextBox3.TabIndex = 209
-        '
-        'CB_backup
-        '
-        Me.CB_backup.AutoSize = True
-        Me.CB_backup.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CB_backup.Location = New System.Drawing.Point(16, 262)
-        Me.CB_backup.Name = "CB_backup"
-        Me.CB_backup.Size = New System.Drawing.Size(257, 21)
-        Me.CB_backup.TabIndex = 380
-        Me.CB_backup.Text = "Create a copy of the original worksheet"
-        Me.CB_backup.UseVisualStyleBackColor = True
-        '
         'Btn_OK
         '
         Me.Btn_OK.BackColor = System.Drawing.Color.White
         Me.Btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_OK.Location = New System.Drawing.Point(195, 298)
+        Me.Btn_OK.Location = New System.Drawing.Point(192, 274)
         Me.Btn_OK.Name = "Btn_OK"
         Me.Btn_OK.Size = New System.Drawing.Size(62, 26)
         Me.Btn_OK.TabIndex = 379
@@ -196,7 +184,7 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         Me.Btn_Cancel.BackColor = System.Drawing.Color.White
         Me.Btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_Cancel.Location = New System.Drawing.Point(263, 298)
+        Me.Btn_Cancel.Location = New System.Drawing.Point(263, 274)
         Me.Btn_Cancel.Name = "Btn_Cancel"
         Me.Btn_Cancel.Size = New System.Drawing.Size(62, 26)
         Me.Btn_Cancel.TabIndex = 378
@@ -207,7 +195,7 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         '
         Me.ComboBox2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Location = New System.Drawing.Point(16, 298)
+        Me.ComboBox2.Location = New System.Drawing.Point(16, 274)
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(96, 25)
         Me.ComboBox2.TabIndex = 377
@@ -240,10 +228,9 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(349, 346)
+        Me.ClientSize = New System.Drawing.Size(349, 322)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.Selection_source)
-        Me.Controls.Add(Me.CB_backup)
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.Btn_Cancel)
         Me.Controls.Add(Me.ComboBox2)
@@ -275,7 +262,6 @@ Partial Class Form31_Update_Dynamic_Drop_down_List
     Friend WithEvents Label3 As Windows.Forms.Label
     Friend WithEvents RadioButton10 As Windows.Forms.RadioButton
     Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
-    Friend WithEvents CB_backup As Windows.Forms.CheckBox
     Friend WithEvents Btn_OK As Windows.Forms.Button
     Friend WithEvents Btn_Cancel As Windows.Forms.Button
     Friend WithEvents ComboBox2 As Windows.Forms.ComboBox
