@@ -5,6 +5,10 @@ Imports System.Windows.Forms
 Imports Excel = Microsoft.Office.Interop.Excel
 Public Class Ribbon1
 
+    Dim WithEvents excelApp As Excel.Application
+    Dim workBook As Excel.Workbook
+    Dim workSheet As Excel.Worksheet
+
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
     End Sub
@@ -97,6 +101,15 @@ Public Class Ribbon1
 
     Private Sub Button20_Click(sender As Object, e As RibbonControlEventArgs) Handles Button20.Click
         Dim form As New Form22_Merge_Duplicate_Rows
+        excelApp = Globals.ThisAddIn.Application
+        Workbook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        form.Show()
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        form.TextBox1.Text = selection.Address
         form.Show()
     End Sub
 
