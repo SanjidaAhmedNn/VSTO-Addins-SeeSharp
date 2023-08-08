@@ -1,5 +1,8 @@
 ﻿Imports Microsoft.Office.Tools.Ribbon
-
+Imports System.Drawing
+Imports System.Windows.Forms
+'Imports Microsoft.Office.Tools.Ribbon
+Imports Excel = Microsoft.Office.Interop.Excel
 Public Class Ribbon1
 
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
