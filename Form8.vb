@@ -25,6 +25,10 @@ Public Class Form8
     Dim FocusedTextBox As Integer
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
+        'This function takes two ranges as the inputs and checks whether they intersect or not.
+        'It will be used to check whether the input range and the output range intersect or not. If they don't intersect, we can directly copy the values and formats from the input range to the output range.
+        'But if they do intersect, then the process becomes a bit complex. First we have to copy everything from the input range to a number of arrays, then we will copy them from the arrays to the output range.
+
         If sheet1.Name <> sheet2.Name Then
             Return False
 
@@ -46,6 +50,10 @@ Public Class Form8
     End Function
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
+        'This function takes a string as the input and checks whether it's a valid cell reference or not.
+        'It will be used when the user presses the OK button. First it'll check whether all the cell references put in the corresponding text boxes are valid cell references or not.
+        'If is, then we will continue the next procedures. Otherwise, we'll exit with an error message asking the user to input a valid cell reference in the required text box.
+
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
 
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
@@ -61,6 +69,8 @@ Public Class Form8
     End Function
     Function FindMinValue(arr() As Integer) As Integer
 
+        'This function finds the minimum value of an array.
+
         Dim min As Integer = arr(0)
 
         For Each num In arr
@@ -73,6 +83,10 @@ Public Class Form8
 
     End Function
     Private Function SearchAlongRow(Rng As Excel.Range, r As Integer, C As Integer)
+
+        'This is a very important function for this class.
+        'It takes a specific co-ordinate of a cell within a range as the input, and finds out the number of adjacent cells with the same value, along the row.
+        'It will be used while we attempt to merge similar values row-wise.
 
         Dim i As Integer = 1
 
@@ -113,6 +127,10 @@ Public Class Form8
     End Function
     Private Function SearchAlongColumn(Rng As Excel.Range, r As Integer, C As Integer)
 
+        'This is also a very important function for this class.
+        'It takes a specific co-ordinate of a cell within a range as the input, and finds out the number of adjacent cells with the same value, along the column.
+        'It will be used while we attempt to merge similar values column-wise.
+
         Dim i As Integer = 1
 
         Dim search As Boolean = True
@@ -151,23 +169,11 @@ Public Class Form8
 
     End Function
 
-    Private Function FindInArray(i, j, Arr)
-
-        Dim Result As Boolean = False
-        Dim count As Integer
-
-        For count = LBound(Arr, 1) To UBound(Arr, 1)
-            If Arr(count, 0) = i And Arr(count, 1) = j Then
-                Result = True
-                Exit For
-            End If
-        Next count
-
-        FindInArray = Result
-
-    End Function
-
     Private Function SearchDiagonally(Rng, r, c)
+
+        'This is another very important function for this class.
+        'It takes a specific co-ordinate of a cell within a range as the input, and finds out the highest number of adjacent cells with the same value, both row-wise and column-wise.
+        'It will be used while we attempt to merge similar values both row-wise and column-wise.
 
         Dim rowEqual As Integer = SearchAlongRow(Rng, r, c)
 
@@ -206,6 +212,10 @@ Public Class Form8
     End Function
     Private Function CrossCheck(excelApp As Excel.Application, rng1 As Excel.Range, rng2 As Excel.Range)
 
+        'This function takes two ranges (within the same worksheet) as the inputs and checkes whether they overlap or not.
+        'It will be used while we attempt to merge smiliar values both row-wise and column-wise.
+        'There may be cases where there are multiple ranges within the input range with similar values that intersect, and this function will be used to sort this out.
+
         Dim intersectRange As Range = excelApp.Intersect(rng1, rng2)
 
         If intersectRange Is Nothing Then
@@ -217,6 +227,9 @@ Public Class Form8
     End Function
 
     Private Function RemoveCrossings(excelApp, Arr)
+
+        'This function takes all the possible ranges within the input range that contain similar values.
+        'Then from all the ranges that overlap, it will keep only the largest range and remove all the other ranges.
 
         Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
         Dim Rng1 As Excel.Range
@@ -263,6 +276,9 @@ Public Class Form8
 
     End Function
     Private Function IsWithinRange(r As Integer, c As Integer, Rng As Excel.Range)
+
+        'This function takes a co-ordinate of a cell as the input, and checks whether it's located within a given range or not.
+        'This will be used while we attempt to merge same values both row-wise and column-wise.
 
         If r >= Rng.Cells(1, 1).Row And r <= Rng.Cells(Rng.Rows.Count, 1).Row And c >= Rng.Cells(1, 1).Column And r <= Rng.Cells(1, Rng.Columns.Count).Column Then
 
@@ -702,8 +718,8 @@ Public Class Form8
                     For i = 1 To r
                         For j = 1 To c
                             Dim rowEqual As Integer = SearchAlongRow(rng2, i, j)
-                            workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i, j + rowEqual - 1)).Merge()
                             If rowEqual > 1 Then
+                                workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i, j + rowEqual - 1)).Merge()
                                 rng2.Cells(i, j).HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter
                             End If
                             j = j + rowEqual - 1
@@ -715,8 +731,8 @@ Public Class Form8
                     For j = 1 To c
                         For i = 1 To r
                             Dim columnEqual As Integer = SearchAlongColumn(rng2, i, j)
-                            workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + columnEqual - 1, j)).Merge()
                             If columnEqual > 1 Then
+                                workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + columnEqual - 1, j)).Merge()
                                 rng2.Cells(i, j).VerticalAlignment = Excel.XlVAlign.xlVAlignCenter
                             End If
                             i = i + columnEqual - 1
@@ -771,13 +787,18 @@ Public Class Form8
 
                             Next
 
-                            workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + MRng.Rows.Count - 1, j + MRng.Columns.Count - 1)).Merge()
+                            If MRng.Rows.Count > 1 Or MRng.Columns.Count > 1 Then
+                                workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + MRng.Rows.Count - 1, j + MRng.Columns.Count - 1)).Merge()
+                            End If
+
                             If MRng.Columns.Count > 1 Then
                                 rng2.Cells(i, j).HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter
                             End If
+
                             If MRng.Rows.Count > 1 Then
                                 rng2.Cells(i, j).VerticalAlignment = Excel.XlVAlign.xlVAlignCenter
                             End If
+
                         Next
                     Next
 
@@ -1337,8 +1358,8 @@ Public Class Form8
 
         Try
 
-            Button2.BackColor = Color.FromArgb(255, 255, 255)
-            Button2.ForeColor = Color.FromArgb(70, 70, 70)
+            Button1.BackColor = Color.FromArgb(255, 255, 255)
+            Button1.ForeColor = Color.FromArgb(70, 70, 70)
         Catch ex As Exception
 
         End Try

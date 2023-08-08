@@ -509,7 +509,6 @@ Public Class Form1
             workSheet = workBook.Worksheets(sheetName)
             workSheet.Activate()
 
-
             rng.Select()
 
             rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
@@ -538,14 +537,8 @@ Public Class Form1
 
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
-            workSheet = workBook.ActiveSheet
 
-            'workSheet.Range("A1").Select()
-            'Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select range", "=$A$1")
-            userInput = excelApp.InputBox("Select a range", Type:=8)
-
-
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
             rng = userInput
 
             Dim sheetName As String
@@ -1660,6 +1653,5 @@ Public Class Form1
 
         End Try
     End Sub
-
 
 End Class
