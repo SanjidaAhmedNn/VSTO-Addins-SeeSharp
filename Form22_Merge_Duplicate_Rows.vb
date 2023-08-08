@@ -121,6 +121,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
             comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
             comboBox.Height = height - 5
+            comboBox.Font = New Font("Segoe UI", 9.75F)
             comboBox.Width = Label5.Width - 0.5
             comboBox.Visible = False
 
