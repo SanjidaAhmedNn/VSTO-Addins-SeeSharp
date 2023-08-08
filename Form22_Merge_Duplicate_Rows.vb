@@ -68,6 +68,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
             AddHandler lbl.Click, AddressOf Me.lbl_Click
             AddHandler lbl.MouseEnter, AddressOf Me.lbl_MouseEnter
+            AddHandler lbl.Paint, AddressOf lbl_Paint
 
             Dim lbl2 As New System.Windows.Forms.Label
             lbl2.Text = rng.Cells(2, i).Value
@@ -83,6 +84,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
             AddHandler lbl2.Click, AddressOf Me.lbl2_Click
             AddHandler lbl2.MouseEnter, AddressOf Me.lbl2_MouseEnter
+            AddHandler lbl2.Paint, AddressOf lbl2_Paint
 
             Dim lbl3 As New System.Windows.Forms.Label
             lbl3.Text = ""
@@ -98,6 +100,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
             AddHandler lbl3.Click, AddressOf Me.lbl3_Click
             AddHandler lbl3.MouseEnter, AddressOf Me.lbl3_MouseEnter
+            AddHandler lbl3.Paint, AddressOf lbl3_Paint
 
             Dim comboBox As New System.Windows.Forms.ComboBox()
 
@@ -106,12 +109,15 @@ Public Class Form22_Merge_Duplicate_Rows
             AddHandler comboBox.MeasureItem, AddressOf ComboBox_MeasureItem
             AddHandler comboBox.SelectedIndexChanged, AddressOf ComboBox_SelectedIndexChanged
 
-            comboBox.Items.Add("Header 1")
-            comboBox.Items.Add("Item 1.1")
-            comboBox.Items.Add("Item 1.2")
-            comboBox.Items.Add("Header 2")
-            comboBox.Items.Add("Item 2.1")
-            comboBox.Items.Add("Item 2.2")
+            comboBox.Items.Add("Primary Key")
+            comboBox.Items.Add("    Primary Key")
+            comboBox.Items.Add("Separator")
+            comboBox.Items.Add("    Comma")
+            comboBox.Items.Add("    Colon")
+            comboBox.Items.Add("    Semicolon")
+            comboBox.Items.Add("    Space")
+            comboBox.Items.Add("    Nothing")
+            comboBox.Items.Add("    New Line")
 
             comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
             comboBox.Height = height - 5
@@ -135,8 +141,8 @@ Public Class Form22_Merge_Duplicate_Rows
         End If
 
         If e.Index >= 0 Then
-            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("Header")
-            If isHeader Then
+            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("  ")
+            If isHeader = False Then
                 e.Graphics.FillRectangle(Brushes.LightGray, e.Bounds)
                 e.Graphics.DrawString(comboBox.Items(e.Index).ToString(), e.Font, Brushes.Black, e.Bounds)
             Else
@@ -153,8 +159,8 @@ Public Class Form22_Merge_Duplicate_Rows
         comboBox = DirectCast(sender, System.Windows.Forms.ComboBox)
 
         If e.Index >= 0 Then
-            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("Header")
-            If isHeader Then
+            Dim isHeader As Boolean = comboBox.Items(e.Index).StartsWith("  ")
+            If isHeader = False Then
                 e.ItemHeight = 20
             Else
                 e.ItemHeight = 15
@@ -169,8 +175,8 @@ Public Class Form22_Merge_Duplicate_Rows
         comboBox = DirectCast(sender, System.Windows.Forms.ComboBox)
 
         If comboBox.SelectedIndex >= 0 Then
-            Dim isHeader As Boolean = comboBox.SelectedItem.StartsWith("Header")
-            If isHeader Then
+            Dim isHeader As Boolean = comboBox.SelectedItem.StartsWith("    ")
+            If isHeader = False Then
                 comboBox.SelectedIndex = -1
             Else
                 Dim clickedBoxNumber As Integer = comboBoxes.IndexOf(comboBox)
@@ -179,6 +185,51 @@ Public Class Form22_Merge_Duplicate_Rows
                 comboBox.Visible = False
             End If
         End If
+
+    End Sub
+    Private Sub lbl_Paint(sender As Object, e As PaintEventArgs)
+
+        Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
+        Dim borderColor As Color = Color.FromArgb(245, 245, 245)
+        Dim borderWidth As Integer = 0.2
+
+        Dim borderPen As New Pen(borderColor, borderWidth)
+
+        borderPen.DashStyle = Drawing2D.DashStyle.Dash
+
+        e.Graphics.DrawRectangle(borderPen, 0, 0, lbl.Width - 1, lbl.Height - 1)
+
+        borderPen.Dispose()
+
+    End Sub
+    Private Sub lbl2_Paint(sender As Object, e As PaintEventArgs)
+
+        Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
+        Dim borderColor As Color = Color.FromArgb(245, 245, 245)
+        Dim borderWidth As Integer = 0.2
+
+        Dim borderPen As New Pen(borderColor, borderWidth)
+
+        borderPen.DashStyle = Drawing2D.DashStyle.Dash
+
+        e.Graphics.DrawRectangle(borderPen, 0, 0, lbl.Width - 1, lbl.Height - 1)
+
+        borderPen.Dispose()
+
+    End Sub
+    Private Sub lbl3_Paint(sender As Object, e As PaintEventArgs)
+
+        Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
+        Dim borderColor As Color = Color.FromArgb(245, 245, 245)
+        Dim borderWidth As Integer = 0.2
+
+        Dim borderPen As New Pen(borderColor, borderWidth)
+
+        borderPen.DashStyle = Drawing2D.DashStyle.Dash
+
+        e.Graphics.DrawRectangle(borderPen, 0, 0, lbl.Width - 1, lbl.Height - 1)
+
+        borderPen.Dispose()
 
     End Sub
 
