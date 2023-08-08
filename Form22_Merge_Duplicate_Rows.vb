@@ -42,20 +42,32 @@ Public Class Form22_Merge_Duplicate_Rows
 
     Private Sub Setup()
 
+        CustomGroupBox7.Controls.Clear()
+
         excelApp = Globals.ThisAddIn.Application
         workBook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
         rng = workSheet.Range(TextBox1.Text)
 
+        If CheckBox5.Checked = True Then
+            rng = workSheet.Range(rng.Cells(2, 1), rng.Cells(rng.Rows.Count, rng.Columns.Count))
+        End If
+
+        rng.Select()
+
         Dim height As Single = Label3.Height
 
         Dim i As Integer
 
-
         For i = 1 To rng.Columns.Count
 
             Dim lbl As New System.Windows.Forms.Label()
-            lbl.Text = rng.Cells(1, i).Value
+            If CheckBox5.Checked = True Then
+                lbl.Text = rng.Cells(0, i).Value
+            Else
+                Dim columnLetter As String = Split(rng.Cells(1, i).Address(True, True), "$")(1)
+                lbl.Text = "Column " & columnLetter
+            End If
             lbl.Location = New System.Drawing.Point(1, (i - 1) * height)
             lbl.Height = height
             lbl.Width = Label2.Width - 4
@@ -71,7 +83,7 @@ Public Class Form22_Merge_Duplicate_Rows
             AddHandler lbl.Paint, AddressOf lbl_Paint
 
             Dim lbl2 As New System.Windows.Forms.Label
-            lbl2.Text = rng.Cells(2, i).Value
+            lbl2.Text = rng.Cells(1, i).Value
             lbl2.Location = New System.Drawing.Point(Label2.Width - 4, (i - 1) * height)
             lbl2.Height = height
             lbl2.Width = Label4.Width - 4.25
@@ -118,6 +130,13 @@ Public Class Form22_Merge_Duplicate_Rows
             comboBox.Items.Add("    Space")
             comboBox.Items.Add("    Nothing")
             comboBox.Items.Add("    New Line")
+            comboBox.Items.Add("Function")
+            comboBox.Items.Add("    Sum")
+            comboBox.Items.Add("    Count")
+            comboBox.Items.Add("    Average")
+            comboBox.Items.Add("    Max")
+            comboBox.Items.Add("    Min")
+            comboBox.Items.Add("    Product")
 
             comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
             comboBox.Height = height - 5
@@ -382,11 +401,102 @@ Public Class Form22_Merge_Duplicate_Rows
 
     End Sub
 
+    Private Sub Display()
+
+        CustomPanel1.Controls.Clear()
+        CustomPanel2.Controls.Clear()
+
+        Dim displayRng As Excel.Range
+
+        If rng.Rows.Count > 50 Then
+            displayRng = rng.Rows("1:50")
+        Else
+            displayRng = rng
+        End If
+
+        Dim r As Integer
+        Dim c As Integer
+
+        r = displayRng.Rows.Count
+        c = displayRng.Columns.Count
+
+        Dim height As Single
+        Dim width As Single
+
+        If r <= 6 Then
+            height = CustomPanel1.Height / r
+        Else
+            height = CustomPanel1.Height / 6
+        End If
+
+        If c <= 4 Then
+            width = CustomPanel1.Width / c
+        Else
+            width = CustomPanel1.Width / 4
+        End If
+
+        For i = 1 To displayRng.Rows.Count
+            For j = 1 To displayRng.Columns.Count
+                Dim label As New System.Windows.Forms.Label
+                label.Text = displayRng.Cells(i, j).Value
+                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                label.Height = height
+                label.Width = width
+                label.BorderStyle = BorderStyle.FixedSingle
+                label.TextAlign = ContentAlignment.MiddleCenter
+
+                If CheckBox4.Checked = True Then
+
+                    Dim cell As Excel.Range = displayRng.Cells(i, j)
+                    Dim font As Excel.Font = cell.Font
+                    Dim fontStyle As FontStyle = FontStyle.Regular
+                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+
+                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                        Dim red1 As Integer = colorValue1 Mod 256
+                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                    End If
+
+                    If IsDBNull(cell.Font.Color) Then
+                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                        Dim red2 As Integer = colorValue2 Mod 256
+                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
+                    End If
+
+                End If
+                CustomPanel1.Controls.Add(label)
+            Next
+        Next
+
+        CustomPanel1.AutoScroll = True
+
+    End Sub
+
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
-        If TextBox1.Text <> "" And IsValidExcelCellReference(TextBox1.Text) = True Then
-            Call Setup()
-        End If
+        Try
+            If TextBox1.Text <> "" And IsValidExcelCellReference(TextBox1.Text) = True Then
+                Call Setup()
+                Call Display()
+            End If
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
@@ -394,6 +504,27 @@ Public Class Form22_Merge_Duplicate_Rows
 
         clickedLabelNumber = -1
         EnteredLabelNumber = -1
+
+    End Sub
+
+    Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
+
+        Try
+            Call Setup()
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
+
+        Call Display()
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
     End Sub
 End Class

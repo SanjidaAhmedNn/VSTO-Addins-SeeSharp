@@ -359,7 +359,11 @@ Public Class Form8
                             Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
                             label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
                         End If
-                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+
+                        If IsDBNull(cell.Font.Color) Then
+                            label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                        ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
                             Dim colorValue2 As Long = CLng(cell.Font.Color)
                             Dim red2 As Integer = colorValue2 Mod 256
                             Dim green2 As Integer = (colorValue2 \ 256) Mod 256
@@ -407,7 +411,11 @@ Public Class Form8
                                     Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
                                     label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
                                 End If
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
                                     Dim colorValue2 As Long = CLng(cell.Font.Color)
                                     Dim red2 As Integer = colorValue2 Mod 256
                                     Dim green2 As Integer = (colorValue2 \ 256) Mod 256
@@ -455,7 +463,11 @@ Public Class Form8
                                     Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
                                     label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
                                 End If
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
                                     Dim colorValue2 As Long = CLng(cell.Font.Color)
                                     Dim red2 As Integer = colorValue2 Mod 256
                                     Dim green2 As Integer = (colorValue2 \ 256) Mod 256
@@ -548,7 +560,11 @@ Public Class Form8
                                     Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
                                     label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
                                 End If
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
                                     Dim colorValue2 As Long = CLng(cell.Font.Color)
                                     Dim red2 As Integer = colorValue2 Mod 256
                                     Dim green2 As Integer = (colorValue2 \ 256) Mod 256
