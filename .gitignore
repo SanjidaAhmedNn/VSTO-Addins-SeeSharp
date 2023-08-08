@@ -362,3 +362,31 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /VSTO Addins.vbproj
+/.gitignore
+/Form11SwapRanges.Designer.vb
+/Form2.Designer.vb
+/Form12HideRanges.resx
+/Form11SwapRanges.resx
+/Form12HideRanges.Designer.vb
+/Form3.Designer.vb
+/Ribbon1.Designer.vb
+/Ribbon1.vb
+/VSTO Addins.vbproj
+/.gitignore
+/.gitignore
+/Form14SpecifyScrollArea.Designer.vb
+/Form14SpecifyScrollArea.resx
+/Form14SpecifyScrollArea.vb
+/Form15CompareCells.Designer.vb
+/Form15CompareCells.resx
+/Form15CompareCells.vb
+/Form16PasteintoVisibleRange.Designer.vb
+/Form16PasteintoVisibleRange.resx
+/Form16PasteintoVisibleRange.vb
+/Form17DivideNames.Designer.vb
+/Form17DivideNames.resx
+/Form17DivideNames.vb
+/Form18_CombineRanges.Designer.vb
+/Form18_CombineRanges.resx
+/Form18_CombineRanges.vb
+/.gitignore
