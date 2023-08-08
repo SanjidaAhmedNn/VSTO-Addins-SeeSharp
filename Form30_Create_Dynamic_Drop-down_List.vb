@@ -109,10 +109,109 @@ Public Class Form30_Create_Dynamic_Drop_down_List
     End Sub
 
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
+        ' Dim worksheet As Excel.Worksheet
+        excelApp = Globals.ThisAddIn.Application
+        Dim rng1 As Excel.Range = excelApp.Range("A12", "A27")
+        Dim destRange As Excel.Range = excelApp.Range("Z100", "Z104")
+        ' Dim destRange As Excel.Range = xlWorksheet.Range("Z1:Z100")
+        src_rng.Columns(1).AdvancedFilter(Action:=Excel.XlFilterAction.xlFilterCopy, CopyToRange:=destRange, Unique:=True)
+        '=UNIQUE(FILTER(B12:B27, A12: A27 = I24))
+        ' Get the filter criteria from cell I24
+        Dim filterCriteria As String = destRange(1, 1).Value
+        Dim filterCriteria2 As String = destRange(1, 2).value
+        ' Create a new range for filtered values
+        Dim filteredRange As Excel.Range = src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants, Type.Missing).
+                                    Offset(, -1).Resize(src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants).Count)
 
-        ' Use AdvancedFilter to copy unique values to the target range.
-        'Dim xlApp.CutCopyMode As Excel.application = Excel.XlCutCopyMode.xlCopy
-        src_rng.AdvancedFilter(Action:=Excel.XlFilterAction.xlFilterCopy, CopyToRange:=des_rng, Unique:=True)
+        ' Loop through the column A values and check if they match the filter criteria
+        For Each cell In src_rng.Columns(1).Cells
+            If cell.Value = filterCriteria Then
+                Dim valueToAdd As Object = cell.Offset(, 1).Value
+                filteredRange.Value = valueToAdd
+                filteredRange = filteredRange.Offset(1)
+            End If
+        Next
+
+
+        ' Create a new range for filtered values
+        Dim filteredRange2 As Excel.Range = src_rng.Columns(3).SpecialCells(Excel.XlCellType.xlCellTypeConstants, Type.Missing).
+                                    Offset(, -2).Resize(src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants).Count)
+
+        ' Loop through the values in column A and check if they match the filter criteria
+        For Each cellA In src_rng.Columns(1).Cells
+            Dim cellB As Excel.Range = src_rng.Columns(2).Cells(cellA.Row - src_rng.Columns(1).Row + 1)
+            If cellA.Value = filterCriteria And cellB.Value = filterCriteria2 Then
+                Dim valueToAdd As Object = cellA.Offset(, 2).Value
+                filteredRange2.Value = valueToAdd
+                filteredRange2 = filteredRange2.Offset(1)
+            End If
+        Next
+
+        ' Define the cell reference
+        'Dim cellI24 As Excel.Range = des_rng
+
+        ' Delete any existing validation
+        des_rng.Validation.Delete()
+
+        ' Set new validation
+        des_rng.Validation.Add(Excel.XlDVType.xlValidateList,
+                              Excel.XlDVAlertStyle.xlValidAlertStop,
+                              Excel.XlFormatConditionOperator.xlBetween,
+                              Formula1:=destRange(1, 1) & "#")
+
+        ' Configure additional validation settings
+        With des_rng.Validation
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .InputTitle = ""
+            .ErrorTitle = ""
+            .InputMessage = ""
+            .ErrorMessage = ""
+            .ShowInput = True
+            .ShowError = True
+        End With
+
+        ' Delete any existing validation
+        des_rng.Columns(2).Validation.Delete()
+
+        ' Set new validation
+        des_rng.Columns(2).Validation.Add(Excel.XlDVType.xlValidateList,
+                              Excel.XlDVAlertStyle.xlValidAlertStop,
+                              Excel.XlFormatConditionOperator.xlBetween,
+                              Formula1:=destRange(1, 2) & "#")
+
+        ' Configure additional validation settings
+        With des_rng.Columns(2).Validation
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .InputTitle = ""
+            .ErrorTitle = ""
+            .InputMessage = ""
+            .ErrorMessage = ""
+            .ShowInput = True
+            .ShowError = True
+        End With
+
+        ' Delete any existing validation
+        des_rng.Columns(3).Validation.Delete()
+
+        ' Set new validation
+        des_rng.Columns(3).Validation.Add(Excel.XlDVType.xlValidateList,
+                              Excel.XlDVAlertStyle.xlValidAlertStop,
+                              Excel.XlFormatConditionOperator.xlBetween,
+                              Formula1:=destRange(1, 3) & "#")
+
+        ' Configure additional validation settings
+        With des_rng.Columns(3).Validation
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .InputTitle = ""
+            .ErrorTitle = ""
+            .InputMessage = ""
+            .ErrorMessage = ""
+            .ShowInput = True
+            .ShowError = True
+        End With
 
         Me.Close()
     End Sub
@@ -139,7 +238,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             sheetName = Split(sheetName, "!")(0)
 
             If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+        sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
             End If
 
             workSheet = workBook.Worksheets(sheetName)
@@ -186,14 +285,14 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             excelApp = Globals.ThisAddIn.Application
 
             If Me.ActiveControl Is TB_dest_range Then
-                des_rng = selectionRange1
+                'des_rng = selectionRange1
                 ' This will run on the Excel thread, so you need to use Invoke to update the UI
                 'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
                 'Me.Activate()
                 'Me.BeginInvoke(New System.Action(Sub()
 
             ElseIf Me.ActiveControl Is TB_src_range Then
-                src_rng = selectionRange1
+                'src_rng = selectionRange1
                 'workSheet = workBook.ActiveSheet
                 'TB_src_range.Text = src_rng.Address
                 'TB_src_range.Focus()
