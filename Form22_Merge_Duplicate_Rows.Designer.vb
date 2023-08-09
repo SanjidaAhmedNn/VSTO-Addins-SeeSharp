@@ -332,8 +332,10 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         'Label5
         '
+        Me.Label5.BackColor = System.Drawing.Color.CadetBlue
         Me.Label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.ForeColor = System.Drawing.Color.White
         Me.Label5.Location = New System.Drawing.Point(212, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(95, 40)
@@ -343,8 +345,10 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         'Label4
         '
+        Me.Label4.BackColor = System.Drawing.Color.CadetBlue
         Me.Label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.Color.White
         Me.Label4.Location = New System.Drawing.Point(96, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(121, 40)
@@ -354,8 +358,10 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         'Label2
         '
+        Me.Label2.BackColor = System.Drawing.Color.CadetBlue
         Me.Label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.White
         Me.Label2.Location = New System.Drawing.Point(1, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(99, 40)

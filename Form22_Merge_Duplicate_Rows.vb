@@ -24,7 +24,48 @@ Public Class Form22_Merge_Duplicate_Rows
     Dim clickedLabelNumber As Integer
     Dim EnteredLabelNumber As Integer
 
+    Private Function Search(Arr, value)
 
+        Dim Result As Boolean
+        Result = False
+
+        For i = LBound(Arr) To UBound(Arr)
+
+            Dim Type1 As Type = Arr(i).GetType
+            Dim Type2 As Type = value.GetType
+
+            If Type1.Equals(Type2) Then
+                If Arr(i) = value Then
+                    Result = True
+                    Exit For
+                End If
+            End If
+        Next
+
+        Search = Result
+
+    End Function
+    Function GetUniqueValuesFromRange(ByVal rng As Excel.Range)
+
+        Dim Arr(0) As Object
+
+        Dim Index As Integer = 0
+
+        Arr(0) = rng.Cells(1, 1)
+
+        For i = 1 To rng.Rows.Count
+            For j = 1 To rng.Columns.Count
+                If Search(Arr, rng.Cells(i, j).Value) = False Then
+                    Index = Index + 1
+                    ReDim Preserve Arr(Index)
+                    Arr(Index) = rng.Cells(i, j).Value
+                End If
+            Next
+        Next
+
+        GetUniqueValuesFromRange = Arr
+
+    End Function
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -43,6 +84,11 @@ Public Class Form22_Merge_Duplicate_Rows
     Private Sub Setup()
 
         CustomGroupBox7.Controls.Clear()
+
+        labels.Clear()
+        labels2.Clear()
+        labels3.Clear()
+        comboBoxes.Clear()
 
         excelApp = Globals.ThisAddIn.Application
         workBook = excelApp.ActiveWorkbook
@@ -74,7 +120,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl.Font = New Font("Segoe UI", 9.75F)
             lbl.TextAlign = ContentAlignment.MiddleCenter
             lbl.TextAlign = ContentAlignment.MiddleLeft
-            lbl.BorderStyle = BorderStyle.FixedSingle
+            lbl.BorderStyle = BorderStyle.None
             CustomGroupBox7.Controls.Add(lbl)
             labels.Add(lbl)
 
@@ -90,7 +136,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl2.Font = New Font("Segoe UI", 9.75F)
             lbl2.TextAlign = ContentAlignment.MiddleCenter
             lbl2.TextAlign = ContentAlignment.MiddleLeft
-            lbl2.BorderStyle = BorderStyle.FixedSingle
+            lbl2.BorderStyle = BorderStyle.None
             CustomGroupBox7.Controls.Add(lbl2)
             labels2.Add(lbl2)
 
@@ -106,7 +152,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl3.Font = New Font("Segoe UI", 9.75F)
             lbl3.TextAlign = ContentAlignment.MiddleCenter
             lbl3.TextAlign = ContentAlignment.MiddleLeft
-            lbl3.BorderStyle = BorderStyle.FixedSingle
+            lbl3.BorderStyle = BorderStyle.None
             CustomGroupBox7.Controls.Add(lbl3)
             labels3.Add(lbl3)
 
@@ -206,12 +252,14 @@ Public Class Form22_Merge_Duplicate_Rows
             End If
         End If
 
+        Call Display()
+
     End Sub
     Private Sub lbl_Paint(sender As Object, e As PaintEventArgs)
 
         Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
         Dim borderColor As Color = Color.FromArgb(245, 245, 245)
-        Dim borderWidth As Integer = 0.2
+        Dim borderWidth As Double = 0.4
 
         Dim borderPen As New Pen(borderColor, borderWidth)
 
@@ -226,7 +274,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
         Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
         Dim borderColor As Color = Color.FromArgb(245, 245, 245)
-        Dim borderWidth As Integer = 0.2
+        Dim borderWidth As Double = 0.4
 
         Dim borderPen As New Pen(borderColor, borderWidth)
 
@@ -241,7 +289,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
         Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
         Dim borderColor As Color = Color.FromArgb(245, 245, 245)
-        Dim borderWidth As Integer = 0.2
+        Dim borderWidth As Double = 0.4
 
         Dim borderPen As New Pen(borderColor, borderWidth)
 
@@ -406,6 +454,17 @@ Public Class Form22_Merge_Duplicate_Rows
         CustomPanel1.Controls.Clear()
         CustomPanel2.Controls.Clear()
 
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+        rng = workSheet.Range(TextBox1.Text)
+
+        If CheckBox5.Checked = True Then
+            rng = workSheet.Range(rng.Cells(2, 1), rng.Cells(rng.Rows.Count, rng.Columns.Count))
+        End If
+
+        rng.Select()
+
         Dim displayRng As Excel.Range
 
         If rng.Rows.Count > 50 Then
@@ -484,6 +543,40 @@ Public Class Form22_Merge_Duplicate_Rows
 
         CustomPanel1.AutoScroll = True
 
+        Dim Active As Boolean = True
+
+        For Each cbox In comboBoxes
+            If cbox.SelectedIndex = -1 Then
+                Active = False
+                Exit For
+            End If
+        Next
+
+        If Active = True Then
+
+            Dim cRng As Excel.Range
+            cRng = workSheet.Range(displayRng.Cells(1, 1), displayRng.Cells(displayRng.Rows.Count, 1))
+
+            MsgBox(cRng.Address)
+            Dim Arr() As Object = GetUniqueValuesFromRange(cRng)
+            If UBound(Arr) + 1 <= 6 Then
+                height = CustomPanel1.Height / UBound(Arr) + 1
+            Else
+                height = CustomPanel1.Height / 6
+            End If
+
+            For i = 0 To UBound(Arr)
+                Dim label As New System.Windows.Forms.Label
+                label.Text = Arr(i)
+                label.Location = New System.Drawing.Point((1 - 1) * width, (i - 1) * height)
+                label.Height = height
+                label.Width = width
+                label.BorderStyle = BorderStyle.FixedSingle
+                label.TextAlign = ContentAlignment.MiddleCenter
+                CustomPanel2.Controls.Add(label)
+            Next
+            CustomPanel2.AutoScroll = True
+        End If
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
@@ -511,6 +604,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
         Try
             Call Setup()
+            Call Display()
 
         Catch ex As Exception
 
