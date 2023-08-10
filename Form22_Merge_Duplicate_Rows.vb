@@ -45,27 +45,6 @@ Public Class Form22_Merge_Duplicate_Rows
         Search = Result
 
     End Function
-    Function GetUniqueValuesFromRange(ByVal rng As Excel.Range)
-
-        Dim Arr(0) As Object
-
-        Dim Index As Integer = 0
-
-        Arr(0) = rng.Cells(1, 1)
-
-        For i = 1 To rng.Rows.Count
-            For j = 1 To rng.Columns.Count
-                If Search(Arr, rng.Cells(i, j).Value) = False Then
-                    Index = Index + 1
-                    ReDim Preserve Arr(Index)
-                    Arr(Index) = rng.Cells(i, j).Value
-                End If
-            Next
-        Next
-
-        GetUniqueValuesFromRange = Arr
-
-    End Function
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -194,6 +173,11 @@ Public Class Form22_Merge_Duplicate_Rows
             comboBoxes.Add(comboBox)
 
         Next
+        clickedLabelNumber = 0
+        labels(0).BackColor = Color.FromArgb(217, 217, 217)
+        labels2(0).BackColor = Color.FromArgb(217, 217, 217)
+        labels3(0).BackColor = Color.FromArgb(217, 217, 217)
+        labels3(0).Text = "    Primary Key"
 
     End Sub
 
@@ -383,6 +367,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
         EnteredLabelNumber = labels2.IndexOf(clickedLabel)
 
+
         If (EnteredLabelNumber <> clickedLabelNumber) Then
             clickedLabel.BackColor = Color.FromArgb(229, 243, 255)
             labels(EnteredLabelNumber).BackColor = Color.FromArgb(229, 243, 255)
@@ -545,35 +530,178 @@ Public Class Form22_Merge_Duplicate_Rows
 
         Dim Active As Boolean = True
 
-        For Each cbox In comboBoxes
-            If cbox.SelectedIndex = -1 Then
+        For Each lbl In labels3
+            If lbl.Text = "" Then
                 Active = False
                 Exit For
             End If
         Next
 
+        Dim IsPrimary As Boolean
+        IsPrimary = False
+
+        Dim PrimaryColumn As Integer = 0
+
+        For Each lbl In labels3
+            If lbl.Text = "    Primary Key" Then
+                IsPrimary = True
+                PrimaryColumn = labels3.IndexOf(lbl) + 1
+                Exit For
+            End If
+        Next
+
+        Active = Active And IsPrimary
+
         If Active = True Then
 
             Dim cRng As Excel.Range
-            cRng = workSheet.Range(displayRng.Cells(1, 1), displayRng.Cells(displayRng.Rows.Count, 1))
+            cRng = workSheet.Range(displayRng.Cells(1, PrimaryColumn), displayRng.Cells(displayRng.Rows.Count, PrimaryColumn))
 
-            MsgBox(cRng.Address)
-            Dim Arr() As Object = GetUniqueValuesFromRange(cRng)
-            If UBound(Arr) + 1 <= 6 Then
-                height = CustomPanel1.Height / UBound(Arr) + 1
+            Dim Arr1(0) As Object
+            Dim Arr2(0) As Integer
+
+            Dim Index1 As Integer = 0
+            Dim Index2 As Integer = 0
+
+            Arr1(0) = cRng.Cells(1, 1).Value
+            Arr2(0) = 1
+
+            For i = 1 To cRng.Rows.Count
+                If Search(Arr1, cRng.Cells(i, 1).Value) = False Then
+                    Index1 = Index1 + 1
+                    Index2 = Index2 + 1
+                    ReDim Preserve Arr1(Index1)
+                    ReDim Preserve Arr2(Index2)
+                    Arr1(Index1) = cRng.Cells(i, 1).Value
+                    Arr2(Index2) = i
+                End If
+            Next
+
+            If (UBound(Arr1) + 1) <= 6 Then
+                height = CustomPanel1.Height / (UBound(Arr1) + 1)
             Else
                 height = CustomPanel1.Height / 6
             End If
 
-            For i = 0 To UBound(Arr)
-                Dim label As New System.Windows.Forms.Label
-                label.Text = Arr(i)
-                label.Location = New System.Drawing.Point((1 - 1) * width, (i - 1) * height)
-                label.Height = height
-                label.Width = width
-                label.BorderStyle = BorderStyle.FixedSingle
-                label.TextAlign = ContentAlignment.MiddleCenter
-                CustomPanel2.Controls.Add(label)
+            Dim ordinate As Single = 0
+            For j = 1 To displayRng.Columns.Count
+                If j <> PrimaryColumn Then
+                    Dim max As Integer = 1
+                    For k = LBound(Arr1) To UBound(Arr1)
+                        Dim count As Integer = 0
+                        For i = 1 To displayRng.Rows.Count
+                            If displayRng.Cells(i, PrimaryColumn).value = Arr1(k) Then
+                                count = count + 1
+                            End If
+                        Next
+                        If count > max Then
+                            max = count
+                        End If
+                    Next
+
+                    For k = LBound(Arr1) To UBound(Arr1)
+
+                        Dim separator As String = " "
+                        Dim concatenatedValue As String = ""
+
+                        For i = 1 To displayRng.Rows.Count
+                            If displayRng.Cells(i, PrimaryColumn).value = Arr1(k) Then
+                                concatenatedValue = concatenatedValue & displayRng.Cells(i, j).Value & separator
+                            End If
+                        Next
+
+                        Dim label As New System.Windows.Forms.Label
+                        label.Text = concatenatedValue
+                        label.Location = New System.Drawing.Point(ordinate, (k + 1 - 1) * height)
+                        label.Height = height
+                        label.Width = max * width
+                        label.BorderStyle = BorderStyle.FixedSingle
+                        label.TextAlign = ContentAlignment.MiddleCenter
+                        CustomPanel2.Controls.Add(label)
+
+                        If CheckBox4.Checked = True Then
+
+                            Dim cell As Excel.Range = displayRng.Cells(Arr2(k), j)
+                            Dim font As Excel.Font = cell.Font
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+
+                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            End If
+
+                            If IsDBNull(cell.Font.Color) Then
+                                label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                            ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
+                            End If
+                        End If
+                    Next
+
+                    ordinate = ordinate + max * width
+                Else
+                    For k = LBound(Arr1) To UBound(Arr1)
+                        Dim label As New System.Windows.Forms.Label
+                        label.Text = Arr1(k)
+                        label.Location = New System.Drawing.Point(ordinate, (k + 1 - 1) * height)
+                        label.Height = height
+                        label.Width = width
+                        label.BorderStyle = BorderStyle.FixedSingle
+                        label.TextAlign = ContentAlignment.MiddleCenter
+                        CustomPanel2.Controls.Add(label)
+
+                        If CheckBox4.Checked = True Then
+
+                            Dim cell As Excel.Range = displayRng.Cells(Arr2(k), j)
+                            Dim font As Excel.Font = cell.Font
+                            Dim fontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                            label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+
+                            If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                            End If
+
+                            If IsDBNull(cell.Font.Color) Then
+                                label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                            ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
+                            End If
+
+                        End If
+                    Next
+                    ordinate = ordinate + width
+
+                End If
             Next
             CustomPanel2.AutoScroll = True
         End If
@@ -595,7 +723,6 @@ Public Class Form22_Merge_Duplicate_Rows
 
     Private Sub Form22_Merge_Duplicate_Rows_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        clickedLabelNumber = -1
         EnteredLabelNumber = -1
 
     End Sub
@@ -614,11 +741,109 @@ Public Class Form22_Merge_Duplicate_Rows
 
     Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
 
-        Call Display()
+        Try
+            Call Display()
+
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+        rng = workSheet.Range(TextBox1.Text)
+        rng2 = workSheet.Range(TextBox2.Text)
+
+        If CheckBox5.Checked = True Then
+            rng = workSheet.Range(rng.Cells(2, 1), rng.Cells(rng.Rows.Count, rng.Columns.Count))
+        End If
+
+        rng.Select()
+
+
+        Dim r As Integer
+        Dim c As Integer
+
+        r = rng.Rows.Count
+        c = rng.Columns.Count
+
+        Dim Active As Boolean = True
+
+        For Each lbl In labels3
+            If lbl.Text = "" Then
+                Active = False
+                Exit For
+            End If
+        Next
+
+        Dim IsPrimary As Boolean
+        IsPrimary = False
+
+        Dim PrimaryColumn As Integer = 0
+
+        For Each lbl In labels3
+            If lbl.Text = "    Primary Key" Then
+                IsPrimary = True
+                PrimaryColumn = labels3.IndexOf(lbl) + 1
+                Exit For
+            End If
+        Next
+
+        Active = Active And IsPrimary
+
+        If Active = True Then
+
+            Dim cRng As Excel.Range
+            cRng = workSheet.Range(rng.Cells(1, PrimaryColumn), rng.Cells(rng.Rows.Count, PrimaryColumn))
+
+            Dim Arr1(0) As Object
+            Dim Arr2(0) As Integer
+
+            Dim Index1 As Integer = 0
+            Dim Index2 As Integer = 0
+
+            Arr1(0) = cRng.Cells(1, 1).Value
+            Arr2(0) = 1
+
+            For i = 1 To cRng.Rows.Count
+                If Search(Arr1, cRng.Cells(i, 1).Value) = False Then
+                    Index1 = Index1 + 1
+                    Index2 = Index2 + 1
+                    ReDim Preserve Arr1(Index1)
+                    ReDim Preserve Arr2(Index2)
+                    Arr1(Index1) = cRng.Cells(i, 1).Value
+                    Arr2(Index2) = i
+                End If
+            Next
+
+            For j = 1 To rng.Columns.Count
+                If j <> PrimaryColumn Then
+                    For k = LBound(Arr1) To UBound(Arr1)
+
+                        Dim separator As String = " "
+                        Dim concatenatedValue As String = ""
+
+                        For i = 1 To rng.Rows.Count
+                            If rng.Cells(i, PrimaryColumn).value = Arr1(k) Then
+                                concatenatedValue = concatenatedValue & rng.Cells(i, j).Value & separator
+                            End If
+                        Next
+
+                        rng2.Cells(k + 1, j).value = concatenatedValue
+
+                    Next
+                Else
+                    For k = LBound(Arr1) To UBound(Arr1)
+                        rng2.Cells(k + 1, j).value = Arr1(k)
+                    Next
+
+                End If
+            Next
+        End If
 
     End Sub
 End Class
