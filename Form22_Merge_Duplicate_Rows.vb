@@ -1,7 +1,9 @@
 ﻿Imports System.Drawing
+Imports System.Reflection
 Imports System.Reflection.Emit
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
+Imports Microsoft.Office.Interop.Excel
 
 Public Class Form22_Merge_Duplicate_Rows
 
@@ -24,6 +26,27 @@ Public Class Form22_Merge_Duplicate_Rows
     Dim clickedLabelNumber As Integer
     Dim EnteredLabelNumber As Integer
 
+    Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
+
+        If sheet1.Name <> sheet2.Name Then
+            Return False
+
+        Else
+            Dim activesheet As Excel.Worksheet = CType(excelApp.ActiveSheet, Excel.Worksheet)
+
+            Dim rng3 As Excel.Range = activesheet.Range(rng1.Address)
+            Dim rng4 As Excel.Range = activesheet.Range(rng2.Address)
+
+            Dim intersectRange As Range = excelApp.Intersect(rng3, rng4)
+
+            If intersectRange Is Nothing Then
+                Return False
+            Else
+                Return True
+            End If
+        End If
+
+    End Function
     Private Function Search(Arr, value)
 
         Dim Result As Boolean
@@ -96,7 +119,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl.Location = New System.Drawing.Point(1, (i - 1) * height)
             lbl.Height = height
             lbl.Width = Label2.Width - 4
-            lbl.Font = New Font("Segoe UI", 9.75F)
+            lbl.Font = New System.Drawing.Font("Segoe UI", 9.75F)
             lbl.TextAlign = ContentAlignment.MiddleCenter
             lbl.TextAlign = ContentAlignment.MiddleLeft
             lbl.BorderStyle = BorderStyle.None
@@ -112,7 +135,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl2.Location = New System.Drawing.Point(Label2.Width - 4, (i - 1) * height)
             lbl2.Height = height
             lbl2.Width = Label4.Width - 4.25
-            lbl2.Font = New Font("Segoe UI", 9.75F)
+            lbl2.Font = New System.Drawing.Font("Segoe UI", 9.75F)
             lbl2.TextAlign = ContentAlignment.MiddleCenter
             lbl2.TextAlign = ContentAlignment.MiddleLeft
             lbl2.BorderStyle = BorderStyle.None
@@ -128,7 +151,7 @@ Public Class Form22_Merge_Duplicate_Rows
             lbl3.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8.75, (i - 1) * height)
             lbl3.Height = height
             lbl3.Width = Label5.Width
-            lbl3.Font = New Font("Segoe UI", 9.75F)
+            lbl3.Font = New System.Drawing.Font("Segoe UI", 9.75F)
             lbl3.TextAlign = ContentAlignment.MiddleCenter
             lbl3.TextAlign = ContentAlignment.MiddleLeft
             lbl3.BorderStyle = BorderStyle.None
@@ -165,7 +188,7 @@ Public Class Form22_Merge_Duplicate_Rows
 
             comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
             comboBox.Height = height - 5
-            comboBox.Font = New Font("Segoe UI", 9.75F)
+            comboBox.Font = New System.Drawing.Font("Segoe UI", 9.75F)
             comboBox.Width = Label5.Width - 0.5
             comboBox.Visible = False
 
@@ -755,8 +778,10 @@ Public Class Form22_Merge_Duplicate_Rows
         excelApp = Globals.ThisAddIn.Application
         workBook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
+        workSheet2 = workBook.ActiveSheet
         rng = workSheet.Range(TextBox1.Text)
-        rng2 = workSheet.Range(TextBox2.Text)
+        rng2 = workSheet2.Range(TextBox2.Text)
+        Dim rng2Address As String = rng2.Address
 
         If CheckBox5.Checked = True Then
             rng = workSheet.Range(rng.Cells(2, 1), rng.Cells(rng.Rows.Count, rng.Columns.Count))
@@ -827,18 +852,40 @@ Public Class Form22_Merge_Duplicate_Rows
                         Dim separator As String = " "
                         Dim concatenatedValue As String = ""
 
+                        Dim index As Integer = 0
                         For i = 1 To rng.Rows.Count
                             If rng.Cells(i, PrimaryColumn).value = Arr1(k) Then
                                 concatenatedValue = concatenatedValue & rng.Cells(i, j).Value & separator
+                                If index = 0 Then
+                                    index = i
+                                End If
                             End If
                         Next
 
                         rng2.Cells(k + 1, j).value = concatenatedValue
 
+                        If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = False Then
+                            If CheckBox4.Checked = True Then
+                                rng.Cells(index, j).Copy()
+                                rng2.Cells(k + 1, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = workSheet2.Range(rng2Address)
+                            End If
+                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                        End If
+
                     Next
                 Else
                     For k = LBound(Arr1) To UBound(Arr1)
                         rng2.Cells(k + 1, j).value = Arr1(k)
+
+                        If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = False Then
+                            If CheckBox4.Checked = True Then
+                                rng.Cells(Arr2(k), j).Copy()
+                                rng2.Cells(k + 1, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = workSheet2.Range(rng2Address)
+                            End If
+                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                        End If
                     Next
 
                 End If
