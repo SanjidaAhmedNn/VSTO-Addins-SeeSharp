@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.Windows.Forms
 'Imports Microsoft.Office.Tools.Ribbon
 Imports Excel = Microsoft.Office.Interop.Excel
+'Imports Microsoft.Office.Tools.Ribbon
 Public Class Ribbon1
 
     Dim WithEvents excelApp As Excel.Application
@@ -104,8 +105,6 @@ Public Class Ribbon1
         excelApp = Globals.ThisAddIn.Application
         Workbook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
-
-        form.Show()
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 

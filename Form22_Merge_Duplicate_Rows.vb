@@ -54,15 +54,17 @@ Public Class Form22_Merge_Duplicate_Rows
 
         For i = 1 To rng.Columns.Count
 
-            Dim lbl As New System.Windows.Forms.Label()
+            Dim lbl As New CustomLabel
             lbl.Text = rng.Cells(1, i).Value
             lbl.Location = New System.Drawing.Point(1, (i - 1) * height)
             lbl.Height = height
-            lbl.Width = Label2.Width - 4
+            lbl.Width = L_Column_name.Width
             lbl.Font = New Font("Segoe UI", 9.75F)
             lbl.TextAlign = ContentAlignment.MiddleCenter
             lbl.TextAlign = ContentAlignment.MiddleLeft
-            lbl.BorderStyle = BorderStyle.FixedSingle
+            lbl.BorderStyle = BorderStyle.None
+            lbl.BorderColor = Color.FromArgb(245, 245, 245)
+            lbl.BorderWidth = 0.4
             CustomGroupBox7.Controls.Add(lbl)
             labels.Add(lbl)
 
@@ -70,15 +72,17 @@ Public Class Form22_Merge_Duplicate_Rows
             AddHandler lbl.MouseEnter, AddressOf Me.lbl_MouseEnter
             AddHandler lbl.Paint, AddressOf lbl_Paint
 
-            Dim lbl2 As New System.Windows.Forms.Label
+            Dim lbl2 As New CustomLabel
             lbl2.Text = rng.Cells(2, i).Value
-            lbl2.Location = New System.Drawing.Point(Label2.Width - 4, (i - 1) * height)
+            lbl2.Location = New System.Drawing.Point(L_Column_name.Width, (i - 1) * height)
             lbl2.Height = height
-            lbl2.Width = Label4.Width - 4.25
+            lbl2.Width = L_First_row_content.Width + 2
             lbl2.Font = New Font("Segoe UI", 9.75F)
             lbl2.TextAlign = ContentAlignment.MiddleCenter
             lbl2.TextAlign = ContentAlignment.MiddleLeft
-            lbl2.BorderStyle = BorderStyle.FixedSingle
+            lbl2.BorderStyle = BorderStyle.None
+            lbl2.BorderColor = Color.FromArgb(245, 245, 245)
+            lbl2.BorderWidth = 0.4
             CustomGroupBox7.Controls.Add(lbl2)
             labels2.Add(lbl2)
 
@@ -86,21 +90,23 @@ Public Class Form22_Merge_Duplicate_Rows
             AddHandler lbl2.MouseEnter, AddressOf Me.lbl2_MouseEnter
             AddHandler lbl2.Paint, AddressOf lbl2_Paint
 
-            Dim lbl3 As New System.Windows.Forms.Label
+            Dim lbl3 As New CustomLabel
             lbl3.Text = ""
-            lbl3.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8.75, (i - 1) * height)
+            lbl3.Location = New System.Drawing.Point(L_Combine_with.Left, (i - 1) * height)
             lbl3.Height = height
-            lbl3.Width = Label5.Width
+            lbl3.Width = L_Combine_with.Width
             lbl3.Font = New Font("Segoe UI", 9.75F)
             lbl3.TextAlign = ContentAlignment.MiddleCenter
             lbl3.TextAlign = ContentAlignment.MiddleLeft
-            lbl3.BorderStyle = BorderStyle.FixedSingle
+            lbl3.BorderStyle = BorderStyle.None
+            lbl3.BorderWidth = 0.4
+            lbl3.BorderColor = Color.FromArgb(245, 245, 245)
             CustomGroupBox7.Controls.Add(lbl3)
             labels3.Add(lbl3)
 
             AddHandler lbl3.Click, AddressOf Me.lbl3_Click
             AddHandler lbl3.MouseEnter, AddressOf Me.lbl3_MouseEnter
-            AddHandler lbl3.Paint, AddressOf lbl3_Paint
+            'AddHandler lbl3.Paint, AddressOf lbl3_Paint
 
             Dim comboBox As New System.Windows.Forms.ComboBox()
 
@@ -119,10 +125,10 @@ Public Class Form22_Merge_Duplicate_Rows
             comboBox.Items.Add("    Nothing")
             comboBox.Items.Add("    New Line")
 
-            comboBox.Location = New System.Drawing.Point((Label2.Width + Label4.Width) - 8 + 0.5, (i - 1) * height + 0.5)
+            comboBox.Location = New System.Drawing.Point(L_Combine_with.Left, (i - 1) * height + 0.5)
             comboBox.Height = height - 5
-            comboBox.Font = New Font("Segoe UI", 9.75F)
-            comboBox.Width = Label5.Width - 0.5
+            comboBox.Font = New Font("Segoe UI", 9.0F)
+            comboBox.Width = L_Combine_with.Width - 0.5
             comboBox.Visible = False
 
             CustomGroupBox7.Controls.Add(comboBox)
@@ -191,8 +197,8 @@ Public Class Form22_Merge_Duplicate_Rows
     Private Sub lbl_Paint(sender As Object, e As PaintEventArgs)
 
         Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
-        Dim borderColor As Color = Color.FromArgb(245, 245, 245)
-        Dim borderWidth As Integer = 0.2
+        Dim borderColor As Color = Color.FromArgb(255, 255, 255)
+        Dim borderWidth As Integer = 0.1
 
         Dim borderPen As New Pen(borderColor, borderWidth)
 
@@ -394,6 +400,10 @@ Public Class Form22_Merge_Duplicate_Rows
 
         clickedLabelNumber = -1
         EnteredLabelNumber = -1
+
+    End Sub
+
+    Private Sub CustomGroupBox7_Enter(sender As Object, e As EventArgs) Handles CustomGroupBox7.Enter
 
     End Sub
 End Class

@@ -46,9 +46,9 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.RadioButton10 = New System.Windows.Forms.RadioButton()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.L_Combine_with = New System.Windows.Forms.Label()
+        Me.L_First_row_content = New System.Windows.Forms.Label()
+        Me.L_Column_name = New System.Windows.Forms.Label()
         Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.CustomPanel1 = New VSTO_Addins.CustomPanel()
@@ -116,7 +116,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(486, 228)
+        Me.PictureBox7.Location = New System.Drawing.Point(524, 224)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
         Me.PictureBox7.Size = New System.Drawing.Size(65, 65)
@@ -129,7 +129,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.Button2.BackColor = System.Drawing.Color.White
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Button2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(512, 529)
+        Me.Button2.Location = New System.Drawing.Point(557, 529)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(62, 26)
         Me.Button2.TabIndex = 256
@@ -141,7 +141,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.Button1.BackColor = System.Drawing.Color.White
         Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(600, 529)
+        Me.Button1.Location = New System.Drawing.Point(645, 529)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(62, 26)
         Me.Button1.TabIndex = 255
@@ -319,57 +319,63 @@ Partial Class Form22_Merge_Duplicate_Rows
         'CustomGroupBox1
         '
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox1.Controls.Add(Me.Label5)
-        Me.CustomGroupBox1.Controls.Add(Me.Label4)
-        Me.CustomGroupBox1.Controls.Add(Me.Label2)
+        Me.CustomGroupBox1.Controls.Add(Me.L_Combine_with)
+        Me.CustomGroupBox1.Controls.Add(Me.L_First_row_content)
+        Me.CustomGroupBox1.Controls.Add(Me.L_Column_name)
         Me.CustomGroupBox1.Controls.Add(Me.CustomGroupBox7)
         Me.CustomGroupBox1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CustomGroupBox1.Location = New System.Drawing.Point(15, 99)
         Me.CustomGroupBox1.Name = "CustomGroupBox1"
-        Me.CustomGroupBox1.Size = New System.Drawing.Size(308, 162)
+        Me.CustomGroupBox1.Size = New System.Drawing.Size(372, 162)
         Me.CustomGroupBox1.TabIndex = 268
         Me.CustomGroupBox1.TabStop = False
         '
-        'Label5
+        'L_Combine_with
         '
-        Me.Label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(212, 0)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(95, 40)
-        Me.Label5.TabIndex = 3
-        Me.Label5.Text = "Combine with"
-        Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.L_Combine_with.BackColor = System.Drawing.Color.CadetBlue
+        Me.L_Combine_with.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.L_Combine_with.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.L_Combine_with.ForeColor = System.Drawing.Color.White
+        Me.L_Combine_with.Location = New System.Drawing.Point(253, 4)
+        Me.L_Combine_with.Name = "L_Combine_with"
+        Me.L_Combine_with.Size = New System.Drawing.Size(118, 40)
+        Me.L_Combine_with.TabIndex = 3
+        Me.L_Combine_with.Text = " Combine with"
+        Me.L_Combine_with.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'Label4
+        'L_First_row_content
         '
-        Me.Label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(96, 0)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(121, 40)
-        Me.Label4.TabIndex = 2
-        Me.Label4.Text = "First Row Content"
-        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.L_First_row_content.BackColor = System.Drawing.Color.CadetBlue
+        Me.L_First_row_content.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.L_First_row_content.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.L_First_row_content.ForeColor = System.Drawing.Color.White
+        Me.L_First_row_content.Location = New System.Drawing.Point(117, 4)
+        Me.L_First_row_content.Name = "L_First_row_content"
+        Me.L_First_row_content.Size = New System.Drawing.Size(136, 40)
+        Me.L_First_row_content.TabIndex = 2
+        Me.L_First_row_content.Text = " First Row Content"
+        Me.L_First_row_content.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'Label2
+        'L_Column_name
         '
-        Me.Label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(1, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(99, 40)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Column Name"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.L_Column_name.BackColor = System.Drawing.Color.CadetBlue
+        Me.L_Column_name.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.L_Column_name.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.L_Column_name.ForeColor = System.Drawing.Color.White
+        Me.L_Column_name.Location = New System.Drawing.Point(2, 4)
+        Me.L_Column_name.Name = "L_Column_name"
+        Me.L_Column_name.Size = New System.Drawing.Size(115, 40)
+        Me.L_Column_name.TabIndex = 1
+        Me.L_Column_name.Text = " Column Name"
+        Me.L_Column_name.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'CustomGroupBox7
         '
         Me.CustomGroupBox7.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox7.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox7.Location = New System.Drawing.Point(1, 38)
+        Me.CustomGroupBox7.Location = New System.Drawing.Point(1, 44)
         Me.CustomGroupBox7.Name = "CustomGroupBox7"
-        Me.CustomGroupBox7.Size = New System.Drawing.Size(307, 124)
+        Me.CustomGroupBox7.Size = New System.Drawing.Size(370, 117)
         Me.CustomGroupBox7.TabIndex = 0
         Me.CustomGroupBox7.TabStop = False
         '
@@ -378,7 +384,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox5.Controls.Add(Me.CustomPanel1)
         Me.CustomGroupBox5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox5.Location = New System.Drawing.Point(361, 15)
+        Me.CustomGroupBox5.Location = New System.Drawing.Point(406, 15)
         Me.CustomGroupBox5.Name = "CustomGroupBox5"
         Me.CustomGroupBox5.Size = New System.Drawing.Size(302, 190)
         Me.CustomGroupBox5.TabIndex = 253
@@ -401,7 +407,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox6.Controls.Add(Me.CustomPanel2)
         Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox6.Location = New System.Drawing.Point(361, 305)
+        Me.CustomGroupBox6.Location = New System.Drawing.Point(406, 305)
         Me.CustomGroupBox6.Name = "CustomGroupBox6"
         Me.CustomGroupBox6.Size = New System.Drawing.Size(302, 190)
         Me.CustomGroupBox6.TabIndex = 254
@@ -423,7 +429,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(685, 575)
+        Me.ClientSize = New System.Drawing.Size(733, 575)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.CheckBox4)
         Me.Controls.Add(Me.CheckBox3)
@@ -478,9 +484,9 @@ Partial Class Form22_Merge_Duplicate_Rows
     Friend WithEvents CheckBox5 As Windows.Forms.CheckBox
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
     Friend WithEvents CustomGroupBox7 As CustomGroupBox
-    Friend WithEvents Label5 As Windows.Forms.Label
-    Friend WithEvents Label4 As Windows.Forms.Label
-    Friend WithEvents Label2 As Windows.Forms.Label
+    Friend WithEvents L_Combine_with As Windows.Forms.Label
+    Friend WithEvents L_First_row_content As Windows.Forms.Label
+    Friend WithEvents L_Column_name As Windows.Forms.Label
     Friend WithEvents CustomGroupBox2 As CustomGroupBox
     Friend WithEvents CustomGroupBox10 As CustomGroupBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox

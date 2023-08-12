@@ -7,6 +7,8 @@ Imports Microsoft.Office.Interop.Excel
 Imports System.Reflection.Emit
 Imports System.Linq
 Imports System.Media
+Imports System.Security.Cryptography.X509Certificates
+Imports System.Data
 
 Public Class Form30_Create_Dynamic_Drop_down_List
 
@@ -39,8 +41,8 @@ Public Class Form30_Create_Dynamic_Drop_down_List
         End If
     End Sub
 
-    Private Sub RB_columns_CheckedChanged(sender As Object, e As EventArgs) Handles RB_2_5_levels.CheckedChanged
-        If RB_2_5_levels.Checked = True Then
+    Private Sub RB_columns_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Dropdown_35_Labels.CheckedChanged
+        If RB_Dropdown_35_Labels.Checked = True Then
 
             CB_header.Enabled = True
             CB_ascending.Enabled = True
@@ -51,8 +53,8 @@ Public Class Form30_Create_Dynamic_Drop_down_List
         End If
     End Sub
 
-    Private Sub RB_rows_CheckedChanged(sender As Object, e As EventArgs) Handles RB_2_levels.CheckedChanged
-        If RB_2_levels.Checked = True Then
+    Private Sub RB_rows_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Dropdown_2_Labels.CheckedChanged
+        If RB_Dropdown_2_Labels.Checked = True Then
             GB_list_option.Enabled = True
             CB_header.Enabled = False
             CB_ascending.Enabled = False
@@ -108,112 +110,82 @@ Public Class Form30_Create_Dynamic_Drop_down_List
         End Try
     End Sub
 
+    ' Event handler to detect changes in E1 and adjust dropdown in E2
+
+
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
-        ' Dim worksheet As Excel.Worksheet
-        excelApp = Globals.ThisAddIn.Application
-        Dim rng1 As Excel.Range = excelApp.Range("A12", "A27")
-        Dim destRange As Excel.Range = excelApp.Range("Z100", "Z104")
-        ' Dim destRange As Excel.Range = xlWorksheet.Range("Z1:Z100")
-        src_rng.Columns(1).AdvancedFilter(Action:=Excel.XlFilterAction.xlFilterCopy, CopyToRange:=destRange, Unique:=True)
-        '=UNIQUE(FILTER(B12:B27, A12: A27 = I24))
-        ' Get the filter criteria from cell I24
-        Dim filterCriteria As String = destRange(1, 1).Value
-        Dim filterCriteria2 As String = destRange(1, 2).value
-        ' Create a new range for filtered values
-        Dim filteredRange As Excel.Range = src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants, Type.Missing).
-                                    Offset(, -1).Resize(src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants).Count)
 
-        ' Loop through the column A values and check if they match the filter criteria
-        For Each cell In src_rng.Columns(1).Cells
-            If cell.Value = filterCriteria Then
-                Dim valueToAdd As Object = cell.Offset(, 1).Value
-                filteredRange.Value = valueToAdd
-                filteredRange = filteredRange.Offset(1)
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        If RB_Dropdown_35_Labels.Checked = True Then
+            Dim rng As Excel.Range
+            If CB_header.Checked = True Then
+                'Dim adjustRange As Excel.Range
+                rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
+
+            Else
+
+                rng = src_rng 'Assuming you have a range from A1 to A100
             End If
-        Next
+            'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
+            'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
 
+            Dim uniqueValues As New List(Of String)
 
-        ' Create a new range for filtered values
-        Dim filteredRange2 As Excel.Range = src_rng.Columns(3).SpecialCells(Excel.XlCellType.xlCellTypeConstants, Type.Missing).
-                                    Offset(, -2).Resize(src_rng.Columns(2).SpecialCells(Excel.XlCellType.xlCellTypeConstants).Count)
+            'Extract unique values from the range
+            For Each cell As Excel.Range In rng.Columns(1).Cells
+                Dim value As String = cell.Value
+                If Not uniqueValues.Contains(value) Then
+                    uniqueValues.Add(value)
+                End If
+            Next
 
-        ' Loop through the values in column A and check if they match the filter criteria
-        For Each cellA In src_rng.Columns(1).Cells
-            Dim cellB As Excel.Range = src_rng.Columns(2).Cells(cellA.Row - src_rng.Columns(1).Row + 1)
-            If cellA.Value = filterCriteria And cellB.Value = filterCriteria2 Then
-                Dim valueToAdd As Object = cellA.Offset(, 2).Value
-                filteredRange2.Value = valueToAdd
-                filteredRange2 = filteredRange2.Offset(1)
+            If CB_ascending.Checked = True Then
+                'Sort the list in ascending order
+                uniqueValues.Sort()
+            ElseIf CB_descending.Checked = True Then
+                'Sort the list in ascending order
+                uniqueValues.Sort()
+                uniqueValues.Reverse()
             End If
-        Next
 
-        ' Define the cell reference
-        'Dim cellI24 As Excel.Range = des_rng
+            'Create drop-down list at B1 with the unique values
+            Dim dropDownRange As Excel.Range = des_rng.Columns(1)
+            Dim validation As Excel.Validation = dropDownRange.Validation
+            validation.Delete() 'Remove any existing validation
+            validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
 
-        ' Delete any existing validation
-        des_rng.Validation.Delete()
 
-        ' Set new validation
-        des_rng.Validation.Add(Excel.XlDVType.xlValidateList,
-                              Excel.XlDVAlertStyle.xlValidAlertStop,
-                              Excel.XlFormatConditionOperator.xlBetween,
-                              Formula1:=destRange(1, 1) & "#")
+            'MsgBox(i)
 
-        ' Configure additional validation settings
-        With des_rng.Validation
-            .IgnoreBlank = True
-            .InCellDropdown = True
-            .InputTitle = ""
-            .ErrorTitle = ""
-            .InputMessage = ""
-            .ErrorMessage = ""
-            .ShowInput = True
-            .ShowError = True
-        End With
+            AddHandler worksheet.Change, AddressOf worksheet_Change
 
-        ' Delete any existing validation
-        des_rng.Columns(2).Validation.Delete()
+        ElseIf RB_Dropdown_2_Labels.Checked = True Then
+            ' Extract headers from A1:C1
+            Dim headersRange As Excel.Range = src_rng.Rows(1)
+            Dim headers As List(Of String) = New List(Of String)
+            ' Dim workbook As excelapp.workbook
 
-        ' Set new validation
-        des_rng.Columns(2).Validation.Add(Excel.XlDVType.xlValidateList,
-                              Excel.XlDVAlertStyle.xlValidAlertStop,
-                              Excel.XlFormatConditionOperator.xlBetween,
-                              Formula1:=destRange(1, 2) & "#")
+            For Each cell As Excel.Range In headersRange.Cells
+                headers.Add(cell.Value.ToString())
+            Next
+            'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+            'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+            ' Create the dropdown list with headers in cell E1
+            'CreateValidationList(excelApp.ActiveSheet.Range("$E$1"), String.Join(",", headers))
+            'Create drop-down list at B1 with the unique values
+            Dim dropDownRange As Excel.Range = des_rng(1, 1)
+            Dim validation As Excel.Validation = dropDownRange.Validation
+            validation.Delete() 'Remove any existing validation
+            validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", headers))
 
-        ' Configure additional validation settings
-        With des_rng.Columns(2).Validation
-            .IgnoreBlank = True
-            .InCellDropdown = True
-            .InputTitle = ""
-            .ErrorTitle = ""
-            .InputMessage = ""
-            .ErrorMessage = ""
-            .ShowInput = True
-            .ShowError = True
-        End With
+            ' Add event handler to listen for changes in E1
 
-        ' Delete any existing validation
-        des_rng.Columns(3).Validation.Delete()
-
-        ' Set new validation
-        des_rng.Columns(3).Validation.Add(Excel.XlDVType.xlValidateList,
-                              Excel.XlDVAlertStyle.xlValidAlertStop,
-                              Excel.XlFormatConditionOperator.xlBetween,
-                              Formula1:=destRange(1, 3) & "#")
-
-        ' Configure additional validation settings
-        With des_rng.Columns(3).Validation
-            .IgnoreBlank = True
-            .InCellDropdown = True
-            .InputTitle = ""
-            .ErrorTitle = ""
-            .InputMessage = ""
-            .ErrorMessage = ""
-            .ShowInput = True
-            .ShowError = True
-        End With
-
+            AddHandler worksheet.Change, AddressOf worksheet_Change
+        End If
         Me.Close()
+
+
     End Sub
 
     Private Sub Selection_destination_Click(sender As Object, e As EventArgs) Handles Selection_destination.Click
@@ -238,7 +210,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             sheetName = Split(sheetName, "!")(0)
 
             If Mid(sheetName, Len(sheetName), 1) = "'" Then
-        sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
             End If
 
             workSheet = workBook.Worksheets(sheetName)
@@ -315,6 +287,129 @@ Public Class Form30_Create_Dynamic_Drop_down_List
     End Sub
 
     Private Sub Btn_Cancel_Click(sender As Object, e As EventArgs) Handles Btn_Cancel.Click
+
         Me.Close()
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs)
+
+
+    End Sub
+
+
+    Private Sub worksheet_Change(ByVal Target As Excel.Range)
+        Dim rng As Excel.Range
+        If RB_Dropdown_35_Labels.Checked = True Then
+            If CB_header.Checked = True Then
+                'Dim adjustRange As Excel.Range
+                rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
+
+            Else
+
+                rng = src_rng 'Assuming you have a range from A1 to A100
+            End If
+            ' MsgBox(des_rng.Rows.Count)
+            For k = 1 To des_rng.Rows.Count
+                Dim matchedValues As New List(Of String)
+                'Dim i As Integer = 0
+                'MsgBox(i)
+                If des_rng(k, 1).Value IsNot Nothing Then
+                    For i = 1 To rng.Rows.Count
+                        If rng(i, 1).Value = des_rng(k, 1).Value Then
+                            If Not matchedValues.Contains(rng(i, 2).Value) Then
+                                matchedValues.Add(rng(i, 2).Value)
+                            End If
+                            'matchedValues.Add(rng(i, 2).Value)
+                        End If
+                    Next
+
+
+                    If CB_ascending.Checked = True Then
+                        'Sort the list in ascending order
+                        matchedValues.Sort()
+                    ElseIf CB_descending.Checked = True Then
+                        'Sort the list in ascending order
+                        matchedValues.Sort()
+                        matchedValues.Reverse()
+                    End If
+
+                    'MsgBox(i)
+                    'Create drop-down list at B1 with the unique values
+                    'Dim dropDownRange As Excel.Range = des_rng(k, 2)
+                    Dim dropDownRange As Excel.Range = des_rng(k, 2)
+                    Dim Validation As Excel.Validation = dropDownRange.Validation
+                    Validation.Delete() 'Remove any existing validation
+                    Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", matchedValues))
+                    matchedValues.Clear()
+                    'MsgBox(k)
+                End If
+
+                Dim sec_matchedValues As New List(Of String)
+                'Dim i As Integer = 0
+                'MsgBox(i)
+
+                If des_rng(k, 2).Value IsNot Nothing Then
+                    For i = 1 To rng.Rows.Count
+                        If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value Then
+                            sec_matchedValues.Add(rng(i, 3).Value)
+                        End If
+                    Next
+
+
+                    If CB_ascending.Checked = True Then
+                        'Sort the list in ascending order
+                        sec_matchedValues.Sort()
+                    ElseIf CB_descending.Checked = True Then
+                        'Sort the list in ascending order
+                        sec_matchedValues.Sort()
+                        sec_matchedValues.Reverse()
+                    End If
+
+                    'MsgBox(i)
+                    'Create drop-down list at B1 with the unique values
+                    'dropDownRange = des_rng(k, 3)
+                    Dim dropDownRange As Excel.Range = des_rng(k, 3)
+                    Dim Validation As Excel.Validation = dropDownRange.Validation
+                    Validation.Delete() 'Remove any existing validation
+                    Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", sec_matchedValues))
+                    sec_matchedValues.Clear()
+                End If
+            Next
+
+        ElseIf RB_Dropdown_2_Labels.Checked = True Then
+            If RB_Horizon.Checked = True Then
+                If Target.Address = des_rng(1, 1).Address Then
+                    Dim worksheet As Excel.Worksheet = CType(Target.Worksheet, Excel.Worksheet)
+                    Dim col As Integer = src_rng.Rows().Find(Target.Value).Column
+                    Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(worksheet.Cells(worksheet.Rows.Count, col).End(Excel.XlDirection.xlUp).Row - 1, 1)
+                    Dim dropDownRange As Excel.Range = des_rng(1, 2)
+                    Dim Validation As Excel.Validation = dropDownRange.Validation
+                    Validation.Delete() 'Remove any existing validation
+                    Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                    'CreateValidationList(worksheet.Cells(2, 5), "=" & sourceRng.Address)
+                End If
+
+            ElseIf RB_Verti.Checked = True Then
+                If Target.Address = des_rng(1, 1).Address Then
+                    Dim worksheet As Excel.Worksheet = CType(Target.Worksheet, Excel.Worksheet)
+                    Dim col As Integer = src_rng.Rows().Find(Target.Value).Column
+                    Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(worksheet.Cells(worksheet.Rows.Count, col).End(Excel.XlDirection.xlUp).Row - 1, 1)
+                    Dim dropDownRange As Excel.Range = des_rng(2, 1)
+                    Dim Validation As Excel.Validation = dropDownRange.Validation
+                    Validation.Delete() 'Remove any existing validation
+                    Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                    'CreateValidationList(worksheet.Cells(2, 5), "=" & sourceRng.Address)
+                End If
+            End If
+
+        End If
+    End Sub
+    Sub CreateValidationList(cell As Excel.Range, listValues As String)
+        With cell.Validation
+            .Delete()
+            .Add(Type:=Excel.XlDVType.xlValidateList, AlertStyle:=Excel.XlDVAlertStyle.xlValidAlertStop, Operator:=Excel.XlFormatConditionOperator.xlBetween, Formula1:=listValues)
+            .ShowInput = True
+            .ShowError = True
+        End With
     End Sub
 End Class

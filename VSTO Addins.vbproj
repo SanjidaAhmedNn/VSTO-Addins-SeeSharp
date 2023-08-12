@@ -211,6 +211,9 @@
     <Compile Include="CustomGroupBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomPanel.vb">
       <SubType>Component</SubType>
     </Compile>
