@@ -769,16 +769,7 @@ Public Class Form15CompareCells
 
 
 
-
-
-
-
-
-
-
-
-
-                CP_Output_Range.AutoScroll = True
+            CP_Output_Range.AutoScroll = True
 
 
         Catch ex As Exception
