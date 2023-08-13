@@ -211,6 +211,9 @@
     <Compile Include="CustomGroupBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomPanel.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -352,6 +355,18 @@
     <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form4.Designer.vb">
       <DependentUpon>Form4.vb</DependentUpon>
     </Compile>
@@ -460,6 +475,12 @@
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.vb</DependentUpon>
     </EmbeddedResource>
@@ -539,7 +560,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C3C41984D3B7C608886F2646EE14930B1FA36775</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>337CCDFDA45DC2240B4B6DA5D862A48FB4C5CB38</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
