@@ -459,7 +459,6 @@ Public Class Form22_Merge_Duplicate_Rows
 
     Private Sub Display()
 
-        CustomPanel1.Controls.Clear()
         CustomPanel2.Controls.Clear()
 
         excelApp = Globals.ThisAddIn.Application
@@ -491,65 +490,15 @@ Public Class Form22_Merge_Duplicate_Rows
         Dim width As Single
 
         If r <= 6 Then
-            height = CustomPanel1.Height / r
+            height = CustomPanel2.Height / r
         Else
-            height = CustomPanel1.Height / 6
+            height = CustomPanel2.Height / 6
         End If
 
-        If c <= 4 Then
-            width = CustomPanel1.Width / c
-        Else
-            width = CustomPanel1.Width / 4
-        End If
 
-        For i = 1 To displayRng.Rows.Count
-            For j = 1 To displayRng.Columns.Count
-                Dim label As New System.Windows.Forms.Label
-                label.Text = displayRng.Cells(i, j).Value
-                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                label.Height = height
-                label.Width = width
-                label.BorderStyle = BorderStyle.FixedSingle
-                label.TextAlign = ContentAlignment.MiddleCenter
+        width = CustomPanel2.Width / 8
 
-                If CheckBox4.Checked = True Then
-
-                    Dim cell As Excel.Range = displayRng.Cells(i, j)
-                    Dim font As Excel.Font = cell.Font
-                    Dim fontStyle As FontStyle = FontStyle.Regular
-                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-
-                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                        Dim red1 As Integer = colorValue1 Mod 256
-                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                    End If
-
-                    If IsDBNull(cell.Font.Color) Then
-                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                        Dim red2 As Integer = colorValue2 Mod 256
-                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-
-                    End If
-
-                End If
-                CustomPanel1.Controls.Add(label)
-            Next
-        Next
-
-        CustomPanel1.AutoScroll = True
+        CustomPanel2.AutoScroll = True
 
         Dim Active As Boolean = True
 
@@ -601,9 +550,9 @@ Public Class Form22_Merge_Duplicate_Rows
             Next
 
             If (UBound(Arr1) + 1) <= 6 Then
-                height = CustomPanel1.Height / (UBound(Arr1) + 1)
+                height = CustomPanel2.Height / (UBound(Arr1) + 1)
             Else
-                height = CustomPanel1.Height / 6
+                height = CustomPanel2.Height / 6
             End If
 
             Dim ordinate As Single = 0
@@ -625,6 +574,7 @@ Public Class Form22_Merge_Duplicate_Rows
                     For k = LBound(Arr1) To UBound(Arr1)
 
                         Dim separator As String = " "
+
                         Dim concatenatedValue As String = ""
 
                         For i = 1 To displayRng.Rows.Count
