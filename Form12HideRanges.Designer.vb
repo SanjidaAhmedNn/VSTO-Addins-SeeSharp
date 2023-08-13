@@ -29,7 +29,7 @@ Partial Class Form12HideRanges
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.GB_Input_Range = New VSTO_Addins.CustomGroupBox()
@@ -135,17 +135,17 @@ Partial Class Form12HideRanges
         Me.AutoSelection.TabIndex = 119
         Me.AutoSelection.TabStop = False
         '
-        'TextBox1
+        'txtSourceRange
         '
-        Me.TextBox1.BackColor = System.Drawing.Color.White
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TextBox1.Location = New System.Drawing.Point(15, 42)
-        Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(248, 25)
-        Me.TextBox1.TabIndex = 118
+        Me.txtSourceRange.BackColor = System.Drawing.Color.White
+        Me.txtSourceRange.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSourceRange.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.txtSourceRange.Location = New System.Drawing.Point(15, 42)
+        Me.txtSourceRange.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.txtSourceRange.Name = "txtSourceRange"
+        Me.txtSourceRange.Size = New System.Drawing.Size(248, 25)
+        Me.txtSourceRange.TabIndex = 118
         '
         'Label1
         '
@@ -352,7 +352,7 @@ Partial Class Form12HideRanges
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.AutoSelection)
-        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.txtSourceRange)
         Me.Controls.Add(Me.Label1)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -387,7 +387,7 @@ Partial Class Form12HideRanges
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
     Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
     Friend WithEvents AutoSelection As Windows.Forms.PictureBox
-    Friend WithEvents TextBox1 As Windows.Forms.TextBox
+    Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents RB_bidirection As Windows.Forms.RadioButton
     Friend WithEvents GB_Input_Range As CustomGroupBox
