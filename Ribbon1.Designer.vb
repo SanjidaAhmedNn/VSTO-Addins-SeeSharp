@@ -120,7 +120,7 @@
         '
         'Button7
         '
-        Me.Button7.Label = "Button7"
+        Me.Button7.Label = "Tranform"
         Me.Button7.Name = "Button7"
         '
         'Button6
