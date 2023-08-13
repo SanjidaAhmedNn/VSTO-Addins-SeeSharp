@@ -23,143 +23,143 @@ Partial Class Form11SwapRanges
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form11SwapRanges))
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.lblSourceRng1 = New System.Windows.Forms.Label()
+        Me.txtSourceRange1 = New System.Windows.Forms.TextBox()
+        Me.rngSelection1 = New System.Windows.Forms.PictureBox()
+        Me.AutoSelection1 = New System.Windows.Forms.PictureBox()
+        Me.lblSourceRng2 = New System.Windows.Forms.Label()
+        Me.txtSourceRange2 = New System.Windows.Forms.TextBox()
+        Me.rngSelection2 = New System.Windows.Forms.PictureBox()
+        Me.AutoSelection2 = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
-        Me.CustomPanel1 = New VSTO_Addins.CustomPanel()
-        Me.CustomPanel2 = New VSTO_Addins.CustomPanel()
-        Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.radBtnValues = New System.Windows.Forms.RadioButton()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox5 = New System.Windows.Forms.PictureBox()
+        Me.radBtnKeepRef = New System.Windows.Forms.RadioButton()
+        Me.radBtnAdjustRef = New System.Windows.Forms.RadioButton()
+        Me.CB_CopyWs = New System.Windows.Forms.CheckBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.btnCancel = New System.Windows.Forms.Button()
+        Me.btnOK = New System.Windows.Forms.Button()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.CB_KeepFormatting = New System.Windows.Forms.CheckBox()
+        Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
+        Me.CP_InputRng = New VSTO_Addins.CustomPanel()
+        Me.CP_OutputRng = New VSTO_Addins.CustomPanel()
+        Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
+        CType(Me.rngSelection1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.AutoSelection1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.rngSelection2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.AutoSelection2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox1.SuspendLayout()
+        Me.CustomGroupBox7.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
-        Me.CustomGroupBox7.SuspendLayout()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'Label1
+        'lblSourceRng1
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(8, 6)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(249, 17)
-        Me.Label1.TabIndex = 164
-        Me.Label1.Text = "1st Source Range (X rows x Y columns) :"
+        Me.lblSourceRng1.AutoSize = True
+        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng1.Location = New System.Drawing.Point(8, 6)
+        Me.lblSourceRng1.Name = "lblSourceRng1"
+        Me.lblSourceRng1.Size = New System.Drawing.Size(249, 17)
+        Me.lblSourceRng1.TabIndex = 164
+        Me.lblSourceRng1.Text = "1st Source Range (X rows x Y columns) :"
         '
-        'TextBox1
+        'txtSourceRange1
         '
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox1.Location = New System.Drawing.Point(8, 30)
-        Me.TextBox1.Multiline = True
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(260, 26)
-        Me.TextBox1.TabIndex = 165
+        Me.txtSourceRange1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange1.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSourceRange1.Location = New System.Drawing.Point(8, 30)
+        Me.txtSourceRange1.Multiline = True
+        Me.txtSourceRange1.Name = "txtSourceRange1"
+        Me.txtSourceRange1.Size = New System.Drawing.Size(260, 26)
+        Me.txtSourceRange1.TabIndex = 165
         '
-        'PictureBox4
+        'rngSelection1
         '
-        Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(241, 32)
-        Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox4.TabIndex = 166
-        Me.PictureBox4.TabStop = False
+        Me.rngSelection1.Image = CType(resources.GetObject("rngSelection1.Image"), System.Drawing.Image)
+        Me.rngSelection1.Location = New System.Drawing.Point(241, 32)
+        Me.rngSelection1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.rngSelection1.Name = "rngSelection1"
+        Me.rngSelection1.Size = New System.Drawing.Size(27, 23)
+        Me.rngSelection1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.rngSelection1.TabIndex = 166
+        Me.rngSelection1.TabStop = False
         '
-        'PictureBox9
+        'AutoSelection1
         '
-        Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
-        Me.PictureBox9.Location = New System.Drawing.Point(206, 32)
-        Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox9.Name = "PictureBox9"
-        Me.PictureBox9.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox9.TabIndex = 167
-        Me.PictureBox9.TabStop = False
+        Me.AutoSelection1.Image = CType(resources.GetObject("AutoSelection1.Image"), System.Drawing.Image)
+        Me.AutoSelection1.Location = New System.Drawing.Point(206, 32)
+        Me.AutoSelection1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.AutoSelection1.Name = "AutoSelection1"
+        Me.AutoSelection1.Size = New System.Drawing.Size(27, 23)
+        Me.AutoSelection1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.AutoSelection1.TabIndex = 167
+        Me.AutoSelection1.TabStop = False
         '
-        'Label2
+        'lblSourceRng2
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(8, 65)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(256, 17)
-        Me.Label2.TabIndex = 168
-        Me.Label2.Text = "2nd Source Range (X rows x Y columns) :"
+        Me.lblSourceRng2.AutoSize = True
+        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng2.Location = New System.Drawing.Point(8, 65)
+        Me.lblSourceRng2.Name = "lblSourceRng2"
+        Me.lblSourceRng2.Size = New System.Drawing.Size(256, 17)
+        Me.lblSourceRng2.TabIndex = 168
+        Me.lblSourceRng2.Text = "2nd Source Range (X rows x Y columns) :"
         '
-        'TextBox2
+        'txtSourceRange2
         '
-        Me.TextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox2.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TextBox2.Location = New System.Drawing.Point(8, 93)
-        Me.TextBox2.Multiline = True
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(260, 26)
-        Me.TextBox2.TabIndex = 169
+        Me.txtSourceRange2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange2.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSourceRange2.Location = New System.Drawing.Point(8, 93)
+        Me.txtSourceRange2.Multiline = True
+        Me.txtSourceRange2.Name = "txtSourceRange2"
+        Me.txtSourceRange2.Size = New System.Drawing.Size(260, 26)
+        Me.txtSourceRange2.TabIndex = 169
         '
-        'PictureBox6
+        'rngSelection2
         '
-        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
-        Me.PictureBox6.Location = New System.Drawing.Point(241, 95)
-        Me.PictureBox6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox6.Name = "PictureBox6"
-        Me.PictureBox6.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox6.TabIndex = 170
-        Me.PictureBox6.TabStop = False
+        Me.rngSelection2.Image = CType(resources.GetObject("rngSelection2.Image"), System.Drawing.Image)
+        Me.rngSelection2.Location = New System.Drawing.Point(241, 95)
+        Me.rngSelection2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.rngSelection2.Name = "rngSelection2"
+        Me.rngSelection2.Size = New System.Drawing.Size(27, 23)
+        Me.rngSelection2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.rngSelection2.TabIndex = 170
+        Me.rngSelection2.TabStop = False
         '
-        'PictureBox3
+        'AutoSelection2
         '
-        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(206, 96)
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(27, 23)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 171
-        Me.PictureBox3.TabStop = False
+        Me.AutoSelection2.Image = CType(resources.GetObject("AutoSelection2.Image"), System.Drawing.Image)
+        Me.AutoSelection2.Location = New System.Drawing.Point(206, 96)
+        Me.AutoSelection2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.AutoSelection2.Name = "AutoSelection2"
+        Me.AutoSelection2.Size = New System.Drawing.Size(27, 23)
+        Me.AutoSelection2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.AutoSelection2.TabIndex = 171
+        Me.AutoSelection2.TabStop = False
         '
         'CustomGroupBox2
         '
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox3)
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox6)
-        Me.CustomGroupBox2.Controls.Add(Me.TextBox2)
-        Me.CustomGroupBox2.Controls.Add(Me.Label2)
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox9)
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox4)
-        Me.CustomGroupBox2.Controls.Add(Me.TextBox1)
-        Me.CustomGroupBox2.Controls.Add(Me.Label1)
+        Me.CustomGroupBox2.Controls.Add(Me.AutoSelection2)
+        Me.CustomGroupBox2.Controls.Add(Me.rngSelection2)
+        Me.CustomGroupBox2.Controls.Add(Me.txtSourceRange2)
+        Me.CustomGroupBox2.Controls.Add(Me.lblSourceRng2)
+        Me.CustomGroupBox2.Controls.Add(Me.AutoSelection1)
+        Me.CustomGroupBox2.Controls.Add(Me.rngSelection1)
+        Me.CustomGroupBox2.Controls.Add(Me.txtSourceRange1)
+        Me.CustomGroupBox2.Controls.Add(Me.lblSourceRng1)
         Me.CustomGroupBox2.Location = New System.Drawing.Point(15, 15)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Size = New System.Drawing.Size(278, 136)
@@ -178,192 +178,21 @@ Partial Class Form11SwapRanges
         Me.CustomGroupBox1.TabStop = False
         Me.CustomGroupBox1.Text = "Swap Type"
         '
-        'CheckBox2
-        '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(15, 309)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
-        Me.CheckBox2.TabIndex = 151
-        Me.CheckBox2.Text = "Create a copy of the original worksheet"
-        Me.CheckBox2.UseVisualStyleBackColor = True
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(15, 346)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
-        Me.ComboBox1.TabIndex = 152
-        Me.ComboBox1.Text = "SOFTEKO"
-        '
-        'Button1
-        '
-        Me.Button1.BackColor = System.Drawing.Color.White
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(518, 346)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(62, 26)
-        Me.Button1.TabIndex = 155
-        Me.Button1.Text = "Cancel"
-        Me.Button1.UseVisualStyleBackColor = False
-        '
-        'Button2
-        '
-        Me.Button2.BackColor = System.Drawing.Color.White
-        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(446, 346)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(62, 26)
-        Me.Button2.TabIndex = 156
-        Me.Button2.Text = "OK"
-        Me.Button2.UseVisualStyleBackColor = False
-        '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(437, 145)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(43, 49)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 157
-        Me.PictureBox7.TabStop = False
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(15, 280)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(122, 21)
-        Me.CheckBox1.TabIndex = 150
-        Me.CheckBox1.Text = "Keep formatting"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'CustomGroupBox5
-        '
-        Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox5.Controls.Add(Me.CustomPanel1)
-        Me.CustomGroupBox5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox5.Location = New System.Drawing.Point(329, 4)
-        Me.CustomGroupBox5.Name = "CustomGroupBox5"
-        Me.CustomGroupBox5.Size = New System.Drawing.Size(252, 135)
-        Me.CustomGroupBox5.TabIndex = 153
-        Me.CustomGroupBox5.TabStop = False
-        Me.CustomGroupBox5.Text = "Input Range"
-        '
-        'CustomPanel1
-        '
-        Me.CustomPanel1.BackColor = System.Drawing.Color.White
-        Me.CustomPanel1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CustomPanel1.BorderWidth = 1
-        Me.CustomPanel1.Location = New System.Drawing.Point(1, 30)
-        Me.CustomPanel1.Name = "CustomPanel1"
-        Me.CustomPanel1.Size = New System.Drawing.Size(250, 105)
-        Me.CustomPanel1.TabIndex = 0
-        '
-        'CustomPanel2
-        '
-        Me.CustomPanel2.BackColor = System.Drawing.Color.White
-        Me.CustomPanel2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomPanel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CustomPanel2.BorderWidth = 1
-        Me.CustomPanel2.Location = New System.Drawing.Point(1, 30)
-        Me.CustomPanel2.Name = "CustomPanel2"
-        Me.CustomPanel2.Size = New System.Drawing.Size(250, 105)
-        Me.CustomPanel2.TabIndex = 11
-        '
-        'CustomGroupBox6
-        '
-        Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox6.Controls.Add(Me.CustomPanel2)
-        Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox6.Location = New System.Drawing.Point(330, 195)
-        Me.CustomGroupBox6.Name = "CustomGroupBox6"
-        Me.CustomGroupBox6.Size = New System.Drawing.Size(252, 135)
-        Me.CustomGroupBox6.TabIndex = 154
-        Me.CustomGroupBox6.TabStop = False
-        Me.CustomGroupBox6.Text = "Expected Output"
-        '
-        'RadioButton2
-        '
-        Me.RadioButton2.AutoSize = True
-        Me.RadioButton2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton2.Location = New System.Drawing.Point(8, 60)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(143, 21)
-        Me.RadioButton2.TabIndex = 1
-        Me.RadioButton2.TabStop = True
-        Me.RadioButton2.Text = "Keep Cell Reference"
-        Me.RadioButton2.UseVisualStyleBackColor = True
-        '
         'CustomGroupBox7
         '
         Me.CustomGroupBox7.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox7.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox7.Controls.Add(Me.PictureBox2)
-        Me.CustomGroupBox7.Controls.Add(Me.RadioButton3)
+        Me.CustomGroupBox7.Controls.Add(Me.radBtnValues)
         Me.CustomGroupBox7.Controls.Add(Me.PictureBox1)
         Me.CustomGroupBox7.Controls.Add(Me.PictureBox5)
-        Me.CustomGroupBox7.Controls.Add(Me.RadioButton2)
-        Me.CustomGroupBox7.Controls.Add(Me.RadioButton1)
+        Me.CustomGroupBox7.Controls.Add(Me.radBtnKeepRef)
+        Me.CustomGroupBox7.Controls.Add(Me.radBtnAdjustRef)
         Me.CustomGroupBox7.Location = New System.Drawing.Point(1, 22)
         Me.CustomGroupBox7.Name = "CustomGroupBox7"
         Me.CustomGroupBox7.Size = New System.Drawing.Size(280, 88)
         Me.CustomGroupBox7.TabIndex = 0
         Me.CustomGroupBox7.TabStop = False
-        '
-        'RadioButton1
-        '
-        Me.RadioButton1.AutoSize = True
-        Me.RadioButton1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton1.Location = New System.Drawing.Point(8, 34)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(149, 21)
-        Me.RadioButton1.TabIndex = 0
-        Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "Adjust Cell Reference"
-        Me.RadioButton1.UseVisualStyleBackColor = True
-        '
-        'PictureBox5
-        '
-        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"), System.Drawing.Image)
-        Me.PictureBox5.Location = New System.Drawing.Point(245, 7)
-        Me.PictureBox5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox5.Name = "PictureBox5"
-        Me.PictureBox5.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox5.TabIndex = 127
-        Me.PictureBox5.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(245, 34)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 128
-        Me.PictureBox1.TabStop = False
-        '
-        'RadioButton3
-        '
-        Me.RadioButton3.AutoSize = True
-        Me.RadioButton3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton3.Location = New System.Drawing.Point(8, 8)
-        Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(93, 21)
-        Me.RadioButton3.TabIndex = 129
-        Me.RadioButton3.TabStop = True
-        Me.RadioButton3.Text = "Values Only"
-        Me.RadioButton3.UseVisualStyleBackColor = True
         '
         'PictureBox2
         '
@@ -376,6 +205,177 @@ Partial Class Form11SwapRanges
         Me.PictureBox2.TabIndex = 130
         Me.PictureBox2.TabStop = False
         '
+        'radBtnValues
+        '
+        Me.radBtnValues.AutoSize = True
+        Me.radBtnValues.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.radBtnValues.Location = New System.Drawing.Point(8, 8)
+        Me.radBtnValues.Name = "radBtnValues"
+        Me.radBtnValues.Size = New System.Drawing.Size(93, 21)
+        Me.radBtnValues.TabIndex = 129
+        Me.radBtnValues.TabStop = True
+        Me.radBtnValues.Text = "Values Only"
+        Me.radBtnValues.UseVisualStyleBackColor = True
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(245, 34)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 128
+        Me.PictureBox1.TabStop = False
+        '
+        'PictureBox5
+        '
+        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"), System.Drawing.Image)
+        Me.PictureBox5.Location = New System.Drawing.Point(245, 7)
+        Me.PictureBox5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox5.Name = "PictureBox5"
+        Me.PictureBox5.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox5.TabIndex = 127
+        Me.PictureBox5.TabStop = False
+        '
+        'radBtnKeepRef
+        '
+        Me.radBtnKeepRef.AutoSize = True
+        Me.radBtnKeepRef.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.radBtnKeepRef.Location = New System.Drawing.Point(8, 60)
+        Me.radBtnKeepRef.Name = "radBtnKeepRef"
+        Me.radBtnKeepRef.Size = New System.Drawing.Size(143, 21)
+        Me.radBtnKeepRef.TabIndex = 1
+        Me.radBtnKeepRef.TabStop = True
+        Me.radBtnKeepRef.Text = "Keep Cell Reference"
+        Me.radBtnKeepRef.UseVisualStyleBackColor = True
+        '
+        'radBtnAdjustRef
+        '
+        Me.radBtnAdjustRef.AutoSize = True
+        Me.radBtnAdjustRef.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.radBtnAdjustRef.Location = New System.Drawing.Point(8, 34)
+        Me.radBtnAdjustRef.Name = "radBtnAdjustRef"
+        Me.radBtnAdjustRef.Size = New System.Drawing.Size(149, 21)
+        Me.radBtnAdjustRef.TabIndex = 0
+        Me.radBtnAdjustRef.TabStop = True
+        Me.radBtnAdjustRef.Text = "Adjust Cell Reference"
+        Me.radBtnAdjustRef.UseVisualStyleBackColor = True
+        '
+        'CB_CopyWs
+        '
+        Me.CB_CopyWs.AutoSize = True
+        Me.CB_CopyWs.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_CopyWs.Location = New System.Drawing.Point(15, 309)
+        Me.CB_CopyWs.Name = "CB_CopyWs"
+        Me.CB_CopyWs.Size = New System.Drawing.Size(257, 21)
+        Me.CB_CopyWs.TabIndex = 151
+        Me.CB_CopyWs.Text = "Create a copy of the original worksheet"
+        Me.CB_CopyWs.UseVisualStyleBackColor = True
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(15, 346)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
+        Me.ComboBox1.TabIndex = 152
+        Me.ComboBox1.Text = "SOFTEKO"
+        '
+        'btnCancel
+        '
+        Me.btnCancel.BackColor = System.Drawing.Color.White
+        Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCancel.Location = New System.Drawing.Point(518, 346)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(62, 26)
+        Me.btnCancel.TabIndex = 155
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = False
+        '
+        'btnOK
+        '
+        Me.btnOK.BackColor = System.Drawing.Color.White
+        Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnOK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnOK.Location = New System.Drawing.Point(446, 346)
+        Me.btnOK.Name = "btnOK"
+        Me.btnOK.Size = New System.Drawing.Size(62, 26)
+        Me.btnOK.TabIndex = 156
+        Me.btnOK.Text = "OK"
+        Me.btnOK.UseVisualStyleBackColor = False
+        '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
+        Me.PictureBox7.Location = New System.Drawing.Point(437, 145)
+        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(43, 49)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox7.TabIndex = 157
+        Me.PictureBox7.TabStop = False
+        '
+        'CB_KeepFormatting
+        '
+        Me.CB_KeepFormatting.AutoSize = True
+        Me.CB_KeepFormatting.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_KeepFormatting.Location = New System.Drawing.Point(15, 280)
+        Me.CB_KeepFormatting.Name = "CB_KeepFormatting"
+        Me.CB_KeepFormatting.Size = New System.Drawing.Size(122, 21)
+        Me.CB_KeepFormatting.TabIndex = 150
+        Me.CB_KeepFormatting.Text = "Keep formatting"
+        Me.CB_KeepFormatting.UseVisualStyleBackColor = True
+        '
+        'CustomGroupBox5
+        '
+        Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox5.Controls.Add(Me.CP_InputRng)
+        Me.CustomGroupBox5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CustomGroupBox5.Location = New System.Drawing.Point(329, 4)
+        Me.CustomGroupBox5.Name = "CustomGroupBox5"
+        Me.CustomGroupBox5.Size = New System.Drawing.Size(252, 135)
+        Me.CustomGroupBox5.TabIndex = 153
+        Me.CustomGroupBox5.TabStop = False
+        Me.CustomGroupBox5.Text = "Input Range"
+        '
+        'CP_InputRng
+        '
+        Me.CP_InputRng.BackColor = System.Drawing.Color.White
+        Me.CP_InputRng.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CP_InputRng.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.CP_InputRng.BorderWidth = 1
+        Me.CP_InputRng.Location = New System.Drawing.Point(1, 30)
+        Me.CP_InputRng.Name = "CP_InputRng"
+        Me.CP_InputRng.Size = New System.Drawing.Size(250, 105)
+        Me.CP_InputRng.TabIndex = 0
+        '
+        'CP_OutputRng
+        '
+        Me.CP_OutputRng.BackColor = System.Drawing.Color.White
+        Me.CP_OutputRng.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CP_OutputRng.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.CP_OutputRng.BorderWidth = 1
+        Me.CP_OutputRng.Location = New System.Drawing.Point(1, 30)
+        Me.CP_OutputRng.Name = "CP_OutputRng"
+        Me.CP_OutputRng.Size = New System.Drawing.Size(250, 105)
+        Me.CP_OutputRng.TabIndex = 11
+        '
+        'CustomGroupBox6
+        '
+        Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox6.Controls.Add(Me.CP_OutputRng)
+        Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CustomGroupBox6.Location = New System.Drawing.Point(330, 195)
+        Me.CustomGroupBox6.Name = "CustomGroupBox6"
+        Me.CustomGroupBox6.Size = New System.Drawing.Size(252, 135)
+        Me.CustomGroupBox6.TabIndex = 154
+        Me.CustomGroupBox6.TabStop = False
+        Me.CustomGroupBox6.Text = "Expected Output"
+        '
         'Form11SwapRanges
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -384,60 +384,60 @@ Partial Class Form11SwapRanges
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CustomGroupBox6)
         Me.Controls.Add(Me.CustomGroupBox5)
-        Me.Controls.Add(Me.CheckBox1)
+        Me.Controls.Add(Me.CB_KeepFormatting)
         Me.Controls.Add(Me.PictureBox7)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.btnOK)
+        Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.ComboBox1)
-        Me.Controls.Add(Me.CheckBox2)
+        Me.Controls.Add(Me.CB_CopyWs)
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Name = "Form11SwapRanges"
         Me.Text = "Swap"
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rngSelection1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.AutoSelection1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rngSelection2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.AutoSelection2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox2.PerformLayout()
         Me.CustomGroupBox1.ResumeLayout(False)
+        Me.CustomGroupBox7.ResumeLayout(False)
+        Me.CustomGroupBox7.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
-        Me.CustomGroupBox7.ResumeLayout(False)
-        Me.CustomGroupBox7.PerformLayout()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents Label1 As Windows.Forms.Label
-    Friend WithEvents TextBox1 As Windows.Forms.TextBox
-    Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
-    Friend WithEvents PictureBox9 As Windows.Forms.PictureBox
-    Friend WithEvents Label2 As Windows.Forms.Label
-    Friend WithEvents TextBox2 As Windows.Forms.TextBox
-    Friend WithEvents PictureBox6 As Windows.Forms.PictureBox
-    Friend WithEvents PictureBox3 As Windows.Forms.PictureBox
+    Friend WithEvents lblSourceRng1 As Windows.Forms.Label
+    Friend WithEvents txtSourceRange1 As Windows.Forms.TextBox
+    Friend WithEvents rngSelection1 As Windows.Forms.PictureBox
+    Friend WithEvents AutoSelection1 As Windows.Forms.PictureBox
+    Friend WithEvents lblSourceRng2 As Windows.Forms.Label
+    Friend WithEvents txtSourceRange2 As Windows.Forms.TextBox
+    Friend WithEvents rngSelection2 As Windows.Forms.PictureBox
+    Friend WithEvents AutoSelection2 As Windows.Forms.PictureBox
     Friend WithEvents CustomGroupBox2 As CustomGroupBox
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
     Friend WithEvents CustomGroupBox7 As CustomGroupBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
-    Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
+    Friend WithEvents radBtnValues As Windows.Forms.RadioButton
     Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox5 As Windows.Forms.PictureBox
-    Friend WithEvents RadioButton2 As Windows.Forms.RadioButton
-    Friend WithEvents RadioButton1 As Windows.Forms.RadioButton
-    Friend WithEvents CheckBox2 As Windows.Forms.CheckBox
+    Friend WithEvents radBtnKeepRef As Windows.Forms.RadioButton
+    Friend WithEvents radBtnAdjustRef As Windows.Forms.RadioButton
+    Friend WithEvents CB_CopyWs As Windows.Forms.CheckBox
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
-    Friend WithEvents Button1 As Windows.Forms.Button
-    Friend WithEvents Button2 As Windows.Forms.Button
+    Friend WithEvents btnCancel As Windows.Forms.Button
+    Friend WithEvents btnOK As Windows.Forms.Button
     Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
-    Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
+    Friend WithEvents CB_KeepFormatting As Windows.Forms.CheckBox
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
-    Friend WithEvents CustomPanel1 As CustomPanel
-    Friend WithEvents CustomPanel2 As CustomPanel
+    Friend WithEvents CP_InputRng As CustomPanel
+    Friend WithEvents CP_OutputRng As CustomPanel
     Friend WithEvents CustomGroupBox6 As CustomGroupBox
 End Class
