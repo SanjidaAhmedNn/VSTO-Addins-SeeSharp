@@ -83,6 +83,9 @@
         Me.Button28 = Me.Factory.CreateRibbonButton
         Me.Button29 = Me.Factory.CreateRibbonButton
         Me.Button30 = Me.Factory.CreateRibbonButton
+        Me.Menu4 = Me.Factory.CreateRibbonMenu
+        Me.Button31 = Me.Factory.CreateRibbonButton
+        Me.Button32 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -286,6 +289,7 @@
         Me.Group4.Items.Add(Me.Menu2)
         Me.Group4.Items.Add(Me.Button27)
         Me.Group4.Items.Add(Me.Menu3)
+        Me.Group4.Items.Add(Me.Menu4)
         Me.Group4.Label = "Group4"
         Me.Group4.Name = "Group4"
         '
@@ -356,6 +360,25 @@
         Me.Button30.Name = "Button30"
         Me.Button30.ShowImage = True
         '
+        'Menu4
+        '
+        Me.Menu4.Items.Add(Me.Button31)
+        Me.Menu4.Items.Add(Me.Button32)
+        Me.Menu4.Label = "Unhide Ranges"
+        Me.Menu4.Name = "Menu4"
+        '
+        'Button31
+        '
+        Me.Button31.Label = "Unhide all ranges"
+        Me.Button31.Name = "Button31"
+        Me.Button31.ShowImage = True
+        '
+        'Button32
+        '
+        Me.Button32.Label = "Unhide ranges from the selection"
+        Me.Button32.Name = "Button32"
+        Me.Button32.ShowImage = True
+        '
         'Ribbon1
         '
         Me.Name = "Ribbon1"
@@ -417,6 +440,9 @@
     Friend WithEvents Button28 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button29 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button30 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu4 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button31 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button32 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

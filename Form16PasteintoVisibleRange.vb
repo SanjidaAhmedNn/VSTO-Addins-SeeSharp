@@ -19,6 +19,7 @@ Public Class Form16PasteintoVisibleRange
     Dim selectedRange As Excel.Range
     Dim destRange As Excel.Range
     Dim outputRng As Excel.Range
+    Dim WsName As String
 
     Private Sub Form16PasteintoVisibleRange_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -155,9 +156,7 @@ Public Class Form16PasteintoVisibleRange
             excelApp = Globals.ThisAddIn.Application
             selectedRange = excelApp.Selection
             selectedRange.Select()
-            'txtSourceRange.Text = selectedRange.Address
-            'txtSourceRange.Focus()
-            'CustomPanel1.Focus()
+
 
             If FocusedTxtBox = 1 Then
 
@@ -293,39 +292,108 @@ Public Class Form16PasteintoVisibleRange
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        Dim i, j As Integer
-        'Dim inputCell As Excel.Range
-        'Dim outputCell As Excel.Range
+        Dim i, j, count, rngCount As Integer
+        Dim lastRow As String
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+        WsName = worksheet.Name
+
+
+        If CB_copyWs.Checked = True Then
+
+            workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+            outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+
+
+            worksheet = workbook.Sheets(WsName)
+            worksheet.Activate()
+
+
+        End If
+
+        If CB_keepFormat.Checked = False Then
+
+            inputRng.ClearFormats()
+
+        End If
+
+
+
 
         inputRng = worksheet.Range(txtSourceRange.Text)
-        inputRng.Copy()
+
         outputRng = worksheet.Range(txtDestRange.Text).SpecialCells(Excel.XlCellType.xlCellTypeVisible)
-        'outputRng.PasteSpecial(Excel.XlPasteType.xlPasteValues)
-        MsgBox(outputRng.Address)
-        For i = 1 To inputRng.Rows.Count
-            For j = 1 To outputRng.Rows.Count
-
-                If Not outputRng.EntireRow.Hidden Then
-
-                    outputRng.Cells(j, 1).value = inputRng.Cells(i, 1).value
+        selectedRange = excelApp.Selection
 
 
+        rngCount = 0
 
-                End If
+        For Each c As Char In outputRng.Address
+
+            If c = "," Then
+                rngCount = rngCount + 1
+            End If
+
+        Next
 
 
+        Dim arrRng As String() = Split(outputRng.Address, ",")
+
+
+        lastRow = worksheet.Range(arrRng(rngCount)).End(XlDirection.xlDown).Address
+        lastRow = worksheet.Range(lastRow).End(XlDirection.xlUp).Address
+
+        count = 0
+
+        While worksheet.Range(lastRow).Offset(count, 0).Value <> Nothing
+
+            count = count + 1
+
+        End While
+
+
+
+
+
+
+
+
+
+        If inputRng.Rows.Count - 1 <= rngCount Then
+
+            For i = 0 To inputRng.Rows.Count - 1
+
+
+                worksheet.Range(arrRng(i)).Value = inputRng.Cells.Offset(i, 0).Value
 
 
             Next
 
 
+        Else
+
+            For j = 0 To inputRng.Rows.Count
+                If j <= rngCount Then
+                    worksheet.Range(arrRng(j)).Value = inputRng.Cells.Offset(j, 0).Value
+                ElseIf j > rngCount Then
+                    For k = 0 To inputRng.Columns.Count - 1
+                        worksheet.Range(lastRow).Offset(count, k).Value = inputRng.Cells.Offset(j, k).Value
+
+                    Next
+                    count = count + 1
+                End If
+            Next
 
 
-        Next
+        End If
 
 
+        Me.Dispose()
 
 
 
     End Sub
+
+
 End Class

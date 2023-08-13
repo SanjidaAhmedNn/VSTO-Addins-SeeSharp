@@ -23,10 +23,10 @@ Partial Class Form16PasteintoVisibleRange
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form16PasteintoVisibleRange))
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.CB_keepFormat = New System.Windows.Forms.CheckBox()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CB_copyWs = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.txtSourceRange = New System.Windows.Forms.TextBox()
@@ -43,16 +43,16 @@ Partial Class Form16PasteintoVisibleRange
         CType(Me.destinationSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'CheckBox1
+        'CB_keepFormat
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(19, 77)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(122, 21)
-        Me.CheckBox1.TabIndex = 184
-        Me.CheckBox1.Text = "Keep formatting"
-        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.CB_keepFormat.AutoSize = True
+        Me.CB_keepFormat.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_keepFormat.Location = New System.Drawing.Point(19, 77)
+        Me.CB_keepFormat.Name = "CB_keepFormat"
+        Me.CB_keepFormat.Size = New System.Drawing.Size(122, 21)
+        Me.CB_keepFormat.TabIndex = 184
+        Me.CB_keepFormat.Text = "Keep formatting"
+        Me.CB_keepFormat.UseVisualStyleBackColor = True
         '
         'btnOK
         '
@@ -76,16 +76,16 @@ Partial Class Form16PasteintoVisibleRange
         Me.ComboBox1.TabIndex = 186
         Me.ComboBox1.Text = "SOFTEKO"
         '
-        'CheckBox2
+        'CB_copyWs
         '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(13, 286)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
-        Me.CheckBox2.TabIndex = 185
-        Me.CheckBox2.Text = "Create a copy of the original worksheet"
-        Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.CB_copyWs.AutoSize = True
+        Me.CB_copyWs.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_copyWs.Location = New System.Drawing.Point(13, 286)
+        Me.CB_copyWs.Name = "CB_copyWs"
+        Me.CB_copyWs.Size = New System.Drawing.Size(257, 21)
+        Me.CB_copyWs.TabIndex = 185
+        Me.CB_copyWs.Text = "Create a copy of the original worksheet"
+        Me.CB_copyWs.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -211,10 +211,10 @@ Partial Class Form16PasteintoVisibleRange
         Me.Controls.Add(Me.txtDestRange)
         Me.Controls.Add(Me.txtSourceRange)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.CheckBox1)
+        Me.Controls.Add(Me.CB_keepFormat)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.ComboBox1)
-        Me.Controls.Add(Me.CheckBox2)
+        Me.Controls.Add(Me.CB_copyWs)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.CustomGroupBox5)
         Me.Controls.Add(Me.btnCancel)
@@ -230,10 +230,10 @@ Partial Class Form16PasteintoVisibleRange
     End Sub
 
     Friend WithEvents CustomPanel1 As CustomPanel
-    Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
+    Friend WithEvents CB_keepFormat As Windows.Forms.CheckBox
     Friend WithEvents btnOK As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
-    Friend WithEvents CheckBox2 As Windows.Forms.CheckBox
+    Friend WithEvents CB_copyWs As Windows.Forms.CheckBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
     Friend WithEvents btnCancel As Windows.Forms.Button
