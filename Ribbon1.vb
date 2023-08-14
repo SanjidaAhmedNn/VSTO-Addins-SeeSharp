@@ -109,7 +109,6 @@ Public Class Ribbon1
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-        MyForm11.TextBox1.Text = selection.Address
         MyForm11.Show()
     End Sub
 
