@@ -56,8 +56,10 @@ Public Class Form11SwapRanges
 
             lblSourceRng1.Text = "1st Source Range (" & firstInputRng.Rows.Count & " rows x " & firstInputRng.Columns.Count & " columns)"
 
+            firstRngRows = worksheet.Range(txtSourceRange1.Text).Rows.Count
+            firstRngCols = worksheet.Range(txtSourceRange1.Text).Columns.Count
 
-            'Call Display()
+
 
 
 
@@ -83,18 +85,9 @@ Public Class Form11SwapRanges
             secondInputRng = worksheet.Range(txtSourceRange2.Text)
 
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-            If Not firstInputRng.Rows.Count = secondInputRng.Rows.Count And firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
-
-                MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
-
-                Me.Dispose()
-                Exit Sub
 
 
-            End If
 
-
-            'Call Display()
 
         Catch ex As Exception
 
@@ -351,11 +344,24 @@ Public Class Form11SwapRanges
             WsName = worksheet.Name
             Dim temp As Object
 
+
+            If Not firstInputRng.Rows.Count = secondInputRng.Rows.Count Or firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+
+                MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
+
+                Me.Close()
+
+                Me.Dispose()
+                Exit Sub
+
+
+            End If
+
             If CB_CopyWs.Checked = True Then
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
                 outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-                'outWorksheet.Range("A1").Select()
+
 
                 worksheet = workbook.Sheets(WsName)
                 worksheet.Activate()
@@ -396,6 +402,8 @@ Public Class Form11SwapRanges
 
             End If
 
+
+
             Me.Dispose()
 
 
@@ -405,7 +413,6 @@ Public Class Form11SwapRanges
 
 
     End Sub
-
 
 
 
