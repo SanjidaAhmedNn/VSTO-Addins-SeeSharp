@@ -115,7 +115,7 @@
         '
         'Button8
         '
-        Me.Button8.Label = "Form 11"
+        Me.Button8.Label = "Swap"
         Me.Button8.Name = "Button8"
         '
         'Button7

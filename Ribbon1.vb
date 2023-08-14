@@ -54,9 +54,16 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As RibbonControlEventArgs) Handles Button8.Click
-        Dim form As New Form11SwapRanges
+        Dim MyForm11 As New Form11SwapRanges
 
-        form.Show()
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm11.TextBox1.Text = selection.Address
+        MyForm11.Show()
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
