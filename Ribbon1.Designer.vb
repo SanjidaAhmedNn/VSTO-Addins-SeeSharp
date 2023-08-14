@@ -264,7 +264,7 @@
         '
         'Button20
         '
-        Me.Button20.Label = "Form 22 Merge Dupli"
+        Me.Button20.Label = "Merge Duplicate Rows"
         Me.Button20.Name = "Button20"
         '
         'Button21

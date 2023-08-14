@@ -36,19 +36,55 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
-        Dim form As New Form3
-        form.Show()
+        Dim MyForm3 As New Form3
+
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        MyForm3.excelApp = excelApp
+        MyForm3.workbook = workBook
+        MyForm3.worksheet = workSheet
+        MyForm3.workbook2 = workBook
+        MyForm3.worksheet2 = workSheet
+
+        MyForm3.FocusedTextBox = 0
+        MyForm3.Form4Open = 0
+        MyForm3.Workbook2Opened = False
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm3.TextBox1.Text = selection.Address
+        MyForm3.ComboBox1.SelectedIndex = -1
+        MyForm3.ComboBox1.Text = "SOFTEKO"
+
+        MyForm3.Show()
     End Sub
 
     Private Sub Button5_Click(sender As Object, e As RibbonControlEventArgs) Handles Button5.Click
-        Dim form As New Form8
-        form.Show()
+        Dim MyForm8 As New Form8
+
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm8.TextBox1.Text = selection.Address
+        MyForm8.Show()
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As RibbonControlEventArgs) Handles Button6.Click
-        Dim form As New Form10
+        Dim MyForm10 As New Form10
 
-        form.Show()
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm10.TextBox1.Text = selection.Address
+        MyForm10.Show()
     End Sub
 
     Private Sub Button7_Click(sender As Object, e As RibbonControlEventArgs) Handles Button7.Click
@@ -126,15 +162,17 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button20_Click(sender As Object, e As RibbonControlEventArgs) Handles Button20.Click
-        Dim form As New Form22_Merge_Duplicate_Rows
+        Dim MyForm22 As New Form22_Merge_Duplicate_Rows
+
         excelApp = Globals.ThisAddIn.Application
-        Workbook = excelApp.ActiveWorkbook
+        workBook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-        form.TextBox1.Text = selection.Address
-        form.Show()
+        MyForm22.TextBox1.Text = selection.Address
+
+        MyForm22.Show()
     End Sub
 
     Private Sub Button21_Click(sender As Object, e As RibbonControlEventArgs) Handles Button21.Click
