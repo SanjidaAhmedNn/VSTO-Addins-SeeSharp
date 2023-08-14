@@ -15,11 +15,22 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As RibbonControlEventArgs) Handles Button1.Click
-        Dim form As New Form1
-        form.Show()
+        Dim MyForm1 As New Form1
+
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        MyForm1.TextBox1.Text = selection.Address
+        MyForm1.ComboBox1.SelectedIndex = -1
+        MyForm1.ComboBox1.Text = "SOFTEKO"
+
+        MyForm1.Show()
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
+    Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs)
         Dim form As New Form2
         form.Show()
     End Sub
