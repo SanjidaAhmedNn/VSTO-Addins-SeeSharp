@@ -21,6 +21,7 @@ Public Class Form16PasteintoVisibleRange
     Dim outputRng As Excel.Range
     Dim WsName As String
 
+
     Private Sub Form16PasteintoVisibleRange_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         excelApp = Globals.ThisAddIn.Application
@@ -46,6 +47,7 @@ Public Class Form16PasteintoVisibleRange
 
 
             inputRng = worksheet.Range(txtSourceRange.Text)
+
 
 
 
@@ -271,7 +273,7 @@ Public Class Form16PasteintoVisibleRange
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
-
+            selectedRange = excelApp.Selection
 
             txtDestRange.Focus()
 
@@ -292,12 +294,24 @@ Public Class Form16PasteintoVisibleRange
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        Dim i, j, count, rngCount As Integer
-        Dim lastRow As String
+
+
+        If txtDestRange.Text = Nothing Or txtSourceRange.Text = Nothing Or Not TypeOf txtSourceRange.Text Is Excel.Range Or Not TypeOf txtDestRange.Text Is Excel.Range Then
+
+            MsgBox("Please enter a valid Range.",, "Warning!")
+            Me.Dispose()
+            Exit Sub
+
+        End If
+
+
+        Dim i, j, count, pasteValue, pasteValue2, count2, lastRowNum, lastColNum As Integer
+        Dim lastRow, lastCol As String
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         WsName = worksheet.Name
+
 
 
         If CB_copyWs.Checked = True Then
@@ -312,81 +326,295 @@ Public Class Form16PasteintoVisibleRange
 
         End If
 
-        If CB_keepFormat.Checked = False Then
 
-            inputRng.ClearFormats()
+        lastRowNum = 0
+        If worksheet.Range(txtDestRange.Text).End(XlDirection.xlDown).Value Is Nothing Then
 
+            While worksheet.Range(txtDestRange.Text).Offset(lastRowNum, 0).Value <> Nothing
+
+                lastRowNum = lastRowNum + 1
+
+            End While
+
+            lastRowNum = worksheet.Range(txtDestRange.Text).Row + lastRowNum
+
+        Else
+            lastRow = worksheet.Range(txtDestRange.Text).End(XlDirection.xlDown).Address
+            While worksheet.Range(lastRow).Offset(lastRowNum, 0).Value <> Nothing
+
+                lastRowNum = lastRowNum + 1
+
+            End While
+
+            lastRowNum = worksheet.Range(lastRow).Row + lastRowNum
+        End If
+
+        'finding last column number
+        lastColNum = 0
+        If worksheet.Range(txtDestRange.Text).End(XlDirection.xlToRight).Value Is Nothing Then
+
+            While worksheet.Range(txtDestRange.Text).Offset(0, lastColNum).Value <> Nothing
+
+                lastColNum = lastColNum + 1
+
+            End While
+
+            lastColNum = worksheet.Range(txtDestRange.Text).Column + lastColNum
+
+        Else
+            lastCol = worksheet.Range(txtDestRange.Text).End(XlDirection.xlToRight).Address
+            While worksheet.Range(lastCol).Offset(0, lastColNum).Value <> Nothing
+
+                lastColNum = lastColNum + 1
+
+            End While
+
+            lastColNum = worksheet.Range(lastCol).Column + lastColNum
         End If
 
 
 
 
-        inputRng = worksheet.Range(txtSourceRange.Text)
 
-        outputRng = worksheet.Range(txtDestRange.Text).SpecialCells(Excel.XlCellType.xlCellTypeVisible)
-        selectedRange = excelApp.Selection
+        'finding the total visible rows
+        Dim visibleRows As Integer = 0
+        For i = worksheet.Range(txtDestRange.Text).Row To lastRowNum
 
-
-        rngCount = 0
-
-        For Each c As Char In outputRng.Address
-
-            If c = "," Then
-                rngCount = rngCount + 1
+            If worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 2)).EntireRow.Hidden = False Then
+                visibleRows = visibleRows + 1
             End If
 
+
         Next
+        visibleRows = visibleRows - 1
 
 
-        Dim arrRng As String() = Split(outputRng.Address, ",")
+
+        'finding total visible columns
+        Dim visibleCols As Integer = 0
+        For i = worksheet.Range(txtDestRange.Text).Column To lastColNum
+
+            If worksheet.Range(worksheet.Cells(1, i), worksheet.Cells(2, i)).EntireColumn.Hidden = False Then
+                visibleCols = visibleCols + 1
+            End If
 
 
-        lastRow = worksheet.Range(arrRng(rngCount)).End(XlDirection.xlDown).Address
-        lastRow = worksheet.Range(lastRow).End(XlDirection.xlUp).Address
+        Next
+        visibleCols = visibleCols - 1
+
 
         count = 0
+        pasteValue = 0
 
-        While worksheet.Range(lastRow).Offset(count, 0).Value <> Nothing
-
-            count = count + 1
-
-        End While
+        If inputRng.Rows.Count <= visibleRows And inputRng.Columns.Count <= visibleCols Then
 
 
 
+            While worksheet.Range(txtDestRange.Text).Offset(count, 0).Value <> Nothing
+
+                If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False Then
+                    pasteValue = pasteValue + 1
+                    count2 = 0
+                    pasteValue2 = 0
+
+                End If
+                If pasteValue > inputRng.Rows.Count Then
+                    Exit While
+                End If
+
+                While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
+                    If pasteValue2 + 1 > inputRng.Columns.Count Then
+                        Exit While
+                    End If
 
 
+                    If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False And worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireColumn.Hidden = False Then
+                        pasteValue2 = pasteValue2 + 1
 
 
+                        If CB_keepFormat.Checked = True Then
+
+                            Call copyCell(worksheet.Range(txtDestRange.Text), count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
 
 
-        If inputRng.Rows.Count - 1 <= rngCount Then
+                        Else
 
-            For i = 0 To inputRng.Rows.Count - 1
+                            worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
 
+                        End If
 
-                worksheet.Range(arrRng(i)).Value = inputRng.Cells.Offset(i, 0).Value
+                    End If
 
+                    count2 = count2 + 1
 
-            Next
+                End While
+
+                count = count + 1
+
+            End While
+
 
 
         Else
 
-            For j = 0 To inputRng.Rows.Count
-                If j <= rngCount Then
-                    worksheet.Range(arrRng(j)).Value = inputRng.Cells.Offset(j, 0).Value
-                ElseIf j > rngCount Then
-                    For k = 0 To inputRng.Columns.Count - 1
-                        worksheet.Range(lastRow).Offset(count, k).Value = inputRng.Cells.Offset(j, k).Value
+            For j = worksheet.Range(txtDestRange.Text).Row To lastRowNum
 
-                    Next
+                While worksheet.Range(txtDestRange.Text).Offset(count, 0).Value <> Nothing
+
+                    If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False Then
+                        pasteValue = pasteValue + 1
+                        count2 = 0
+                        pasteValue2 = 0
+
+                    End If
+                    If pasteValue > inputRng.Rows.Count Then
+                        Exit While
+                    End If
+
+                    While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
+                        If pasteValue2 + 1 > inputRng.Columns.Count Then
+                            Exit While
+                        End If
+
+
+                        If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False And worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireColumn.Hidden = False Then
+                            pasteValue2 = pasteValue2 + 1
+                            If CB_keepFormat.Checked = True Then
+
+                                Call copyCell(worksheet.Range(txtDestRange.Text), count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
+                            Else
+                                worksheet.Range(txtDestRange.Text).Offset(count, count2).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
+
+                            End If
+                        End If
+
+                        count2 = count2 + 1
+
+                    End While
+
                     count = count + 1
+
+                End While
+
+            Next
+
+
+
+
+
+            Dim count3, count4, count5, l As Integer
+
+            count3 = 0
+
+            For k = lastRowNum To lastRowNum + inputRng.Rows.Count - visibleRows - 1
+                count4 = 0
+                count5 = 0
+                For l = 1 To lastColNum + inputRng.Columns.Count - visibleCols - 1
+
+                    If worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
+                        count5 = count5 + 1
+                    End If
+
+
+                    If count5 > inputRng.Columns.Count Then
+                        Exit For
+                    End If
+
+                    If worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
+
+                        If CB_keepFormat.Checked = True Then
+
+                            Call copyCell(worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column), count3, l - 1, worksheet.Range(txtSourceRange.Text).Cells(1, 1), visibleRows + count3, count4)
+                        Else
+                            worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(visibleRows + count3, count4).value
+
+                        End If
+
+                        count4 = count4 + 1
+                    End If
+
+                Next
+                count3 = count3 + 1
+            Next
+
+
+
+
+
+
+
+            Dim rowNum, colNum As Integer
+            rowNum = worksheet.Range(txtDestRange.Text).Row
+            colNum = worksheet.Range(txtDestRange.Text).Column
+            count3 = 0
+            count4 = visibleCols
+            For k = worksheet.Range(txtDestRange.Text).Row To lastRowNum - 1
+
+                If worksheet.Range(worksheet.Cells(k, 1), worksheet.Cells(k, 2)).EntireRow.Hidden = False Then
+
+                    rowNum = worksheet.Range(worksheet.Cells(k, 1), worksheet.Cells(k, 2)).Row
+
                 End If
+
+                If count3 + 1 > inputRng.Rows.Count Then
+                    Exit For
+                End If
+
+
+                If Not worksheet.Range(worksheet.Cells(k, 1), worksheet.Cells(k, 2)).EntireRow.Hidden = False And worksheet.Range(worksheet.Cells(k, 1), worksheet.Cells(k + 1, 1)).EntireColumn.Hidden = False Then
+
+                    GoTo exitLoop
+
+                End If
+
+                count4 = visibleCols
+
+
+                For l = lastColNum To lastColNum + inputRng.Columns.Count - visibleCols - 1
+
+
+                    If worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k + 1, l)).EntireColumn.Hidden = False Then
+
+                        colNum = worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k + 1, l)).Column
+
+                    End If
+                    If count4 + 1 > inputRng.Columns.Count Then
+                        Exit For
+                    End If
+
+
+                    If worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k, l + 1)).EntireRow.Hidden = False And worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k + 1, l)).EntireColumn.Hidden = False Then
+
+                        If CB_keepFormat.Checked = True Then
+
+                            Call copyCell(worksheet.Range(worksheet.Cells(rowNum, colNum), worksheet.Cells(rowNum, colNum)), 0, 0, worksheet.Range(txtSourceRange.Text).Cells(1, 1), count3, count4)
+                        Else
+                            worksheet.Range(worksheet.Cells(rowNum, colNum), worksheet.Cells(rowNum, colNum)).Offset(0, 0).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(count3, count4).value
+
+                        End If
+
+
+
+
+                        'worksheet.Range(worksheet.Cells(rowNum, colNum), worksheet.Cells(rowNum, colNum)).Value = inputRng.Cells.Offset(count3, count4).Value
+                        'inputRng.Cells.Offset(count3, count4).Copy(worksheet.Cells(rowNum, colNum))
+
+                    End If
+                    count4 = count4 + 1
+
+                Next
+                count3 = count3 + 1
+exitLoop:
             Next
 
 
         End If
+
+
+
+
+
+
 
 
         Me.Dispose()
@@ -395,5 +623,31 @@ Public Class Form16PasteintoVisibleRange
 
     End Sub
 
+
+    Public Sub copyCell(ByVal destRng As Range, ByVal destOff1 As Integer, ByVal destOff2 As Integer, ByVal srcRng As Range, ByVal srcOff1 As Integer, ByVal srcOff2 As Integer)
+
+        destRng.Offset(destOff1, destOff2).Font.Name = srcRng.Offset(srcOff1, srcOff2).Font.Name
+        destRng.Offset(destOff1, destOff2).Font.Size = srcRng.Offset(srcOff1, srcOff2).Font.Size
+        destRng.Offset(destOff1, destOff2).Font.Color = srcRng.Offset(srcOff1, srcOff2).Font.Color
+        destRng.Offset(destOff1, destOff2).NumberFormat = srcRng.Offset(srcOff1, srcOff2).NumberFormat
+        destRng.Offset(destOff1, destOff2).Interior.Color = srcRng.Offset(srcOff1, srcOff2).Interior.Color
+
+        'bold,italic,underline
+        destRng.Offset(destOff1, destOff2).Font.FontStyle = srcRng.Offset(srcOff1, srcOff2).Font.FontStyle
+        destRng.Offset(destOff1, destOff2).Font.Underline = srcRng.Offset(srcOff1, srcOff2).Font.Underline
+
+
+
+
+        'border
+
+        destRng.Offset(destOff1, destOff2).Borders.LineStyle = srcRng.Offset(srcOff1, srcOff2).Borders.LineStyle
+        destRng.Offset(destOff1, destOff2).Borders.Weight = srcRng.Offset(srcOff1, srcOff2).Borders.Weight
+
+
+
+        'value
+        destRng.Offset(destOff1, destOff2).Value = srcRng.Offset(srcOff1, srcOff2).Value
+    End Sub
 
 End Class
