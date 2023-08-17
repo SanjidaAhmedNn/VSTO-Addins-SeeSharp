@@ -296,7 +296,7 @@ Public Class Form16PasteintoVisibleRange
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
 
-        If txtDestRange.Text = Nothing Or txtSourceRange.Text = Nothing Or Not TypeOf txtSourceRange.Text Is Excel.Range Or Not TypeOf txtDestRange.Text Is Excel.Range Then
+        If txtDestRange.Text = Nothing Or txtSourceRange.Text = Nothing Then
 
             MsgBox("Please enter a valid Range.",, "Warning!")
             Me.Dispose()
