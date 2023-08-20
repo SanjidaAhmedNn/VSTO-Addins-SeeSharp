@@ -28,7 +28,11 @@ Public Class Form16PasteintoVisibleRange
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
+        'Define a varibale to access a selected range
         Dim selectedRng As Excel.Range = excelApp.Selection
+
+        'Assign the address of selected range that is selcted before loading the form in the textbox "txtSourceRange" 
+        'keep foucs on the textbox "txtSourceRange" after the form loads
         txtSourceRange.Text = selectedRng.Address
         txtSourceRange.Focus()
 
@@ -42,13 +46,11 @@ Public Class Form16PasteintoVisibleRange
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-
+            'keep foucs on the textbox "txtSourceRange" if any text is changed in it
             txtSourceRange.Focus()
 
-
+            'convert the text of the textbox to range and store it in the public variable "inputRng"
             inputRng = worksheet.Range(txtSourceRange.Text)
-
-
 
 
         Catch ex As Exception
@@ -67,13 +69,19 @@ Public Class Form16PasteintoVisibleRange
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
+
+            ' Give focus to "txtSourceRange" textbox
             txtSourceRange.Focus()
 
+            ' Display an InputBox to prompt the user to select a range and store the address in the public variable "inputRng" as range
+            ' Select the range provided by the user
+            ' Display the selected range address in the "txtSourceRange" textbox
             inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", selectedRange.Address, Type:=8)
             inputRng.Select()
             txtSourceRange.Text = inputRng.Address
-            txtSourceRange.Focus()
 
+            'Return focus to "txtSourceRange" textbox after displaying the selected range
+            txtSourceRange.Focus()
 
 
         Catch ex As Exception
@@ -92,17 +100,25 @@ Public Class Form16PasteintoVisibleRange
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
+
+            ' Give focus to "txtDestRange" textbox
             txtDestRange.Focus()
 
+            ' Display an InputBox to prompt the user to select a range and store the address in the public variable "outputRng" as range
+            ' Select the range provided by the user
+            ' Display the selected range address in the "txtDestRange" textbox
             outputRng = excelApp.InputBox("Please Select a Destination Range", "Destination Range Selection", selectedRange.Address, Type:=8)
             outputRng.Select()
             txtDestRange.Text = outputRng.Address
-            txtDestRange.Focus()
 
+            'Return focus to "txtDestRange" textbox after displaying the selected range
+            txtDestRange.Focus()
 
 
         Catch ex As Exception
 
+            'Return focus to "txtDestRange" textbox if any error occurs 
+            'This will keep the form visible on the scrren and allow user to enter correct destination range
             txtDestRange.Focus()
 
         End Try
@@ -115,6 +131,7 @@ Public Class Form16PasteintoVisibleRange
     Private Sub txtSourceRange_GotFocus(sender As Object, e As EventArgs) Handles txtSourceRange.GotFocus
         Try
 
+            'If txtSourceRange textbox got focus, assign 1 to the global variable "FocusedTxtBox"
             FocusedTxtBox = 1
 
 
@@ -127,6 +144,7 @@ Public Class Form16PasteintoVisibleRange
 
         Try
 
+            'If txtDestRange textbox got focus, assign 2 to the global variable "FocusedTxtBox"
             FocusedTxtBox = 2
 
 
@@ -156,21 +174,31 @@ Public Class Form16PasteintoVisibleRange
         Try
 
             excelApp = Globals.ThisAddIn.Application
+
             selectedRange = excelApp.Selection
             selectedRange.Select()
 
-
+            'If value of FocusedTxtBox is 1, that means txtSourceRange textbox is selected, and 2 means txtDestRange textbox is selected
             If FocusedTxtBox = 1 Then
 
+                'Display the address of the selected range in the txtSourceRange textbox
+                'Store the address in the public variable "inputRng" as range
                 txtSourceRange.Text = selectedRange.Address
                 worksheet = workbook.ActiveSheet
                 inputRng = selectedRange
+
+                'Return focus to "txtSourceRange" textbox after displaying the selected range
                 txtSourceRange.Focus()
 
             ElseIf FocusedTxtBox = 2 Then
+
+                'Display the address of the selected range in the txtDestRange textbox
+                'Store the address in the public variable "destRange" as range
                 txtDestRange.Text = selectedRange.Address
                 worksheet = workbook.ActiveSheet
                 destRange = selectedRange
+
+                'Return focus to "txtDestRange" textbox after displaying the selected range
                 txtDestRange.Focus()
 
             End If

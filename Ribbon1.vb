@@ -145,7 +145,9 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button31_Click(sender As Object, e As RibbonControlEventArgs) Handles Button31.Click
-        'unhide all
+
+        'Unhide All
+
         Dim excelApp As Excel.Application
         Dim workbook As Excel.Workbook
         Dim worksheet As Excel.Worksheet
@@ -155,20 +157,31 @@ Public Class Ribbon1
         Workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
-        Dim i, j, rowCount, columnCount As Integer
+        ' Declare variables to store row and column numbers
+        Dim data_Row_Num, data_Col_Num, last_Data_Row_Num, last_Data_Col_Num As Integer
 
-        rowCount = worksheet.UsedRange.Rows.Count + worksheet.UsedRange.Row - 1
-        columnCount = worksheet.UsedRange.Columns.Count + worksheet.UsedRange.Column - 1
 
-        For i = worksheet.UsedRange.Row To rowCount
-            If worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 3)).EntireRow.Hidden = True Then
-                worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 3)).EntireRow.Hidden = False
+        'Calculate the last used row and column number in the worksheet
+        last_Data_Row_Num = worksheet.UsedRange.Rows.Count + worksheet.UsedRange.Row - 1
+        last_Data_Col_Num = worksheet.UsedRange.Columns.Count + worksheet.UsedRange.Column - 1
+
+
+        ' Loop through each row in the used range of the worksheet
+        ' Check if the entire row is hidden
+        ' If the row is hidden, unhide it
+        For data_Row_Num = worksheet.UsedRange.Row To last_Data_Row_Num
+            If worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = True Then
+                worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = False
             End If
         Next
 
-        For j = worksheet.UsedRange.Column To columnCount
-            If worksheet.Range(worksheet.Cells(1, j), worksheet.Cells(3, j)).EntireColumn.Hidden = True Then
-                worksheet.Range(worksheet.Cells(1, j), worksheet.Cells(3, j)).EntireColumn.Hidden = False
+
+        ' Loop through each column in the used range of the worksheet
+        ' Check if the entire column is hidden
+        ' If the column is hidden, unhide it
+        For data_Col_Num = worksheet.UsedRange.Column To last_Data_Col_Num
+            If worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = True Then
+                worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = False
             End If
         Next
 
@@ -176,7 +189,8 @@ Public Class Ribbon1
 
     Private Sub Button32_Click(sender As Object, e As RibbonControlEventArgs) Handles Button32.Click
 
-        'unhide from selected range
+        'Unhide from Selected Range
+
         Dim excelApp As Excel.Application
         Dim workbook As Excel.Workbook
         Dim worksheet As Excel.Worksheet
@@ -187,19 +201,26 @@ Public Class Ribbon1
         worksheet = workbook.ActiveSheet
         selectedRange = excelApp.Selection
 
+        'Define varibales to store row and column numbers of the selected range
+        Dim rowNum, colNum As Integer
 
-        For i = 1 To selectedRange.Rows.Count
-            If worksheet.Range(selectedRange.Cells(i, 1), selectedRange.Cells(i, 3)).EntireRow.Hidden = True Then
-                worksheet.Range(selectedRange.Cells(i, 1), selectedRange.Cells(i, 3)).EntireRow.Hidden = False
+        'Loop through each row of the selected range
+        ' Check if the entire row is hidden
+        ' If the row is hidden, unhide it
+        For rowNum = 1 To selectedRange.Rows.Count
+            If worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = True Then
+                worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = False
             End If
         Next
 
-        For j = 1 To selectedRange.Columns.Count
-            If worksheet.Range(selectedRange.Cells(1, j), selectedRange.Cells(3, j)).EntireColumn.Hidden = True Then
-                worksheet.Range(selectedRange.Cells(1, j), selectedRange.Cells(3, j)).EntireColumn.Hidden = False
+        ' Loop through each column in the selected range
+        ' Check if the entire column is hidden
+        ' If the column is hidden, unhide it
+        For colNum = 1 To selectedRange.Columns.Count
+            If worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = True Then
+                worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = False
             End If
         Next
-
 
     End Sub
 End Class
