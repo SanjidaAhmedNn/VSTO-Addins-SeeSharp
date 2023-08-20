@@ -1,5 +1,12 @@
 ﻿Imports Microsoft.Office.Tools.Ribbon
-
+Imports System.ComponentModel.Design
+Imports System.Security.Cryptography
+Imports System.Windows.Forms
+Imports Microsoft.Office.Interop.Excel
+Imports Excel = Microsoft.Office.Interop.Excel
+Imports System.Drawing
+Imports System.ComponentModel
+Imports System.Linq.Expressions
 Public Class Ribbon1
 
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
@@ -135,5 +142,64 @@ Public Class Ribbon1
     Private Sub Button28_Click(sender As Object, e As RibbonControlEventArgs) Handles Button28.Click
         'Dim form As New Form30_Create_Dynamic_Drop_down_List
         'form.Show()
+    End Sub
+
+    Private Sub Button31_Click(sender As Object, e As RibbonControlEventArgs) Handles Button31.Click
+        'unhide all
+        Dim excelApp As Excel.Application
+        Dim workbook As Excel.Workbook
+        Dim worksheet As Excel.Worksheet
+
+
+        excelApp = Globals.ThisAddIn.Application
+        Workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim i, j, rowCount, columnCount As Integer
+
+        rowCount = worksheet.UsedRange.Rows.Count + worksheet.UsedRange.Row - 1
+        columnCount = worksheet.UsedRange.Columns.Count + worksheet.UsedRange.Column - 1
+
+        For i = worksheet.UsedRange.Row To rowCount
+            If worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 3)).EntireRow.Hidden = True Then
+                worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 3)).EntireRow.Hidden = False
+            End If
+        Next
+
+        For j = worksheet.UsedRange.Column To columnCount
+            If worksheet.Range(worksheet.Cells(1, j), worksheet.Cells(3, j)).EntireColumn.Hidden = True Then
+                worksheet.Range(worksheet.Cells(1, j), worksheet.Cells(3, j)).EntireColumn.Hidden = False
+            End If
+        Next
+
+    End Sub
+
+    Private Sub Button32_Click(sender As Object, e As RibbonControlEventArgs) Handles Button32.Click
+
+        'unhide from selected range
+        Dim excelApp As Excel.Application
+        Dim workbook As Excel.Workbook
+        Dim worksheet As Excel.Worksheet
+        Dim selectedRange As Excel.Range
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+        selectedRange = excelApp.Selection
+
+
+        For i = 1 To selectedRange.Rows.Count
+            If worksheet.Range(selectedRange.Cells(i, 1), selectedRange.Cells(i, 3)).EntireRow.Hidden = True Then
+                worksheet.Range(selectedRange.Cells(i, 1), selectedRange.Cells(i, 3)).EntireRow.Hidden = False
+            End If
+        Next
+
+        For j = 1 To selectedRange.Columns.Count
+            If worksheet.Range(selectedRange.Cells(1, j), selectedRange.Cells(3, j)).EntireColumn.Hidden = True Then
+                worksheet.Range(selectedRange.Cells(1, j), selectedRange.Cells(3, j)).EntireColumn.Hidden = False
+            End If
+        Next
+
+
     End Sub
 End Class
