@@ -34,6 +34,7 @@ Public Class Form11SwapRanges
         txtSourceRange1.Text = selectedRng.Address
         txtSourceRange1.Focus()
 
+        radBtnValues.Checked = True
 
 
 
@@ -235,17 +236,82 @@ Public Class Form11SwapRanges
 
     Private Sub AutoSelection2_Click(sender As Object, e As EventArgs) Handles AutoSelection2.Click
 
+
         Dim firstCell As Excel.Range
+
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         selectedRange = excelApp.Selection
-        firstCell = selectedRange
+        selectedRange.Select()
 
-        selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+
+        Dim topLeft, bottomRight As String
+
+
+
+        If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            topLeft = selectedRange.Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+
+            topLeft = selectedRange.Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            bottomRight = selectedRange.End(XlDirection.xlToRight).Address
+            bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+
+        ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
+
+            topLeft = selectedRange.End(XlDirection.xlUp).Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
+            topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
+            topLeft = selectedRange.End(XlDirection.xlUp).Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+        ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
+
+            topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+
+        Else
+            topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
+            bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+        End If
 
         selectedRange.Select()
 
+        If selectedRange.Rows.Count > firstRngRows Or selectedRange.Columns.Count > firstRngCols Then
+            firstCell = selectedRange.Cells(1, 1)
+            selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+            selectedRange.Select()
+        End If
 
 
     End Sub
@@ -345,17 +411,29 @@ Public Class Form11SwapRanges
             Dim temp As Object
 
 
-            If Not firstInputRng.Rows.Count = secondInputRng.Rows.Count Or firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+
+            If firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
 
                 MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
-
-                Me.Close()
 
                 Me.Dispose()
                 Exit Sub
 
+            ElseIf firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+                MsgBox("Please match the source range row size.",, "Warning!")
+
+                Me.Dispose()
+                Exit Sub
+            ElseIf firstInputRng.Rows.Count = secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
+                MsgBox("Please match the source range column size.",, "Warning!")
+
+                Me.Dispose()
+                Exit Sub
 
             End If
+
+
+
 
             If CB_CopyWs.Checked = True Then
 

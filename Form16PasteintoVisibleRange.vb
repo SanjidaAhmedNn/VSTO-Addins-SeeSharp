@@ -32,7 +32,7 @@ Public Class Form16PasteintoVisibleRange
         Dim selectedRng As Excel.Range = excelApp.Selection
 
         'Assign the address of selected range that is selcted before loading the form in the textbox "txtSourceRange" 
-        'keep foucs on the textbox "txtSourceRange" after the form loads
+        'Give foucs to the textbox "txtSourceRange" after the form loads
         txtSourceRange.Text = selectedRng.Address
         txtSourceRange.Focus()
 
@@ -46,7 +46,7 @@ Public Class Form16PasteintoVisibleRange
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            'keep foucs on the textbox "txtSourceRange" if any text is changed in it
+            'Give foucs to the textbox "txtSourceRange" if any text is changed in it
             txtSourceRange.Focus()
 
             'convert the text of the textbox to range and store it in the public variable "inputRng"

@@ -97,7 +97,7 @@ Public Class Form15CompareCells
         txtSourceRange1.Focus()
 
 
-
+        radBtnSameValues.Checked = True
 
 
 
@@ -250,19 +250,184 @@ Public Class Form15CompareCells
     Private Sub AutoSelection2_Click(sender As Object, e As EventArgs) Handles AutoSelection2.Click
 
         Dim firstCell As Excel.Range
+
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         selectedRange = excelApp.Selection
-        firstCell = selectedRange
-
-        selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
-
         selectedRange.Select()
 
+        Dim bottomRight As String
+        firstCell = selectedRange.Cells(1, 1)
+        'bottomRight = firstCell.End(XlDirection.xlToRight).Address
+        'bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+        'selectedRange = worksheet.Range(firstCell, worksheet.Range(bottomRight))
+
+        If selectedRange.Offset(1, 0).Value = Nothing Then
+
+        End If
+
+
+        If selectedRange.Rows.Count = 1 And selectedRange.Columns.Count >= firstRngCols Then
+            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, firstRngCols - 1))
+            selectedRange.Select()
+
+        ElseIf selectedRange.Rows.Count = 1 And selectedRange.Columns.Count < firstRngCols Then
+            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, selectedRange.Columns.Count - 1))
+            selectedRange.Select()
+
+        ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count >= firstRngRows Then
+            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(firstRngRows - 1, 0))
+            selectedRange.Select()
+
+        ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count < firstRngRows Then
+            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(selectedRange.Rows.Count - 1, 0))
+            selectedRange.Select()
+
+
+        Else
+            bottomRight = firstCell.End(XlDirection.xlToRight).Address
+            bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            selectedRange = worksheet.Range(firstCell, worksheet.Range(bottomRight))
+
+            If selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                bottomRight = worksheet.Range(bottomRight).Offset(firstRngRows - 1, 0).Address
+
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                selectedRange.Select()
+            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+
+                firstCell = selectedRange.Cells(1, 1)
+                bottomRight = firstCell.Offset(0, firstRngCols - 1).Address
+                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                selectedRange.Select()
+
+
+            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                firstCell = selectedRange.Cells(1, 1)
+                bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                selectedRange.Select()
+
+
+            End If
+        End If
 
 
 
+        'selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+        'selectedRange.Select()
+
+
+
+
+
+        'If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+        '    topLeft = selectedRange.Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+
+        '    topLeft = selectedRange.Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+        '    bottomRight = selectedRange.End(XlDirection.xlToRight).Address
+        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+        '    selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+
+        'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
+
+        '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
+        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+        'ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
+        '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
+
+        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+
+        'Else
+        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+        '    topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
+        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+        'End If
+
+        'selectedRange.Select()
+
+        'If selectedRange.Rows.Count > firstRngRows Or selectedRange.Columns.Count > firstRngCols Then
+        '    firstCell = selectedRange.Cells(1, 1)
+        '    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+        '    selectedRange.Select()
+        'End If
 
 
 
@@ -351,13 +516,23 @@ Public Class Form15CompareCells
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
 
-        If Not firstInputRng.Rows.Count = secondInputRng.Rows.Count And firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+        If firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
 
             MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
 
             Me.Dispose()
             Exit Sub
 
+        ElseIf firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+            MsgBox("Please match the source range row size.",, "Warning!")
+
+            Me.Dispose()
+            Exit Sub
+        ElseIf firstInputRng.Rows.Count = secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
+            MsgBox("Please match the source range column size.",, "Warning!")
+
+            Me.Dispose()
+            Exit Sub
 
         End If
 
@@ -365,22 +540,30 @@ Public Class Form15CompareCells
         Dim i, j As Integer
         Dim rng1CellValue, rng2CellValue, WsName As String
         Dim coloredRng As String
+        Dim temp As String
 
         worksheet = workbook.ActiveSheet
         WsName = worksheet.Name
 
         count = 0
         coloredRng = ""
+        temp = txtSourceRange2.Text
 
 
+        If checkBoxCopyWs.Checked = True Then
 
-        If Not firstInputRng.Rows.Count = secondInputRng.Rows.Count And firstInputRng.Columns.Count = secondInputRng.Columns.Count Then
+            workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+            outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+            outWorksheet.Range("A1").Select()
 
-            MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
-            Me.Dispose()
-            Exit Sub
+
+            worksheet = workbook.Sheets(WsName)
+            worksheet.Activate()
+
+            txtSourceRange2.Text = temp
 
         End If
+
 
         If checkBoxFormatting.Checked = False Then
 
@@ -392,11 +575,17 @@ Public Class Form15CompareCells
 
         If radBtnSameValues.Checked = True Then
             If checkBoxCase.Checked = True Then
-                If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
 
+                '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive checked >> fill/font color both are selected >> OK
+                If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
-                            If firstInputRng.Cells(i, j).value = secondInputRng.Cells(i, j).value Then
+
+                            'handles comparison of different type o variables
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop1
+
+                            ElseIf firstInputRng.Cells(i, j).value = secondInputRng.Cells(i, j).value Then
 
                                 firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
 
@@ -404,21 +593,82 @@ Public Class Form15CompareCells
                                 count = count + 1
                                 coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
                             End If
+nextLoop1:
                         Next
                     Next
 
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive checked >> only fill color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+
+
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop2
+
+                            ElseIf firstInputRng.Cells(i, j).value = secondInputRng.Cells(i, j).value Then
+
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop2:
+                        Next
+                    Next
+
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive checked >> only font color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop3
+
+                            ElseIf firstInputRng.Cells(i, j).value = secondInputRng.Cells(i, j).value Then
+
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop3:
+                        Next
+                    Next
+
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive checked >> fill/font color is not selected >> OK
                 Else
-                    MsgBox("Please select a Color for 'Cell Background' or 'Font Color'.")
-                    Exit Sub
+
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            'If variable type of two compared cell are different
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop4
+
+                            ElseIf firstInputRng.Cells(i, j).value = secondInputRng.Cells(i, j).value Then
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop4:
+                        Next
+                    Next
 
                 End If
             Else
-                If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
+
+                '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive unchecked >> fill/font color both are selected >> OK
+                If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
-                            If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop5
+
+                            ElseIf rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
                                 firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
 
@@ -426,42 +676,173 @@ Public Class Form15CompareCells
                                 count = count + 1
                                 coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
                             End If
+nextLoop5:
                         Next
                     Next
+
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive unchecked >> only fill color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop6
+
+                            ElseIf rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop6:
+                        Next
+                    Next
+
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive unchecked >> only font color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop7
+
+                            ElseIf rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop7:
+                        Next
+                    Next
+
+
                 Else
-                    MsgBox("Please select a Color for 'Cell Background' or 'Font Color'.")
-                    Exit Sub
+                    '1st Range >> 2nd Range >> radbtnSameValues checked >> case sensitive unchecked >> fill/font color not selected >> OK
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop8
+
+                            ElseIf rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                            End If
+nextLoop8:
+                        Next
+                    Next
+
+
                 End If
             End If
 
         ElseIf radBtnDifferentValues.Checked = True Then
             If checkBoxCase.Checked = True Then
-                If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
+
+                '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color both are selected >> OK
+                If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
-                            If firstInputRng.Cells(i, j).value <> secondInputRng.Cells(i, j).value Then
 
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop9
+
+                            ElseIf firstInputRng.Cells(i, j).value <> secondInputRng.Cells(i, j).value Then
+nextLoop9:
                                 firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
-
                                 firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
                                 count = count + 1
                                 coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
 
                             End If
+
                         Next
                     Next
+
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> only fill color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop10
+
+                            ElseIf firstInputRng.Cells(i, j).value <> secondInputRng.Cells(i, j).value Then
+nextLoop10:
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                            End If
+
+                        Next
+                    Next
+
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> only font color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop11
+
+                            ElseIf firstInputRng.Cells(i, j).value <> secondInputRng.Cells(i, j).value Then
+nextLoop11:
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                            End If
+
+                        Next
+                    Next
+
+
                 Else
-                    MsgBox("Please select a Color for 'Cell Background' or 'Font Color'.")
-                    Exit Sub
+                        '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color not selected >> OK
+
+                        For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop12
+
+                            ElseIf firstInputRng.Cells(i, j).value <> secondInputRng.Cells(i, j).value Then
+nextLoop12:
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                            End If
+
+                        Next
+                    Next
+
+
                 End If
             Else
-                If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
+
+                '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color both selected >> OK
+                If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
-                            If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop13
+
+                            ElseIf rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+nextLoop13:
                                 firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
 
                                 firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
@@ -469,37 +850,101 @@ Public Class Form15CompareCells
                                 coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
 
                             End If
+
                         Next
                     Next
-                Else
-                    MsgBox("Please select a Color for 'Cell Background' or 'Font Color'.")
-                    Exit Sub
+
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> onle fill color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop14
+
+                            ElseIf rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+nextLoop14:
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                            End If
+
+                        Next
+                    Next
+
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> only font color is selected >> OK
+                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                    For i = 1 To firstInputRng.Rows.Count
+                            For j = 1 To firstInputRng.Columns.Count
+                                rng1CellValue = firstInputRng.Cells(i, j).value
+                                rng2CellValue = secondInputRng.Cells(i, j).value
+
+                                If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop15
+
+                            ElseIf rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+nextLoop15:
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+                                count = count + 1
+                                    coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                End If
+
+                            Next
+                        Next
+
+
+
+                    Else
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color not selected >> OK
+                    For i = 1 To firstInputRng.Rows.Count
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                                GoTo nextLoop16
+
+                            ElseIf rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+nextLoop16:
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                            End If
+
+                        Next
+                    Next
+
                 End If
             End If
 
         End If
 
-        If checkBoxCopyWs.Checked = True Then
+        'If checkBoxCopyWs.Checked = True Then
 
-            workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-            outWorksheet.Range("A1").Select()
+        '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+        '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+        '    outWorksheet.Range("A1").Select()
 
-            For i = 1 To worksheet.Range(txtSourceRange1.Text).Rows.Count
-                For j = 1 To worksheet.Range(txtSourceRange1.Text).Columns.Count
+        '    For i = 1 To worksheet.Range(txtSourceRange1.Text).Rows.Count
+        '        For j = 1 To worksheet.Range(txtSourceRange1.Text).Columns.Count
 
 
-                    worksheet.Range(txtSourceRange1.Text).Cells(i, j).Interior.Colorindex = -4142
+        '            worksheet.Range(txtSourceRange1.Text).Cells(i, j).Interior.Colorindex = -4142
 
-                    worksheet.Range(txtSourceRange1.Text).Cells(i, j).Font.Color = Nothing
+        '            worksheet.Range(txtSourceRange1.Text).Cells(i, j).Font.Color = Nothing
 
-                Next
-            Next
+        '        Next
+        '    Next
 
-            worksheet = workbook.Sheets(WsName)
-            worksheet.Activate()
+        '    worksheet = workbook.Sheets(WsName)
+        '    worksheet.Activate()
 
-        End If
+        'End If
 
         Me.Dispose()
 
@@ -613,17 +1058,22 @@ Public Class Form15CompareCells
 
             CP_Input_Range2.AutoScroll = True
 
-
+            If displayRng.Rows.Count <> displayRng2.Rows.Count Or displayRng.Columns.Count <> displayRng2.Columns.Count Then
+                Exit Sub
+            End If
 
 
             If radBtnSameValues.Checked = True Then
-                    If checkBoxCase.Checked = True Then
-                        If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
-                            For i = 1 To displayRng.Rows.Count
-                                For j = 1 To displayRng.Columns.Count
 
+                If checkBoxCase.Checked = True Then
 
-                                If displayRng.Cells(i, j).value = displayRng2.Cells(i, j).value Then
+                    '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive checked >> both fill/font color selected
+                    If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If displayRng.Cells(i, j).value = displayRng2.Cells(i, j).value Then
 
                                         Dim label As New System.Windows.Forms.Label
                                         label.Text = displayRng.Cells(i, j).Value
@@ -650,21 +1100,160 @@ Public Class Form15CompareCells
                                         CP_Output_Range.Controls.Add(label)
 
                                     End If
-                                Next
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+                                End If
                             Next
-                        End If
+                        Next
+
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive checked >> only fill color is selected
+                    ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If displayRng.Cells(i, j).value = displayRng2.Cells(i, j).value Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = CBFillBackground.BackColor
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive checked >> only font color is selected
+                    ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If displayRng.Cells(i, j).value = displayRng2.Cells(i, j).value Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = CbFillFont.BackColor
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
                     Else
-                        If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
-                            For i = 1 To displayRng.Rows.Count
-                                For j = 1 To displayRng.Columns.Count
-                                    rng1CellValue = displayRng.Cells(i, j).value
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive checked >> fill/font color not selected
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
+                                label.BackColor = Color.Transparent
+                                label.ForeColor = Nothing
+
+                                CP_Output_Range.Controls.Add(label)
+
+                            Next
+                        Next
+
+                    End If
+                Else
+                    '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive unchecked >> fill/font color both are selected
+                    If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
                                     Exit Sub
                                 End If
 
-                                If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
                                         label.Text = displayRng.Cells(i, j).Value
@@ -691,17 +1280,181 @@ Public Class Form15CompareCells
                                         CP_Output_Range.Controls.Add(label)
 
                                     End If
-                                Next
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
                             Next
-                        End If
+                        Next
+
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive unchecked >> only fill color is selected
+                    ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = CBFillBackground.BackColor
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive unchecked >> only font color is selected
+                    ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+
+
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = CbFillFont.BackColor
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnSameValues checked >> case sensitive unchecked >> fill/font color not selected
+                    Else
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+
+
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
+                                label.BackColor = Color.Transparent
+                                label.ForeColor = Nothing
+
+                                CP_Output_Range.Controls.Add(label)
+                            Next
+                        Next
+
                     End If
 
-                ElseIf radBtnDifferentValues.Checked = True Then
-                    If checkBoxCase.Checked = True Then
-                        If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
-                            For i = 1 To displayRng.Rows.Count
-                                For j = 1 To displayRng.Columns.Count
+                End If
 
+            ElseIf radBtnDifferentValues.Checked = True Then
+
+                If checkBoxCase.Checked = True Then
+
+                    '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color both are selected
+                    If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
                                     If displayRng.Cells(i, j).value <> displayRng2.Cells(i, j).value Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -729,20 +1482,164 @@ Public Class Form15CompareCells
                                         CP_Output_Range.Controls.Add(label)
 
                                     End If
-                                Next
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = CbFillFont.BackColor
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
                             Next
-                        End If
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive checked >> only fill color is selected
+                    ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If displayRng.Cells(i, j).value <> displayRng2.Cells(i, j).value Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = CBFillBackground.BackColor
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive checked >> only font color is selected
+                    ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If displayRng.Cells(i, j).value <> displayRng2.Cells(i, j).value Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = CbFillFont.BackColor
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = CbFillFont.BackColor
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color not selected
                     Else
-                        If checkBoxFillBack.Checked = True Or checkBoxFillFont.Checked = True Then
-                            For i = 1 To displayRng.Rows.Count
-                                For j = 1 To displayRng.Columns.Count
-                                    rng1CellValue = displayRng.Cells(i, j).value
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
+                                label.BackColor = Color.Transparent
+                                label.ForeColor = Nothing
+
+                                CP_Output_Range.Controls.Add(label)
+
+                            Next
+                        Next
+
+                    End If
+
+
+
+
+                Else
+
+                    '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color both are selected
+                    If checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
                                     Exit Sub
                                 End If
-
-                                If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
                                         label.Text = displayRng.Cells(i, j).Value
@@ -769,12 +1666,167 @@ Public Class Form15CompareCells
                                         CP_Output_Range.Controls.Add(label)
 
                                     End If
-                                Next
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = CbFillFont.BackColor
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
                             Next
-                        End If
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive unchecked >> only fill color is selected
+                    ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = CBFillBackground.BackColor
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive unchecked >> only font color is selected
+                    ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
+
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = CbFillFont.BackColor
+
+                                        CP_Output_Range.Controls.Add(label)
+                                    Else
+                                        Dim label As New System.Windows.Forms.Label
+                                        label.Text = displayRng.Cells(i, j).Value
+                                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                        label.Height = height
+                                        label.Width = width
+                                        label.BorderStyle = BorderStyle.FixedSingle
+                                        label.TextAlign = ContentAlignment.MiddleCenter
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                        CP_Output_Range.Controls.Add(label)
+
+                                    End If
+
+                                Else
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = CbFillFont.BackColor
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                End If
+                            Next
+                        Next
+
+                        '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color not selected
+                    Else
+                        For i = 1 To displayRng.Rows.Count
+                            For j = 1 To displayRng.Columns.Count
+                                rng1CellValue = displayRng.Cells(i, j).value
+                                rng2CellValue = displayRng2.Cells(i, j).value
+                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                    Exit Sub
+                                End If
+
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
+                                label.BackColor = Color.Transparent
+                                label.ForeColor = Nothing
+
+                                CP_Output_Range.Controls.Add(label)
+
+
+                            Next
+                        Next
+
+
                     End If
 
                 End If
+
+
+            End If
 
 
 
@@ -788,13 +1840,15 @@ Public Class Form15CompareCells
     End Sub
 
     Private Sub CBFillBackground_Click(sender As Object, e As EventArgs) Handles CBFillBackground.Click
-
+        Call Display()
         If checkBoxFillBack.Checked = True Then
 
             colorPick = CD_Fill_Background.ShowDialog()
 
             If colorPick = DialogResult.OK Then
                 CBFillBackground.BackColor = CD_Fill_Background.Color
+                Call Display()
+
             End If
 
 
@@ -804,6 +1858,7 @@ Public Class Form15CompareCells
 
     Private Sub CbFillFont_Click(sender As Object, e As EventArgs) Handles CbFillFont.Click
 
+        Call Display()
         If checkBoxFillFont.Checked = True Then
 
             colorPick = CD_Fill_Font.ShowDialog()
@@ -811,6 +1866,8 @@ Public Class Form15CompareCells
 
             If colorPick = DialogResult.OK Then
                 CbFillFont.BackColor = CD_Fill_Font.Color
+                Call Display()
+
             End If
 
 
@@ -831,6 +1888,9 @@ Public Class Form15CompareCells
         Call Display()
     End Sub
 
+    Private Sub CustomPanel1_Paint(sender As Object, e As PaintEventArgs) Handles CustomPanel1.Paint
+
+    End Sub
 
     Private Sub checkBoxCase_CheckedChanged(sender As Object, e As EventArgs) Handles checkBoxCase.CheckedChanged
         Call Display()
@@ -870,6 +1930,17 @@ Public Class Form15CompareCells
 
         Call Display()
 
+
+    End Sub
+
+    Private Sub checkBoxFillBack_CheckedChanged(sender As Object, e As EventArgs) Handles checkBoxFillBack.CheckedChanged
+        Call Display()
+
+    End Sub
+
+    Private Sub checkBoxFillFont_CheckedChanged(sender As Object, e As EventArgs) Handles checkBoxFillFont.CheckedChanged
+
+        Call Display()
 
     End Sub
 End Class
