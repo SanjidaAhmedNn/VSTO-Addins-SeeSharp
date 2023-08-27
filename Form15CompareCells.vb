@@ -7,6 +7,7 @@ Imports System.Drawing
 Imports System.ComponentModel
 Imports System.Linq.Expressions
 Imports System.Threading
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 
 Public Class Form15CompareCells
@@ -28,15 +29,20 @@ Public Class Form15CompareCells
     Private Sub txtSourceRange1_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange1.TextChanged
 
         Try
+
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
 
             txtSourceRange1.Focus()
+            txtSourceRange1.SelectionStart = txtSourceRange1.TextLength
+            txtSourceRange1.ScrollToCaret()
 
 
-            firstInputRng = worksheet.Range(txtSourceRange1.Text)
+
+            firstInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange1.Text, Len(txtSourceRange1.Text) - txtSourceRange1.Text.IndexOf("!") - 1))
+            MsgBox(firstInputRng.Address)
 
             lblSourceRng1.Text = "1st Source Range (" & firstInputRng.Rows.Count & " rows x " & firstInputRng.Columns.Count & " columns)"
 
@@ -47,9 +53,17 @@ Public Class Form15CompareCells
             Call Display()
 
 
+
         Catch ex As Exception
 
         End Try
+
+        If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
+            Exit Sub
+        End If
+
+        firstInputRng.Select()
+        txtSourceRange1.Focus()
 
 
 
@@ -66,19 +80,51 @@ Public Class Form15CompareCells
 
 
             txtSourceRange2.Focus()
+            txtSourceRange2.SelectionStart = txtSourceRange2.TextLength
+            txtSourceRange2.ScrollToCaret()
 
 
-            secondInputRng = worksheet.Range(txtSourceRange2.Text)
 
+
+            'rng2_Address = Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1)
+            secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+            MsgBox(secondInputRng.Address)
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
 
-
-
             Call Display()
+
 
         Catch ex As Exception
 
         End Try
+
+
+
+        If txtSourceRange2.Text = "" Or secondInputRng Is Nothing Then
+            Exit Sub
+        End If
+        'If FocusedTxtBox <> 2 Then
+        '    secondInputRng.Select()
+        'End If
+        'secondInputRng.Select()
+
+
+        'If IsError(secondInputRng) = False Then
+        '    secondInputRng.Select()
+        'Else
+        '    Exit Sub
+        'End If
+
+        txtSourceRange2.Focus()
+        If txtSourceRange2.Focus() = False Then
+            secondInputRng.Select()
+        Else
+            Exit Sub
+        End If
+
+        'worksheet.Range(secondInputRng.Address).Select()
+
+
 
 
 
@@ -120,9 +166,19 @@ Public Class Form15CompareCells
             selectedRange = excelApp.Selection
             txtSourceRange1.Focus()
 
+            Me.Hide()
             firstInputRng = excelApp.InputBox("Please Select the First Range", "First Range Selection", selectedRange.Address, Type:=8)
+            Me.Show()
+
+            MsgBox(firstInputRng.Worksheet.Name & firstInputRng.Address)
+
+            'firstInputRng.Worksheet.Activate()
+
+
+            txtSourceRange1.Text = firstInputRng.Worksheet.Name & firstInputRng.Address
+
             firstInputRng.Select()
-            txtSourceRange1.Text = firstInputRng.Address
+
             txtSourceRange1.Focus()
 
 
@@ -146,9 +202,16 @@ Public Class Form15CompareCells
             selectedRange = excelApp.Selection
             txtSourceRange2.Focus()
 
+            Me.Hide()
             secondInputRng = excelApp.InputBox("Please Select the Second Range", "Second Range Selection", selectedRange.Address, Type:=8)
+            Me.Show()
+
+            MsgBox(secondInputRng.Worksheet.Name & secondInputRng.Address)
+
+
+            txtSourceRange2.Text = secondInputRng.Worksheet.Name & secondInputRng.Address
+
             secondInputRng.Select()
-            txtSourceRange2.Text = secondInputRng.Address
             txtSourceRange2.Focus()
 
 
@@ -259,182 +322,122 @@ Public Class Form15CompareCells
 
         Dim bottomRight As String
         firstCell = selectedRange.Cells(1, 1)
-        'bottomRight = firstCell.End(XlDirection.xlToRight).Address
-        'bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
-        'selectedRange = worksheet.Range(firstCell, worksheet.Range(bottomRight))
+        If selectedRange.Cells(1, 1).Offset(1, 0).Value = Nothing Then
 
-        If selectedRange.Offset(1, 0).Value = Nothing Then
+            For i = 0 To firstRngCols - 1
+                If selectedRange.Cells(1, 1).offset(0, i).value <> Nothing Then
+                    selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, i))
+                End If
+                selectedRange.Select()
+            Next
 
-        End If
-
-
-        If selectedRange.Rows.Count = 1 And selectedRange.Columns.Count >= firstRngCols Then
-            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, firstRngCols - 1))
-            selectedRange.Select()
-
-        ElseIf selectedRange.Rows.Count = 1 And selectedRange.Columns.Count < firstRngCols Then
-            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, selectedRange.Columns.Count - 1))
-            selectedRange.Select()
-
-        ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count >= firstRngRows Then
-            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(firstRngRows - 1, 0))
-            selectedRange.Select()
-
-        ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count < firstRngRows Then
-            selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(selectedRange.Rows.Count - 1, 0))
-            selectedRange.Select()
-
+        ElseIf selectedRange.Cells(1, 1).Offset(0, 1).Value = Nothing Then
+            For i = 0 To firstRngRows - 1
+                If selectedRange.Cells(1, 1).offset(i, 0).value <> Nothing Then
+                    selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(i, 0))
+                End If
+                selectedRange.Select()
+            Next
 
         Else
+
             bottomRight = firstCell.End(XlDirection.xlToRight).Address
             bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
             selectedRange = worksheet.Range(firstCell, worksheet.Range(bottomRight))
 
-            If selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count = firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+            If selectedRange.Rows.Count = 1 And selectedRange.Columns.Count >= firstRngCols Then
+                selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, firstRngCols - 1))
                 selectedRange.Select()
 
-            ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count > firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+            ElseIf selectedRange.Rows.Count = 1 And selectedRange.Columns.Count < firstRngCols Then
+                selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(0, selectedRange.Columns.Count - 1))
                 selectedRange.Select()
 
-            ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count < firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
+            ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count >= firstRngRows Then
+                selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(firstRngRows - 1, 0))
+                selectedRange.Select()
+
+            ElseIf selectedRange.Columns.Count = 1 And selectedRange.Rows.Count < firstRngRows Then
+                selectedRange = worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, 1).Offset(selectedRange.Rows.Count - 1, 0))
+                selectedRange.Select()
+
+
+            Else
                 bottomRight = firstCell.End(XlDirection.xlToRight).Address
                 bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
-                selectedRange.Select()
+                selectedRange = worksheet.Range(firstCell, worksheet.Range(bottomRight))
 
-            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count = firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
-                selectedRange.Select()
+                If selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                    selectedRange.Select()
 
-            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count > firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
-                selectedRange.Select()
+                ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                    selectedRange.Select()
 
-            ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count < firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                bottomRight = firstCell.End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).Offset(firstRngRows - 1, 0).Address
+                ElseIf selectedRange.Rows.Count = firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
-                selectedRange.Select()
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                    selectedRange.Select()
 
-            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count = firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                bottomRight = firstCell.End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+                ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                    selectedRange.Select()
 
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
-                selectedRange.Select()
-            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+                ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
+                    selectedRange.Select()
 
-                firstCell = selectedRange.Cells(1, 1)
-                bottomRight = firstCell.Offset(0, firstRngCols - 1).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+                ElseIf selectedRange.Rows.Count > firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                    bottomRight = worksheet.Range(bottomRight).Offset(firstRngRows - 1, 0).Address
 
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
-                selectedRange.Select()
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                    selectedRange.Select()
+
+                ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count = firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                    selectedRange.Select()
+                ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count > firstRngCols Then
+
+                    firstCell = selectedRange.Cells(1, 1)
+                    bottomRight = firstCell.Offset(0, firstRngCols - 1).Address
+                    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                    selectedRange.Select()
 
 
-            ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count < firstRngCols Then
-                firstCell = selectedRange.Cells(1, 1)
-                bottomRight = firstCell.End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+                ElseIf selectedRange.Rows.Count < firstRngRows And selectedRange.Columns.Count < firstRngCols Then
+                    firstCell = selectedRange.Cells(1, 1)
+                    bottomRight = firstCell.End(XlDirection.xlToRight).Address
+                    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
 
-                selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
-                selectedRange.Select()
+                    selectedRange = worksheet.Range(firstCell.Offset(0, 0), worksheet.Range(bottomRight))
+                    selectedRange.Select()
 
-
+                End If
             End If
+
         End If
 
 
-
-        'selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
-        'selectedRange.Select()
-
-
-
-
-
-        'If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-        '    topLeft = selectedRange.Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
-
-        '    topLeft = selectedRange.Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-        'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-        '    bottomRight = selectedRange.End(XlDirection.xlToRight).Address
-        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-
-        '    selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
-
-        'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
-
-        '    topLeft = selectedRange.End(XlDirection.xlUp).Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
-        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-        'ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
-        '    topLeft = selectedRange.End(XlDirection.xlUp).Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-        'ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
-
-        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-
-        'Else
-        '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-        '    topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
-        '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-        '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-
-        '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-        'End If
-
-        'selectedRange.Select()
-
-        'If selectedRange.Rows.Count > firstRngRows Or selectedRange.Columns.Count > firstRngCols Then
-        '    firstCell = selectedRange.Cells(1, 1)
-        '    selectedRange = worksheet.Range(firstCell.Offset(0, 0), firstCell.Offset(firstRngRows - 1, firstRngCols - 1))
-        '    selectedRange.Select()
-        'End If
-
-
-
     End Sub
-
-
-
 
     Private Sub txtSourceRange1_GotFocus(sender As Object, e As EventArgs) Handles txtSourceRange1.GotFocus
         Try
@@ -497,6 +500,7 @@ Public Class Form15CompareCells
 
                 txtSourceRange2.Focus()
 
+
             End If
 
 
@@ -515,7 +519,19 @@ Public Class Form15CompareCells
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
-
+        If txtSourceRange1.Text = "" And txtSourceRange2.Text = "" Then
+            MsgBox("Please select the first and the second range.", MsgBoxStyle.Exclamation, "Error!")
+            Me.Dispose()
+            Exit Sub
+        ElseIf txtSourceRange1.Text = "" Then
+            MsgBox("Please select the first range.", MsgBoxStyle.Exclamation, "Error!")
+            Me.Dispose()
+            Exit Sub
+        ElseIf txtSourceRange2.Text = "" Then
+            MsgBox("Please select the second range.", MsgBoxStyle.Exclamation, "Error!")
+            Me.Dispose()
+            Exit Sub
+        End If
         If firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
 
             MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
@@ -803,15 +819,12 @@ nextLoop11:
                                 coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
 
                             End If
-
                         Next
                     Next
-
-
                 Else
-                        '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color not selected >> OK
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive checked >> fill/font color not selected >> OK
 
-                        For i = 1 To firstInputRng.Rows.Count
+                    For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
@@ -854,7 +867,7 @@ nextLoop13:
                         Next
                     Next
 
-                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> onle fill color is selected >> OK
+                    '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> only fill color is selected >> OK
                 ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
@@ -877,29 +890,30 @@ nextLoop14:
                     Next
 
                     '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> only font color is selected >> OK
-                ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = True Then
+                ElseIf checkBoxFillBack.Checked = False And checkBoxFillFont.Checked = True Then
                     For i = 1 To firstInputRng.Rows.Count
-                            For j = 1 To firstInputRng.Columns.Count
-                                rng1CellValue = firstInputRng.Cells(i, j).value
-                                rng2CellValue = secondInputRng.Cells(i, j).value
+                        For j = 1 To firstInputRng.Columns.Count
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
 
-                                If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
+                            If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop15
 
                             ElseIf rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 nextLoop15:
                                 firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
                                 count = count + 1
-                                    coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
 
-                                End If
+                            End If
 
-                            Next
                         Next
 
+                    Next
 
 
-                    Else
+
+                Else
                     '1st Range >> 2nd Range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color not selected >> OK
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
@@ -924,38 +938,19 @@ nextLoop16:
 
         End If
 
-        'If checkBoxCopyWs.Checked = True Then
-
-        '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-        '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-        '    outWorksheet.Range("A1").Select()
-
-        '    For i = 1 To worksheet.Range(txtSourceRange1.Text).Rows.Count
-        '        For j = 1 To worksheet.Range(txtSourceRange1.Text).Columns.Count
-
-
-        '            worksheet.Range(txtSourceRange1.Text).Cells(i, j).Interior.Colorindex = -4142
-
-        '            worksheet.Range(txtSourceRange1.Text).Cells(i, j).Font.Color = Nothing
-
-        '        Next
-        '    Next
-
-        '    worksheet = workbook.Sheets(WsName)
-        '    worksheet.Activate()
-
-        'End If
-
         Me.Dispose()
 
 
 
-
+        Dim wsName1 As String = firstInputRng.Worksheet.Name
+        Dim worksheet1 As Excel.Worksheet
+        worksheet1 = workbook.Sheets(wsName1)
+        worksheet1.Activate()
 
         MsgBox(count & " cell(s) found.", MsgBoxStyle.Information, "SOFTEKO")
 
         coloredRng = Microsoft.VisualBasic.Right(coloredRng, Len(coloredRng) - 1)
-        worksheet.Range(coloredRng).Select()
+        worksheet1.Range(coloredRng).Select()
 
 
     End Sub
@@ -1943,4 +1938,15 @@ nextLoop16:
         Call Display()
 
     End Sub
+
+    Private Sub txtSourceRange1_Click(sender As Object, e As EventArgs) Handles txtSourceRange1.Click
+        txtSourceRange1.SelectionStart = txtSourceRange1.TextLength
+        txtSourceRange1.ScrollToCaret()
+    End Sub
+
+    Private Sub txtSourceRange2_Click(sender As Object, e As EventArgs) Handles txtSourceRange2.Click
+        txtSourceRange2.SelectionStart = txtSourceRange2.TextLength
+        txtSourceRange2.ScrollToCaret()
+    End Sub
+
 End Class
