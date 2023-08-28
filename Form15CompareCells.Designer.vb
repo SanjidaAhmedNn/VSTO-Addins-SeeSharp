@@ -268,6 +268,7 @@ Partial Class Form15CompareCells
         'CbFillFont
         '
         Me.CbFillFont.BackColor = System.Drawing.Color.MidnightBlue
+        Me.CbFillFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple
         Me.CbFillFont.ForeColor = System.Drawing.Color.Navy
         Me.CbFillFont.FormattingEnabled = True
         Me.CbFillFont.Location = New System.Drawing.Point(162, 35)
@@ -278,6 +279,7 @@ Partial Class Form15CompareCells
         'CBFillBackground
         '
         Me.CBFillBackground.BackColor = System.Drawing.Color.LightSteelBlue
+        Me.CBFillBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple
         Me.CBFillBackground.FormattingEnabled = True
         Me.CBFillBackground.Location = New System.Drawing.Point(8, 35)
         Me.CBFillBackground.Name = "CBFillBackground"
@@ -491,6 +493,7 @@ Partial Class Form15CompareCells
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(775, 465)
         Me.Controls.Add(Me.CustomPanel1)
         Me.Controls.Add(Me.checkBoxCase)
@@ -502,6 +505,8 @@ Partial Class Form15CompareCells
         Me.Controls.Add(Me.checkBoxCopyWs)
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Controls.Add(Me.CustomGroupBox2)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form15CompareCells"
         Me.Text = "Compare Cells"
         Me.CustomPanel1.ResumeLayout(False)
