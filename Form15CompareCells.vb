@@ -23,10 +23,86 @@ Public Class Form15CompareCells
     Dim colorPick As DialogResult
     Dim count As Integer
     Dim rng1CellValue, rng2CellValue, WsName, coloredRng, rngKeyBoard, output As String
+    Dim changeState As Boolean = False
+
+    Private firstUsedTextbox As System.Windows.Forms.TextBox = Nothing
+    Private firstWorksheetName As String = Nothing
+
+    Private Sub TextBox_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange1.TextChanged, txtSourceRange2.TextChanged
+
+        'Dim currentTextbox = CType(sender, System.Windows.Forms.TextBox)
+
+        '' If no textbox has been used yet and the current textbox has text
+        'If firstUsedTextbox Is Nothing And Not String.IsNullOrEmpty(currentTextbox.Text) Then
+        '    firstUsedTextbox = currentTextbox
+        '    MsgBox(currentTextbox.Text)
+        '    MsgBox(currentTextbox.Name)
+        '    firstWorksheetName = worksheet.Range(currentTextbox.Text).Worksheet.Name
+        '    MsgBox(firstWorksheetName)
+        '    ' Just display the range in the first textbox
+        '    currentTextbox.Text = worksheet.Range(currentTextbox.Text).Address
+        'ElseIf Not String.IsNullOrEmpty(currentTextbox.Text) Then
+        '    Dim currentWorksheetName = ExtractWorksheetName(currentTextbox.Text)
+        '    If currentWorksheetName = firstWorksheetName Or String.IsNullOrEmpty(currentWorksheetName) Then
+        '        MsgBox("b")
+        '        ' Just display the range
+        '        currentTextbox.Text = ExtractRange(currentTextbox.Text)
+        '    Else
+        '        ' Display both worksheet name and range
+        '        MsgBox("c")
+        '        currentTextbox.Text = currentWorksheetName & "!" & ExtractRange(currentTextbox.Text)
+        '    End If
+        'End If
+
+        'If txtSourceRange1.Text = "" Or txtSourceRange2.Text = "" Or firstInputRng Is Nothing Or secondInputRng Is Nothing Then
+        '    Exit Sub
+        'End If
 
 
+        ''firstInputRng = worksheet.Range(txtSourceRange1.Text)
+        ''secondInputRng = worksheet.Range(txtSourceRange2.Text)
+
+        'Dim ws1, ws2 As String
+        'ws1 = firstInputRng.Worksheet.Name
+        'ws2 = secondInputRng.Worksheet.Name
+
+        'If ws2 <> ws1 Then
+
+
+        '    txtSourceRange1.Text = firstInputRng.Address
+        '    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+        '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+        '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+        'Else
+
+        '    txtSourceRange1.Text = firstInputRng.Address
+        '    txtSourceRange2.Text = secondInputRng.Address
+        '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+        'End If
+
+
+
+
+    End Sub
+
+    Private Function ExtractWorksheetName(value As String) As String
+        If value.Contains("!") Then
+            Return value.Split("!")(0)
+        End If
+        Return String.Empty
+    End Function
+
+    Private Function ExtractRange(value As String) As String
+        If value.Contains("!") Then
+            Return value.Split("!")(1)
+        End If
+        Return value
+    End Function
 
     Private Sub txtSourceRange1_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange1.TextChanged
+
+
+
 
         Try
 
@@ -35,26 +111,32 @@ Public Class Form15CompareCells
             worksheet = workbook.ActiveSheet
 
 
+
+
             txtSourceRange1.Focus()
             txtSourceRange1.SelectionStart = txtSourceRange1.TextLength
             txtSourceRange1.ScrollToCaret()
 
 
 
-            firstInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange1.Text, Len(txtSourceRange1.Text) - txtSourceRange1.Text.IndexOf("!") - 1))
+            'firstInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange1.Text, Len(txtSourceRange1.Text) - txtSourceRange1.Text.IndexOf("!") - 1))
 
+            firstInputRng = worksheet.Range(txtSourceRange1.Text)
 
             lblSourceRng1.Text = "1st Source Range (" & firstInputRng.Rows.Count & " rows x " & firstInputRng.Columns.Count & " columns)"
 
-            If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
-                Exit Sub
-            ElseIf txtSourceRange2.Text = "" Then
+            'If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
+            '    Exit Sub
+            'ElseIf txtSourceRange2.Text = "" Then
 
-                txtSourceRange1.Text = firstInputRng.Address
-            Else
+            '    txtSourceRange1.Text = firstInputRng.Address
+            'Else
 
-                txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
-            End If
+            '    txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
+            'End If
+
+
+
 
 
 
@@ -62,7 +144,26 @@ Public Class Form15CompareCells
             firstRngCols = worksheet.Range(txtSourceRange1.Text).Columns.Count
 
 
-            Call Display()
+
+
+            If changeState = True Then
+
+
+                If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+
+                    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+                    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+                    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                Else
+                    txtSourceRange2.Text = secondInputRng.Address
+                    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                End If
+
+
+            End If
+
+
+
 
 
 
@@ -70,7 +171,7 @@ Public Class Form15CompareCells
 
         End Try
 
-
+        Call Display()
         'If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
         '    Exit Sub
         'Else
@@ -84,6 +185,11 @@ Public Class Form15CompareCells
 
     End Sub
 
+    Private Sub txtSrc2Changed()
+
+        changeState = True
+    End Sub
+
 
     Private Sub txtSourceRange2_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange2.TextChanged
 
@@ -91,6 +197,8 @@ Public Class Form15CompareCells
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
+
+            Call txtSrc2Changed()
 
 
             txtSourceRange2.Focus()
@@ -101,19 +209,36 @@ Public Class Form15CompareCells
 
 
             'rng2_Address = Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1)
-            secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
-            lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
 
 
-            If txtSourceRange2.Text = "" Or secondInputRng Is Nothing Then
-                Exit Sub
-            ElseIf txtSourceRange1.Text = "" Then
 
-                txtSourceRange2.Text = secondInputRng.Address
-            Else
+
+            'secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+
+            secondInputRng = worksheet.Range(txtSourceRange2.Text)
+
+
+            If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
 
                 txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+                secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+                lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+            Else
+                txtSourceRange2.Text = secondInputRng.Address
+                lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
             End If
+
+
+
+            'If txtSourceRange2.Text = "" Or secondInputRng Is Nothing Then
+            '    Exit Sub
+            'ElseIf txtSourceRange1.Text = "" Then
+
+            '    txtSourceRange2.Text = secondInputRng.Address
+            'Else
+
+            '    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+            'End If
 
             'If Form1_KeyPress() = True Then
 
@@ -130,14 +255,14 @@ Public Class Form15CompareCells
 
 
 
-            Call Display()
+
 
 
         Catch ex As Exception
 
         End Try
 
-
+        Call Display()
 
         'If txtSourceRange2.Text = "" Or secondInputRng Is Nothing Then
         '    Exit Sub
@@ -165,8 +290,6 @@ Public Class Form15CompareCells
 
     End Sub
 
-    Private keyWasPressed As Boolean = False
-
     Private Sub TtxtSourceRange2_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSourceRange2.KeyDown
 
         If e.KeyCode <> Keys.Back And e.KeyCode <> Keys.Delete Then
@@ -174,7 +297,7 @@ Public Class Form15CompareCells
 
             Dim rng2Address As String
 
-            rng2Address = excelApp.InputBox("Please type in the Range")
+            rng2Address = excelApp.InputBox("Please type in the Range", "Range Input")
 
             Dim isValidRange As Boolean = False
 
@@ -210,7 +333,7 @@ Public Class Form15CompareCells
 
             Dim rng1Address As String
 
-            rng1Address = excelApp.InputBox("Please type in the Range")
+            rng1Address = excelApp.InputBox("Please type in the Range", "Range Input", txtSourceRange1.Text)
 
             Dim isValidRange As Boolean = False
 
@@ -244,9 +367,9 @@ Public Class Form15CompareCells
         worksheet = workbook.ActiveSheet
 
         Dim selectedRng As Excel.Range = excelApp.Selection
-        txtSourceRange1.Text = selectedRng.Address
-        txtSourceRange1.Focus()
 
+        txtSourceRange1.Focus()
+        txtSourceRange1.Text = selectedRng.Address
 
         radBtnSameValues.Checked = True
 
@@ -404,9 +527,11 @@ Public Class Form15CompareCells
 
             selectedRange.Select()
 
-            Call Display()
+            'Call Display()
 
-            txtSourceRange1.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
+            'txtSourceRange1.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
+            firstInputRng = selectedRange
+            txtSourceRange1.Text = firstInputRng.Address
 
             firstRngRows = selectedRange.Rows.Count
             firstRngCols = selectedRange.Columns.Count
@@ -545,8 +670,11 @@ Public Class Form15CompareCells
 
         End If
 
-        txtSourceRange2.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
-        Call Display()
+        'txtSourceRange2.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
+        secondInputRng = selectedRange
+        txtSourceRange2.Text = secondInputRng.Address
+
+        'Call Display()
 
     End Sub
 
@@ -554,7 +682,7 @@ Public Class Form15CompareCells
         Try
 
             FocusedTxtBox = 1
-
+            'Call Display()
 
         Catch ex As Exception
 
@@ -564,7 +692,7 @@ Public Class Form15CompareCells
         Try
 
             FocusedTxtBox = 2
-
+            'Call Display()
 
         Catch ex As Exception
 
@@ -599,6 +727,8 @@ Public Class Form15CompareCells
             If FocusedTxtBox = 1 Then
 
                 txtSourceRange1.Text = selectedRange.Address
+
+                'Call Display()
                 'worksheet = workbook.ActiveSheet
                 'firstInputRng = selectedRange
                 'firstInputRng = worksheet.Range(selectedRange.Address)
@@ -607,6 +737,8 @@ Public Class Form15CompareCells
 
             ElseIf FocusedTxtBox = 2 Then
                 txtSourceRange2.Text = selectedRange.Address
+
+                'Call Display()
                 'worksheet = workbook.ActiveSheet
                 ''secondInputRng = selectedRange
                 'secondInputRng = worksheet.Range(txtSourceRange2.Text)
@@ -616,7 +748,7 @@ Public Class Form15CompareCells
 
             End If
 
-            Call Display()
+
 
 
         Catch ex As Exception
@@ -1080,9 +1212,12 @@ nextLoop16:
 
 
             Dim displayRng As Excel.Range
-            Dim displayRng2 As Excel.Range
 
 
+            If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
+                CP_Input_Range1.Controls.Clear()
+                GoTo secondDisplay
+            End If
 
 
             If firstInputRng.Rows.Count > 50 Then
@@ -1123,12 +1258,14 @@ nextLoop16:
 
             CP_Input_Range1.AutoScroll = True
 
+secondDisplay:
 
-            If secondInputRng Is Nothing Then
+            If txtSourceRange2.Text = "" Or secondInputRng Is Nothing Then
+                CP_Input_Range2.Controls.Clear()
                 Exit Sub
             End If
 
-
+            Dim displayRng2 As Excel.Range
             If secondInputRng.Rows.Count > 50 Then
                 displayRng2 = secondInputRng.Rows("1:50")
             Else
@@ -1145,7 +1282,7 @@ nextLoop16:
                 height2 = (119 / 4)
             End If
 
-            If displayRng.Columns.Count <= 3 Then
+            If displayRng2.Columns.Count <= 3 Then
                 width2 = CP_Input_Range2.Width / displayRng2.Columns.Count
             Else
                 width2 = (260 / 3)
@@ -1166,6 +1303,11 @@ nextLoop16:
             Next
 
             CP_Input_Range2.AutoScroll = True
+
+            If txtSourceRange1.Text = "" Or firstInputRng Is Nothing Then
+                Exit Sub
+            End If
+
 
             If displayRng.Rows.Count <> displayRng2.Rows.Count Or displayRng.Columns.Count <> displayRng2.Columns.Count Then
                 Exit Sub
@@ -2063,37 +2205,5 @@ nextLoop16:
         'txtSourceRange2.ScrollToCaret()
     End Sub
 
-    'Private Sub txtSourceRange2_KeyPress(sender As Object, e As KeyPressEventArgs) Handles .KeyPress
-    '    ' Check if the key pressed is "a" for example
-    '    If e.KeyChar =  Then
-    '        MessageBox.Show("You pressed the letter 'a'.")
-    '    End If
-    'End Sub
-
-    'Private Sub Form1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
-    '    'MessageBox.Show("You pressed: " & e.KeyChar)
-    '    'Dim output As String
-    '    'output = ""
-    '    Try
-    '        If txtSourceRange2.Focused = True Then
-
-    '            txtSourceRange2.Text = ""
-    '            rngKeyBoard = e.KeyChar
-    '            'If IsError(worksheet.Range(txtSourceRange2.Text)) = False Then
-
-    '            'End If
-
-
-    '        End If
-
-    '        output = output & rngKeyBoard
-
-
-    '    Catch ex As Exception
-
-    '    End Try
-
-
-    'End Sub
 
 End Class
