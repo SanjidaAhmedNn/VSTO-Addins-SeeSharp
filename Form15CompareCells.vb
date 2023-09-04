@@ -157,7 +157,7 @@ Public Class Form15CompareCells
         radBtnSameValues.Checked = True
 
 
-        Me.KeyPreview = True
+
 
 
 
@@ -2322,6 +2322,9 @@ secondDisplay:
                 Call Display()
 
             End If
+            CP_Input_Range1.Focus()
+        Else
+            CP_Input_Range1.Focus()
 
 
         End If
@@ -2341,6 +2344,9 @@ secondDisplay:
                 Call Display()
 
             End If
+            CP_Input_Range1.Focus()
+        Else
+            CP_Input_Range1.Focus()
 
 
         End If

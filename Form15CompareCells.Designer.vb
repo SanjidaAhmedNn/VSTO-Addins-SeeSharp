@@ -268,9 +268,11 @@ Partial Class Form15CompareCells
         'CbFillFont
         '
         Me.CbFillFont.BackColor = System.Drawing.Color.MidnightBlue
-        Me.CbFillFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple
+        Me.CbFillFont.DropDownHeight = 1
+        Me.CbFillFont.DropDownWidth = 1
         Me.CbFillFont.ForeColor = System.Drawing.Color.Navy
         Me.CbFillFont.FormattingEnabled = True
+        Me.CbFillFont.IntegralHeight = False
         Me.CbFillFont.Location = New System.Drawing.Point(162, 35)
         Me.CbFillFont.Name = "CbFillFont"
         Me.CbFillFont.Size = New System.Drawing.Size(110, 25)
@@ -279,8 +281,10 @@ Partial Class Form15CompareCells
         'CBFillBackground
         '
         Me.CBFillBackground.BackColor = System.Drawing.Color.LightSteelBlue
-        Me.CBFillBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple
+        Me.CBFillBackground.DropDownHeight = 1
+        Me.CBFillBackground.DropDownWidth = 1
         Me.CBFillBackground.FormattingEnabled = True
+        Me.CBFillBackground.IntegralHeight = False
         Me.CBFillBackground.Location = New System.Drawing.Point(8, 35)
         Me.CBFillBackground.Name = "CBFillBackground"
         Me.CBFillBackground.Size = New System.Drawing.Size(110, 25)
@@ -550,7 +554,6 @@ Partial Class Form15CompareCells
     Friend WithEvents GB_Display_Result As CustomGroupBox
     Friend WithEvents CustomGroupBox4 As CustomGroupBox
     Friend WithEvents checkBoxCase As Windows.Forms.CheckBox
-    Friend WithEvents CbFillFont As Windows.Forms.ComboBox
     Friend WithEvents CBFillBackground As Windows.Forms.ComboBox
     Friend WithEvents checkBoxFillFont As Windows.Forms.CheckBox
     Friend WithEvents checkBoxFillBack As Windows.Forms.CheckBox
@@ -569,4 +572,5 @@ Partial Class Form15CompareCells
     Friend WithEvents txtSourceRange1 As Windows.Forms.TextBox
     Friend WithEvents CD_Fill_Background As Windows.Forms.ColorDialog
     Friend WithEvents CD_Fill_Font As Windows.Forms.ColorDialog
+    Friend WithEvents CbFillFont As Windows.Forms.ComboBox
 End Class
