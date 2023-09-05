@@ -380,6 +380,7 @@ Partial Class Form11SwapRanges
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(596, 387)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CustomGroupBox6)
@@ -391,6 +392,8 @@ Partial Class Form11SwapRanges
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.CB_CopyWs)
         Me.Controls.Add(Me.CustomGroupBox1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form11SwapRanges"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Swap"

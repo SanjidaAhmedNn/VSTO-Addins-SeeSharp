@@ -56,21 +56,21 @@ Public Class Form15CompareCells
 
 
 
-            'If changeState = True Then
+            If changeState = True Then
 
 
-            '    If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+                If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
 
-            '        txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
-            '        '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
-            '        '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-            '        'Else
-            '        '    txtSourceRange2.Text = secondInputRng.Address
-            '        '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-            '    End If
+                    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+                    '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+                    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                    'Else
+                    '    txtSourceRange2.Text = secondInputRng.Address
+                    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                End If
 
 
-            'End If
+            End If
 
 
 
@@ -112,16 +112,16 @@ Public Class Form15CompareCells
 
 
 
-            'If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+            If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
 
-            '        txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
-            '    '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
-            '    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-            '    'Else
-            '    '    txtSourceRange2.Text = secondInputRng.Address
-            '    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+                '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+                '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+                'Else
+                '    txtSourceRange2.Text = secondInputRng.Address
+                '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
 
-            'End If
+            End If
 
 
 

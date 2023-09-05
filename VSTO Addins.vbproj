@@ -214,18 +214,6 @@
     <Compile Include="CustomPanel.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form10Unmerge Cells with Value.Designer.vb">
-      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form10Unmerge Cells with Value.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form11SwapRanges.Designer.vb">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
     </Compile>
@@ -262,54 +250,6 @@
     <Compile Include="Form16PasteintoVisibleRange.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form17DivideNames.Designer.vb">
-      <DependentUpon>Form17DivideNames.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form17DivideNames.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form18_CombineRanges.Designer.vb">
-      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form18_CombineRanges.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form3.Designer.vb">
-      <DependentUpon>Form3.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form3.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form4.Designer.vb">
-      <DependentUpon>Form4.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form4.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form7.Designer.vb">
-      <DependentUpon>Form7.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form7.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form8.Designer.vb">
-      <DependentUpon>Form8.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form8.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form9.Designer.vb">
-      <DependentUpon>Form9.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form9.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -324,12 +264,6 @@
     </Compile>
     <EmbeddedResource Include="CustomGroupBox.resx">
       <DependentUpon>CustomGroupBox.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form10Unmerge Cells with Value.resx">
-      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form11SwapRanges.resx">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
@@ -348,30 +282,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
       <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form17DivideNames.resx">
-      <DependentUpon>Form17DivideNames.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form18_CombineRanges.resx">
-      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form4.resx">
-      <DependentUpon>Form4.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form7.resx">
-      <DependentUpon>Form7.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form8.resx">
-      <DependentUpon>Form8.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form9.resx">
-      <DependentUpon>Form9.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
@@ -458,7 +368,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C2FD030154B5F8E4BA490C199026E3DA578916FF</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>EE9DDA031E0E356FFC25496B88EC4117558311E2</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
