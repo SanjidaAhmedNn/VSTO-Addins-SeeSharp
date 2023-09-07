@@ -11,12 +11,27 @@ Imports System.Linq.Expressions
 Public Class Form12HideRanges
     Dim WithEvents excelApp As Excel.Application
     Dim workbook As Excel.Workbook
-    Dim worksheet As Excel.Worksheet
+    Dim worksheet, worksheet1 As Excel.Worksheet
     Dim outWorksheet As Excel.Worksheet
     Dim inputRng As Excel.Range
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
+    Dim textChanged As Boolean = False
 
+
+    Private Sub Form12HideRanges_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selectedRng As Excel.Range = excelApp.Selection
+        txtSourceRange.Text = selectedRng.Address
+
+        RB_Single_Range.Checked = True
+        RB_Row.Checked = True
+
+    End Sub
     Private Sub txtSourceRange_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange.TextChanged
 
         Try
@@ -24,18 +39,18 @@ Public Class Form12HideRanges
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-
-            txtSourceRange.Focus()
-
+            textChanged = True
 
             inputRng = worksheet.Range(txtSourceRange.Text)
-
+            inputRng.Select()
 
 
         Catch ex As Exception
 
         End Try
 
+        textChanged = False
+        txtSourceRange.Focus()
 
 
 
@@ -51,11 +66,14 @@ Public Class Form12HideRanges
             selectedRange = excelApp.Selection
             txtSourceRange.Focus()
 
+            Me.Hide()
             inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", selectedRange.Address, Type:=8)
-            inputRng.Select()
-            txtSourceRange.Text = inputRng.Address
-            txtSourceRange.Focus()
+            Me.Show()
 
+            inputRng.Worksheet.Activate()
+
+            txtSourceRange.Text = inputRng.Address
+            inputRng.Select()
 
 
         Catch ex As Exception
@@ -100,15 +118,19 @@ Public Class Form12HideRanges
 
             txtSourceRange.Focus()
 
+            If textChanged = False Then
 
-            If FocusedTxtBox = 1 Then
+                If FocusedTxtBox = 1 Then
 
-                txtSourceRange.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                inputRng = selectedRange
-                txtSourceRange.Focus()
+                    txtSourceRange.Text = selectedRange.Address
+                    worksheet = workbook.ActiveSheet
+                    inputRng = selectedRange
+                    txtSourceRange.Focus()
+
+                End If
 
             End If
+
 
 
         Catch ex As Exception
@@ -126,6 +148,7 @@ Public Class Form12HideRanges
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
+            selectedRange = selectedRange.Cells(1, 1)
             selectedRange.Select()
 
             Dim topLeft, bottomRight As String
@@ -201,6 +224,13 @@ Public Class Form12HideRanges
 
     End Sub
 
+    Public Function IsValidRng(input As String) As Boolean
+
+        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
+    End Function
+
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
         Try
 
@@ -210,7 +240,16 @@ Public Class Form12HideRanges
             worksheet = workbook.ActiveSheet
             inputWsName = worksheet.Name
 
-
+            If txtSourceRange.Text = "" Then
+                MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Focus()
+                Exit Sub
+            ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False Then
+                MsgBox("Please use a valid range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Text = ""
+                txtSourceRange.Focus()
+                Exit Sub
+            End If
 
 
 
@@ -225,15 +264,21 @@ Public Class Form12HideRanges
             Next
 
 
-            If rngCount = 0 Then
-
+            If rngCount = 0 And RB_Single_Range.Checked = True Then
                 Call singleRng()
-            Else
+                Me.Dispose()
+            ElseIf rngCount = 0 And RB_Multiple_Range.Checked = True Then
+                MsgBox("Please select the correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
+                RB_Single_Range.Focus()
+            ElseIf rngCount <> 0 And RB_Multiple_Range.Checked = True Then
                 Call multiRng()
+                Me.Dispose()
+            ElseIf rngCount <> 0 And RB_Single_Range.Checked = True Then
+                MsgBox("Please select the correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
+                RB_Multiple_Range.Focus()
             End If
-break:
 
-            Me.Dispose()
+
 
 
         Catch ex As Exception
@@ -241,17 +286,7 @@ break:
         End Try
     End Sub
 
-    Private Sub Form12HideRanges_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
-
-        Dim selectedRng As Excel.Range = excelApp.Selection
-        txtSourceRange.Text = selectedRng.Address
-
-
-    End Sub
 
     Private Sub singleRng()
 
@@ -262,6 +297,19 @@ break:
             worksheet = workbook.ActiveSheet
             inputWsName = worksheet.Name
 
+            Dim temp As String
+            temp = txtSourceRange.Text
+            worksheet1 = inputRng.Worksheet
+
+            If CheckBox1.Checked = True Then
+
+                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+
+                worksheet1.Activate()
+                txtSourceRange.Text = temp
+
+            End If
 
             Dim firstRow, lastRow, firstColumn, lastColumn As Integer
 
@@ -321,18 +369,18 @@ break3:
             End If
 
 
-            If CheckBox1.Checked = True Then
+            'If CheckBox1.Checked = True Then
 
-                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-                outWorksheet.Range("A1").Select()
-                worksheet.Cells.EntireColumn.Hidden = False
-                worksheet.Cells.EntireRow.Hidden = False
+            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+            '    outWorksheet.Range("A1").Select()
+            '    worksheet.Cells.EntireColumn.Hidden = False
+            '    worksheet.Cells.EntireRow.Hidden = False
 
-                worksheet = workbook.Sheets(inputWsName)
-                worksheet.Activate()
+            '    worksheet = workbook.Sheets(inputWsName)
+            '    worksheet.Activate()
 
-            End If
+            'End If
 
 
         Catch ex As Exception
@@ -352,6 +400,22 @@ break3:
             worksheet = workbook.ActiveSheet
             inputWsName = worksheet.Name
 
+            Dim temp As String
+            temp = txtSourceRange.Text
+            worksheet1 = inputRng.Worksheet
+
+
+            If CheckBox1.Checked = True Then
+
+                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+
+                worksheet1.Activate()
+                txtSourceRange.Text = temp
+
+            End If
+
+
             Dim visRows, followingRows As Integer
             Dim visColumns, followingColumns As Integer
             Dim arrRng As String() = Split(txtSourceRange.Text, ",")
@@ -364,8 +428,6 @@ break3:
                     followingColumns = visColumns + worksheet.Range(arrRng(i)).Columns.Count - 1
 
                     worksheet.Range(worksheet.Cells(visRows, 1), worksheet.Cells(followingRows, 1)).EntireRow.Hidden = True
-
-
 
                 Next
 
@@ -401,18 +463,18 @@ break3:
             End If
 
 
-            If CheckBox1.Checked = True Then
+            'If CheckBox1.Checked = True Then
 
-                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-                outWorksheet.Range("A1").Select()
-                worksheet.Cells.EntireColumn.Hidden = False
-                worksheet.Cells.EntireRow.Hidden = False
+            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+            '    outWorksheet.Range("A1").Select()
+            '    worksheet.Cells.EntireColumn.Hidden = False
+            '    worksheet.Cells.EntireRow.Hidden = False
 
-                worksheet = workbook.Sheets(inputWsName)
-                worksheet.Activate()
+            '    worksheet = workbook.Sheets(inputWsName)
+            '    worksheet.Activate()
 
-            End If
+            'End If
 
 
 

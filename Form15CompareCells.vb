@@ -547,6 +547,10 @@ Public Class Form15CompareCells
     Private Sub btnCanecl_Click(sender As Object, e As EventArgs) Handles btnCanecl.Click
         Me.Dispose()
     End Sub
+    Public Function IsValidRng(input As String) As Boolean
+        Dim pattern As String = "^\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?$"
+        Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+    End Function
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
@@ -554,18 +558,57 @@ Public Class Form15CompareCells
 
 
         If txtSourceRange1.Text = "" And txtSourceRange2.Text = "" Then
+
             MsgBox("Please select the first and the second range.", MsgBoxStyle.Exclamation, "Error!")
             txtSourceRange1.Focus()
             Exit Sub
-        ElseIf txtSourceRange1.Text = "" Then
-            MsgBox("Please select the first range.", MsgBoxStyle.Exclamation, "Error!")
-            txtSourceRange1.Focus()
-            Exit Sub
-        ElseIf txtSourceRange2.Text = "" Then
-            MsgBox("Please select the second range.", MsgBoxStyle.Exclamation, "Error!")
-            txtSourceRange2.Focus()
-            Exit Sub
+        ElseIf txtSourceRange1.Text = "" And txtSourceRange2.Text <> "" Then
+
+            If IsValidRng(txtSourceRange2.Text.ToUpper) = True Then
+                MsgBox("Please select the first range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange1.Focus()
+                Exit Sub
+            Else
+                MsgBox("Please use a valid range in the 2nd Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange2.Text = ""
+                txtSourceRange2.Focus()
+                Exit Sub
+            End If
+
+        ElseIf txtSourceRange2.Text = "" And txtSourceRange1.Text <> "" Then
+            If IsValidRng(txtSourceRange1.Text.ToUpper) = True Then
+                MsgBox("Please select the second range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange2.Focus()
+                Exit Sub
+            Else
+                MsgBox("Please use a valid range in the 1st Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange1.Text = ""
+                txtSourceRange1.Focus()
+                Exit Sub
+            End If
+
+        ElseIf txtSourceRange1.Text <> "" And txtSourceRange2.Text <> "" Then
+            If IsValidRng(txtSourceRange1.Text.ToUpper) = False And IsValidRng(txtSourceRange2.Text.ToUpper) = True Then
+                MsgBox("Please use a valid range in the 1st Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange1.Text = ""
+                txtSourceRange1.Focus()
+                Exit Sub
+
+            ElseIf IsValidRng(txtSourceRange1.Text.ToUpper) = True And IsValidRng(txtSourceRange2.Text.ToUpper) = False Then
+                MsgBox("Please use a valid range in the 2nd Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange2.Text = ""
+                txtSourceRange2.Focus()
+                Exit Sub
+            ElseIf IsValidRng(txtSourceRange1.Text.ToUpper) = False And IsValidRng(txtSourceRange2.Text.ToUpper) = False Then
+                MsgBox("Please use a valid range in the Source Ranges.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange1.Text = ""
+                txtSourceRange2.Text = ""
+                txtSourceRange1.Focus()
+                Exit Sub
+
+            End If
         End If
+
         If firstInputRng.Rows.Count <> secondInputRng.Rows.Count And firstInputRng.Columns.Count <> secondInputRng.Columns.Count Then
 
             MsgBox("You must use same number of rows and columns in both ranges.",, "Warning!")
