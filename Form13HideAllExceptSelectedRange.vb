@@ -140,7 +140,6 @@ Public Class Form13HideAllExceptSelectedRange
             Else
                 Call multiRng()
             End If
-finish:
 
             Me.Dispose()
 

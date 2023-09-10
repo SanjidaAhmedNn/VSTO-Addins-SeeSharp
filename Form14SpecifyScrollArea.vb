@@ -11,11 +11,12 @@ Public Class Form14SpecifyScrollArea
 
     Dim WithEvents excelApp As Excel.Application
     Dim workbook As Excel.Workbook
-    Dim worksheet As Excel.Worksheet
+    Dim worksheet, worksheet1 As Excel.Worksheet
     Dim outWorksheet As Excel.Worksheet
     Dim inputRng As Excel.Range
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
+    Dim textChanged As Boolean = False
 
 
     Private Sub Form14SpecifyScrollArea_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -38,25 +39,21 @@ Public Class Form14SpecifyScrollArea
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-
-            txtSourceRange.Focus()
-
+            textChanged = True
 
             inputRng = worksheet.Range(txtSourceRange.Text)
-
+            inputRng.Select()
 
 
         Catch ex As Exception
 
         End Try
 
+        textChanged = False
+        txtSourceRange.Focus()
 
 
     End Sub
-
-
-
-
 
 
     Private Sub txtSourceRange_GotFocus(sender As Object, e As EventArgs) Handles txtSourceRange.GotFocus
@@ -91,15 +88,19 @@ Public Class Form14SpecifyScrollArea
 
             txtSourceRange.Focus()
 
+            If textChanged = False Then
 
-            If FocusedTxtBox = 1 Then
+                If FocusedTxtBox = 1 Then
 
-                txtSourceRange.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                inputRng = selectedRange
-                txtSourceRange.Focus()
+                    txtSourceRange.Text = selectedRange.Address
+                    worksheet = workbook.ActiveSheet
+                    inputRng = selectedRange
+                    txtSourceRange.Focus()
+
+                End If
 
             End If
+
 
 
         Catch ex As Exception
@@ -119,9 +120,13 @@ Public Class Form14SpecifyScrollArea
             selectedRange = excelApp.Selection
             txtSourceRange.Focus()
 
+            Me.Hide()
             inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", selectedRange.Address, Type:=8)
-            inputRng.Select()
+            Me.Show()
+
+            inputRng.Worksheet.Activate()
             txtSourceRange.Text = inputRng.Address
+            inputRng.Select()
             txtSourceRange.Focus()
 
 
@@ -140,14 +145,34 @@ Public Class Form14SpecifyScrollArea
 
     End Sub
 
+    Public Function IsValidRng(input As String) As Boolean
+
+        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
+    End Function
+
+
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
 
         Try
-            Dim inputWsName As String
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
-            inputWsName = worksheet.Name
+
+
+
+            If txtSourceRange.Text = "" Then
+                MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Focus()
+                Exit Sub
+            ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False Then
+                MsgBox("Please use a valid range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Text = ""
+                txtSourceRange.Focus()
+                Exit Sub
+            End If
+
 
             Dim rngCount As Integer
             rngCount = 0
@@ -160,15 +185,6 @@ Public Class Form14SpecifyScrollArea
 
             Next
 
-            Dim arrRng As String() = Split(txtSourceRange.Text, ",")
-            For i = 0 To UBound(arrRng) - 1
-                If Not worksheet.Range(arrRng(i)).Column = worksheet.Range(arrRng(i + 1)).Column And worksheet.Range(arrRng(i)).Columns.Count = worksheet.Range(arrRng(i + 1)).Columns.Count Then
-                    Dim columnMisMatchAnswer As MsgBoxResult
-                    columnMisMatchAnswer = MsgBox("To continue, the number of Columns must be same in each selection." & vbCrLf & "Please retry!", MsgBoxStyle.OkOnly, "Warning!")
-
-                    GoTo break
-                End If
-            Next
 
 
             If rngCount = 0 Then
@@ -177,8 +193,6 @@ Public Class Form14SpecifyScrollArea
             Else
                 Call multiRng()
             End If
-
-break:
 
             Me.Dispose()
 
@@ -194,27 +208,27 @@ break:
     Private Sub singleRng()
 
         Try
-            Dim inputWsName As String
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
-            inputWsName = worksheet.Name
 
-
-
-
-
-
-            Dim firstRow, lastRow, firstColumn, lastColumn As Integer
             Dim selectedRng As Excel.Range
-
             selectedRng = worksheet.Range(txtSourceRange.Text)
-            firstRow = selectedRng.Row
-            lastRow = firstRow + selectedRng.Rows.Count - 1
-            firstColumn = selectedRng.Column
-            lastColumn = firstColumn + selectedRng.Columns.Count - 1
 
-            'Single rows Or Columns validation
+            Dim temp As String
+            temp = txtSourceRange.Text
+            worksheet1 = inputRng.Worksheet
+
+            If CheckBox.Checked = True Then
+
+                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+
+                worksheet1.Activate()
+                txtSourceRange.Text = temp
+
+            End If
+
             If selectedRng.Rows.Count <= 2 And selectedRng.Columns.Count <= 2 Then
                 Dim answer As MsgBoxResult
                 answer = MsgBox("You are about to set Scroll Area for only " & selectedRng.Rows.Count & " Rows and " & selectedRng.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
@@ -226,25 +240,18 @@ break:
             End If
 
 Proceed:
-            worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(firstRow - 1, 1)).EntireRow.Hidden = True
-            worksheet.Range(worksheet.Cells(lastRow + 1, 1), worksheet.Cells(lastRow + 1, 1).end(Excel.XlDirection.xlDown)).EntireRow.Hidden = True
+            worksheet.Rows.Hidden = True
+            worksheet.Columns.Hidden = True
 
+            For i As Integer = 1 To selectedRng.Rows.Count
+                selectedRng.Rows(i).EntireRow.Hidden = False
+            Next
 
-            worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(1, firstColumn - 1)).EntireColumn.Hidden = True
-            worksheet.Range(worksheet.Cells(1, lastColumn + 1), worksheet.Cells(1, lastColumn + 1).end(Excel.XlDirection.xlToRight)).EntireColumn.Hidden = True
+            For i As Integer = 1 To selectedRng.Columns.Count
+                selectedRng.Columns(i).EntireColumn.Hidden = False
+            Next
 
-            If CheckBox.Checked = True Then
-
-                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-                outWorksheet.Range("A1").Select()
-                worksheet.Cells.EntireColumn.Hidden = False
-                worksheet.Cells.EntireRow.Hidden = False
-
-                worksheet = workbook.Sheets(inputWsName)
-                worksheet.Activate()
-
-            End If
+            selectedRng.Select()
 
 break:
 
@@ -261,13 +268,9 @@ break:
 
     Private Sub multiRng()
 
-        Dim WsName As String
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
-        WsName = worksheet.Name
-
-
 
         Try
 
@@ -275,62 +278,50 @@ break:
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            Dim arrRng As String() = Split(txtSourceRange.Text, ",")
-            Dim visRows, followingRows As Integer
-            Dim visColumns, followingColumns As Integer
 
-
-            For i = 0 To UBound(arrRng) + 1
-
-
-                If i > UBound(arrRng) Then
-
-                    worksheet.Range(worksheet.Cells(followingRows + 1, visColumns), worksheet.Cells(1048576, visColumns)).EntireRow.Hidden = True
-                    worksheet.Range(worksheet.Cells(followingRows, followingColumns + 1), worksheet.Cells(followingRows, followingColumns + 1).end(Excel.XlDirection.xlToRight)).EntireColumn.Hidden = True
-
-                    Exit For
-
-                End If
-
-                visRows = worksheet.Range(arrRng(i)).Row
-                visColumns = worksheet.Range(arrRng(i)).Column
-                followingColumns = visColumns + worksheet.Range(arrRng(i)).Columns.Count - 1
-
-                If i = 0 Then
-                    worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
-                    worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(1, visColumns - 1)).EntireColumn.Hidden = True
-                    worksheet.Range(worksheet.Cells(1, followingColumns + 1), worksheet.Cells(1, followingColumns + 1).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
-
-
-
-                Else
-                    worksheet.Range(worksheet.Cells(followingRows + 1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
-                    worksheet.Range(worksheet.Cells(visRows, 1), worksheet.Cells(visRows, visColumns - 1)).EntireColumn.Hidden = True
-                    worksheet.Range(worksheet.Cells(visRows, followingColumns + 1), worksheet.Cells(visRows, followingColumns + 1).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
-
-
-                End If
-
-                followingRows = visRows + worksheet.Range(arrRng(i)).Rows.Count - 1
-
-
-
-            Next
-
+            Dim temp As String
+            temp = txtSourceRange.Text
+            worksheet1 = inputRng.Worksheet
 
             If CheckBox.Checked = True Then
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
                 outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-                outWorksheet.Range("A1").Select()
-                worksheet.Cells.EntireColumn.Hidden = False
-                worksheet.Cells.EntireRow.Hidden = False
-                worksheet = workbook.Sheets(WsName)
-                worksheet.Activate()
+
+                worksheet1.Activate()
+                txtSourceRange.Text = temp
 
             End If
 
+            Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
+            Dim minRow As Integer = Integer.MaxValue
+            Dim maxRow As Integer = Integer.MinValue
+            Dim minCol As Integer = Integer.MaxValue
+            Dim maxCol As Integer = Integer.MinValue
+
+            For Each address In arrRng
+                Dim range As Excel.Range = worksheet.Range(address)
+                minRow = Math.Min(minRow, range.Row)
+                maxRow = Math.Max(maxRow, range.Row + range.Rows.Count - 1)
+                minCol = Math.Min(minCol, range.Column)
+                maxCol = Math.Max(maxCol, range.Column + range.Columns.Count - 1)
+            Next
+            Dim scrollArea As Excel.Range = worksheet.Range(worksheet.Cells(minRow, minCol), worksheet.Cells(maxRow, maxCol))
+
+            worksheet.Rows.Hidden = True
+            worksheet.Columns.Hidden = True
+
+
+            For i As Integer = 1 To scrollArea.Rows.Count
+                scrollArea.Rows(i).EntireRow.Hidden = False
+            Next
+
+            For i As Integer = 1 To scrollArea.Columns.Count
+                scrollArea.Columns(i).EntireColumn.Hidden = False
+            Next
+
+            scrollArea.Select()
 
 
             Me.Dispose()
@@ -338,8 +329,6 @@ break:
         Catch ex As Exception
 
         End Try
-
-
 
     End Sub
 
