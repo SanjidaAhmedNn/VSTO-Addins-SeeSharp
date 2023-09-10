@@ -14,12 +14,12 @@ Public Class Form16PasteintoVisibleRange
     Dim workbook As Excel.Workbook
     Dim worksheet As Excel.Worksheet
     Dim outWorksheet As Excel.Worksheet
-    Dim inputRng As Excel.Range
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
-    Dim destRange As Excel.Range
-    Dim outputRng As Excel.Range
+    Dim sourceRange, destRange As Excel.Range
     Dim WsName As String
+    Dim changeState As Boolean = False
+    Dim textChanged As Boolean = False
 
 
     Private Sub Form16PasteintoVisibleRange_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -42,46 +42,106 @@ Public Class Form16PasteintoVisibleRange
     Private Sub txtSourceRange_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange.TextChanged
 
         Try
+
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            'Give foucs to the textbox "txtSourceRange" if any text is changed in it
-            txtSourceRange.Focus()
 
-            'convert the text of the textbox to range and store it in the public variable "inputRng"
-            inputRng = worksheet.Range(txtSourceRange.Text)
+            'MsgBox(txtSourceRange1.Text)
+            textChanged = True
+            sourceRange = worksheet.Range(txtSourceRange.Text)
+
+
+            sourceRange.Select()
+
+
+
+
+            If changeState = True Then
+
+
+                If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
+
+                    txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
+
+                End If
+
+
+            End If
+
 
 
         Catch ex As Exception
 
         End Try
 
+        textChanged = False
 
+        txtSourceRange.Focus()
+
+
+    End Sub
+    Private Sub txtDestRange_TextChanged(sender As Object, e As EventArgs) Handles txtDestRange.TextChanged
+
+        Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+
+            changeState = True
+
+            textChanged = True
+            destRange = worksheet.Range(txtDestRange.Text)
+
+
+
+
+            destRange.Select()
+
+
+            If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
+
+                txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
+
+            End If
+
+
+        Catch ex As Exception
+
+        End Try
+
+        textChanged = False
+        txtDestRange.Focus()
 
 
     End Sub
 
     Private Sub Selection_Click(sender As Object, e As EventArgs) Handles Selection.Click
+
         Try
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
-
-            ' Give focus to "txtSourceRange" textbox
             txtSourceRange.Focus()
 
-            ' Display an InputBox to prompt the user to select a range and store the address in the public variable "inputRng" as range
-            ' Select the range provided by the user
-            ' Display the selected range address in the "txtSourceRange" textbox
-            inputRng = excelApp.InputBox("Please Select a Range", "Range Selection", selectedRange.Address, Type:=8)
-            inputRng.Select()
-            txtSourceRange.Text = inputRng.Address
+            Me.Hide()
+            sourceRange = excelApp.InputBox("Please Select the First Range", "First Range Selection", selectedRange.Address, Type:=8)
+            Me.Show()
 
-            'Return focus to "txtSourceRange" textbox after displaying the selected range
+
+
+            'firstInputRng.Worksheet.Activate()
+
+
+            txtSourceRange.Text = sourceRange.Worksheet.Name & "!" & sourceRange.Address
+
+            sourceRange.Select()
+
             txtSourceRange.Focus()
+
 
 
         Catch ex As Exception
@@ -89,39 +149,41 @@ Public Class Form16PasteintoVisibleRange
             txtSourceRange.Focus()
 
         End Try
+
 
     End Sub
 
     Private Sub destinationSelection_Click(sender As Object, e As EventArgs) Handles destinationSelection.Click
 
         Try
-
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
-
-            ' Give focus to "txtDestRange" textbox
             txtDestRange.Focus()
 
-            ' Display an InputBox to prompt the user to select a range and store the address in the public variable "outputRng" as range
-            ' Select the range provided by the user
-            ' Display the selected range address in the "txtDestRange" textbox
-            outputRng = excelApp.InputBox("Please Select a Destination Range", "Destination Range Selection", selectedRange.Address, Type:=8)
-            outputRng.Select()
-            txtDestRange.Text = outputRng.Address
+            Me.Hide()
+            destRange = excelApp.InputBox("Please Select the Second Range", "Second Range Selection", selectedRange.Address, Type:=8)
+            Me.Show()
 
-            'Return focus to "txtDestRange" textbox after displaying the selected range
+
+
+
+            txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
+
+            destRange.Select()
             txtDestRange.Focus()
+
+
 
 
         Catch ex As Exception
 
-            'Return focus to "txtDestRange" textbox if any error occurs 
-            'This will keep the form visible on the scrren and allow user to enter correct destination range
             txtDestRange.Focus()
 
         End Try
+
+
 
 
     End Sub
@@ -174,40 +236,29 @@ Public Class Form16PasteintoVisibleRange
         Try
 
             excelApp = Globals.ThisAddIn.Application
-
+            worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
             selectedRange.Select()
 
-            'If value of FocusedTxtBox is 1, that means txtSourceRange textbox is selected, and 2 means txtDestRange textbox is selected
-            If FocusedTxtBox = 1 Then
 
-                'Display the address of the selected range in the txtSourceRange textbox
-                'Store the address in the public variable "inputRng" as range
-                txtSourceRange.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                inputRng = selectedRange
+            If textChanged = False Then
 
-                'Return focus to "txtSourceRange" textbox after displaying the selected range
-                txtSourceRange.Focus()
 
-            ElseIf FocusedTxtBox = 2 Then
+                If FocusedTxtBox = 1 Then
+                    txtSourceRange.Text = selectedRange.Address
+                    txtSourceRange.Focus()
 
-                'Display the address of the selected range in the txtDestRange textbox
-                'Store the address in the public variable "destRange" as range
-                txtDestRange.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                destRange = selectedRange
-
-                'Return focus to "txtDestRange" textbox after displaying the selected range
-                txtDestRange.Focus()
+                ElseIf FocusedTxtBox = 2 Then
+                    txtDestRange.Text = selectedRange.Address
+                End If
 
             End If
 
 
         Catch ex As Exception
 
-
         End Try
+
 
     End Sub
 
@@ -219,6 +270,7 @@ Public Class Form16PasteintoVisibleRange
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
+            selectedRange = selectedRange.Cells(1, 1)
             selectedRange.Select()
 
             Dim topLeft, bottomRight As String
@@ -282,31 +334,10 @@ Public Class Form16PasteintoVisibleRange
 
             selectedRange.Select()
 
+            sourceRange = selectedRange
+            txtSourceRange.Text = sourceRange.Address
 
 
-
-
-        Catch ex As Exception
-
-        End Try
-
-
-
-
-    End Sub
-
-    Private Sub txtDestRange_TextChanged(sender As Object, e As EventArgs) Handles txtDestRange.TextChanged
-
-        Try
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-            selectedRange = excelApp.Selection
-
-            txtDestRange.Focus()
-
-
-            outputRng = worksheet.Range(txtDestRange.Text)
 
 
 
@@ -316,20 +347,75 @@ Public Class Form16PasteintoVisibleRange
 
 
     End Sub
+
+
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.Dispose()
     End Sub
 
+
+    Public Function IsValidRng(input As String) As Boolean
+
+        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
+    End Function
+
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
 
-        If txtDestRange.Text = Nothing Or txtSourceRange.Text = Nothing Then
 
-            MsgBox("Please enter a valid Range.",, "Warning!")
-            Me.Dispose()
+        If txtSourceRange.Text = "" And txtDestRange.Text = "" Then
+
+            MsgBox("Please select the Source Range and the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+            txtSourceRange.Focus()
             Exit Sub
+        ElseIf txtSourceRange.Text = "" And txtDestRange.Text <> "" Then
 
+            If IsValidRng(txtDestRange.Text.ToUpper) = True Then
+                MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Focus()
+                Exit Sub
+            Else
+                MsgBox("Please use a valid range in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtDestRange.Text = ""
+                txtDestRange.Focus()
+                Exit Sub
+            End If
+
+        ElseIf txtDestRange.Text = "" And txtSourceRange.Text <> "" Then
+            If IsValidRng(txtSourceRange.Text.ToUpper) = True Then
+                MsgBox("Please select the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtDestRange.Focus()
+                Exit Sub
+            Else
+                MsgBox("Please use a valid range in the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Text = ""
+                txtSourceRange.Focus()
+                Exit Sub
+            End If
+
+        ElseIf txtSourceRange.Text <> "" And txtDestRange.Text <> "" Then
+            If IsValidRng(txtSourceRange.Text.ToUpper) = False And IsValidRng(txtDestRange.Text.ToUpper) = True Then
+                MsgBox("Please use a valid range in the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Text = ""
+                txtSourceRange.Focus()
+                Exit Sub
+
+            ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = True And IsValidRng(txtDestRange.Text.ToUpper) = False Then
+                MsgBox("Please use a valid range in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtDestRange.Text = ""
+                txtDestRange.Focus()
+                Exit Sub
+            ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False And IsValidRng(txtDestRange.Text.ToUpper) = False Then
+                MsgBox("Please use valid ranges in the Source Range and in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Text = ""
+                txtDestRange.Text = ""
+                txtSourceRange.Focus()
+                Exit Sub
+
+            End If
         End If
 
 
@@ -434,7 +520,7 @@ Public Class Form16PasteintoVisibleRange
         count = 0
         pasteValue = 0
 
-        If inputRng.Rows.Count <= visibleRows And inputRng.Columns.Count <= visibleCols Then
+        If sourceRange.Rows.Count <= visibleRows And sourceRange.Columns.Count <= visibleCols Then
 
 
 
@@ -446,12 +532,12 @@ Public Class Form16PasteintoVisibleRange
                     pasteValue2 = 0
 
                 End If
-                If pasteValue > inputRng.Rows.Count Then
+                If pasteValue > sourceRange.Rows.Count Then
                     Exit While
                 End If
 
                 While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
-                    If pasteValue2 + 1 > inputRng.Columns.Count Then
+                    If pasteValue2 + 1 > sourceRange.Columns.Count Then
                         Exit While
                     End If
 
@@ -495,12 +581,12 @@ Public Class Form16PasteintoVisibleRange
                         pasteValue2 = 0
 
                     End If
-                    If pasteValue > inputRng.Rows.Count Then
+                    If pasteValue > sourceRange.Rows.Count Then
                         Exit While
                     End If
 
                     While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
-                        If pasteValue2 + 1 > inputRng.Columns.Count Then
+                        If pasteValue2 + 1 > sourceRange.Columns.Count Then
                             Exit While
                         End If
 
@@ -534,17 +620,17 @@ Public Class Form16PasteintoVisibleRange
 
             count3 = 0
 
-            For k = lastRowNum To lastRowNum + inputRng.Rows.Count - visibleRows - 1
+            For k = lastRowNum To lastRowNum + sourceRange.Rows.Count - visibleRows - 1
                 count4 = 0
                 count5 = 0
-                For l = 1 To lastColNum + inputRng.Columns.Count - visibleCols - 1
+                For l = 1 To lastColNum + sourceRange.Columns.Count - visibleCols - 1
 
                     If worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
                         count5 = count5 + 1
                     End If
 
 
-                    If count5 > inputRng.Columns.Count Then
+                    If count5 > sourceRange.Columns.Count Then
                         Exit For
                     End If
 
@@ -584,7 +670,7 @@ Public Class Form16PasteintoVisibleRange
 
                 End If
 
-                If count3 + 1 > inputRng.Rows.Count Then
+                If count3 + 1 > sourceRange.Rows.Count Then
                     Exit For
                 End If
 
@@ -598,7 +684,7 @@ Public Class Form16PasteintoVisibleRange
                 count4 = visibleCols
 
 
-                For l = lastColNum To lastColNum + inputRng.Columns.Count - visibleCols - 1
+                For l = lastColNum To lastColNum + sourceRange.Columns.Count - visibleCols - 1
 
 
                     If worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k + 1, l)).EntireColumn.Hidden = False Then
@@ -606,7 +692,7 @@ Public Class Form16PasteintoVisibleRange
                         colNum = worksheet.Range(worksheet.Cells(k, l), worksheet.Cells(k + 1, l)).Column
 
                     End If
-                    If count4 + 1 > inputRng.Columns.Count Then
+                    If count4 + 1 > sourceRange.Columns.Count Then
                         Exit For
                     End If
 
@@ -624,8 +710,8 @@ Public Class Form16PasteintoVisibleRange
 
 
 
-                        'worksheet.Range(worksheet.Cells(rowNum, colNum), worksheet.Cells(rowNum, colNum)).Value = inputRng.Cells.Offset(count3, count4).Value
-                        'inputRng.Cells.Offset(count3, count4).Copy(worksheet.Cells(rowNum, colNum))
+                        'worksheet.Range(worksheet.Cells(rowNum, colNum), worksheet.Cells(rowNum, colNum)).Value = sourceRange.Cells.Offset(count3, count4).Value
+                        'sourceRange.Cells.Offset(count3, count4).Copy(worksheet.Cells(rowNum, colNum))
 
                     End If
                     count4 = count4 + 1

@@ -492,8 +492,10 @@ Public Class Form11SwapRanges
 
     End Sub
     Public Function IsValidRng(input As String) As Boolean
-        Dim pattern As String = "^\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?$"
+
+        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
         Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
     End Function
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
