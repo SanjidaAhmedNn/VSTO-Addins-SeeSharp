@@ -43,11 +43,6 @@
     Private Sub InitializeComponent()
         Me.Tab1 = Me.Factory.CreateRibbonTab
         Me.Group1 = Me.Factory.CreateRibbonGroup
-        Me.Group2 = Me.Factory.CreateRibbonGroup
-        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
-        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
-        Me.Group3 = Me.Factory.CreateRibbonGroup
-        Me.Group4 = Me.Factory.CreateRibbonGroup
         Me.Button8 = Me.Factory.CreateRibbonButton
         Me.Button7 = Me.Factory.CreateRibbonButton
         Me.Button6 = Me.Factory.CreateRibbonButton
@@ -56,10 +51,14 @@
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
+        Me.Group2 = Me.Factory.CreateRibbonGroup
         Me.Menu1 = Me.Factory.CreateRibbonMenu
         Me.SplitButton1 = Me.Factory.CreateRibbonSplitButton
         Me.Button9 = Me.Factory.CreateRibbonButton
         Me.Button10 = Me.Factory.CreateRibbonButton
+        Me.DropDown1 = Me.Factory.CreateRibbonDropDown
+        Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
+        Me.Group3 = Me.Factory.CreateRibbonGroup
         Me.SplitButton2 = Me.Factory.CreateRibbonSplitButton
         Me.Button16 = Me.Factory.CreateRibbonButton
         Me.Button17 = Me.Factory.CreateRibbonButton
@@ -72,6 +71,7 @@
         Me.Button19 = Me.Factory.CreateRibbonButton
         Me.Button20 = Me.Factory.CreateRibbonButton
         Me.Button21 = Me.Factory.CreateRibbonButton
+        Me.Group4 = Me.Factory.CreateRibbonGroup
         Me.Button22 = Me.Factory.CreateRibbonButton
         Me.Button23 = Me.Factory.CreateRibbonButton
         Me.Menu2 = Me.Factory.CreateRibbonMenu
@@ -128,51 +128,6 @@
         Me.Group1.Label = "Group1"
         Me.Group1.Name = "Group1"
         '
-        'Group2
-        '
-        Me.Group2.Items.Add(Me.Menu1)
-        Me.Group2.Items.Add(Me.DropDown1)
-        Me.Group2.Items.Add(Me.ComboBox1)
-        Me.Group2.Label = "Group2"
-        Me.Group2.Name = "Group2"
-        '
-        'DropDown1
-        '
-        Me.DropDown1.Label = "DropDown1"
-        Me.DropDown1.Name = "DropDown1"
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.Label = "ComboBox1"
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Text = Nothing
-        '
-        'Group3
-        '
-        Me.Group3.Items.Add(Me.SplitButton2)
-        Me.Group3.Items.Add(Me.Button11)
-        Me.Group3.Items.Add(Me.Button12)
-        Me.Group3.Items.Add(Me.Button13)
-        Me.Group3.Items.Add(Me.Button14)
-        Me.Group3.Items.Add(Me.Button15)
-        Me.Group3.Items.Add(Me.Button19)
-        Me.Group3.Items.Add(Me.Button20)
-        Me.Group3.Items.Add(Me.Button21)
-        Me.Group3.Label = "Test"
-        Me.Group3.Name = "Group3"
-        '
-        'Group4
-        '
-        Me.Group4.Items.Add(Me.Button22)
-        Me.Group4.Items.Add(Me.Button23)
-        Me.Group4.Items.Add(Me.Menu2)
-        Me.Group4.Items.Add(Me.Button27)
-        Me.Group4.Items.Add(Me.Menu3)
-        Me.Group4.Items.Add(Me.Menu4)
-        Me.Group4.Items.Add(Me.Menu5)
-        Me.Group4.Label = "Group4"
-        Me.Group4.Name = "Group4"
-        '
         'Button8
         '
         Me.Button8.Label = "Form 11"
@@ -215,6 +170,14 @@
         Me.Button3.Label = "Transpose"
         Me.Button3.Name = "Button3"
         '
+        'Group2
+        '
+        Me.Group2.Items.Add(Me.Menu1)
+        Me.Group2.Items.Add(Me.DropDown1)
+        Me.Group2.Items.Add(Me.ComboBox1)
+        Me.Group2.Label = "Group2"
+        Me.Group2.Name = "Group2"
+        '
         'Menu1
         '
         Me.Menu1.Items.Add(Me.SplitButton1)
@@ -239,6 +202,31 @@
         Me.Button10.Label = "Clear"
         Me.Button10.Name = "Button10"
         Me.Button10.ShowImage = True
+        '
+        'DropDown1
+        '
+        Me.DropDown1.Label = "DropDown1"
+        Me.DropDown1.Name = "DropDown1"
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Label = "ComboBox1"
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Text = Nothing
+        '
+        'Group3
+        '
+        Me.Group3.Items.Add(Me.SplitButton2)
+        Me.Group3.Items.Add(Me.Button11)
+        Me.Group3.Items.Add(Me.Button12)
+        Me.Group3.Items.Add(Me.Button13)
+        Me.Group3.Items.Add(Me.Button14)
+        Me.Group3.Items.Add(Me.Button15)
+        Me.Group3.Items.Add(Me.Button19)
+        Me.Group3.Items.Add(Me.Button20)
+        Me.Group3.Items.Add(Me.Button21)
+        Me.Group3.Label = "Test"
+        Me.Group3.Name = "Group3"
         '
         'SplitButton2
         '
@@ -305,6 +293,18 @@
         '
         Me.Button21.Label = "Form 23 Merge Dupli Row"
         Me.Button21.Name = "Button21"
+        '
+        'Group4
+        '
+        Me.Group4.Items.Add(Me.Button22)
+        Me.Group4.Items.Add(Me.Button23)
+        Me.Group4.Items.Add(Me.Menu2)
+        Me.Group4.Items.Add(Me.Button27)
+        Me.Group4.Items.Add(Me.Menu3)
+        Me.Group4.Items.Add(Me.Menu4)
+        Me.Group4.Items.Add(Me.Menu5)
+        Me.Group4.Label = "Group4"
+        Me.Group4.Name = "Group4"
         '
         'Button22
         '
@@ -406,7 +406,7 @@
         Me.Menu6.Items.Add(Me.Button34)
         Me.Menu6.Items.Add(Me.Button35)
         Me.Menu6.Items.Add(Me.Button36)
-        Me.Menu6.Label = "Emty Columns"
+        Me.Menu6.Label = "Empty Columns"
         Me.Menu6.Name = "Menu6"
         Me.Menu6.ShowImage = True
         '
@@ -440,7 +440,7 @@
         Me.Menu7.Items.Add(Me.Button38)
         Me.Menu7.Items.Add(Me.Button39)
         Me.Menu7.Items.Add(Me.Button40)
-        Me.Menu7.Label = "Emty Rows"
+        Me.Menu7.Label = "Empty Rows"
         Me.Menu7.Name = "Menu7"
         Me.Menu7.ShowImage = True
         '
@@ -470,7 +470,7 @@
         '
         'Button41
         '
-        Me.Button41.Label = "Emty Sheets"
+        Me.Button41.Label = "Empty Sheets"
         Me.Button41.Name = "Button41"
         Me.Button41.ShowImage = True
         '
