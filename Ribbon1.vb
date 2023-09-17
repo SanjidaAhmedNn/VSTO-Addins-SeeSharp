@@ -9,6 +9,7 @@ Imports System.ComponentModel
 Imports System.Linq.Expressions
 Imports System.Data.Common
 Imports System.Runtime.InteropServices
+Imports Application = System.Windows.Forms.Application
 
 Public Class Ribbon1
 
@@ -1268,7 +1269,6 @@ nextloop:
     ''' removes empty sheets from the active workbook
     ''' </summary>
 
-
     Private Sub Button41_Click(sender As Object, e As RibbonControlEventArgs) Handles Button41.Click
 
         Try
@@ -1280,9 +1280,13 @@ nextloop:
             Dim i As Integer = 0
             Dim flag As String
             Dim answer As MsgBoxResult
+            Dim initialWs As String
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
+
+            '"initialWs" variable stores the name of the worksheet, where the button event was clicked
+            initialWs = excelApp.ActiveSheet.name
 
             'takes the sheet names of all worksheets of the workbook
             Dim selectedSheets As Excel.Sheets = excelApp.Sheets
@@ -1348,7 +1352,7 @@ nextloop:
                 Exit Sub
             End If
 
-            workbook.Sheets(arrSheetName(0)).activate()
+            workbook.Sheets(initialWs).activate()
 
             'assign the reponse of user from the msgbox to the "answer" variable
             answer = MsgBox(blankWsCount & " empty worksheet(s) will be deleted. Please click Yes to continue.", MsgBoxStyle.YesNo, "SOFTEKO")
@@ -1388,7 +1392,7 @@ nextloop:
 
                 Next
 
-                workbook.Sheets(arrSheetName(0)).activate()
+                workbook.Sheets(initialWs).activate()
 
                 'finally this msgBox is shown
                 MsgBox(blankWsCount & " worksheet(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
