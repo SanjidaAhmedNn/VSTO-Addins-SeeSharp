@@ -99,8 +99,8 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button19_Click(sender As Object, e As RibbonControlEventArgs) Handles Button19.Click
-        'Dim form As New Form21FillEmtyCells
-        'form.Show()
+        Dim form As New Form21FillEmtyCells
+        form.Show()
     End Sub
 
     Private Sub Button20_Click(sender As Object, e As RibbonControlEventArgs) Handles Button20.Click

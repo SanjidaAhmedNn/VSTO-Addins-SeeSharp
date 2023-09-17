@@ -26,18 +26,22 @@ Partial Class Form21FillEmtyCells
         Me.btn_OK = New System.Windows.Forms.Button()
         Me.btn_Cancel = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Backup_sheet = New System.Windows.Forms.CheckBox()
+        Me.CB_Backup_Sheet = New System.Windows.Forms.CheckBox()
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
-        Me.Textbox1 = New System.Windows.Forms.TextBox()
+        Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Selection = New System.Windows.Forms.PictureBox()
-        Me.Checkbox_Keepformatting = New System.Windows.Forms.CheckBox()
+        Me.CB_Keepformatting = New System.Windows.Forms.CheckBox()
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.L_Fill_Options = New System.Windows.Forms.Label()
         Me.ComboBox_Options = New System.Windows.Forms.ComboBox()
         Me.L_Fill_Value = New System.Windows.Forms.Label()
+        Me.TextBox_Value = New System.Windows.Forms.TextBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.RB_Certain_value = New System.Windows.Forms.RadioButton()
         Me.RB_Values_fromselected_range = New System.Windows.Forms.RadioButton()
         Me.RB_Linear_values = New System.Windows.Forms.RadioButton()
@@ -45,20 +49,16 @@ Partial Class Form21FillEmtyCells
         Me.CP_Output_Range = New VSTO_Addins.CustomPanel()
         Me.GB_Input_Range = New VSTO_Addins.CustomGroupBox()
         Me.CP_Input_Range = New VSTO_Addins.CustomPanel()
-        Me.TextBox_Value = New System.Windows.Forms.TextBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox3.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GB_Expected_Output.SuspendLayout()
         Me.GB_Input_Range.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btn_OK
@@ -104,16 +104,16 @@ Partial Class Form21FillEmtyCells
         Me.ComboBox1.TabIndex = 165
         Me.ComboBox1.Text = "SOFTEKO"
         '
-        'Backup_sheet
+        'CB_Backup_Sheet
         '
-        Me.Backup_sheet.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Backup_sheet.Location = New System.Drawing.Point(15, 312)
-        Me.Backup_sheet.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Backup_sheet.Name = "Backup_sheet"
-        Me.Backup_sheet.Size = New System.Drawing.Size(258, 29)
-        Me.Backup_sheet.TabIndex = 164
-        Me.Backup_sheet.Text = "Create a copy of the original worksheet"
-        Me.Backup_sheet.UseVisualStyleBackColor = True
+        Me.CB_Backup_Sheet.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_Backup_Sheet.Location = New System.Drawing.Point(15, 312)
+        Me.CB_Backup_Sheet.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.CB_Backup_Sheet.Name = "CB_Backup_Sheet"
+        Me.CB_Backup_Sheet.Size = New System.Drawing.Size(258, 29)
+        Me.CB_Backup_Sheet.TabIndex = 164
+        Me.CB_Backup_Sheet.Text = "Create a copy of the original worksheet"
+        Me.CB_Backup_Sheet.UseVisualStyleBackColor = True
         '
         'AutoSelection
         '
@@ -127,17 +127,17 @@ Partial Class Form21FillEmtyCells
         Me.AutoSelection.TabIndex = 163
         Me.AutoSelection.TabStop = False
         '
-        'Textbox1
+        'txtSourceRange
         '
-        Me.Textbox1.BackColor = System.Drawing.Color.White
-        Me.Textbox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Textbox1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Textbox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.Textbox1.Location = New System.Drawing.Point(15, 42)
-        Me.Textbox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Textbox1.Name = "Textbox1"
-        Me.Textbox1.Size = New System.Drawing.Size(248, 25)
-        Me.Textbox1.TabIndex = 162
+        Me.txtSourceRange.BackColor = System.Drawing.Color.White
+        Me.txtSourceRange.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSourceRange.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSourceRange.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.txtSourceRange.Location = New System.Drawing.Point(15, 42)
+        Me.txtSourceRange.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.txtSourceRange.Name = "txtSourceRange"
+        Me.txtSourceRange.Size = New System.Drawing.Size(248, 25)
+        Me.txtSourceRange.TabIndex = 162
         '
         'Label1
         '
@@ -163,16 +163,16 @@ Partial Class Form21FillEmtyCells
         Me.Selection.TabIndex = 168
         Me.Selection.TabStop = False
         '
-        'Checkbox_Keepformatting
+        'CB_Keepformatting
         '
-        Me.Checkbox_Keepformatting.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Checkbox_Keepformatting.Location = New System.Drawing.Point(15, 193)
-        Me.Checkbox_Keepformatting.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Checkbox_Keepformatting.Name = "Checkbox_Keepformatting"
-        Me.Checkbox_Keepformatting.Size = New System.Drawing.Size(136, 29)
-        Me.Checkbox_Keepformatting.TabIndex = 165
-        Me.Checkbox_Keepformatting.Text = "Keep formatting"
-        Me.Checkbox_Keepformatting.UseVisualStyleBackColor = True
+        Me.CB_Keepformatting.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_Keepformatting.Location = New System.Drawing.Point(15, 193)
+        Me.CB_Keepformatting.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.CB_Keepformatting.Name = "CB_Keepformatting"
+        Me.CB_Keepformatting.Size = New System.Drawing.Size(136, 29)
+        Me.CB_Keepformatting.TabIndex = 165
+        Me.CB_Keepformatting.Text = "Keep formatting"
+        Me.CB_Keepformatting.UseVisualStyleBackColor = True
         '
         'PictureBox7
         '
@@ -217,6 +217,14 @@ Partial Class Form21FillEmtyCells
         Me.L_Fill_Value.TabIndex = 176
         Me.L_Fill_Value.Text = "Fill Value"
         '
+        'TextBox_Value
+        '
+        Me.TextBox_Value.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox_Value.Location = New System.Drawing.Point(101, 273)
+        Me.TextBox_Value.Name = "TextBox_Value"
+        Me.TextBox_Value.Size = New System.Drawing.Size(163, 25)
+        Me.TextBox_Value.TabIndex = 178
+        '
         'CustomGroupBox3
         '
         Me.CustomGroupBox3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
@@ -248,6 +256,39 @@ Partial Class Form21FillEmtyCells
         Me.CustomGroupBox6.Size = New System.Drawing.Size(248, 82)
         Me.CustomGroupBox6.TabIndex = 0
         Me.CustomGroupBox6.TabStop = False
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
+        Me.PictureBox3.Location = New System.Drawing.Point(220, 56)
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox3.TabIndex = 232
+        Me.PictureBox3.TabStop = False
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(220, 32)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 231
+        Me.PictureBox1.TabStop = False
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(220, 9)
+        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 230
+        Me.PictureBox2.TabStop = False
         '
         'RB_Certain_value
         '
@@ -332,47 +373,6 @@ Partial Class Form21FillEmtyCells
         Me.CP_Input_Range.Size = New System.Drawing.Size(245, 110)
         Me.CP_Input_Range.TabIndex = 0
         '
-        'TextBox_Value
-        '
-        Me.TextBox_Value.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox_Value.Location = New System.Drawing.Point(101, 273)
-        Me.TextBox_Value.Name = "TextBox_Value"
-        Me.TextBox_Value.Size = New System.Drawing.Size(163, 25)
-        Me.TextBox_Value.TabIndex = 178
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(220, 9)
-        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 230
-        Me.PictureBox2.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(220, 32)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 231
-        Me.PictureBox1.TabStop = False
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(220, 56)
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 232
-        Me.PictureBox3.TabStop = False
-        '
         'Form21FillEmtyCells
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -383,18 +383,18 @@ Partial Class Form21FillEmtyCells
         Me.Controls.Add(Me.ComboBox_Options)
         Me.Controls.Add(Me.L_Fill_Options)
         Me.Controls.Add(Me.PictureBox7)
-        Me.Controls.Add(Me.Checkbox_Keepformatting)
+        Me.Controls.Add(Me.CB_Keepformatting)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.GB_Expected_Output)
         Me.Controls.Add(Me.GB_Input_Range)
         Me.Controls.Add(Me.btn_OK)
         Me.Controls.Add(Me.btn_Cancel)
         Me.Controls.Add(Me.ComboBox1)
-        Me.Controls.Add(Me.Backup_sheet)
+        Me.Controls.Add(Me.CB_Backup_Sheet)
         Me.Controls.Add(Me.AutoSelection)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Selection)
-        Me.Controls.Add(Me.Textbox1)
+        Me.Controls.Add(Me.txtSourceRange)
         Me.Name = "Form21FillEmtyCells"
         Me.Text = "Fill Emty Cells"
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -403,11 +403,11 @@ Partial Class Form21FillEmtyCells
         Me.CustomGroupBox3.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
         Me.CustomGroupBox6.PerformLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GB_Expected_Output.ResumeLayout(False)
         Me.GB_Input_Range.ResumeLayout(False)
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -424,12 +424,12 @@ Partial Class Form21FillEmtyCells
     Friend WithEvents btn_OK As Windows.Forms.Button
     Friend WithEvents btn_Cancel As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
-    Friend WithEvents Backup_sheet As Windows.Forms.CheckBox
+    Friend WithEvents CB_Backup_Sheet As Windows.Forms.CheckBox
     Friend WithEvents AutoSelection As Windows.Forms.PictureBox
-    Friend WithEvents Textbox1 As Windows.Forms.TextBox
+    Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents Selection As Windows.Forms.PictureBox
-    Friend WithEvents Checkbox_Keepformatting As Windows.Forms.CheckBox
+    Friend WithEvents CB_Keepformatting As Windows.Forms.CheckBox
     Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
     Friend WithEvents L_Fill_Options As Windows.Forms.Label
     Friend WithEvents ComboBox_Options As Windows.Forms.ComboBox

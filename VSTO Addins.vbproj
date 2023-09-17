@@ -253,7 +253,9 @@
     <Compile Include="Form21FillEmtyCells.designer.vb">
       <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form21FillEmtyCells.vb" />
+    <Compile Include="Form21FillEmtyCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
