@@ -27,7 +27,6 @@ Partial Class Form21FillEmtyCells
         Me.btn_Cancel = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.CB_Backup_Sheet = New System.Windows.Forms.CheckBox()
-        Me.AutoSelection = New System.Windows.Forms.PictureBox()
         Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Selection = New System.Windows.Forms.PictureBox()
@@ -36,7 +35,7 @@ Partial Class Form21FillEmtyCells
         Me.L_Fill_Options = New System.Windows.Forms.Label()
         Me.ComboBox_Options = New System.Windows.Forms.ComboBox()
         Me.L_Fill_Value = New System.Windows.Forms.Label()
-        Me.TextBox_Value = New System.Windows.Forms.TextBox()
+        Me.txtFillValue = New System.Windows.Forms.TextBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
@@ -49,7 +48,6 @@ Partial Class Form21FillEmtyCells
         Me.CP_Output_Range = New VSTO_Addins.CustomPanel()
         Me.GB_Input_Range = New VSTO_Addins.CustomGroupBox()
         Me.CP_Input_Range = New VSTO_Addins.CustomPanel()
-        CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox3.SuspendLayout()
@@ -114,18 +112,6 @@ Partial Class Form21FillEmtyCells
         Me.CB_Backup_Sheet.TabIndex = 164
         Me.CB_Backup_Sheet.Text = "Create a copy of the original worksheet"
         Me.CB_Backup_Sheet.UseVisualStyleBackColor = True
-        '
-        'AutoSelection
-        '
-        Me.AutoSelection.BackColor = System.Drawing.Color.White
-        Me.AutoSelection.Image = CType(resources.GetObject("AutoSelection.Image"), System.Drawing.Image)
-        Me.AutoSelection.Location = New System.Drawing.Point(214, 43)
-        Me.AutoSelection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.AutoSelection.Name = "AutoSelection"
-        Me.AutoSelection.Size = New System.Drawing.Size(24, 23)
-        Me.AutoSelection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.AutoSelection.TabIndex = 163
-        Me.AutoSelection.TabStop = False
         '
         'txtSourceRange
         '
@@ -217,13 +203,13 @@ Partial Class Form21FillEmtyCells
         Me.L_Fill_Value.TabIndex = 176
         Me.L_Fill_Value.Text = "Fill Value"
         '
-        'TextBox_Value
+        'txtFillValue
         '
-        Me.TextBox_Value.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox_Value.Location = New System.Drawing.Point(101, 273)
-        Me.TextBox_Value.Name = "TextBox_Value"
-        Me.TextBox_Value.Size = New System.Drawing.Size(163, 25)
-        Me.TextBox_Value.TabIndex = 178
+        Me.txtFillValue.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFillValue.Location = New System.Drawing.Point(101, 273)
+        Me.txtFillValue.Name = "txtFillValue"
+        Me.txtFillValue.Size = New System.Drawing.Size(163, 25)
+        Me.txtFillValue.TabIndex = 178
         '
         'CustomGroupBox3
         '
@@ -378,7 +364,7 @@ Partial Class Form21FillEmtyCells
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(560, 399)
-        Me.Controls.Add(Me.TextBox_Value)
+        Me.Controls.Add(Me.txtFillValue)
         Me.Controls.Add(Me.L_Fill_Value)
         Me.Controls.Add(Me.ComboBox_Options)
         Me.Controls.Add(Me.L_Fill_Options)
@@ -391,13 +377,11 @@ Partial Class Form21FillEmtyCells
         Me.Controls.Add(Me.btn_Cancel)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.CB_Backup_Sheet)
-        Me.Controls.Add(Me.AutoSelection)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Selection)
         Me.Controls.Add(Me.txtSourceRange)
         Me.Name = "Form21FillEmtyCells"
         Me.Text = "Fill Emty Cells"
-        CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox3.ResumeLayout(False)
@@ -425,7 +409,6 @@ Partial Class Form21FillEmtyCells
     Friend WithEvents btn_Cancel As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
     Friend WithEvents CB_Backup_Sheet As Windows.Forms.CheckBox
-    Friend WithEvents AutoSelection As Windows.Forms.PictureBox
     Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents Selection As Windows.Forms.PictureBox
@@ -434,7 +417,7 @@ Partial Class Form21FillEmtyCells
     Friend WithEvents L_Fill_Options As Windows.Forms.Label
     Friend WithEvents ComboBox_Options As Windows.Forms.ComboBox
     Friend WithEvents L_Fill_Value As Windows.Forms.Label
-    Friend WithEvents TextBox_Value As Windows.Forms.TextBox
+    Friend WithEvents txtFillValue As Windows.Forms.TextBox
     Friend WithEvents PictureBox3 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox

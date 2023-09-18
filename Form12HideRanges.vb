@@ -144,75 +144,117 @@ Public Class Form12HideRanges
 
         Try
 
+            'excelApp = Globals.ThisAddIn.Application
+            'workbook = excelApp.ActiveWorkbook
+            'worksheet = workbook.ActiveSheet
+            'selectedRange = excelApp.Selection
+            'selectedRange = selectedRange.Cells(1, 1)
+            'selectedRange.Select()
+
+            'Dim topLeft, bottomRight As String
+
+
+
+            'If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            '    topLeft = selectedRange.Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+
+            '    topLeft = selectedRange.Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            '    bottomRight = selectedRange.End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            '    selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
+
+            '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
+            '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
+
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+
+            'Else
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+            'End If
+
+            'selectedRange.Select()
+
+
+
+
+            '    Try
+
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             selectedRange = excelApp.Selection
-            selectedRange = selectedRange.Cells(1, 1)
-            selectedRange.Select()
 
-            Dim topLeft, bottomRight As String
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
 
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
 
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
 
-            If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-                topLeft = selectedRange.Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
 
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
 
-                topLeft = selectedRange.Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
 
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-                bottomRight = selectedRange.End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            'Select the determined range
+            worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn)).Select()
 
-                selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+            '    Catch ex As Exception
 
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
-
-                topLeft = selectedRange.End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
-                topLeft = selectedRange.End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
-
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-
-            Else
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-            End If
-
-            selectedRange.Select()
-
-
+            '    End Try
 
 
 
