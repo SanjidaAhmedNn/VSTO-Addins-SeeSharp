@@ -18,6 +18,11 @@ Public Class Form14SpecifyScrollArea
     Dim selectedRange As Excel.Range
     Dim textChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Btn_OK.PerformClick()
+        End If
+    End Sub
 
     Private Sub Form14SpecifyScrollArea_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -28,6 +33,7 @@ Public Class Form14SpecifyScrollArea
         Dim selectedRng As Excel.Range = excelApp.Selection
         txtSourceRange.Text = selectedRng.Address
 
+        Me.KeyPreview = True
 
 
     End Sub
@@ -313,12 +319,12 @@ break:
             worksheet.Columns.Hidden = True
 
 
-            For i As Integer = 1 To scrollArea.Rows.Count
-                scrollArea.Rows(i).EntireRow.Hidden = False
+            For i As Integer = minRow To maxRow
+                worksheet.Rows(i).EntireRow.Hidden = False
             Next
 
-            For i As Integer = 1 To scrollArea.Columns.Count
-                scrollArea.Columns(i).EntireColumn.Hidden = False
+            For i As Integer = minCol To maxCol
+                worksheet.Columns(i).EntireColumn.Hidden = False
             Next
 
             scrollArea.Select()

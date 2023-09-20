@@ -18,6 +18,12 @@ Public Class Form13HideAllExceptSelectedRange
     Dim selectedRange As Excel.Range
     Dim textChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btnOK.PerformClick()
+        End If
+    End Sub
+
     Private Sub Form13HideAllExceptSelectedRange_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         excelApp = Globals.ThisAddIn.Application
@@ -27,7 +33,7 @@ Public Class Form13HideAllExceptSelectedRange
         Dim selectedRng As Excel.Range = excelApp.Selection
         txtSourceRange.Text = selectedRng.Address
 
-
+        Me.KeyPreview = True
 
 
 
@@ -277,80 +283,6 @@ break:
 
 
             worksheet.Range(arrRng(0)).Cells(1, 1).select()
-
-
-
-            'Dim visRows, followingRows As Integer
-            'Dim visColumns, followingColumns As Integer
-
-
-            'For i = 0 To UBound(arrRng) + 1
-
-
-            '    If i > UBound(arrRng) Then
-
-            '        If worksheet.Range(worksheet.Cells(followingRows, visColumns), worksheet.Cells(1048576, visColumns).end(Excel.XlDirection.xlUp)).Rows.Count = 1 Then
-
-            '            worksheet.Range(worksheet.Cells(followingRows, visColumns), worksheet.Cells(followingRows, visColumns)).EntireRow.Hidden = False
-            '        Else
-            '            worksheet.Range(worksheet.Cells(followingRows + 1, visColumns), worksheet.Cells(followingRows, visColumns).end(Excel.XlDirection.xlDown)).EntireRow.Hidden = True
-
-            '        End If
-
-            '        Exit For
-            '    End If
-
-            '    visRows = worksheet.Range(arrRng(i)).Row
-            '    visColumns = worksheet.Range(arrRng(i)).Column
-            '    followingColumns = visColumns + worksheet.Range(arrRng(i)).Columns.Count - 1
-
-            '    If i = 0 Then
-            '        worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
-            '        worksheet.Range(worksheet.Cells(1, 1), worksheet.Cells(1, visColumns - 1)).EntireColumn.Hidden = True
-
-            '        If worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, 16384).End(XlDirection.xlToLeft)).Columns.Count = 1 Then
-
-            '            worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, followingColumns)).EntireColumn.Hidden = False
-            '        Else
-            '            worksheet.Range(worksheet.Cells(visRows, followingColumns + 1), worksheet.Cells(visRows, followingColumns).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
-
-            '        End If
-
-            '    Else
-            '        worksheet.Range(worksheet.Cells(followingRows + 1, 1), worksheet.Cells(visRows - 1, 1)).EntireRow.Hidden = True
-            '        worksheet.Range(worksheet.Cells(visRows, 1), worksheet.Cells(visRows, visColumns - 1)).EntireColumn.Hidden = True
-
-            '        If worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, 16384).End(XlDirection.xlToLeft)).Columns.Count = 1 Then
-
-            '            worksheet.Range(worksheet.Cells(visRows, followingColumns), worksheet.Cells(visRows, followingColumns)).EntireColumn.Hidden = False
-            '        Else
-            '            worksheet.Range(worksheet.Cells(visRows, followingColumns + 1), worksheet.Cells(visRows, followingColumns).End(XlDirection.xlToRight)).EntireColumn.Hidden = True
-
-            '        End If
-
-
-            '    End If
-
-            '    followingRows = visRows + worksheet.Range(arrRng(i)).Rows.Count - 1
-
-
-
-            'Next
-
-
-            'If checkBoxCopyWorksheet.Checked = True Then
-
-            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-            '    outWorksheet.Range("A1").Select()
-            '    worksheet.Cells.EntireColumn.Hidden = False
-            '    worksheet.Cells.EntireRow.Hidden = False
-            '    worksheet = workbook.Sheets(WsName)
-            '    worksheet.Activate()
-
-            'End If
-
-
 
 
             Me.Dispose()

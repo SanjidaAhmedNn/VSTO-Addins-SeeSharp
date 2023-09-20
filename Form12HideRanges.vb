@@ -18,6 +18,11 @@ Public Class Form12HideRanges
     Dim selectedRange As Excel.Range
     Dim textChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btn_OK.PerformClick()
+        End If
+    End Sub
 
     Private Sub Form12HideRanges_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -31,6 +36,7 @@ Public Class Form12HideRanges
         RB_Single_Range.Checked = True
         RB_Row.Checked = True
 
+        Me.KeyPreview = True
     End Sub
     Private Sub txtSourceRange_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange.TextChanged
 
@@ -411,19 +417,6 @@ break3:
             End If
 
 
-            'If CheckBox1.Checked = True Then
-
-            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-            '    outWorksheet.Range("A1").Select()
-            '    worksheet.Cells.EntireColumn.Hidden = False
-            '    worksheet.Cells.EntireRow.Hidden = False
-
-            '    worksheet = workbook.Sheets(inputWsName)
-            '    worksheet.Activate()
-
-            'End If
-
 
         Catch ex As Exception
 
@@ -505,18 +498,6 @@ break3:
             End If
 
 
-            'If CheckBox1.Checked = True Then
-
-            '    workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
-            '    outWorksheet = workbook.Sheets(workbook.Sheets.Count)
-            '    outWorksheet.Range("A1").Select()
-            '    worksheet.Cells.EntireColumn.Hidden = False
-            '    worksheet.Cells.EntireRow.Hidden = False
-
-            '    worksheet = workbook.Sheets(inputWsName)
-            '    worksheet.Activate()
-
-            'End If
 
 
 

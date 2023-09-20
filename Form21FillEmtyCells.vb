@@ -21,6 +21,11 @@ Public Class Form21FillEmtyCells
     Dim selectedRange As Excel.Range
     Dim textChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btn_OK.PerformClick()
+        End If
+    End Sub
 
     Private Sub RB_Linear_values_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Linear_values.CheckedChanged
         If RB_Linear_values.Checked = True Then
@@ -32,7 +37,7 @@ Public Class Form21FillEmtyCells
             L_Fill_Value.Enabled = False
             ComboBox_Options.Enabled = True
             L_Fill_Options.Enabled = True
-
+            CB_Keepformatting.Enabled = True
         End If
 
     End Sub
@@ -49,7 +54,7 @@ Public Class Form21FillEmtyCells
             L_Fill_Value.Enabled = False
             ComboBox_Options.Enabled = True
             L_Fill_Options.Enabled = True
-
+            CB_Keepformatting.Enabled = True
         End If
     End Sub
 
@@ -61,6 +66,7 @@ Public Class Form21FillEmtyCells
             L_Fill_Value.Enabled = True
             ComboBox_Options.Enabled = False
             L_Fill_Options.Enabled = False
+            CB_Keepformatting.Enabled = False
         End If
     End Sub
 
@@ -76,6 +82,7 @@ Public Class Form21FillEmtyCells
             Dim selectedRng As Excel.Range = excelApp.Selection
             txtSourceRange.Text = selectedRng.Address
 
+            Me.KeyPreview = True
 
         Catch ex As Exception
 
@@ -233,6 +240,7 @@ Public Class Form21FillEmtyCells
                 Exit Sub
             End If
 
+
             'stores the text value of the textbox in "temp" variable to use it later
             'store the active worksheet into "worksheet1" variable
             Dim temp As String
@@ -256,39 +264,48 @@ Public Class Form21FillEmtyCells
 
                 If ComboBox_Options.SelectedIndex = 0 Then
 
-                    'loops through the cells of the selected range column by column
-                    For j = 1 To selectedRange.Columns.Count
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
-                        'checks if the first cell of the column is blank or not
-                        'if so then value of fillValue var will be blank
-                        'if not, fillValue will be the value of the first cell
-                        If selectedRange.Cells(1, j).value Is Nothing Then
-                            fillValue = ""
-                        Else
-                            fillValue = selectedRange.Cells(1, j).value
-                        End If
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
+                        selectedRange = worksheet.Range(arrRng(p))
 
+                        'loops through the cells of the selected range column by column
+                        For j = 1 To selectedRange.Columns.Count
 
-                        For i = 1 To selectedRange.Rows.Count
-
-                            'checks if the current cell is blank or not. this condition only passes from 2nd row (i=2)
-                            'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the following cells if they are blank
-                            If selectedRange.Cells(i, j).value Is Nothing And i > 1 Then
-
-                                'checks if the CB_Keepformatting is checked
-                                'if so then, copy the cell of the previous row and same column (i-1,j) and paste it in current cell. This will copy both the value and format
-                                'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
-                                If CB_Keepformatting.Checked = True Then
-                                    selectedRange.Cells(i - 1, j).copy(selectedRange.Cells(i, j))
-                                Else
-                                    selectedRange.Cells(i, j).value = fillValue
-                                End If
-
+                            'checks if the first cell of the column is blank or not
+                            'if so then value of fillValue var will be blank
+                            'if not, fillValue will be the value of the first cell
+                            If selectedRange.Cells(1, j).value Is Nothing Then
+                                fillValue = ""
                             Else
-                                fillValue = selectedRange.Cells(i, j).value
+                                fillValue = selectedRange.Cells(1, j).value
                             End If
 
+
+                            For i = 1 To selectedRange.Rows.Count
+
+                                'checks if the current cell is blank or not. this condition only passes from 2nd row (i=2)
+                                'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the following cells if they are blank
+                                If selectedRange.Cells(i, j).value Is Nothing And i > 1 Then
+
+                                    'checks if the CB_Keepformatting is checked
+                                    'if so then, copy the cell of the previous row and same column (i-1,j) and paste it in current cell. This will copy both the value and format
+                                    'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
+                                    If CB_Keepformatting.Checked = True Then
+                                        selectedRange.Cells(i - 1, j).copy(selectedRange.Cells(i, j))
+                                    Else
+                                        selectedRange.Cells(i, j).value = fillValue
+                                    End If
+
+                                Else
+                                    fillValue = selectedRange.Cells(i, j).value
+                                End If
+
+                            Next
                         Next
+
                     Next
 
 
@@ -296,78 +313,98 @@ Public Class Form21FillEmtyCells
                     'RB_Values_fromselected_range with Upwards fill option 
                 ElseIf ComboBox_Options.SelectedIndex = 1 Then
 
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
                     Dim rowCount As Integer = selectedRange.Rows.Count
 
-                    'loops through the cells of the selected range column by column
-                    For j = 1 To selectedRange.Columns.Count
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
 
-                        'checks if the last cell of the column is blank or not
-                        'if so then value of fillValue var will be blank
-                        'if not, fillValue will be the value of the last cell
-                        If selectedRange.Cells(rowCount, j).value Is Nothing Then
-                            fillValue = ""
-                        Else
-                            fillValue = selectedRange.Cells(rowCount, j).value
-                        End If
+                        selectedRange = worksheet.Range(arrRng(p))
+
+                        'loops through the cells of the selected range column by column
+                        For j = 1 To selectedRange.Columns.Count
 
 
-                        For i = rowCount To 1 Step -1
+                            'checks if the last cell of the column is blank or not
+                            'if so then value of fillValue var will be blank
+                            'if not, fillValue will be the value of the last cell
 
-                            'checks if the current cell is blank or not. this condition only passes from 2nd from last row (i < rowCount)
-                            'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
-                            If selectedRange.Cells(i, j).value Is Nothing And i < rowCount Then
-
-                                'checks if the CB_Keepformatting is checked
-                                'if so then, copy the cell of the next row and same column (i+1,j) and paste it in current cell. This will copy both the value and format
-                                'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
-                                If CB_Keepformatting.Checked = True Then
-                                    selectedRange.Cells(i + 1, j).copy(selectedRange.Cells(i, j))
-                                Else
-                                    selectedRange.Cells(i, j).value = fillValue
-                                End If
-
+                            If selectedRange.Cells(rowCount, j).value Is Nothing Then
+                                fillValue = ""
                             Else
-                                fillValue = selectedRange.Cells(i, j).value
+                                fillValue = selectedRange.Cells(rowCount, j).value
                             End If
 
+
+                            For i = rowCount To 1 Step -1
+
+                                'checks if the current cell is blank or not. this condition only passes from 2nd from last row (i < rowCount)
+                                'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
+                                If selectedRange.Cells(i, j).value Is Nothing And i < rowCount Then
+
+                                    'checks if the CB_Keepformatting is checked
+                                    'if so then, copy the cell of the next row and same column (i+1,j) and paste it in current cell. This will copy both the value and format
+                                    'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
+                                    If CB_Keepformatting.Checked = True Then
+                                        selectedRange.Cells(i + 1, j).copy(selectedRange.Cells(i, j))
+                                    Else
+                                        selectedRange.Cells(i, j).value = fillValue
+                                    End If
+
+                                Else
+                                    fillValue = selectedRange.Cells(i, j).value
+                                End If
+
+                            Next
                         Next
+
                     Next
 
 
                     'RB_Values_fromselected_range with Towards Right fill option 
                 ElseIf ComboBox_Options.SelectedIndex = 2 Then
-                    'loops through the cells of the selected range row by row
-                    For i = 1 To selectedRange.Rows.Count
 
-                        'checks if the first cell of the row is blank or not
-                        'if so then value of fillValue var will be blank
-                        'if not, fillValue will be the value of the first cell
-                        If selectedRange.Cells(i, 1).value Is Nothing Then
-                            fillValue = ""
-                        Else
-                            fillValue = selectedRange.Cells(i, 1).value
-                        End If
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
+                        selectedRange = worksheet.Range(arrRng(p))
 
-                        For j = 1 To selectedRange.Columns.Count
+                        'loops through the cells of the selected range row by row
+                        For i = 1 To selectedRange.Rows.Count
 
-                            'checks if the current cell is blank or not. this condition only passes from 2nd column(j > 1)
-                            'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
-                            If selectedRange.Cells(i, j).value Is Nothing And j > 1 Then
-
-                                'checks if the CB_Keepformatting is checked
-                                'if so then, copy the cell of the previous column and same row(i,j-1) and paste it in current cell. This will copy both the value and format
-                                'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
-                                If CB_Keepformatting.Checked = True Then
-                                    selectedRange.Cells(i, j - 1).copy(selectedRange.Cells(i, j))
-                                Else
-                                    selectedRange.Cells(i, j).value = fillValue
-                                End If
-
+                            'checks if the first cell of the row is blank or not
+                            'if so then value of fillValue var will be blank
+                            'if not, fillValue will be the value of the first cell
+                            If selectedRange.Cells(i, 1).value Is Nothing Then
+                                fillValue = ""
                             Else
-                                fillValue = selectedRange.Cells(i, j).value
+                                fillValue = selectedRange.Cells(i, 1).value
                             End If
 
+
+                            For j = 1 To selectedRange.Columns.Count
+
+                                'checks if the current cell is blank or not. this condition only passes from 2nd column(j > 1)
+                                'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
+                                If selectedRange.Cells(i, j).value Is Nothing And j > 1 Then
+
+                                    'checks if the CB_Keepformatting is checked
+                                    'if so then, copy the cell of the previous column and same row(i,j-1) and paste it in current cell. This will copy both the value and format
+                                    'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
+                                    If CB_Keepformatting.Checked = True Then
+                                        selectedRange.Cells(i, j - 1).copy(selectedRange.Cells(i, j))
+                                    Else
+                                        selectedRange.Cells(i, j).value = fillValue
+                                    End If
+
+                                Else
+                                    fillValue = selectedRange.Cells(i, j).value
+                                End If
+
+                            Next
                         Next
                     Next
 
@@ -376,53 +413,192 @@ Public Class Form21FillEmtyCells
                     'RB_Values_fromselected_range with Towards Left fill option 
                 ElseIf ComboBox_Options.SelectedIndex = 3 Then
 
+
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
                     Dim colCount As Integer = selectedRange.Columns.Count
 
-                    'loops through the cells of the selected range row by row
-                    For i = 1 To selectedRange.Rows.Count
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
 
-                        'checks if the last cell of the row is blank or not
-                        'if so then value of fillValue var will be blank
-                        'if not, fillValue will be the value of the last cell
-                        If selectedRange.Cells(i, colCount).value Is Nothing Then
-                            fillValue = ""
-                        Else
-                            fillValue = selectedRange.Cells(i, colCount).value
-                        End If
+                        selectedRange = worksheet.Range(arrRng(p))
 
+                        'loops through the cells of the selected range row by row
+                        For i = 1 To selectedRange.Rows.Count
 
-                        For j = colCount To 1 Step -1
-
-                            'checks if the current cell is blank or not. this condition only passes from 2nd last column(j < colCount)
-                            'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
-                            If selectedRange.Cells(i, j).value Is Nothing And j < colCount Then
-
-                                'checks if the CB_Keepformatting is checked
-                                'if so then, copy the cell of the next column and same row(i,j+1) and paste it in current cell. This will copy both the value and format
-                                'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
-                                If CB_Keepformatting.Checked = True Then
-                                    selectedRange.Cells(i, j + 1).copy(selectedRange.Cells(i, j))
-                                Else
-                                    selectedRange.Cells(i, j).value = fillValue
-                                End If
-
+                            'checks if the last cell of the row is blank or not
+                            'if so then value of fillValue var will be blank
+                            'if not, fillValue will be the value of the last cell
+                            If selectedRange.Cells(i, colCount).value Is Nothing Then
+                                fillValue = ""
                             Else
-                                fillValue = selectedRange.Cells(i, j).value
+                                fillValue = selectedRange.Cells(i, colCount).value
                             End If
 
+
+                            For j = colCount To 1 Step -1
+
+                                'checks if the current cell is blank or not. this condition only passes from 2nd last column(j < colCount)
+                                'if the current cell is not blank then, replace the value of fillValue by the cuurent cell value. Then it can be copied to the previous cells if they are blank
+                                If selectedRange.Cells(i, j).value Is Nothing And j < colCount Then
+
+                                    'checks if the CB_Keepformatting is checked
+                                    'if so then, copy the cell of the next column and same row(i,j+1) and paste it in current cell. This will copy both the value and format
+                                    'if CB_Keepformatting is not checked then, cuurent cell's value will be the value of fillValue
+                                    If CB_Keepformatting.Checked = True Then
+                                        selectedRange.Cells(i, j + 1).copy(selectedRange.Cells(i, j))
+                                    Else
+                                        selectedRange.Cells(i, j).value = fillValue
+                                    End If
+
+                                Else
+                                    fillValue = selectedRange.Cells(i, j).value
+                                End If
+
+                            Next
+                        Next
+                    Next
+
+
+                End If
+
+
+
+
+            ElseIf RB_Linear_values.Checked = True Then
+                Dim startValue, endValue, steps As Double
+                Dim startCell As Excel.Range
+
+                'RB_Linear_values selected with Top to Bottom fill option 
+                If ComboBox_Options.SelectedIndex = 0 Then
+
+
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
+                    Dim tempRng As String
+
+
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
+
+                        selectedRange = worksheet.Range(arrRng(p))
+
+                        tempRng = arrRng(p)
+                        ' loops through the each cells row by row
+                        For j = 1 To selectedRange.Columns.Count
+
+                            startValue = 0
+                            endValue = 0
+                            startCell = Nothing
+
+                            For i = 1 To selectedRange.Rows.Count
+
+                                'checks if the current cell is blank or not and makes sure that it is numeric value
+                                If selectedRange.Cells(i, j).value IsNot Nothing AndAlso IsNumeric(selectedRange.Cells(i, j).value) Then
+
+                                    'for the first non empty cell of each column the startCell will be nothing and enter the first If Else block
+                                    'for the following non empty cells of the column the next If Else block will be executed
+                                    If startCell Is Nothing Then
+                                        startCell = selectedRange.Cells(i, j)
+                                        startValue = selectedRange.Cells(i, j).value
+                                    Else
+
+                                        endValue = selectedRange.Cells(i, j).value
+                                        steps = (endValue - startValue) / (selectedRange.Cells(i, j).Row - startCell.Row)
+
+                                        'fill the empty cells in between, linearly
+                                        'copy formatting if CB_Keepformatting is checked, otherwise only value will be visible in the empty cells
+                                        If CB_Keepformatting.Checked = True Then
+                                            For k = 1 To selectedRange.Cells(i, j).Row - startCell.Row - 1
+                                                startCell.Offset(k, 0).Value = startValue + k * steps
+                                                startCell.Copy()
+                                                startCell.Offset(k, 0).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                            Next
+                                            selectedRange = worksheet.Range(tempRng)
+                                        Else
+                                            For k = 1 To selectedRange.Cells(i, j).Row - startCell.Row - 1
+                                                startCell.Offset(k, 0).Value = startValue + k * steps
+                                            Next
+                                        End If
+
+                                        'reset the value for next iteration
+                                        'this block of code converts the endValue of the current iteration to the startValue for next iteration
+                                        startCell = selectedRange.Cells(i, j)
+                                        startValue = selectedRange.Cells(i, j).value
+                                    End If
+                                End If
+
+                            Next
                         Next
                     Next
 
 
 
+                    'RB_Linear_values selected with Left to Right fill option 
+                ElseIf ComboBox_Options.SelectedIndex = 1 Then
+
+                    'takes all the ranges selected by user into an array named arrRng
+                    Dim arrRng As String() = Split(txtSourceRange.Text, ",")
+                    Dim tempRng As String
+
+                    'loops through each range selected by user, which is stored in arrRng array
+                    For p = 0 To UBound(arrRng)
+
+                        selectedRange = worksheet.Range(arrRng(p))
+
+                        tempRng = arrRng(p)
+                        ' loops through the each cells row by row
+                        For i = 1 To selectedRange.Rows.Count
+
+                            startValue = 0
+                            endValue = 0
+                            startCell = Nothing
+
+                            For j = 1 To selectedRange.Columns.Count
+
+
+                                'checks if the current cell is blank or not and makes sure that it is numeric value
+                                If selectedRange.Cells(i, j).value IsNot Nothing AndAlso IsNumeric(selectedRange.Cells(i, j).value) Then
+
+                                    'for the first non empty cell of each row the startCell will be nothing and enter the first If Else block
+                                    'for the following non empty cells of the column the next If Else block will be executed
+                                    If startCell Is Nothing Then
+                                        startCell = selectedRange.Cells(i, j)
+                                        startValue = selectedRange.Cells(i, j).value
+                                    Else
+
+                                        endValue = selectedRange.Cells(i, j).value
+                                        steps = (endValue - startValue) / (selectedRange.Cells(i, j).Column - startCell.Column)
+
+
+                                        'fill the empty cells in between, linearly
+                                        'copy formatting if CB_Keepformatting is checked, otherwise only value will be visible in the empty cells
+                                        If CB_Keepformatting.Checked = True Then
+                                            For k = 1 To selectedRange.Cells(i, j).Column - startCell.Column - 1
+                                                startCell.Offset(0, k).Value = startValue + k * steps
+                                                startCell.Copy()
+                                                startCell.Offset(0, k).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                            Next
+                                            selectedRange = worksheet.Range(tempRng)
+                                        Else
+                                            For k = 1 To selectedRange.Cells(i, j).Column - startCell.Column - 1
+                                                startCell.Offset(0, k).Value = startValue + k * steps
+                                            Next
+                                        End If
+
+                                        'reset the value for next iteration
+                                        'this block of code converts the endValue of the current iteration to the startValue for next iteration
+                                        startCell = selectedRange.Cells(i, j)
+                                        startValue = selectedRange.Cells(i, j).value
+                                    End If
+                                End If
+
+                            Next
+                        Next
+                    Next
 
 
                 End If
-
-            ElseIf RB_Linear_values.Checked = True Then
-
-                'code
-
 
 
 
@@ -437,20 +613,31 @@ Public Class Form21FillEmtyCells
                     Exit Sub
                 End If
 
-                'loops through each cell of the selected range
-                For i = 1 To selectedRange.Rows.Count
-                    For j = 1 To selectedRange.Columns.Count
+                'takes all the ranges selected by user into an array named arrRng
+                Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
-                        'checks if the current cell is blank or not
-                        'if so then, its cell value will be the specified Fill Value
-                        If selectedRange.Cells(i, j).value Is Nothing Then
-                            selectedRange.Cells(i, j).value = txtFillValue.Text
-                        End If
+                'loops through each range selected by user, which is stored in arrRng array
+                For p = 0 To UBound(arrRng)
+
+                    selectedRange = worksheet.Range(arrRng(p))
+
+
+                    'loops through each cell of the selected range
+                    For i = 1 To selectedRange.Rows.Count
+                        For j = 1 To selectedRange.Columns.Count
+
+                            'checks if the current cell is blank or not
+                            'if so then, its cell value will be the specified Fill Value
+                            If selectedRange.Cells(i, j).value Is Nothing Then
+                                selectedRange.Cells(i, j).value = txtFillValue.Text
+                            End If
+                        Next
                     Next
                 Next
 
 
             End If
+
 
 
             Me.Dispose()
@@ -468,32 +655,5 @@ Public Class Form21FillEmtyCells
         Me.Dispose()
 
     End Sub
-
-    Public Sub copyCell(ByVal destRng As Range, ByVal destOff1 As Integer, ByVal destOff2 As Integer, ByVal srcRng As Range, ByVal srcOff1 As Integer, ByVal srcOff2 As Integer)
-
-        destRng.Offset(destOff1, destOff2).Font.Name = srcRng.Offset(srcOff1, srcOff2).Font.Name
-        destRng.Offset(destOff1, destOff2).Font.Size = srcRng.Offset(srcOff1, srcOff2).Font.Size
-        destRng.Offset(destOff1, destOff2).Font.Color = srcRng.Offset(srcOff1, srcOff2).Font.Color
-        destRng.Offset(destOff1, destOff2).NumberFormat = srcRng.Offset(srcOff1, srcOff2).NumberFormat
-        destRng.Offset(destOff1, destOff2).Interior.Color = srcRng.Offset(srcOff1, srcOff2).Interior.Color
-
-        'bold,italic,underline
-        destRng.Offset(destOff1, destOff2).Font.FontStyle = srcRng.Offset(srcOff1, srcOff2).Font.FontStyle
-        destRng.Offset(destOff1, destOff2).Font.Underline = srcRng.Offset(srcOff1, srcOff2).Font.Underline
-
-
-
-
-        'border
-
-        destRng.Offset(destOff1, destOff2).Borders.LineStyle = srcRng.Offset(srcOff1, srcOff2).Borders.LineStyle
-        destRng.Offset(destOff1, destOff2).Borders.Weight = srcRng.Offset(srcOff1, srcOff2).Borders.Weight
-
-
-        'value
-        'destRng.Offset(destOff1, destOff2).Value = srcRng.Offset(srcOff1, srcOff2).Value
-
-    End Sub
-
 
 End Class

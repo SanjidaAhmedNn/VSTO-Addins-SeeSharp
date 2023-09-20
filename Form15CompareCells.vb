@@ -26,6 +26,12 @@ Public Class Form15CompareCells
     Dim changeState As Boolean = False
     Dim textChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btnOK.PerformClick()
+        End If
+    End Sub
+
     Private Sub txtSourceRange1_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange1.TextChanged
 
 
@@ -157,7 +163,7 @@ Public Class Form15CompareCells
         radBtnSameValues.Checked = True
 
 
-
+        Me.KeyPreview = True
 
 
 
@@ -239,77 +245,116 @@ Public Class Form15CompareCells
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
-            workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
-            selectedRange = excelApp.Selection
-            selectedRange = selectedRange.Cells(1, 1)
-            selectedRange.Select()
+            'excelApp = Globals.ThisAddIn.Application
+            'workbook = excelApp.ActiveWorkbook
+            'worksheet = workbook.ActiveSheet
+            'selectedRange = excelApp.Selection
+            'selectedRange = selectedRange.Cells(1, 1)
+            'selectedRange.Select()
 
-            Dim topLeft, bottomRight As String
-
-
-
-            If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-                topLeft = selectedRange.Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
-
-                topLeft = selectedRange.Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
-                bottomRight = selectedRange.End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-
-                selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
-
-                topLeft = selectedRange.End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-            ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
-                topLeft = selectedRange.End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
-
-
-            ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
-
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+            'Dim topLeft, bottomRight As String
 
 
 
-            Else
-                topLeft = selectedRange.End(XlDirection.xlToLeft).Address
-                topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
-                bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
-                bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            'If selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            '    topLeft = selectedRange.Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
 
-                selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing And selectedRange.Offset(0, -1).Value = Nothing Then
+
+            '    topLeft = selectedRange.Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(-1, 0).Value = Nothing Then
+            '    bottomRight = selectedRange.End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            '    selectedRange = worksheet.Range(selectedRange, worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing And selectedRange.Offset(0, 1).Value = Nothing Then
+
+            '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing And selectedRange.Offset(1, 0).Value = Nothing Then
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+            'ElseIf selectedRange.Offset(0, -1).Value = Nothing Then
+            '    topLeft = selectedRange.End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
 
 
-            End If
+            'ElseIf selectedRange.Offset(-1, 0).Value = Nothing Then
 
-            selectedRange.Select()
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+
+            'Else
+            '    topLeft = selectedRange.End(XlDirection.xlToLeft).Address
+            '    topLeft = worksheet.Range(topLeft).End(XlDirection.xlUp).Address
+            '    bottomRight = worksheet.Range(topLeft).End(XlDirection.xlToRight).Address
+            '    bottomRight = worksheet.Range(bottomRight).End(XlDirection.xlDown).Address
+
+            '    selectedRange = worksheet.Range(worksheet.Range(topLeft), worksheet.Range(bottomRight))
+
+
+            'End If
+
+            'selectedRange.Select()
 
             'Call Display()
 
             'txtSourceRange1.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
+
+
+
+
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+            selectedRange = excelApp.Selection
+
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
+
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
+
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
+
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
+
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
+
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn)).Select()
+
             firstInputRng = selectedRange
             txtSourceRange1.Text = firstInputRng.Address
 
@@ -450,11 +495,9 @@ Public Class Form15CompareCells
 
         End If
 
-        'txtSourceRange2.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
         secondInputRng = selectedRange
         txtSourceRange2.Text = secondInputRng.Address
 
-        'Call Display()
 
     End Sub
 

@@ -363,6 +363,7 @@ Partial Class Form21FillEmtyCells
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(560, 399)
         Me.Controls.Add(Me.txtFillValue)
         Me.Controls.Add(Me.L_Fill_Value)
@@ -380,6 +381,8 @@ Partial Class Form21FillEmtyCells
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Selection)
         Me.Controls.Add(Me.txtSourceRange)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form21FillEmtyCells"
         Me.Text = "Fill Emty Cells"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()

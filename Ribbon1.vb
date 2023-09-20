@@ -221,22 +221,31 @@ Public Class Ribbon1
             'Define varibales to store row and column numbers of the selected range
             Dim rowNum, colNum As Integer
 
-            'Loop through each row of the selected range
-            ' Check if the entire row is hidden
-            ' If the row is hidden, unhide it
-            For rowNum = 1 To selectedRange.Rows.Count
-                If worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = True Then
-                    worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = False
-                End If
-            Next
+            'takes all the ranges selected by user into an array named arrRng
+            Dim arrRng As String() = Split(selectedRange.Address, ",")
 
-            ' Loop through each column in the selected range
-            ' Check if the entire column is hidden
-            ' If the column is hidden, unhide it
-            For colNum = 1 To selectedRange.Columns.Count
-                If worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = True Then
-                    worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = False
-                End If
+            'loops through each range selected by user, which is stored in arrRng array
+            For p = 0 To UBound(arrRng)
+
+                selectedRange = worksheet.Range(arrRng(p))
+
+                'Loop through each row of the selected range
+                ' Check if the entire row is hidden
+                ' If the row is hidden, unhide it
+                For rowNum = 1 To selectedRange.Rows.Count
+                    If worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = True Then
+                        worksheet.Range(selectedRange.Cells(rowNum, 1), selectedRange.Cells(rowNum, 3)).EntireRow.Hidden = False
+                    End If
+                Next
+
+                ' Loop through each column in the selected range
+                ' Check if the entire column is hidden
+                ' If the column is hidden, unhide it
+                For colNum = 1 To selectedRange.Columns.Count
+                    If worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = True Then
+                        worksheet.Range(selectedRange.Cells(1, colNum), selectedRange.Cells(3, colNum)).EntireColumn.Hidden = False
+                    End If
+                Next
             Next
 
         Catch ex As Exception
