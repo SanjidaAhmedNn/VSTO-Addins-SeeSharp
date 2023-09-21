@@ -88,8 +88,8 @@ Public Class Ribbon1
 
     Private Sub Button15_Click(sender As Object, e As RibbonControlEventArgs) Handles Button15.Click
 
-        'Dim form As New Form17DivideNames
-        'form.Show()
+        Dim form As New Form17DivideNames
+        form.Show()
 
     End Sub
 
