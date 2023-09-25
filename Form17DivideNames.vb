@@ -8,6 +8,7 @@ Imports System.ComponentModel
 Imports System.Linq.Expressions
 Imports Microsoft.VisualBasic
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
+Imports System.Text.RegularExpressions
 
 Public Class Form17DivideNames
 
@@ -19,6 +20,8 @@ Public Class Form17DivideNames
     Dim FocusedTxtBox As Integer
     Dim sourceRange, destRange As Excel.Range
     Dim selectedRange As Excel.Range
+    Dim mainArr(6) As String
+    Dim name As String
     Dim changeState As Boolean = False
     Dim textChanged As Boolean = False
 
@@ -83,7 +86,7 @@ Public Class Form17DivideNames
         textChanged = False
 
         txtSourceRange.Focus()
-
+        Call display()
 
     End Sub
 
@@ -118,6 +121,7 @@ Public Class Form17DivideNames
 
         textChanged = False
         txtDestRange.Focus()
+
 
 
     End Sub
@@ -318,138 +322,205 @@ Public Class Form17DivideNames
 
         Try
 
-            'excelApp = Globals.ThisAddIn.Application
-            'workbook = excelApp.ActiveWorkbook
-            'worksheet = workbook.ActiveSheet
-            'selectedRange = excelApp.Selection
-            'Dim arrRng As String()
-            'Dim arrName As String()
-            'Dim arrTitle() = {"Sir", "Miss", "Lady", "Lord", "Madam", "Master"}
-            'Dim arrHeader() = {"Full Name", "Title", "First Name", "Middle Name", "Last Name Prefix", "Last Name", "Abbreviations", "Name Suffix"}
 
-            'If RB_Same_As_Source_Range.Checked = True Then
+            Dim arrRng As String()
+            Dim temp As String
+            temp = txtSourceRange.Text
+            worksheet1 = sourceRange.Worksheet
 
 
+            If CB_Backup_Sheet.Checked = True Then
 
+                workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
+                outWorksheet = workbook.Sheets(workbook.Sheets.Count)
 
+                worksheet1.Activate()
+                txtSourceRange.Text = temp
 
+            End If
 
-            'ElseIf RB_Different_Range.Checked = True Then
-
-            '    If CB_Keep_Formatting.Checked = True Then
-            '        If CB_Add_Header.Checked = True Then
-            '            For i = 1 To 8
-            '                destRange.Cells(1, i).value = arrHeader(i - 1)
-            '            Next
-            '        End If
-            '    End If
-
-            '    Exit Sub
-
-
-
-            '    'arrRng = Split(txtSourceRange.Text, ",")
-
-            '    'For i = 0 To UBound(arrRng)
-
-            '    '    selectedRange = worksheet.Range(arrRng(i))
-
-            '    '    For j = 1 To selectedRange.Rows.Count
-
-            '    '        arrName = Split(selectedRange.Cells(j, 1).value, " ")
-
-            '    '        Dim dotCount As Integer
-            '    '        dotCount = 0
-            '    '        For Each c As Char In arrName(0)
-
-            '    '            If c = "." Then
-            '    '                dotCount += 1
-            '    '            End If
-
-            '    '        Next
-            '    '        If dotCount > 0 Or arrTitle.Contains(arrName(0), StringComparer.OrdinalIgnoreCase) Then
-            '    '            MsgBox("Title")
-
-
-
-
-
-
-            '    '        Else
-            '    '            MsgBox("no title")
-            '    '        End If
-
-
-            '    '        dotCount = 0
-            '    '        For Each c As Char In arrName(UBound(arrName))
-
-            '    '            If c = "." Then
-            '    '                dotCount += 1
-            '    '            End If
-
-            '    '        Next
-
-
-            '    '        If dotCount > 0 Then
-            '    '            MsgBox("suffix")
-            '    '        Else
-            '    '            MsgBox("No suffix")
-            '    '        End If
-
-
-            '    '    Next
-
-
-            '    'Next
-
-
-
-            'End If
-
-            Call nameSplitter2()
-
-
-
-            Dim headerStr As String = ""
-            For Each ctrl As Control In CustomGroupBox7.Controls
-                If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
-                    Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
-                    'Do something with chk
-                    If chk.Checked Then
-                        'For example, print the name of the checkbox that's checked
-                        'Console.WriteLine(chk.Name & " is checked")
-                        headerStr = headerStr & "," & chk.Text
-                        'MsgBox(chk.Text)
-                    End If
-                End If
-            Next
-            headerStr = "Full Name" & headerStr
-            headerStr = headerStr.Replace("Select All,", String.Empty)
-
-            Dim arrHeaderStr As String() = Split(headerStr, ",")
 
 
             If RB_Same_As_Source_Range.Checked = True Then
-                If CB_Add_Header.Checked = True Then
-                    For i = 0 To UBound(arrHeaderStr)
-                        sourceRange.Cells(1, i + 1).value = arrHeaderStr(i)
+
+                Dim outputColumn As Integer
+
+                arrRng = Split(txtSourceRange.Text, ",")
+
+                For i = 0 To UBound(arrRng)
+
+                    sourceRange = worksheet.Range(arrRng(i))
+
+                    For j = 1 To sourceRange.Rows.Count
+
+                        mainArr = {"", "", "", "", "", "", "", ""}
+                        name = sourceRange.Cells(j, 1).value
+
+                        Call nameSplitter()
+
+                        Dim headerIndex As Integer
+                        Dim headerStr As String = ""
+                        For Each ctrl As Control In CustomGroupBox7.Controls
+                            If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                                Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+                                If chk.Checked Then
+                                    headerStr = headerStr & "," & chk.Text
+                                End If
+                            End If
+                        Next
+
+                        headerStr = headerStr.Replace("Select All,", String.Empty)
+                        headerStr = Microsoft.VisualBasic.Right(headerStr, Len(headerStr) - 1)
+
+                        Dim arrHeaderStr As String() = Split(headerStr, ",")
+                        outputColumn = UBound(arrHeaderStr) + 1
+                        For k = 0 To UBound(arrHeaderStr)
+                            worksheet.Cells(100000, k + 1).value = arrHeaderStr(k)
+
+                            Select Case arrHeaderStr(k)
+                                Case = "Title"
+                                    headerIndex = 0
+                                Case = "First Name"
+                                    headerIndex = 1
+                                Case = "Middle Name"
+                                    headerIndex = 2
+                                Case = "Last Name Prefix"
+                                    headerIndex = 3
+                                Case = "Last Name"
+                                    headerIndex = 4
+                                Case = "Name Suffix"
+                                    headerIndex = 5
+                                Case = "Name Abbreviations"
+                                    headerIndex = 6
+
+                            End Select
+                            If CB_Keep_Formatting.Checked = True Then
+                                sourceRange.Cells(j, 1).copy(worksheet.Cells(100000 + j, k + 1))
+                            End If
+                            worksheet.Cells(100000 + j, k + 1).value = mainArr(headerIndex)
+                        Next
+
+
+
+
+
                     Next
 
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000, outputColumn)).Font.Bold = True
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn)).Copy(sourceRange.Cells(1, 1))
 
-                End If
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                    worksheet.Range(sourceRange.Cells(1, 1), sourceRange.Cells(sourceRange.Rows.Count + 1, outputColumn)).Select()
+
+                    Dim border As Excel.Borders = selectedRange.Borders
+                    border.LineStyle = Excel.XlLineStyle.xlContinuous
+                    border.Weight = Excel.XlBorderWeight.xlThin
+
+                    selectedRange.EntireColumn.AutoFit()
+
+                    If CB_Add_Header.Checked = False Then
+
+                        worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, outputColumn)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                        worksheet.Range(sourceRange.Cells(1, 1), sourceRange.Cells(sourceRange.Rows.Count + 1, outputColumn)).Select()
+
+                    End If
+
+                Next
+
 
 
             ElseIf RB_Different_Range.Checked = True Then
-                If CB_Add_Header.Checked = True Then
 
-                    For i = 0 To UBound(arrHeaderStr)
-                        destRange.Cells(1, i + 1).value = arrHeaderStr(i)
+
+                Dim outputColumn As Integer
+
+                arrRng = Split(txtSourceRange.Text, ",")
+
+                For i = 0 To UBound(arrRng)
+
+                    sourceRange = worksheet.Range(arrRng(i))
+
+                    For j = 1 To sourceRange.Rows.Count
+
+                        mainArr = {"", "", "", "", "", "", "", ""}
+                        name = sourceRange.Cells(j, 1).value
+
+                        Call nameSplitter()
+
+                        Dim headerIndex As Integer
+                        Dim headerStr As String = ""
+                        For Each ctrl As Control In CustomGroupBox7.Controls
+                            If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                                Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+                                If chk.Checked Then
+                                    headerStr = headerStr & "," & chk.Text
+                                End If
+                            End If
+                        Next
+
+                        headerStr = headerStr.Replace("Select All,", String.Empty)
+                        headerStr = Microsoft.VisualBasic.Right(headerStr, Len(headerStr) - 1)
+
+                        Dim arrHeaderStr As String() = Split(headerStr, ",")
+                        outputColumn = UBound(arrHeaderStr) + 1
+                        For k = 0 To UBound(arrHeaderStr)
+                            worksheet.Cells(100000, k + 1).value = arrHeaderStr(k)
+
+                            Select Case arrHeaderStr(k)
+                                Case = "Title"
+                                    headerIndex = 0
+                                Case = "First Name"
+                                    headerIndex = 1
+                                Case = "Middle Name"
+                                    headerIndex = 2
+                                Case = "Last Name Prefix"
+                                    headerIndex = 3
+                                Case = "Last Name"
+                                    headerIndex = 4
+                                Case = "Name Suffix"
+                                    headerIndex = 5
+                                Case = "Name Abbreviations"
+                                    headerIndex = 6
+
+                            End Select
+                            If CB_Keep_Formatting.Checked = True Then
+                                sourceRange.Cells(j, 1).copy(worksheet.Cells(100000 + j, k + 1))
+                            End If
+                            worksheet.Cells(100000 + j, k + 1).value = mainArr(headerIndex)
+                        Next
+
+
+
+
+
                     Next
 
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000, outputColumn)).Font.Bold = True
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn)).Copy(destRange.Cells(1, 1))
 
-                End If
+                    worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                    worksheet.Range(destRange.Cells(1, 1), destRange.Cells(sourceRange.Rows.Count + 1, outputColumn)).Select()
+
+                    Dim border As Excel.Borders = selectedRange.Borders
+                    border.LineStyle = Excel.XlLineStyle.xlContinuous
+                    border.Weight = Excel.XlBorderWeight.xlThin
+
+                    selectedRange.EntireColumn.AutoFit()
+
+                    If CB_Add_Header.Checked = False Then
+
+                        worksheet.Range(selectedRange.Cells(1, 1), selectedRange.Cells(1, outputColumn)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                        worksheet.Range(destRange.Cells(1, 1), destRange.Cells(sourceRange.Rows.Count + 1, outputColumn)).Select()
+
+                    End If
+
+                Next
+
+
+
 
             End If
+
 
 
 
@@ -457,6 +528,7 @@ Public Class Form17DivideNames
             'MsgBox(headerStr)
 
 
+            Me.Dispose()
 
 
 
@@ -471,151 +543,7 @@ Public Class Form17DivideNames
     End Sub
 
 
-    Private Sub nameSplitter()
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
-        selectedRange = excelApp.Selection
-        Dim arrRng As String()
-        Dim arrName As String()
 
-        Dim arrTitle() = {
-                                "Mr", "Mister", "Mrs", "Missus", "Miss", "Ms", "Dr", "Doctor",
-                                "Prof", "Professor", "Sir", "Lady", "Lord", "Madam",
-                                "Mdm", "Count", "Madame", "Master", "Rev", "Reverend", "Fr",
-                                "Father", "Sr", "Sister", "Pvt", "Private", "Esq", "Esquire",
-                                "Imam", "Sheikh", "Capt", "Captain", "Cpl", "Corporal",
-                                "Sgt", "Sergeant", "Gen", "General", "Lt", "Lieutenant",
-                                "Eng", "Engineer", "Hon", "Honorable", "Pres", "President",
-                                "VP", "Vice President", "Gov", "Governor", "Sen", "Senator",
-                                "Rep", "Representative", "Mx", "Herr", "Frau", "Duke",
-                                "Señor", "Señora", "Señorita", "Dott", "Dottore", "Mlle", "Mademoiselle",
-                                "Maestro", "Don", "Doña", "Smt", "Shrimati", "Shri", "Guru", "Sensei"
-                          }
-
-
-        Dim arrSuffix() = {
-                                "Jr", "Sr", "II", "III", "IV", "V",
-                                "VI", "VII", "VIII", "IX", "X", "MD",
-                                "PhD", "Esq", "DDS", "RN", "CPA",
-                                "DVM", "JD", "LLB", "LLM", "BA",
-                                "BS", "MA", "MS", "PsyD", "OD",
-                                "DO", "EdD", "DPhil", "PE", "CFA",
-                                "MBA", "MPH", "BEd", "MFA", "ThD",
-                                "DMin", "DPT", "BBA", "MDiv", "RPh",
-                                "OBE", "KBE", "DC", "NP", "PA",
-                                "CNM", "FACP", "DABR"
-                            }
-
-
-
-
-        Dim arrHeader() = {"Full Name", "Title", "First Name", "Middle Name", "Last Name Prefix", "Last Name", "Abbreviations", "Name Suffix"}
-        'Dim arrSplitName As String()
-
-
-        arrRng = Split(txtSourceRange.Text, ",")
-
-        For i = 0 To UBound(arrRng)
-
-            selectedRange = worksheet.Range(arrRng(i))
-
-            For j = 1 To selectedRange.Rows.Count
-
-                destRange.Cells(j, 1).value = selectedRange.Cells(j, 1).value
-                arrName = Split(selectedRange.Cells(j, 1).value, " ")
-
-
-
-
-
-                Dim dotCount As Integer
-
-
-                'Name Suffix
-
-
-                'count if there is any periods in the last word of the name
-                'if a period is there then it will be considered as a Name Suffix
-                dotCount = 0
-                For Each c As Char In arrName(UBound(arrName))
-
-                    If c = "." Then
-                        dotCount += 1
-                    End If
-
-                Next
-
-                'checks if there are period(s) in the last word
-                'OR the last word matches with any of the word from the arrSuffix array (case insensitively)
-                'if any one of the 2 conditon is true then, assign the last word as value in the last column of the destRange
-                'otherwise assign a blank value
-                If dotCount > 0 Or arrSuffix.Contains(arrName(UBound(arrName)), StringComparer.OrdinalIgnoreCase) Then
-                    'MsgBox("Title")
-                    'For p = 1 To sourceRange.Rows.Count
-                    'For q = 1 To 8
-                    destRange.Cells(j, 8).value = arrName(UBound(arrName))
-                    'Next
-                    'Next
-                    destRange.Cells(j, 6).value = arrName(UBound(arrName) - 1)
-
-                Else
-                    destRange.Cells(j, 8).value = ""
-                    destRange.Cells(j, 6).value = arrName(UBound(arrName))
-                End If
-
-
-
-                'Title
-
-
-                dotCount = 0
-
-                'count if there is any periods in the first word of the name
-                'if a period is there then it will be considered as a title
-                For Each c As Char In arrName(0)
-
-                    If c = "." Then
-                        dotCount += 1
-                    End If
-
-                Next
-
-                'checks if there are period(s) in the first word
-                'OR the first word matches with any of the word from the arrTitle array (case insensitively)
-                'if any one of the 2 conditon is true then, assign the first word as value in the first column of the destRange
-                'otherwise assign a blank value
-                If dotCount > 0 Or arrTitle.Contains(arrName(0), StringComparer.OrdinalIgnoreCase) Then
-                    'MsgBox("Title")
-                    'For p = 1 To sourceRange.Rows.Count
-                    'For q = 1 To 8
-                    destRange.Cells(j, 2).value = arrName(0)
-                    'Next
-                    'Next
-                    destRange.Cells(j, 3).value = arrName(1)
-                    destRange.Cells(j, 4).value = arrName(2)
-                    destRange.Cells(j, 5).value = arrName(3) & " " & arrName(4)
-                    destRange.Cells(j, 7).value = Microsoft.VisualBasic.Left(destRange.Cells(j, 3).value, 1) & "." & Microsoft.VisualBasic.Left(destRange.Cells(j, 4).value, 1) & ". " & destRange.Cells(j, 5).value & " " & destRange.Cells(j, 6).value
-
-
-                Else
-                    destRange.Cells(j, 2).value = ""
-                    destRange.Cells(j, 3).value = arrName(0)
-                    destRange.Cells(j, 4).value = arrName(1)
-                    destRange.Cells(j, 5).value = arrName(2) & " " & arrName(3)
-                    destRange.Cells(j, 7).value = Microsoft.VisualBasic.Left(destRange.Cells(j, 3).value, 1) & "." & Microsoft.VisualBasic.Left(destRange.Cells(j, 4).value, 1) & ". " & destRange.Cells(j, 5).value & " " & destRange.Cells(j, 6).value
-                End If
-
-
-
-
-            Next
-
-
-        Next
-
-
-    End Sub
 
     Function checkTitle(ByVal inputStr As String) As Boolean
 
@@ -706,16 +634,16 @@ Public Class Form17DivideNames
 
 
 
-    Sub nameSplitter2()
+    Sub nameSplitter()
 
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         selectedRange = excelApp.Selection
-        Dim arrRng As String()
+        'Dim arrRng As String()
         Dim arrName As String()
 
-        Dim mainArr(7) As String
+        'Dim mainArr(7) As String
 
 
         Dim arrTitle() = {
@@ -747,455 +675,658 @@ Public Class Form17DivideNames
                             }
 
 
-        Dim arrHeader() = {"Full Name", "Title", "First Name", "Middle Name", "Last Name Prefix", "Last Name", "Abbreviations", "Name Suffix"}
+        'Dim arrHeader() = {"Full Name", "Title", "First Name", "Middle Name", "Last Name Prefix", "Last Name", "Abbreviations", "Name Suffix"}
         'Dim arrSplitName As String()
 
 
-        arrRng = Split(txtSourceRange.Text, ",")
+        'arrRng = Split(txtSourceRange.Text, ",")
 
-        For i = 0 To UBound(arrRng)
+        'For i = 0 To UBound(arrRng)
 
-            selectedRange = worksheet.Range(arrRng(i))
+        '    selectedRange = worksheet.Range(arrRng(i))
 
-            For j = 1 To selectedRange.Rows.Count
+        'For j = 1 To selectedRange.Rows.Count
 
-                mainArr = {"", "", "", "", "", "", "", ""}
-                mainArr(0) = selectedRange.Cells(j, 1).value
+        'mainArr = {"", "", "", "", "", "", "", ""}
+        '    mainArr(0) = selectedRange.Cells(j, 1).value
 
-                arrName = Split(selectedRange.Cells(j, 1).value, " ")
+        'arrName = Split(selectedRange.Cells(j, 1).value, " ")
+        arrName = Split(name, " ")
 
 
 
-                If UBound(arrName) = 0 Then
+        If UBound(arrName) = 0 Then
 
-                    If checkTitle(arrName(0)) = True Then
-                        mainArr(1) = arrName(0)
+            If checkTitle(arrName(0)) = True Then
+                mainArr(0) = arrName(0)
 
-                    ElseIf checkSuffix(arrName(0)) = True Then
-                        mainArr(7) = arrName(0)
+            ElseIf checkSuffix(arrName(0)) = True Then
+                mainArr(5) = arrName(0)
 
-                    Else
-                        mainArr(2) = arrName(0)
+            Else
+                mainArr(1) = arrName(0)
 
-                    End If
+            End If
 
 
-                ElseIf UBound(arrName) = 1 Then
 
-                    If checkTitle(arrName(0)) = True And checkSuffix(arrName(1)) = True Then
-                        'Dr. PhD
+        ElseIf UBound(arrName) = 1 Then
 
-                        'add title to 2nd place in Mainarray
-                        mainArr(1) = arrName(0)
+            If checkTitle(arrName(0)) = True And checkSuffix(arrName(1)) = True Then
+                'Dr. PhD
 
-                        'add suffix to last place in main array
-                        mainArr(7) = arrName(1)
+                'add title to 1st place in Mainarray
+                mainArr(0) = arrName(0)
 
-                    ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(1)) = False Then
-                        'Dr. John
+                'add suffix to 6th  place in main array
+                mainArr(5) = arrName(1)
 
-                        'add title in the 2nd place
-                        mainArr(1) = arrName(0)
+            ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(1)) = False Then
+                'Dr. John
 
-                        'add first name to the 3rd place 
-                        mainArr(2) = arrName(1)
+                'add title in the 1st place
+                mainArr(0) = arrName(0)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(1)) = True Then
-                        'John PhD
+                'add first name to the 2nd place 
+                mainArr(1) = arrName(1)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(1)) = True Then
+                'John PhD
 
-                        'add suffix to the last place
-                        mainArr(7) = arrName(1)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(1)) = False Then
-                        'John Smith
+                'add suffix to the 6th place
+                mainArr(6) = arrName(1)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(1)) = False Then
+                'John Smith
 
-                        'add last name in the 6th place
-                        mainArr(5) = arrName(1)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                    End If
+                'add last name in the 5th place
+                mainArr(4) = arrName(1)
 
-                ElseIf UBound(arrName) = 2 Then
+            End If
 
-                    If checkTitle(arrName(0)) = True And checkSuffix(arrName(2)) = True Then
-                        'Dr. John PhD
 
-                        'add title to 2nd place in Mainarray
-                        mainArr(1) = arrName(0)
+        ElseIf UBound(arrName) = 2 Then
 
-                        'add first name to the 3rd plcae in the main array
-                        mainArr(2) = arrName(1)
+            If checkTitle(arrName(0)) = True And checkSuffix(arrName(2)) = True Then
+                'Dr. John PhD
 
-                        'add suffix to last place in main array
-                        mainArr(7) = arrName(2)
+                'add title to 1st place in Mainarray
+                mainArr(0) = arrName(0)
 
+                'add first name to the 2nd plcae in the main array
+                mainArr(1) = arrName(1)
 
-                    ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(2)) = False Then
-                        'Dr. John Smith
+                'add suffix to 6th place in main array
+                mainArr(5) = arrName(2)
 
-                        'add title to the 2nd place
-                        mainArr(1) = arrName(0)
 
-                        'add frist name to the 3rd place
-                        mainArr(2) = arrName(1)
+            ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(2)) = False Then
+                'Dr. John Smith
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(2)
+                'add title to the 1st place
+                mainArr(0) = arrName(0)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(2)) = True Then
-                        'John Smith PhD
+                'add frist name to the 2nd place
+                mainArr(1) = arrName(1)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add last name to the 5th place
+                mainArr(4) = arrName(2)
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(1)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(2)) = True Then
+                'John Smith PhD
 
-                        'add suffix to the last place
-                        mainArr(7) = arrName(2)
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(2)) = False Then
-                        'John Phillip Smith
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add last name to the 5th place
+                mainArr(4) = arrName(1)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
+                'add suffix to the 6th place
+                mainArr(5) = arrName(2)
 
-                        'add last name to the 6th plcae
-                        mainArr(5) = arrName(2)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(2)) = False Then
+                'John Phillip Smith
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(5)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
-                    End If
+                'add last name to the 5th plcae
+                mainArr(4) = arrName(2)
 
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(4)
 
-                ElseIf UBound(arrName) = 3 Then
 
+            End If
 
-                    If checkTitle(arrName(0)) = True And checkSuffix(arrName(3)) = True Then
-                        'Dr. John Smith PhD
 
-                        'add title to 2nd place in Main array
-                        mainArr(1) = arrName(0)
+        ElseIf UBound(arrName) = 3 Then
 
-                        'add first name to the 3rd plcae in the main array
-                        mainArr(2) = arrName(1)
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(2)
+            If checkTitle(arrName(0)) = True And checkSuffix(arrName(3)) = True Then
+                'Dr. John Smith PhD
 
-                        'add suffix to last place in main array
-                        mainArr(7) = arrName(3)
+                'add title to 1st place in Main array
+                mainArr(0) = arrName(0)
 
+                'add first name to the 2nd plcae in the main array
+                mainArr(1) = arrName(1)
 
-                    ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(3)) = False Then
-                        'Dr. John Phillip Smith
+                'add last name to the 5th place
+                mainArr(4) = arrName(2)
 
-                        'add title to the 2nd place
-                        mainArr(1) = arrName(0)
+                'add suffix to 6th place in main array
+                mainArr(5) = arrName(3)
 
-                        'add frist name to the 3rd place
-                        mainArr(2) = arrName(1)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(2)
+            ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(3)) = False Then
+                'Dr. John Phillip Smith
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(3)
+                'add title to the 1st place
+                mainArr(0) = arrName(0)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(5)
+                'add frist name to the 2nd place
+                mainArr(1) = arrName(1)
 
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(2)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(3)) = True Then
-                        'John Phillip Smith PhD
+                'add last name to the 5th place
+                mainArr(4) = arrName(3)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(2)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(3)) = True Then
+                'John Phillip Smith PhD
 
-                        'add suffix to the last place
-                        mainArr(7) = arrName(3)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(5)
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(3)) = False Then
-                        'John Phillip Van Smith
+                'add last name to the 5th place
+                mainArr(4) = arrName(2)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add suffix to the 6th place
+                mainArr(5) = arrName(3)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(4)
 
-                        'add last name prefix in 5 th place
-                        mainArr(4) = arrName(2)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(3)) = False Then
+                'John Phillip Van Smith
 
-                        'add last name to the 6th plcae
-                        mainArr(5) = arrName(3)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & mainArr(5)
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
+                'add last name prefix in 4th place
+                mainArr(3) = arrName(2)
 
-                    End If
+                'add last name to the 5th plcae
+                mainArr(4) = arrName(3)
 
-                ElseIf UBound(arrName) = 4 Then
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                    If checkTitle(arrName(0)) = True And checkSuffix(arrName(4)) = True Then
-                        'Dr. John Phillip Smith PhD
 
-                        'add title to 2nd place in Main array
-                        mainArr(1) = arrName(0)
+            End If
 
-                        'add first name to the 3rd plcae in the main array
-                        mainArr(2) = arrName(1)
+        ElseIf UBound(arrName) = 4 Then
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(2)
+            If checkTitle(arrName(0)) = True And checkSuffix(arrName(4)) = True Then
+                'Dr. John Phillip Smith PhD
 
-                        'add last name prefix in 5 th place
+                'add title to 1st place in Main array
+                mainArr(0) = arrName(0)
 
+                'add first name to the 2nd plcae in the main array
+                mainArr(1) = arrName(1)
 
-                        'If UBound(arrName) - 2 - 3 >= 0 Then
-                        '    For k = 3 To UBound(arrName) - 2
-                        '        mainArr(4) = mainArr(4) & " " & arrName(k)
-                        '    Next
-                        '    mainArr(4) = Trim(mainArr(4))
-                        'End If
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(2)
 
 
+                'add last name to the 5th place
+                mainArr(4) = arrName(3)
 
-                        'add last name to the 5th place
-                        mainArr(5) = arrName(3)
+                'add suffix to 6th place in main array
+                mainArr(5) = arrName(4)
 
-                        'mainArr(5) = arrName(UBound(arrName) - 1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(4)
 
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(5)
+            ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(4)) = False Then
+                'Dr. John Phillip Van Smith
 
+                'add title to the 1st place
+                mainArr(0) = arrName(0)
 
-                        'add suffix to last place in main array
-                        mainArr(7) = arrName(4)
+                'add frist name to the 2nd place
+                mainArr(1) = arrName(1)
 
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(2)
 
-                    ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(4)) = False Then
-                        'Dr. John Phillip Van Smith
+                'add last name prefix in 4th place
+                mainArr(3) = arrName(3)
 
-                        'add title to the 2nd place
-                        mainArr(1) = arrName(0)
+                'add last name to the 5th place
+                mainArr(4) = arrName(4)
 
-                        'add frist name to the 3rd place
-                        mainArr(2) = arrName(1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(2)
 
-                        'add last name prefix in 5 th place
-                        mainArr(4) = arrName(3)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(4)) = True Then
+                'John Phillip Van Smith PhD
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(4)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
+                'add last name prefix in 4th place
+                mainArr(3) = arrName(2)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(4)) = True Then
-                        'John Phillip Van Smith PhD
+                'add last name to the 5th place
+                mainArr(4) = arrName(3)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add suffix to the 6th place
+                mainArr(5) = arrName(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add last name prefix in 5 th place
-                        mainArr(4) = arrName(2)
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(4)) = False Then
+                'John Phillip Van Der Smith
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(3)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add suffix to the last place
-                        mainArr(7) = arrName(4)
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
+                'add last name prefix in 4th place
+                mainArr(3) = arrName(2) & " " & arrName(3)
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(4)) = False Then
-                        'John Phillip Van Der Smith
+                'add last name to the 5th plcae
+                mainArr(4) = arrName(4)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
 
-                        'add last name prefix in 5 th place
-                        mainArr(4) = arrName(2) & " " & arrName(3)
+            End If
 
-                        'add last name to the 6th plcae
-                        mainArr(5) = arrName(4)
+        ElseIf UBound(arrName) >= 5 Then
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
 
+            If checkTitle(arrName(0)) = True And checkSuffix(arrName(UBound(arrName))) = True Then
+                'Dr. John Phillip Van ... Smith PhD
 
-                    End If
+                'add title to 1st place in Main array
+                mainArr(0) = arrName(0)
 
-                ElseIf UBound(arrName) >= 5 Then
+                'add first name to the 2nd plcae in the main array
+                mainArr(1) = arrName(1)
 
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(2)
 
-                    If checkTitle(arrName(0)) = True And checkSuffix(arrName(UBound(arrName))) = True Then
-                        'Dr. John Phillip Van ... Smith PhD
+                'add last name prefix in 4th place
+                For k = 3 To UBound(arrName) - 2
+                    mainArr(3) = mainArr(3) & " " & arrName(k)
+                Next
+                'remove any extra leading and trailing spaces
+                mainArr(3) = Trim(mainArr(3))
 
-                        'add title to 2nd place in Main array
-                        mainArr(1) = arrName(0)
 
-                        'add first name to the 3rd plcae in the main array
-                        mainArr(2) = arrName(1)
+                'add last name to the 5th place
+                mainArr(4) = arrName(UBound(arrName) - 1)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(2)
+                'mainArr(5) = arrName(UBound(arrName) - 1)
 
-                        'add last name prefix in 5 th place
-                        For k = 3 To UBound(arrName) - 2
-                            mainArr(4) = mainArr(4) & " " & arrName(k)
-                        Next
-                        'remove any extra leading and trailing spaces
-                        mainArr(4) = Trim(mainArr(4))
 
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add last name to the 5th place
-                        mainArr(5) = arrName(UBound(arrName) - 1)
 
-                        'mainArr(5) = arrName(UBound(arrName) - 1)
+                'add suffix to 6th place in main array
+                mainArr(5) = arrName(UBound(arrName))
 
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
+            ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(UBound(arrName))) = False Then
+                'Dr. John Phillip Van Der ... Smith
 
+                'add title to the 1st place
+                mainArr(0) = arrName(0)
 
-                        'add suffix to last place in main array
-                        mainArr(7) = arrName(UBound(arrName))
+                'add first name to the 2nd place
+                mainArr(1) = arrName(1)
 
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(2)
 
-                    ElseIf checkTitle(arrName(0)) = True And checkSuffix(arrName(UBound(arrName))) = False Then
-                        'Dr. John Phillip Van Der ... Smith
+                'add last name prefix in 4th place
+                For k = 3 To UBound(arrName) - 1
+                    mainArr(3) = mainArr(3) & " " & arrName(k)
+                Next
+                'remove any extra leading and trailing spaces
+                mainArr(3) = Trim(mainArr(3))
 
-                        'add title to the 2nd place
-                        mainArr(1) = arrName(0)
+                'add last name to the 5th place
+                mainArr(4) = arrName(UBound(arrName))
 
-                        'add frist name to the 3rd place
-                        mainArr(2) = arrName(1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(2)
 
-                        'add last name prefix in 5 th place
-                        For k = 3 To UBound(arrName) - 2
-                            mainArr(4) = mainArr(4) & " " & arrName(k)
-                        Next
-                        'remove any extra leading and trailing spaces
-                        mainArr(4) = Trim(mainArr(4))
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(UBound(arrName))) = True Then
+                'John Phillip Van Der ... Smith PhD
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(UBound(arrName))
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
+                'add last name prefix in 4th place
+                For k = 2 To UBound(arrName) - 2
+                    mainArr(3) = mainArr(3) & " " & arrName(k)
+                Next
+                'remove any extra leading and trailing spaces
+                mainArr(3) = Trim(mainArr(3))
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(UBound(arrName))) = True Then
-                        'John Phillip Van Der ... Smith PhD
+                'add last name to the 5th place
+                mainArr(4) = arrName(UBound(arrName) - 1)
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add suffix to the 6th place
+                mainArr(5) = arrName(UBound(arrName))
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add last name prefix in 5 th place
-                        For k = 2 To UBound(arrName) - 2
-                            mainArr(4) = mainArr(4) & " " & arrName(k)
-                        Next
-                        'remove any extra leading and trailing spaces
-                        mainArr(4) = Trim(mainArr(4))
+            ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(UBound(arrName))) = False Then
+                'John Phillip Van Der James ... Smith 
 
-                        'add last name to the 6th place
-                        mainArr(5) = arrName(UBound(arrName) - 1)
+                'add first name to the 2nd place
+                mainArr(1) = arrName(0)
 
-                        'add suffix to the last place
-                        mainArr(7) = arrName(UBound(arrName))
+                'add middle name to the 3rd place
+                mainArr(2) = arrName(1)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
+                'add last name prefix in 4th place
+                For k = 2 To UBound(arrName) - 1
+                    mainArr(3) = mainArr(3) & " " & arrName(k)
+                Next
+                'remove any extra leading and trailing spaces
+                mainArr(3) = Trim(mainArr(3))
 
-                    ElseIf checkTitle(arrName(0)) = False And checkSuffix(arrName(UBound(arrName))) = False Then
-                        'John Phillip Van Der James ... Smith 
+                'add last name to the 5th plcae
+                mainArr(4) = arrName(UBound(arrName))
 
-                        'add first name to the 3rd place
-                        mainArr(2) = arrName(0)
+                'add abbreviation to the 7th place
+                mainArr(6) = Microsoft.VisualBasic.Left(mainArr(1), 1) & "." & Microsoft.VisualBasic.Left(mainArr(2), 1) & ". " & mainArr(3) & " " & mainArr(4)
 
-                        'add middle name to the 4th place
-                        mainArr(3) = arrName(1)
+            End If
 
-                        'add last name prefix in 5 th place
-                        For k = 2 To UBound(arrName) - 2
-                            mainArr(4) = mainArr(4) & " " & arrName(k)
-                        Next
-                        'remove any extra leading and trailing spaces
-                        mainArr(4) = Trim(mainArr(4))
 
-                        'add last name to the 6th plcae
-                        mainArr(5) = arrName(UBound(arrName) - 1)
 
-                        'add abbreviation to the 7th place
-                        mainArr(6) = Microsoft.VisualBasic.Left(mainArr(2), 1) & "." & Microsoft.VisualBasic.Left(mainArr(3), 1) & ". " & mainArr(4) & " " & mainArr(5)
 
 
-                    End If
-
-
-
-
-
-                End If
-
-
-
-
-
-                MsgBox("Full name is " & mainArr(0))
-                MsgBox("title is " & mainArr(1))
-                MsgBox("First name is " & mainArr(2))
-                MsgBox("Middle name is " & mainArr(3))
-                MsgBox("Last name prefix is " & mainArr(4))
-                MsgBox("Last name is " & mainArr(5))
-                MsgBox("Abbreviation is " & mainArr(6))
-                MsgBox("suffix is " & mainArr(7))
-            Next
-
-        Next
+        End If
 
 
 
     End Sub
+
+    Private Sub display()
+
+        Try
+
+
+            CustomPanel2.Controls.Clear()
+
+
+
+            Dim displayRng As Excel.Range
+            Dim arrRng As String()
+
+
+            If RB_Same_As_Source_Range.Checked = True Then
+
+                Dim outputColumn As Integer
+
+                arrRng = Split(txtSourceRange.Text, ",")
+
+                For i = 0 To UBound(arrRng)
+
+                    sourceRange = worksheet.Range(arrRng(i))
+
+                    For j = 1 To sourceRange.Rows.Count
+
+                        mainArr = {"", "", "", "", "", "", "", ""}
+                        name = sourceRange.Cells(j, 1).value
+
+                        Call nameSplitter()
+
+                        Dim headerIndex As Integer
+                        Dim headerStr As String = ""
+                        For Each ctrl As Control In CustomGroupBox7.Controls
+                            If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                                Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+                                If chk.Checked Then
+                                    headerStr = headerStr & "," & chk.Text
+                                End If
+                            End If
+                        Next
+
+                        headerStr = headerStr.Replace("Select All,", String.Empty)
+                        headerStr = Microsoft.VisualBasic.Right(headerStr, Len(headerStr) - 1)
+
+                        Dim arrHeaderStr As String() = Split(headerStr, ",")
+                        outputColumn = UBound(arrHeaderStr) + 1
+                        For k = 0 To UBound(arrHeaderStr)
+                            worksheet.Cells(100000, k + 1).value = arrHeaderStr(k)
+
+                            Select Case arrHeaderStr(k)
+                                Case = "Title"
+                                    headerIndex = 0
+                                Case = "First Name"
+                                    headerIndex = 1
+                                Case = "Middle Name"
+                                    headerIndex = 2
+                                Case = "Last Name Prefix"
+                                    headerIndex = 3
+                                Case = "Last Name"
+                                    headerIndex = 4
+                                Case = "Name Suffix"
+                                    headerIndex = 5
+                                Case = "Name Abbreviations"
+                                    headerIndex = 6
+
+                            End Select
+
+                            worksheet.Cells(100000 + j, k + 1).value = mainArr(headerIndex)
+
+                        Next
+
+
+
+
+
+                    Next
+
+                    displayRng = worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
+
+                    If CB_Add_Header.Checked = False Then
+
+                        displayRng = worksheet.Range(worksheet.Cells(100001, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
+
+                    End If
+
+                Next
+
+
+
+
+            ElseIf RB_Different_Range.Checked = True Then
+                'If CB_Add_Header.Checked = True Then
+
+                '    For i = 0 To UBound(arrHeaderStr)
+                '        destRange.Cells(1, i + 1).value = arrHeaderStr(i)
+                '    Next
+
+
+                'End If
+
+            End If
+
+
+
+
+
+            If txtSourceRange.Text = "" Or displayRng Is Nothing Then
+                CustomPanel2.Controls.Clear()
+                Exit Sub
+            End If
+
+
+            If displayRng.Rows.Count > 50 Then
+                displayRng = displayRng.Rows("1:50")
+                'Else
+                '    displayRng = sourceRange
+            End If
+
+
+            Dim height As Double
+            Dim width As Double
+
+            If displayRng.Rows.Count <= 4 Then
+                height = CustomPanel2.Height / displayRng.Rows.Count
+            Else
+                height = (119 / 4)
+            End If
+
+            If displayRng.Columns.Count <= 3 Then
+                width = CustomPanel2.Width / displayRng.Columns.Count
+            Else
+                width = (260 / 3)
+            End If
+
+
+
+
+
+
+            For i = 1 To displayRng.Rows.Count
+                For j = 1 To displayRng.Columns.Count
+                    Dim label As New System.Windows.Forms.Label
+                    label.Text = displayRng.Cells(i, j).Value
+                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                    label.Height = height
+                    label.Width = width
+                    label.BorderStyle = BorderStyle.FixedSingle
+                    label.TextAlign = ContentAlignment.MiddleCenter
+
+                    If CB_Keep_Formatting.Checked = True Then
+                        If CB_Add_Header.Checked = True Then
+
+                            Dim cellColor As Color = ColorTranslator.FromOle(CType(sourceRange.Cells(i - 1, 1).Font.Color, Integer))
+                            Dim fillColor As Color = ColorTranslator.FromOle(CType(sourceRange.Cells(i - 1, 1).interior.Color, Integer))
+
+
+                            Dim cell As Excel.Range = sourceRange.Cells(i - 1, 1)
+
+                            Dim cellFontName As String = cell.Font.Name
+                            Dim cellFontSize As Single = Convert.ToSingle(10)
+                            Dim cellFontColor As Color = ColorTranslator.FromOle(CType(cell.Font.Color, Integer))
+                            Dim cellFontStyle As FontStyle = fontStyle.Regular
+                            If cell.Font.Bold Then cellFontStyle = cellFontStyle Or fontStyle.Bold
+                            If cell.Font.Italic Then cellFontStyle = cellFontStyle Or fontStyle.Italic
+                            If cell.Font.Underline <> Excel.XlUnderlineStyle.xlUnderlineStyleNone Then cellFontStyle = cellFontStyle Or fontStyle.Underline
+
+                            label.Font = New System.Drawing.Font(cellFontName, cellFontSize, cellFontStyle)
+
+
+                            label.ForeColor = cellColor
+                            label.BackColor = fillColor
+
+                            'bold header
+                            If i = 1 Then
+
+                                cellFontStyle = cellFontStyle Or FontStyle.Bold
+                                label.Font = New System.Drawing.Font(cellFontName, cellFontSize, cellFontStyle)
+                            End If
+
+                        Else
+
+                            Dim cellColor As Color = ColorTranslator.FromOle(CType(sourceRange.Cells(i, 1).Font.Color, Integer))
+                            Dim fillColor As Color = ColorTranslator.FromOle(CType(sourceRange.Cells(i, 1).interior.Color, Integer))
+
+
+                            Dim cell As Excel.Range = sourceRange.Cells(i, 1)
+
+                            Dim cellFontName As String = cell.Font.Name
+                            Dim cellFontSize As Single = Convert.ToSingle(10)
+                            Dim cellFontColor As Color = ColorTranslator.FromOle(CType(cell.Font.Color, Integer))
+                            Dim cellFontStyle As FontStyle = FontStyle.Regular
+                            If cell.Font.Bold Then cellFontStyle = cellFontStyle Or FontStyle.Bold
+                            If cell.Font.Italic Then cellFontStyle = cellFontStyle Or FontStyle.Italic
+                            If cell.Font.Underline <> Excel.XlUnderlineStyle.xlUnderlineStyleNone Then cellFontStyle = cellFontStyle Or FontStyle.Underline
+
+                            label.Font = New System.Drawing.Font(cellFontName, cellFontSize, cellFontStyle)
+
+
+                            label.ForeColor = cellColor
+                            label.BackColor = fillColor
+
+
+                        End If
+
+
+                    Else
+                        label.BackColor = Color.Transparent
+                        label.ForeColor = Nothing
+
+
+
+                    End If
+
+
+                    CustomPanel2.Controls.Add(label)
+                Next
+            Next
+
+            CustomPanel2.AutoScroll = True
+
+
+
+        Catch ex As Exception
+
+        End Try
+
+
+
+    End Sub
+
 
 
     Private Sub uncheck_CB_Select_All()
@@ -1208,6 +1339,8 @@ Public Class Form17DivideNames
                 End If
             End If
         Next
+        Call display()
+
     End Sub
 
 
@@ -1218,11 +1351,28 @@ Public Class Form17DivideNames
                     Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
 
                     chk.Checked = True
+                    chk.Enabled = False
 
                 End If
             Next
             CB_Select_All.Checked = True
+            CB_Select_All.Enabled = True
+
+        ElseIf CB_Select_All.Checked = False Then
+            For Each ctrl As Control In CustomGroupBox7.Controls
+                If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                    Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+
+                    chk.Checked = False
+                    chk.Enabled = True
+
+                End If
+            Next
+
+
         End If
+
+        Call display()
 
 
     End Sub
@@ -1249,13 +1399,24 @@ Public Class Form17DivideNames
         Call uncheck_CB_Select_All()
     End Sub
 
+
+
     Private Sub CB_Name_Abbreviations_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Name_Abbreviations.CheckedChanged
         Call uncheck_CB_Select_All()
     End Sub
+
+
 
     Private Sub CB_Name_Suffix_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Name_Suffix.CheckedChanged
         Call uncheck_CB_Select_All()
     End Sub
 
+    Private Sub CB_Add_Header_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Add_Header.CheckedChanged
+        Call display()
+    End Sub
+
+    Private Sub CB_Keep_Formatting_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Keep_Formatting.CheckedChanged
+        Call display()
+    End Sub
 
 End Class

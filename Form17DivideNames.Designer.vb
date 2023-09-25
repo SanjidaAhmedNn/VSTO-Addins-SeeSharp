@@ -548,9 +548,9 @@ Partial Class Form17DivideNames
         Me.CB_Middle_Name.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CB_Middle_Name.Location = New System.Drawing.Point(9, 150)
         Me.CB_Middle_Name.Name = "CB_Middle_Name"
-        Me.CB_Middle_Name.Size = New System.Drawing.Size(146, 21)
+        Me.CB_Middle_Name.Size = New System.Drawing.Size(97, 21)
         Me.CB_Middle_Name.TabIndex = 1
-        Me.CB_Middle_Name.Text = "Name Abbreviations"
+        Me.CB_Middle_Name.Text = "Name Suffix"
         Me.CB_Middle_Name.UseVisualStyleBackColor = True
         '
         'CB_First_Name
@@ -559,9 +559,9 @@ Partial Class Form17DivideNames
         Me.CB_First_Name.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CB_First_Name.Location = New System.Drawing.Point(9, 174)
         Me.CB_First_Name.Name = "CB_First_Name"
-        Me.CB_First_Name.Size = New System.Drawing.Size(97, 21)
+        Me.CB_First_Name.Size = New System.Drawing.Size(146, 21)
         Me.CB_First_Name.TabIndex = 0
-        Me.CB_First_Name.Text = "Name Suffix"
+        Me.CB_First_Name.Text = "Name Abbreviations"
         Me.CB_First_Name.UseVisualStyleBackColor = True
         '
         'Form17DivideNames
@@ -587,7 +587,7 @@ Partial Class Form17DivideNames
         Me.Controls.Add(Me.CB_Backup_Sheet)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "Form17DivideNames"
+        Me.name = "Form17DivideNames"
         Me.Text = "Divide Names"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
