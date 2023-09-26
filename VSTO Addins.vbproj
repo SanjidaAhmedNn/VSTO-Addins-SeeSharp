@@ -301,6 +301,12 @@
     <Compile Include="Form34_PictureBasedDropdownList.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.designer.vb">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form36.designer.vb">
       <DependentUpon>Form36.vb</DependentUpon>
     </Compile>
@@ -400,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form34_PictureBasedDropdownList.resx">
       <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form35Multi SelectionbasedDropdown.resx">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form36.resx">
       <DependentUpon>Form36.vb</DependentUpon>
@@ -507,7 +516,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>EB1ABF9A87D3672011C334B73AC5610162E6524E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A620FD1381488736E5602D5F8A33F0BECBF3D8EC</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
