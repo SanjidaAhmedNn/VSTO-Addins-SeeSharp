@@ -223,6 +223,10 @@
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.designer.vb">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.vb" />
     <Compile Include="Form11SwapRanges.Designer.vb">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
     </Compile>
@@ -428,6 +432,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form10Unmerge Cells with Value.resx">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form11SwapRanges.resx">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
     </EmbeddedResource>
@@ -552,6 +559,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -605,7 +613,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A620FD1381488736E5602D5F8A33F0BECBF3D8EC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E2D8B69698DF74D2B7FA9D89E1B1140627D99A88</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
