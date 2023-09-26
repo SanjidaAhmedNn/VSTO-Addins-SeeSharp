@@ -217,6 +217,12 @@
     <Compile Include="CustomPanel.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form11SwapRanges.Designer.vb">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
     </Compile>
@@ -259,16 +265,52 @@
     <Compile Include="Form17DivideNames.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form18_CombineRanges.designer.vb">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form21FillEmtyCells.designer.vb">
       <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
     </Compile>
     <Compile Include="Form21FillEmtyCells.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.designer.vb">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.designer.vb">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.designer.vb">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form25_Split_Range.designer.vb">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_Split_Range.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
       <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
     </Compile>
     <Compile Include="Form29_Simple_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.vb">
+      <DependentUpon>Form3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
@@ -331,6 +373,12 @@
     <Compile Include="Form39_DropdownlistwithSearchOption.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form4.Designer.vb">
+      <DependentUpon>Form4.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form4.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form40.designer.vb">
       <DependentUpon>Form40.vb</DependentUpon>
     </Compile>
@@ -349,6 +397,18 @@
     <Compile Include="Form42.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form7.Designer.vb">
+      <DependentUpon>Form7.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form7.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form8.Designer.vb">
+      <DependentUpon>Form8.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form8.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GlobalModule.vb" />
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
@@ -364,6 +424,9 @@
     </Compile>
     <EmbeddedResource Include="CustomGroupBox.resx">
       <DependentUpon>CustomGroupBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form11SwapRanges.resx">
       <DependentUpon>Form11SwapRanges.vb</DependentUpon>
@@ -386,11 +449,29 @@
     <EmbeddedResource Include="Form17DivideNames.resx">
       <DependentUpon>Form17DivideNames.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form18_CombineRanges.resx">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form21FillEmtyCells.resx">
       <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_Split_Cells.resx">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_Split_Range.resx">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
       <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
       <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
@@ -422,6 +503,9 @@
     <EmbeddedResource Include="Form39_DropdownlistwithSearchOption.resx">
       <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form4.resx">
+      <DependentUpon>Form4.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form40.resx">
       <DependentUpon>Form40.vb</DependentUpon>
     </EmbeddedResource>
@@ -430,6 +514,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form42.resx">
       <DependentUpon>Form42.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form7.resx">
+      <DependentUpon>Form7.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form8.resx">
+      <DependentUpon>Form8.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
@@ -462,7 +552,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
