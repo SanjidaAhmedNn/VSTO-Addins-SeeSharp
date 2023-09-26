@@ -395,7 +395,7 @@ Public Class Form16PasteintoVisibleRange
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         WsName = worksheet.Name
-
+        destRange = worksheet.Range(txtDestRange.Text).Cells(1, 1)
 
 
         If CB_copyWs.Checked = True Then
@@ -412,18 +412,18 @@ Public Class Form16PasteintoVisibleRange
 
 
         lastRowNum = 0
-        If worksheet.Range(txtDestRange.Text).End(XlDirection.xlDown).Value Is Nothing Then
+        If destRange.End(XlDirection.xlDown).Value Is Nothing Then
 
-            While worksheet.Range(txtDestRange.Text).Offset(lastRowNum, 0).Value <> Nothing
+            While destRange.Offset(lastRowNum, 0).Value <> Nothing
 
                 lastRowNum = lastRowNum + 1
 
             End While
 
-            lastRowNum = worksheet.Range(txtDestRange.Text).Row + lastRowNum
+            lastRowNum = destRange.Row + lastRowNum
 
         Else
-            lastRow = worksheet.Range(txtDestRange.Text).End(XlDirection.xlDown).Address
+            lastRow = destRange.End(XlDirection.xlDown).Address
             While worksheet.Range(lastRow).Offset(lastRowNum, 0).Value <> Nothing
 
                 lastRowNum = lastRowNum + 1
@@ -435,18 +435,18 @@ Public Class Form16PasteintoVisibleRange
 
         'finding last column number
         lastColNum = 0
-        If worksheet.Range(txtDestRange.Text).End(XlDirection.xlToRight).Value Is Nothing Then
+        If destRange.End(XlDirection.xlToRight).Value Is Nothing Then
 
-            While worksheet.Range(txtDestRange.Text).Offset(0, lastColNum).Value <> Nothing
+            While destRange.Offset(0, lastColNum).Value IsNot Nothing
 
                 lastColNum = lastColNum + 1
 
             End While
 
-            lastColNum = worksheet.Range(txtDestRange.Text).Column + lastColNum
+            lastColNum = destRange.Column + lastColNum
 
         Else
-            lastCol = worksheet.Range(txtDestRange.Text).End(XlDirection.xlToRight).Address
+            lastCol = destRange.End(XlDirection.xlToRight).Address
             While worksheet.Range(lastCol).Offset(0, lastColNum).Value <> Nothing
 
                 lastColNum = lastColNum + 1
@@ -462,7 +462,7 @@ Public Class Form16PasteintoVisibleRange
 
         'finding the total visible rows
         Dim visibleRows As Integer = 0
-        For i = worksheet.Range(txtDestRange.Text).Row To lastRowNum
+        For i = destRange.Row To lastRowNum
 
             If worksheet.Range(worksheet.Cells(i, 1), worksheet.Cells(i, 2)).EntireRow.Hidden = False Then
                 visibleRows = visibleRows + 1
@@ -476,7 +476,7 @@ Public Class Form16PasteintoVisibleRange
 
         'finding total visible columns
         Dim visibleCols As Integer = 0
-        For i = worksheet.Range(txtDestRange.Text).Column To lastColNum
+        For i = destRange.Column To lastColNum
 
             If worksheet.Range(worksheet.Cells(1, i), worksheet.Cells(2, i)).EntireColumn.Hidden = False Then
                 visibleCols = visibleCols + 1
@@ -494,9 +494,9 @@ Public Class Form16PasteintoVisibleRange
 
 
 
-            While worksheet.Range(txtDestRange.Text).Offset(count, 0).Value <> Nothing
+            While destRange.Offset(count, 0).Value <> Nothing
 
-                If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False Then
+                If destRange.Offset(count, count2).EntireRow.Hidden = False Then
                     pasteValue = pasteValue + 1
                     count2 = 0
                     pasteValue2 = 0
@@ -506,19 +506,19 @@ Public Class Form16PasteintoVisibleRange
                     Exit While
                 End If
 
-                While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
+                While destRange.Offset(count, count2).Value <> Nothing
                     If pasteValue2 + 1 > sourceRange.Columns.Count Then
                         Exit While
                     End If
 
 
-                    If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False And worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireColumn.Hidden = False Then
+                    If destRange.Offset(count, count2).EntireRow.Hidden = False And destRange.Offset(count, count2).EntireColumn.Hidden = False Then
                         pasteValue2 = pasteValue2 + 1
 
 
                         If CB_keepFormat.Checked = True Then
 
-                            Call copyCell(worksheet.Range(txtDestRange.Text), count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
+                            Call copyCell(destRange, count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
 
 
                         Else
@@ -541,11 +541,11 @@ Public Class Form16PasteintoVisibleRange
 
         Else
 
-            For j = worksheet.Range(txtDestRange.Text).Row To lastRowNum
+            For j = destRange.Row To lastRowNum
 
-                While worksheet.Range(txtDestRange.Text).Offset(count, 0).Value <> Nothing
+                While destRange.Offset(count, 0).Value <> Nothing
 
-                    If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False Then
+                    If destRange.Offset(count, count2).EntireRow.Hidden = False Then
                         pasteValue = pasteValue + 1
                         count2 = 0
                         pasteValue2 = 0
@@ -555,19 +555,19 @@ Public Class Form16PasteintoVisibleRange
                         Exit While
                     End If
 
-                    While worksheet.Range(txtDestRange.Text).Offset(count, count2).Value <> Nothing
+                    While destRange.Offset(count, count2).Value <> Nothing
                         If pasteValue2 + 1 > sourceRange.Columns.Count Then
                             Exit While
                         End If
 
 
-                        If worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireRow.Hidden = False And worksheet.Range(txtDestRange.Text).Offset(count, count2).EntireColumn.Hidden = False Then
+                        If destRange.Offset(count, count2).EntireRow.Hidden = False And destRange.Offset(count, count2).EntireColumn.Hidden = False Then
                             pasteValue2 = pasteValue2 + 1
                             If CB_keepFormat.Checked = True Then
 
-                                Call copyCell(worksheet.Range(txtDestRange.Text), count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
+                                Call copyCell(destRange, count, count2, worksheet.Range(txtSourceRange.Text).Cells(1, 1), pasteValue - 1, pasteValue2 - 1)
                             Else
-                                worksheet.Range(txtDestRange.Text).Offset(count, count2).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
+                                destRange.Offset(count, count2).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
 
                             End If
                         End If
@@ -595,7 +595,7 @@ Public Class Form16PasteintoVisibleRange
                 count5 = 0
                 For l = 1 To lastColNum + sourceRange.Columns.Count - visibleCols - 1
 
-                    If worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
+                    If worksheet.Cells(lastRowNum, destRange.Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
                         count5 = count5 + 1
                     End If
 
@@ -604,13 +604,13 @@ Public Class Form16PasteintoVisibleRange
                         Exit For
                     End If
 
-                    If worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
+                    If worksheet.Cells(lastRowNum, destRange.Column).Offset(count3, l - 1).EntireColumn.Hidden = False Then
 
                         If CB_keepFormat.Checked = True Then
 
-                            Call copyCell(worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column), count3, l - 1, worksheet.Range(txtSourceRange.Text).Cells(1, 1), visibleRows + count3, count4)
+                            Call copyCell(worksheet.Cells(lastRowNum, destRange.Column), count3, l - 1, worksheet.Range(txtSourceRange.Text).Cells(1, 1), visibleRows + count3, count4)
                         Else
-                            worksheet.Cells(lastRowNum, worksheet.Range(txtDestRange.Text).Column).Offset(count3, l - 1).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(visibleRows + count3, count4).value
+                            worksheet.Cells(lastRowNum, destRange.Column).Offset(count3, l - 1).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(visibleRows + count3, count4).value
 
                         End If
 
@@ -624,11 +624,11 @@ Public Class Form16PasteintoVisibleRange
 
 
             Dim rowNum, colNum As Integer
-            rowNum = worksheet.Range(txtDestRange.Text).Row
-            colNum = worksheet.Range(txtDestRange.Text).Column
+            rowNum = destRange.Row
+            colNum = destRange.Column
             count3 = 0
             count4 = visibleCols
-            For k = worksheet.Range(txtDestRange.Text).Row To lastRowNum - 1
+            For k = destRange.Row To lastRowNum - 1
 
                 If worksheet.Range(worksheet.Cells(k, 1), worksheet.Cells(k, 2)).EntireRow.Hidden = False Then
 
