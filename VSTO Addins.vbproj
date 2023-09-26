@@ -262,6 +262,58 @@
     <Compile Include="Form21FillEmtyCells.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.vb" />
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb" />
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb" />
+    <Compile Include="Form32_ExtendDropDownList.Designer.vb">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form32_ExtendDropDownList.vb" />
+    <Compile Include="Form33_ColorBasedDropDownList.Designer.vb">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form33_ColorBasedDropDownList.vb" />
+    <Compile Include="Form34_PictureBasedDropdownList.Designer.vb">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form34_PictureBasedDropdownList.vb" />
+    <Compile Include="Form36.designer.vb">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form36.vb" />
+    <Compile Include="Form37_MSDropDownCheckBox.designer.vb">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form37_MSDropDownCheckBox.vb" />
+    <Compile Include="Form38.designer.vb">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form38.vb" />
+    <Compile Include="Form39_DropdownlistwithSearchOption.designer.vb">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form39_DropdownlistwithSearchOption.vb" />
+    <Compile Include="Form40.designer.vb">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form40.vb" />
+    <Compile Include="Form41_RemoveAdavancedDropdownList.designer.vb">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.vb" />
+    <Compile Include="Form42.designer.vb">
+      <DependentUpon>Form42.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form42.vb" />
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -301,6 +353,45 @@
     <EmbeddedResource Include="Form21FillEmtyCells.resx">
       <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form32_ExtendDropDownList.resx">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form33_ColorBasedDropDownList.resx">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form34_PictureBasedDropdownList.resx">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form36.resx">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form37_MSDropDownCheckBox.resx">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form38.resx">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form39_DropdownlistwithSearchOption.resx">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form40.resx">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form41_RemoveAdavancedDropdownList.resx">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form42.resx">
+      <DependentUpon>Form42.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
     </EmbeddedResource>
@@ -332,7 +423,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
