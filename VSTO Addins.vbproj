@@ -265,55 +265,81 @@
     <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
       <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form29_Simple_Drop-down_List.vb" />
+    <Compile Include="Form29_Simple_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
       <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb" />
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
       <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb" />
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form32_ExtendDropDownList.Designer.vb">
       <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form32_ExtendDropDownList.vb" />
+    <Compile Include="Form32_ExtendDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form33_ColorBasedDropDownList.Designer.vb">
       <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form33_ColorBasedDropDownList.vb" />
+    <Compile Include="Form33_ColorBasedDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form34_PictureBasedDropdownList.Designer.vb">
       <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form34_PictureBasedDropdownList.vb" />
+    <Compile Include="Form34_PictureBasedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form36.designer.vb">
       <DependentUpon>Form36.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form36.vb" />
+    <Compile Include="Form36.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form37_MSDropDownCheckBox.designer.vb">
       <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form37_MSDropDownCheckBox.vb" />
+    <Compile Include="Form37_MSDropDownCheckBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form38.designer.vb">
       <DependentUpon>Form38.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form38.vb" />
+    <Compile Include="Form38.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form39_DropdownlistwithSearchOption.designer.vb">
       <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form39_DropdownlistwithSearchOption.vb" />
+    <Compile Include="Form39_DropdownlistwithSearchOption.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form40.designer.vb">
       <DependentUpon>Form40.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form40.vb" />
+    <Compile Include="Form40.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form41_RemoveAdavancedDropdownList.designer.vb">
       <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form41_RemoveAdavancedDropdownList.vb" />
+    <Compile Include="Form41_RemoveAdavancedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form42.designer.vb">
       <DependentUpon>Form42.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form42.vb" />
+    <Compile Include="Form42.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -423,6 +449,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="VSTO Addins_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -476,7 +503,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C2FD030154B5F8E4BA490C199026E3DA578916FF</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>EB1ABF9A87D3672011C334B73AC5610162E6524E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
