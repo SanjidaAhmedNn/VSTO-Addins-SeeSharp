@@ -414,7 +414,7 @@ Public Class Form16PasteintoVisibleRange
         lastRowNum = 0
         If destRange.End(XlDirection.xlDown).Value Is Nothing Then
 
-            While destRange.Offset(lastRowNum, 0).Value IsNot Nothing
+            While destRange.Offset(lastRowNum, 0).Value <> Nothing
 
                 lastRowNum = lastRowNum + 1
 
@@ -424,7 +424,7 @@ Public Class Form16PasteintoVisibleRange
 
         Else
             lastRow = destRange.End(XlDirection.xlDown).Address
-            While worksheet.Range(lastRow).Offset(lastRowNum, 0).Value IsNot Nothing
+            While worksheet.Range(lastRow).Offset(lastRowNum, 0).Value <> Nothing
 
                 lastRowNum = lastRowNum + 1
 
@@ -447,7 +447,7 @@ Public Class Form16PasteintoVisibleRange
 
         Else
             lastCol = destRange.End(XlDirection.xlToRight).Address
-            While worksheet.Range(lastCol).Offset(0, lastColNum).Value IsNot Nothing
+            While worksheet.Range(lastCol).Offset(0, lastColNum).Value <> Nothing
 
                 lastColNum = lastColNum + 1
 
@@ -494,7 +494,7 @@ Public Class Form16PasteintoVisibleRange
 
 
 
-            While destRange.Offset(count, 0).Value IsNot Nothing
+            While destRange.Offset(count, 0).Value <> Nothing
 
                 If destRange.Offset(count, count2).EntireRow.Hidden = False Then
                     pasteValue = pasteValue + 1
@@ -522,8 +522,8 @@ Public Class Form16PasteintoVisibleRange
 
 
                         Else
-                            destRange.Offset(count, count2).Value = sourceRange.Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
 
+                            worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).Value = worksheet.Range(txtSourceRange.Text).Cells(1, 1).offset(pasteValue - 1, pasteValue2 - 1).value
 
                         End If
 
