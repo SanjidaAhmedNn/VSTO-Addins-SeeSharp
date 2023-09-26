@@ -340,6 +340,7 @@
     <Compile Include="Form42.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GlobalModule.vb" />
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
