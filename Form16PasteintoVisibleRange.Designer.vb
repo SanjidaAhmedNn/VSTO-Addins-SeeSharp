@@ -204,6 +204,7 @@ Partial Class Form16PasteintoVisibleRange
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(457, 361)
         Me.Controls.Add(Me.destinationSelection)
         Me.Controls.Add(Me.Selection)
@@ -218,6 +219,8 @@ Partial Class Form16PasteintoVisibleRange
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.CustomGroupBox5)
         Me.Controls.Add(Me.btnCancel)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form16PasteintoVisibleRange"
         Me.Text = "Paste into Visible Range"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
