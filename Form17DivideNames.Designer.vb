@@ -39,7 +39,7 @@ Partial Class Form17DivideNames
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.destinationSelection = New System.Windows.Forms.PictureBox()
         Me.txtDestRange = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.lbl_destRange_Selection = New System.Windows.Forms.Label()
         Me.RB_Different_Range = New System.Windows.Forms.RadioButton()
         Me.RB_Same_As_Source_Range = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
@@ -228,7 +228,7 @@ Partial Class Form17DivideNames
         Me.CustomGroupBox10.Controls.Add(Me.PictureBox2)
         Me.CustomGroupBox10.Controls.Add(Me.destinationSelection)
         Me.CustomGroupBox10.Controls.Add(Me.txtDestRange)
-        Me.CustomGroupBox10.Controls.Add(Me.Label3)
+        Me.CustomGroupBox10.Controls.Add(Me.lbl_destRange_Selection)
         Me.CustomGroupBox10.Controls.Add(Me.RB_Different_Range)
         Me.CustomGroupBox10.Controls.Add(Me.RB_Same_As_Source_Range)
         Me.CustomGroupBox10.Location = New System.Drawing.Point(1, 22)
@@ -269,15 +269,15 @@ Partial Class Form17DivideNames
         Me.txtDestRange.Size = New System.Drawing.Size(193, 25)
         Me.txtDestRange.TabIndex = 206
         '
-        'Label3
+        'lbl_destRange_Selection
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(42, 56)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(109, 17)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "Select the range :"
+        Me.lbl_destRange_Selection.AutoSize = True
+        Me.lbl_destRange_Selection.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_destRange_Selection.Location = New System.Drawing.Point(42, 56)
+        Me.lbl_destRange_Selection.Name = "lbl_destRange_Selection"
+        Me.lbl_destRange_Selection.Size = New System.Drawing.Size(109, 17)
+        Me.lbl_destRange_Selection.TabIndex = 2
+        Me.lbl_destRange_Selection.Text = "Select the range :"
         '
         'RB_Different_Range
         '
@@ -649,7 +649,7 @@ Partial Class Form17DivideNames
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents destinationSelection As Windows.Forms.PictureBox
     Friend WithEvents txtDestRange As Windows.Forms.TextBox
-    Friend WithEvents Label3 As Windows.Forms.Label
+    Friend WithEvents lbl_destRange_Selection As Windows.Forms.Label
     Friend WithEvents RB_Different_Range As Windows.Forms.RadioButton
     Friend WithEvents RB_Same_As_Source_Range As Windows.Forms.RadioButton
     Friend WithEvents CB_Keep_Formatting As Windows.Forms.CheckBox

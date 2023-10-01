@@ -317,10 +317,115 @@ Public Class Form17DivideNames
 
     End Sub
 
+    Public Function IsValidRng(input As String) As Boolean
+        '"^(([A-Za-z]+[0-9]*( \([0-9]+\))?!)?\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,([A-Za-z]+[0-9]*( \([0-9]+\))?!)?\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"     
+        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
+    End Function
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
         Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+            selectedRange = excelApp.Selection
+
+            Dim checkBox_checked_count As Integer = 0
+            For Each ctrl As Control In CustomGroupBox7.Controls
+                If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                    Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+                    If chk.Checked Then
+                        checkBox_checked_count += 1
+                    End If
+                End If
+            Next
+
+
+            If RB_Same_As_Source_Range.Checked = True Then
+
+                If txtSourceRange.Text = "" Then
+                    MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                    txtSourceRange.Focus()
+                    Exit Sub
+                Else
+                    If IsValidRng(txtSourceRange.Text.ToUpper) = False Then
+                        MsgBox("Please use a valid range in the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtDestRange.Focus()
+                        Exit Sub
+
+
+                    ElseIf checkBox_checked_count = 0 Then
+                        MsgBox("Please check least one checkbox to divide names.", MsgBoxStyle.Exclamation, "Error!")
+
+                        CustomGroupBox7.Focus()
+                        Exit Sub
+
+                    End If
+
+                End If
+
+            ElseIf RB_Different_Range.Checked = True Then
+
+                If txtSourceRange.Text = "" And txtDestRange.Text = "" Then
+                    MsgBox("Please select the Source Range and the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                    txtSourceRange.Focus()
+                    Exit Sub
+                ElseIf txtSourceRange.Text = "" And txtDestRange.Text <> "" Then
+
+                    If IsValidRng(txtDestRange.Text.ToUpper) = True Then
+                        MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtSourceRange.Focus()
+                        Exit Sub
+                    Else
+                        MsgBox("Please use a valid range in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtDestRange.Text = ""
+                        txtDestRange.Focus()
+                        Exit Sub
+                    End If
+
+                ElseIf txtDestRange.Text = "" And txtSourceRange.Text <> "" Then
+                    If IsValidRng(txtSourceRange.Text.ToUpper) = True Then
+                        MsgBox("Please select the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtDestRange.Focus()
+                        Exit Sub
+                    Else
+                        MsgBox("Please use a valid range in the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtSourceRange.Text = ""
+                        txtSourceRange.Focus()
+                        Exit Sub
+                    End If
+
+                ElseIf txtSourceRange.Text <> "" And txtDestRange.Text <> "" Then
+                    If checkBox_checked_count = 0 Then
+                        MsgBox("Please check least one checkbox to divide names.", MsgBoxStyle.Exclamation, "Error!")
+                        CustomGroupBox7.Focus()
+                        Exit Sub
+
+                    ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False And IsValidRng(txtDestRange.Text.ToUpper) = True Then
+                        MsgBox("Please use a valid range in the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtSourceRange.Text = ""
+                        txtSourceRange.Focus()
+                        Exit Sub
+
+                    ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = True And IsValidRng(txtDestRange.Text.ToUpper) = False Then
+                        MsgBox("Please use a valid range in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtDestRange.Text = ""
+                        txtDestRange.Focus()
+                        Exit Sub
+                    ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False And IsValidRng(txtDestRange.Text.ToUpper) = False Then
+                        MsgBox("Please use valid ranges in the Source Range and in the Destination Range.", MsgBoxStyle.Exclamation, "Error!")
+                        txtSourceRange.Text = ""
+                        txtDestRange.Text = ""
+                        txtSourceRange.Focus()
+                        Exit Sub
+
+                    End If
+
+                End If
+
+            End If
 
 
             Dim arrRng As String()
@@ -333,6 +438,7 @@ Public Class Form17DivideNames
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
                 outWorksheet = workbook.Sheets(workbook.Sheets.Count)
+
 
                 worksheet1.Activate()
                 txtSourceRange.Text = temp
@@ -520,13 +626,6 @@ Public Class Form17DivideNames
 
 
             End If
-
-
-
-
-
-            'MsgBox(headerStr)
-
 
             Me.Dispose()
 
@@ -1110,97 +1209,77 @@ Public Class Form17DivideNames
             Dim arrRng As String()
 
 
-            If RB_Same_As_Source_Range.Checked = True Then
-
-                Dim outputColumn As Integer
+            Dim outputColumn As Integer
 
                 arrRng = Split(txtSourceRange.Text, ",")
 
-                For i = 0 To UBound(arrRng)
+            For i = 0 To UBound(arrRng)
 
-                    sourceRange = worksheet.Range(arrRng(i))
+                sourceRange = worksheet.Range(arrRng(i))
 
-                    For j = 1 To sourceRange.Rows.Count
+                For j = 1 To sourceRange.Rows.Count
 
-                        mainArr = {"", "", "", "", "", "", "", ""}
-                        name = sourceRange.Cells(j, 1).value
+                    mainArr = {"", "", "", "", "", "", "", ""}
+                    name = sourceRange.Cells(j, 1).value
 
-                        Call nameSplitter()
+                    Call nameSplitter()
 
-                        Dim headerIndex As Integer
-                        Dim headerStr As String = ""
-                        For Each ctrl As Control In CustomGroupBox7.Controls
-                            If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
-                                Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
-                                If chk.Checked Then
-                                    headerStr = headerStr & "," & chk.Text
-                                End If
+                    Dim headerIndex As Integer
+                    Dim headerStr As String = ""
+                    For Each ctrl As Control In CustomGroupBox7.Controls
+                        If TypeOf ctrl Is System.Windows.Forms.CheckBox Then
+                            Dim chk As System.Windows.Forms.CheckBox = DirectCast(ctrl, System.Windows.Forms.CheckBox)
+                            If chk.Checked Then
+                                headerStr = headerStr & "," & chk.Text
                             End If
-                        Next
+                        End If
+                    Next
 
-                        headerStr = headerStr.Replace("Select All,", String.Empty)
-                        headerStr = Microsoft.VisualBasic.Right(headerStr, Len(headerStr) - 1)
+                    headerStr = headerStr.Replace("Select All,", String.Empty)
+                    headerStr = Microsoft.VisualBasic.Right(headerStr, Len(headerStr) - 1)
 
-                        Dim arrHeaderStr As String() = Split(headerStr, ",")
-                        outputColumn = UBound(arrHeaderStr) + 1
-                        For k = 0 To UBound(arrHeaderStr)
-                            worksheet.Cells(100000, k + 1).value = arrHeaderStr(k)
+                    Dim arrHeaderStr As String() = Split(headerStr, ",")
+                    outputColumn = UBound(arrHeaderStr) + 1
+                    For k = 0 To UBound(arrHeaderStr)
+                        worksheet.Cells(100000, k + 1).value = arrHeaderStr(k)
 
-                            Select Case arrHeaderStr(k)
-                                Case = "Title"
-                                    headerIndex = 0
-                                Case = "First Name"
-                                    headerIndex = 1
-                                Case = "Middle Name"
-                                    headerIndex = 2
-                                Case = "Last Name Prefix"
-                                    headerIndex = 3
-                                Case = "Last Name"
-                                    headerIndex = 4
-                                Case = "Name Suffix"
-                                    headerIndex = 5
-                                Case = "Name Abbreviations"
-                                    headerIndex = 6
+                        Select Case arrHeaderStr(k)
+                            Case = "Title"
+                                headerIndex = 0
+                            Case = "First Name"
+                                headerIndex = 1
+                            Case = "Middle Name"
+                                headerIndex = 2
+                            Case = "Last Name Prefix"
+                                headerIndex = 3
+                            Case = "Last Name"
+                                headerIndex = 4
+                            Case = "Name Suffix"
+                                headerIndex = 5
+                            Case = "Name Abbreviations"
+                                headerIndex = 6
 
-                            End Select
+                        End Select
 
-                            worksheet.Cells(100000 + j, k + 1).value = mainArr(headerIndex)
-
-                        Next
-
-
-
-
+                        worksheet.Cells(100000 + j, k + 1).value = mainArr(headerIndex)
 
                     Next
 
-                    displayRng = worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
 
-                    If CB_Add_Header.Checked = False Then
 
-                        displayRng = worksheet.Range(worksheet.Cells(100001, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
 
-                    End If
 
                 Next
 
+                displayRng = worksheet.Range(worksheet.Cells(100000, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
 
+                If CB_Add_Header.Checked = False Then
 
+                    displayRng = worksheet.Range(worksheet.Cells(100001, 1), worksheet.Cells(100000 + sourceRange.Rows.Count, outputColumn))
 
-            ElseIf RB_Different_Range.Checked = True Then
-                'If CB_Add_Header.Checked = True Then
+                End If
 
-                '    For i = 0 To UBound(arrHeaderStr)
-                '        destRange.Cells(1, i + 1).value = arrHeaderStr(i)
-                '    Next
-
-
-                'End If
-
-            End If
-
-
-
+            Next
 
 
             If txtSourceRange.Text = "" Or displayRng Is Nothing Then
@@ -1211,8 +1290,6 @@ Public Class Form17DivideNames
 
             If displayRng.Rows.Count > 50 Then
                 displayRng = displayRng.Rows("1:50")
-                'Else
-                '    displayRng = sourceRange
             End If
 
 
@@ -1317,7 +1394,7 @@ Public Class Form17DivideNames
 
             CustomPanel2.AutoScroll = True
 
-
+            worksheet.Range(displayRng.Cells(1, 1).offset(-1, 0), displayRng.Cells(displayRng.Rows.Count, displayRng.Columns.Count)).EntireRow.Delete()
 
         Catch ex As Exception
 
@@ -1409,6 +1486,24 @@ Public Class Form17DivideNames
 
     Private Sub CB_Name_Suffix_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Name_Suffix.CheckedChanged
         Call uncheck_CB_Select_All()
+    End Sub
+
+    Private Sub RB_Same_As_Source_Range_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Same_As_Source_Range.CheckedChanged
+
+        If RB_Same_As_Source_Range.Checked = True Then
+
+            txtDestRange.Enabled = False
+            destinationSelection.Enabled = False
+            lbl_destRange_Selection.Enabled = False
+
+        ElseIf RB_Same_As_Source_Range.Checked = False Then
+
+            txtDestRange.Enabled = True
+            destinationSelection.Enabled = True
+            lbl_destRange_Selection.Enabled = True
+
+        End If
+
     End Sub
 
     Private Sub CB_Add_Header_CheckedChanged(sender As Object, e As EventArgs) Handles CB_Add_Header.CheckedChanged
