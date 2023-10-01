@@ -1,0 +1,921 @@
+﻿Imports System.Drawing
+Imports System.Reflection
+Imports System.Reflection.Emit
+Imports System.Text.RegularExpressions
+Imports System.Windows.Forms
+
+Public Class Form33_ColorBasedDropDownList
+    Dim WithEvents excelApp As Excel.Application
+    Dim workBook As Excel.Workbook
+    Public Shared workSheet As Excel.Worksheet
+    Dim workSheet2 As Excel.Worksheet
+    Dim src_rng As Excel.Range
+    Public des_rng As Excel.Range
+    Dim selectedRange As Excel.Range
+    Public ax As String
+
+    Dim opened As Integer
+    Dim objectPosition As New Point() ' For 2D
+    Public mybtn As Object
+    Public focuschange As Boolean
+    Public form As Form42 = Nothing
+    Dim flag As Boolean = False
+
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+    ' Declare the tooltip at class level
+    Private tooltip As New ToolTip()
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'ReDim mybtn(List_Preview.Items.Count)
+        'MsgBox
+        Me.KeyPreview = True
+        TB_des_rng.Enabled = False
+        Selection_destination.Enabled = False
+
+        ' Define the first 42 colors from the Visual Studio Custom tab with their names
+        Dim vsColors As Dictionary(Of String, Color) = New Dictionary(Of String, Color) From {
+        {"White", Color.FromArgb(255, 255, 255)},    '1
+        {"Aqua Light", Color.FromArgb(228, 239, 240)}, '2
+        {"Blue Light", Color.FromArgb(127, 127, 127)},     '3
+        {"Rose", Color.FromArgb(250, 214, 212)},   '4
+        {"Light Yellow", Color.FromArgb(255, 255, 235)},  '5
+        {"Lavender", Color.FromArgb(255, 153, 255)},    '6
+        {"Lime", Color.FromArgb(233, 249, 198)},     '7
+        {"Light Gray", Color.FromArgb(217, 217, 217)},     '8
+        {"Aqua", Color.FromArgb(188, 215, 218)},     '9
+        {"Light Torquoise", Color.FromArgb(102, 204, 255)},      '10
+        {"Light Red", Color.FromArgb(245, 174, 169)},  '11
+        {"Light Medium Yellow", Color.FromArgb(255, 255, 204)},          '12
+        {"Pink", Color.FromArgb(255, 153, 204)},            '13
+        {"Light Green", Color.FromArgb(200, 249, 207)},         '14
+        {"Gray", Color.FromArgb(166, 166, 166)},        '15
+        {"Teal", Color.FromArgb(122, 174, 181)},     '16
+        {"Blue", Color.FromArgb(51, 102, 255)},             '17
+        {"Medium Red", Color.FromArgb(241, 133, 127)},  '18
+        {"Yellow", Color.FromArgb(255, 255, 153)},          '19
+        {"Medium Pink", Color.FromArgb(255, 51, 204)},    '20
+        {"Medium Green", Color.FromArgb(91, 138, 212)},         '21
+        {"Dark Gray", Color.FromArgb(20, 26, 26)},   '22
+        {"Aqua Medium", Color.FromArgb(71, 121, 128)},        '23
+        {"Royal Blue", Color.FromArgb(0, 0, 255)},    '24
+        {"Red", Color.FromArgb(183, 30, 21)},          '25
+        {"Medium Yellow", Color.FromArgb(255, 255, 102)},          '26
+        {"Dark Pink", Color.FromArgb(204, 51, 153)},        '27
+        {"Green", Color.FromArgb(51, 153, 102)},    '28
+        {"Black", Color.FromArgb(64, 64, 64)},     '29
+        {"Dark Aqua", Color.FromArgb(49, 83, 88)},      '30
+        {"Medium Dark Blue", Color.FromArgb(0, 51, 153)},         '31
+        {"Dark Red", Color.FromArgb(122, 20, 14)},    '32
+        {"Dark Yellow", Color.FromArgb(255, 255, 0)},         '33
+        {"Plum", Color.FromArgb(153, 44, 98)},         '34
+        {"Medium Dark Green", Color.FromArgb(15, 141, 33)},   '35
+        {"Dark Black", Color.FromArgb(13, 13, 13)},    '36
+        {"Dark Teal", Color.FromArgb(20, 26, 26)},    '37
+        {"Dark Blue", Color.FromArgb(0, 32, 96)},          '38
+        {"Brown", Color.FromArgb(106, 53, 12)},           '39
+        {"Gold", Color.FromArgb(255, 204, 0)},               '40
+        {"Dark Purple", Color.FromArgb(128, 0, 128)},          '41
+        {"Dark Green", Color.FromArgb(10, 94, 22)}}          '42
+        '... Add more colors if you have them
+        ' }
+
+        ' Generate color palette buttons
+        For Each colorEntry In vsColors
+            Dim btn As New Button With {
+            .Width = 20,
+            .Height = 20,
+            .BackColor = colorEntry.Value,
+            .Tag = colorEntry.Key,  ' Store color name in the Tag property
+            .FlatStyle = FlatStyle.Popup
+        }
+
+            ' Attach events to the button
+            AddHandler btn.Click, AddressOf ColorButton_Click
+            AddHandler btn.MouseHover, AddressOf ColorButton_MouseHover
+
+            ' Add the button to the flow layout panel
+            FlowLayoutPanel1.Controls.Add(btn)
+        Next
+
+
+
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+
+            AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
+
+            opened = opened + 1
+
+            If excelApp.Selection IsNot Nothing Then
+                selectedRange = excelApp.Selection
+                src_rng = selectedRange
+                TB_src_rng.Text = selectedRange.Address
+
+            End If
+            TB_src_rng.Focus()
+
+        Catch ex As Exception
+            TB_src_rng.Focus()
+        End Try
+
+
+    End Sub
+
+    Private Sub ColorButton_Click(sender As Object, e As EventArgs)
+
+        Dim clickedButton As Button = CType(sender, Button)
+        objectPosition = clickedButton.Location
+        Dim c As Color
+        'MsgBox(8)
+        c = clickedButton.BackColor
+
+
+        Dim index As Integer = List_Preview.SelectedIndex
+        If index < 0 Then Return
+
+        Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
+        item.Color = c
+        clickedButton.Focus()
+
+        'MsgBox(List_Preview.SelectedIndex.ToString)
+        'MsgBox(List_Preview.Items.Count)
+        mybtn(List_Preview.SelectedIndex) = clickedButton
+        Btn_color.BackColor = c
+        Me.Refresh()
+    End Sub
+    Private Sub List_Box_IndexChanged() Handles List_Preview.SelectedIndexChanged
+        Dim item As ColoredItem = CType(List_Preview.Items(List_Preview.SelectedIndex), ColoredItem)
+
+        If item.Color = Color.White Then
+            Btn_NC.Focus()
+        Else
+            mybtn(List_Preview.SelectedIndex).Focus()
+        End If
+    End Sub
+
+    Private Sub ListBox1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles List_Preview.DrawItem
+        If e.Index < 0 Then Return
+
+        Dim item As ColoredItem = CType(List_Preview.Items(e.Index), ColoredItem)
+
+        Dim textColor As Color = Color.Black
+        Dim backColor As Color = item.Color
+
+        If (e.State And DrawItemState.Selected) = DrawItemState.Selected And item.Color = Color.White Then
+            ' If item is selected, we'll use system colors to highlight.
+            backColor = SystemColors.Highlight
+            textColor = SystemColors.HighlightText
+        End If
+
+        ' Use the determined colors.
+        Using brush As New SolidBrush(backColor)
+            e.Graphics.FillRectangle(brush, e.Bounds)
+        End Using
+
+        ' Draw the text in the determined text color.
+        Using brush As New SolidBrush(textColor)
+            e.Graphics.DrawString(item.Text, e.Font, brush, e.Bounds.Left, e.Bounds.Top)
+        End Using
+
+        e.DrawFocusRectangle()
+    End Sub
+
+
+
+    'Private Sub ListBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles List_Preview.MouseDoubleClick
+    '    Dim index As Integer = List_Preview.IndexFromPoint(e.Location)
+    '    If index < 0 Then Return
+
+    '    Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
+
+    '    Using colorDialog As New ColorDialog()
+    '        If colorDialog.ShowDialog() = DialogResult.OK Then
+    '            item.Color = colorDialog.Color
+    '            List_Preview.Refresh() ' Redraw the ListBox to reflect color changes
+    '        End If
+    '    End Using
+    'End Sub
+
+
+    'Private Sub ListBox1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles List_Preview.DrawItem
+    '    If e.Index < 0 Then Return
+
+    '    Dim item As ColoredItem = CType(List_Preview.Items(e.Index), ColoredItem)
+
+    '    ' Determine colors for text and background.
+    '    Dim textColor As Color = Color.Black
+    '    Dim backColor As Color = item.Color
+
+    '    If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
+    '        ' If item is selected, we'll use system colors to highlight.
+    '        backColor = SystemColors.Highlight
+    '        textColor = SystemColors.HighlightText
+    '    End If
+
+    '    ' Use the determined colors.
+    '    Using brush As New SolidBrush(backColor)
+    '        e.Graphics.FillRectangle(brush, e.Bounds)
+    '    End Using
+
+    '    ' Draw the text in the determined text color.
+    '    Using brush As New SolidBrush(textColor)
+    '        e.Graphics.DrawString(item.Text, e.Font, brush, e.Bounds.Left, e.Bounds.Top)
+    '    End Using
+
+    '    e.DrawFocusRectangle()
+    'End Sub
+
+    'Private Sub SheetSelectionChange(ByVal Sh As Object, ByVal selectionRange1 As Excel.Range) Handles excelApp.SheetSelectionChange
+    '    Try
+
+    '        excelApp = Globals.ThisAddIn.Application
+
+    '        If Me.ActiveControl Is TB_des_rng Then
+    '            des_rng = selectionRange1
+    '            ' This will run on the Excel thread, so you need to use Invoke to update the UI
+    '            'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
+    '            Me.Activate()
+    '            Me.BeginInvoke(New System.Action(Sub()
+    '                                                 TB_des_rng.Text = des_rng.Address
+    '                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+    '                                             End Sub))
+    '            TB_des_rng.Focus()
+
+    '        ElseIf Me.ActiveControl Is TB_src_rng Then
+    '            src_rng = selectionRange1
+    '            Me.Activate()
+
+
+    '            Me.BeginInvoke(New System.Action(Sub()
+    '                                                 TB_src_rng.Text = src_rng.Address
+    '                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+    '                                             End Sub))
+    '            TB_des_rng.Focus()
+    '        End If
+
+
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+    Private Sub ColorButton_MouseHover(sender As Object, e As EventArgs)
+        Dim hoveredButton As Button = CType(sender, Button)
+        ' Display the color name from the Tag property of the button
+        tooltip.SetToolTip(hoveredButton, hoveredButton.Tag.ToString())
+    End Sub
+
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        If ColorDialog1.ShowDialog <> Windows.Forms.DialogResult.Cancel Then
+            'Label1.ForeColor = ColorDialog1.Color
+
+            Dim clickedButton As Button = CType(sender, Button)
+            objectPosition = clickedButton.Location
+            Dim index As Integer = List_Preview.SelectedIndex
+
+            Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
+            item.Color = ColorDialog1.Color
+            Button2.Focus()
+
+            mybtn(List_Preview.SelectedIndex) = Button2
+            Btn_color.BackColor = ColorDialog1.Color
+            Me.Refresh()
+        End If
+    End Sub
+
+    Private Sub Selection_source_Click(sender As Object, e As EventArgs) Handles Selection_source.Click
+        Try
+            If selectedRange Is Nothing Then
+            Else
+
+                'MsgBox(List_Preview.Items.Count)
+                TB_src_rng.Text = selectedRange.Address
+
+
+                'FocusedTextBox = 1
+                Me.Hide()
+
+                excelApp = Globals.ThisAddIn.Application
+                workBook = excelApp.ActiveWorkbook
+
+                Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
+                src_rng = userInput
+
+                Dim sheetName As String
+                sheetName = Split(src_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+                sheetName = Split(sheetName, "!")(0)
+
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+                workSheet = workBook.Worksheets(sheetName)
+                workSheet.Activate()
+
+                src_rng.Select()
+
+                TB_src_rng.Text = src_rng.Address
+
+                Me.Show()
+                TB_src_rng.Focus()
+
+
+                Dim ran As Excel.Range = src_rng(1, 1)
+
+                ' Clear the ListBox
+                List_Preview.Items.Clear()
+                'MsgBox(ran.Address)
+
+                'If range.Validation.Type = Excel.XlDVType.xlValidateList Then
+                Dim formula As String = ran.Validation.Formula1
+                'MsgBox(formula)
+                Dim items As New List(Of String)()
+                If formula.Contains(":") Then
+                    Dim range As Excel.Range = excelApp.Range(formula)
+                    For Each r In range
+                        items.Add(r.Value.ToString())
+                    Next
+                Else
+                    ' Else, split the formula to get the individual items
+                    items.AddRange(formula.Split(","))
+                End If
+
+                'Dim items As String() = formula.Split(","c)
+
+                'Dim items As List(Of String) = GetValidationList(src_rng)
+                'MsgBox(items.Count)
+
+                For Each item As String In items
+                    'MsgBox(item.ToString)
+                    List_Preview.Items.Add(New ColoredItem(item.Trim))
+                Next
+                'Dim startPositionY As Integer = 263  ' Starting vertical position for labels
+                'Dim gap As Integer = 20  ' Vertical gap between labels
+
+                'For Each item As String In items
+                '    'List_Preview.Items.Add(New ColoredItem(item.Trim()))
+                '    'MsgBox(item)
+                '    Dim newLabel As New Windows.Forms.Label()
+                '    newLabel.Text = item.Trim()
+                '    newLabel.Location = New Point(17, startPositionY)
+                '    startPositionY += gap
+                '    Me.Controls.Add(newLabel)
+                '    newLabel.BringToFront()
+                '    newLabel.Width = 122
+                '    newLabel.Height = 20
+                '    newLabel.FlatStyle = FlatStyle.Popup
+
+                '    ' Add event handlers for hover effect
+                '    AddHandler newLabel.MouseEnter, AddressOf Label_MouseEnter
+                '    AddHandler newLabel.MouseLeave, AddressOf Label_MouseLeave
+                '    AddHandler newLabel.Click, AddressOf Label_Click
+
+                'Next
+
+                ReDim mybtn(List_Preview.Items.Count)
+
+            End If
+
+        Catch ex As Exception
+
+            Me.Show()
+            TB_src_rng.Focus()
+
+        End Try
+    End Sub
+
+    'Private Function GetValidationList(cell As Excel.Range) As List(Of String)
+    '    Dim items As New List(Of String)()
+    '    'MsgBox(cell.Address)
+    '    ' Check if the cell has validation and it's a List validation
+
+    '    If cell.HasFormula = True Then
+    '        Dim formula As String = cell.Validation.Formula1
+    '        MsgBox(formula)
+    '        ' If the formula is referencing a range, get the values from that range
+    '        If formula.Contains(":") Then
+    '            Dim range As Excel.Range = excelApp.Range(formula)
+    '            For Each r In range
+    '                items.Add(r.Value.ToString())
+    '            Next
+    '        Else
+    '            ' Else, split the formula to get the individual items
+    '            items.AddRange(formula.Split(","))
+    '        End If
+    '    End If
+
+    '    Return items
+    'End Function
+
+
+    Private Sub Label_MouseEnter(sender As Object, e As EventArgs)
+        ' Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
+        'lbl.BackColor = SystemColors.Highlight
+        'lbl.ForeColor = SystemColors.HighlightText
+    End Sub
+
+    Private Sub Label_MouseLeave(sender As Object, e As EventArgs)
+        ' Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
+        'lbl.BackColor = Color.White
+        ' lbl.ForeColor = Color.Black
+    End Sub
+    Private Sub Label_Click(sender As Object, e As EventArgs)
+        Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
+        ' Reset all labels to their default colors
+        For Each control As Control In Me.Controls
+            If TypeOf control Is Windows.Forms.Label Then
+                Dim lbl1 As Windows.Forms.Label = DirectCast(control, Windows.Forms.Label)
+                lbl1.BackColor = Color.White
+                lbl1.ForeColor = Color.Black
+
+            End If
+        Next
+
+        lbl.BackColor = SystemColors.Highlight
+        lbl.ForeColor = SystemColors.HighlightText
+        Btn_NC.Focus()
+
+    End Sub
+
+
+
+    Private Sub Selection_destination_Click(sender As Object, e As EventArgs) Handles Selection_destination.Click
+        If selectedRange Is Nothing Then
+        Else
+            ' TB_src_range.Text = selectedRange.Address
+
+
+            Me.Hide()
+
+            excelApp = Globals.ThisAddIn.Application
+            workBook = excelApp.ActiveWorkbook
+
+            'Dim userInput As String = excelApp.InputBox("Select a range", "Select range", "=$A$1")
+
+
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
+            des_rng = userInput
+
+            Dim sheetName As String
+            sheetName = Split(des_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet = workBook.Worksheets(sheetName)
+            workSheet.Activate()
+
+            des_rng.Select()
+            'MsgBox(src_rng.Address)
+
+            TB_des_rng.Text = des_rng.Address
+
+            Me.Show()
+            TB_des_rng.Focus()
+
+        End If
+    End Sub
+
+    Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal selectionRange1 As Excel.Range) Handles excelApp.SheetSelectionChange
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            If focuschange = False Then
+
+                If Me.ActiveControl Is TB_des_rng Then
+                    des_rng = selectionRange1
+                    ' This will run on the Excel thread, so you need to use Invoke to update the UI
+                    'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
+                    Me.Activate()
+                    Me.BeginInvoke(New System.Action(Sub()
+                                                         TB_des_rng.Text = des_rng.Address
+                                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                                     End Sub))
+
+                ElseIf Me.ActiveControl Is TB_src_rng Then
+                    src_rng = selectionRange1
+                    Me.Activate()
+
+
+                    Me.BeginInvoke(New System.Action(Sub()
+                                                         TB_src_rng.Text = src_rng.Address
+                                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                                     End Sub))
+                End If
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub List_Preview_SelectedIndexChanged(sender As Object, e As EventArgs) Handles List_Preview.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
+        Try
+            If des_rng IsNot Nothing Then
+                des_rng.FormatConditions.Delete()
+            End If
+            If TB_src_rng.Text = "" Then
+                MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_src_rng.Focus()
+                'Me.Close()
+                Exit Sub
+            ElseIf TB_des_rng.Text = "" And RB_Row.Checked = True Then
+                MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_des_rng.Focus()
+                'Me.Close()
+                Exit Sub
+            Else
+
+                ' Retrieve data validation items
+
+                ' Clear any existing conditional formats
+
+                Dim formula As String = src_rng.Validation.Formula1
+                Dim items As String() = formula.Split(","c)
+
+                src_rng.FormatConditions.Delete()
+
+                If RB_cell.Checked = True Then
+                    For Each item As ColoredItem In List_Preview.Items
+                        'Only drop-down cell
+                        AddColorCondition(src_rng, item.ToString, item.Color)
+
+                    Next
+
+                ElseIf RB_Row.Checked = True Then
+                    For Each item As ColoredItem In List_Preview.Items
+                        ' Color the destination range
+                        Dim i As Integer = 0
+                        For Each cell In src_rng
+                            i = i + 1
+                            AddColorCondition2(des_rng.Rows(i), cell, item.ToString, item.Color)
+                        Next
+                    Next
+                End If
+
+
+            End If
+            src_rng.Select()
+
+
+
+
+            For Each cell In src_rng
+                If cell.Validation.Type = Excel.XlDVType.xlValidateList Then
+                    flag = True
+                    Exit For
+                End If
+
+            Next
+            'MsgBox(flag)
+
+            If flag = False Then
+                form = New Form42
+                form.Show()
+                Me.Hide()
+                ' MsgBox(1)
+            Else
+                'MsgBox(2)
+                Me.Close()
+
+            End If
+
+            Me.Show()
+
+        Catch ex As Exception
+            If flag = False Then
+                Me.Hide()
+            form = New Form42
+            form.Show()
+                If form.IsDisposed Or form Is Nothing Then
+                    Me.Show()
+                End If
+            End If
+            'Me.Close()
+        End Try
+    End Sub
+    Private Function GetColorForItem(index As Integer) As Color
+        ' This function maps an index to a color
+        ' You can adjust or expand this as needed
+        Dim colors As Color() = {Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple}
+
+        If index >= 0 And index < colors.Length Then
+            Return colors(index)
+        Else
+            Return Color.White
+        End If
+    End Function
+
+    Private Sub AddColorCondition(targetRange As Excel.Range, value As String, color As Color)
+        Dim condition As Excel.FormatCondition = CType(targetRange.FormatConditions.Add(Type:=Excel.XlFormatConditionType.xlCellValue, Operator:=Excel.XlFormatConditionOperator.xlEqual, Formula1:=value), Excel.FormatCondition)
+        condition.Interior.Color = ColorTranslator.ToOle(color)
+    End Sub
+
+    Private Sub AddColorCondition2(targetRange As Excel.Range, controlCell As Excel.Range, value As String, color As Color)
+        If IsNumeric(value) = False Then
+            Dim formula As String = "=" & controlCell.Address & " = """ & value & """"
+            Dim condition As Excel.FormatCondition = CType(targetRange.FormatConditions.Add(Type:=Excel.XlFormatConditionType.xlExpression, Formula1:=formula), Excel.FormatCondition)
+            condition.Interior.Color = ColorTranslator.ToOle(color)
+        Else
+            Dim formula As String = "=" & controlCell.Address & " = " & value & ""
+            Dim condition As Excel.FormatCondition = CType(targetRange.FormatConditions.Add(Type:=Excel.XlFormatConditionType.xlExpression, Formula1:=formula), Excel.FormatCondition)
+            condition.Interior.Color = ColorTranslator.ToOle(color)
+        End If
+
+    End Sub
+
+    Private Sub List_Box_IndexChanged(sender As Object, e As EventArgs) Handles List_Preview.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub RB_Row_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Row.CheckedChanged
+        If RB_Row.Checked = True Then
+            Selection_destination.Enabled = True
+            TB_des_rng.Enabled = True
+        End If
+    End Sub
+
+    Private Sub btn_Cancel_Click(sender As Object, e As EventArgs) Handles btn_Cancel.Click
+        Me.Close()
+    End Sub
+
+    Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
+        Try
+            TB_src_rng.Focus()
+
+
+            If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                src_rng = excelApp.Range(TB_src_rng.Text)
+                src_rng.Select()
+                Dim range As Excel.Range = src_rng
+
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+                focuschange = False
+
+
+
+                Dim ran As Excel.Range = src_rng(1, 1)
+
+                ' Clear the ListBox
+                List_Preview.Items.Clear()
+                'MsgBox(ran.Address)
+
+                'If range.Validation.Type = Excel.XlDVType.xlValidateList Then
+                Dim formula As String = ran.Validation.Formula1
+                'MsgBox(formula)
+                Dim items As New List(Of String)()
+                If formula.Contains(":") Then
+                    range = excelApp.Range(formula)
+                    For Each r In range
+                        items.Add(r.Value.ToString())
+                    Next
+                Else
+                    ' Else, split the formula to get the individual items
+                    items.AddRange(formula.Split(","))
+                End If
+
+
+                For Each item As String In items
+                    'MsgBox(item.ToString)
+                    List_Preview.Items.Add(New ColoredItem(item.Trim))
+                Next
+
+                TB_src_rng.Focus()
+                ReDim mybtn(List_Preview.Items.Count)
+            End If
+
+        Catch ex As Exception
+            TB_src_rng.Focus()
+        End Try
+    End Sub
+
+
+
+
+    Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RB_cell_KeyDown(sender As Object, e As KeyEventArgs) Handles RB_cell.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RB_row_KeyDown(sender As Object, e As KeyEventArgs) Handles RB_Row.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+    Private Sub Sample_Image_KeyDown(sender As Object, e As KeyEventArgs) Handles GB_sample.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim index As Integer = 0
+        For Each item In List_Preview.Items
+            item = CType(List_Preview.Items(index), ColoredItem)
+            item.Color = Color.White
+            index = index + 1
+        Next
+        Me.Refresh()
+    End Sub
+
+    Private Sub Btn_color_Click(sender As Object, e As EventArgs) Handles Btn_color.Click
+        Dim clickedButton As Button = CType(sender, Button)
+        objectPosition = clickedButton.Location
+        Dim c As Color
+        'MsgBox(8)
+        c = Btn_color.BackColor
+
+
+        Dim index As Integer = List_Preview.SelectedIndex
+        If index < 0 Then Return
+
+        Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
+        item.Color = c
+        clickedButton.Focus()
+
+        mybtn(List_Preview.SelectedIndex) = clickedButton
+        Btn_color.BackColor = c
+        Me.Refresh()
+    End Sub
+
+    Private Function IsValidExcelCellReference(cellReference As String) As Boolean
+
+        ' Regular expression pattern for a cell reference.
+        ' This pattern will match references like A1, $A$1, etc.
+        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+
+        ' Regular expression pattern for an Excel reference.
+        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+
+        ' Create a regex object with the pattern.
+        Dim regex As New Regex(referencePattern)
+
+        ' Test the input string against the regex pattern.
+        If regex.IsMatch(cellReference) Then
+            Return True
+        Else
+            Return False
+        End If
+
+
+    End Function
+
+    Private Sub TB_dest_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_des_rng.KeyDown
+        'If Enter key is pressed then check if the text is a valid address
+        If IsValidExcelCellReference(TB_des_rng.Text) = True And e.KeyCode = Keys.Enter Then
+            des_rng = excelApp.Range(TB_des_rng.Text)
+            TB_des_rng.Focus()
+            des_rng.Select()
+
+            Call btn_OK_Click(sender, e)   'OK button click event called
+
+            'MsgBox(des_rng.Address)
+        ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And e.KeyCode = Keys.Enter Then
+            MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Text = ""
+            TB_des_rng.Focus()
+            'Me.Close()
+            Exit Sub
+        End If
+    End Sub
+
+    Private Sub TB_src_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_src_rng.KeyDown
+        'If Enter key is pressed then check if the text is a valid address
+
+        If IsValidExcelCellReference(TB_src_rng.Text) = True And e.KeyCode = Keys.Enter Then
+            src_rng = excelApp.Range(TB_src_rng.Text)
+            TB_src_rng.Focus()
+            src_rng.Select()
+
+            Call btn_OK_Click(sender, e)   'OK button click event called
+
+            'MsgBox(des_rng.Address)
+        ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False And e.KeyCode = Keys.Enter Then
+            MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Text = ""
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+        End If
+    End Sub
+
+    Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
+        Try
+
+            If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                des_rng = excelApp.Range(TB_des_rng.Text)
+                des_rng.Select()
+                Dim range As Excel.Range = des_rng
+
+                ' Clear the ListBox
+                'List_Preview.Items.Clear()
+
+                '' Iterate over each cell in the range
+                'For Each cell As Excel.Range In range
+                '    ' Add the cell's value to the ListBox
+                '    If cell.Value IsNot Nothing Then
+                '        List_Preview.Items.Add(cell.Value)
+                '    End If
+                'Next
+
+                'Label7.Visible = True
+                'Label7.Text = List_Preview.Items.Count
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_des_rng.SelectionStart = TB_des_rng.Text.Length
+                focuschange = False
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+End Class
+
+Public Class ColoredItem
+    Public Property Text As String
+    Public Property Color As Color = Color.White
+
+    Public Sub New(t As String)
+        Text = t
+    End Sub
+
+    Public Sub New(t As String, c As Color)
+        Text = t
+        Color = c
+    End Sub
+
+    Public Overrides Function ToString() As String
+        Return Text
+    End Function
+End Class

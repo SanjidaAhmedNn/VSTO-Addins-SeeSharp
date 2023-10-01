@@ -90,6 +90,7 @@ Partial Class Form10
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
         Me.ComboBox1.Location = New System.Drawing.Point(12, 413)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(90, 25)
@@ -213,10 +214,10 @@ Partial Class Form10
         Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton10.Location = New System.Drawing.Point(8, 31)
         Me.RadioButton10.Name = "RadioButton10"
-        Me.RadioButton10.Size = New System.Drawing.Size(174, 21)
+        Me.RadioButton10.Size = New System.Drawing.Size(185, 21)
         Me.RadioButton10.TabIndex = 1
         Me.RadioButton10.TabStop = True
-        Me.RadioButton10.Text = "Store into different range"
+        Me.RadioButton10.Text = "Store into a different range"
         Me.RadioButton10.UseVisualStyleBackColor = True
         '
         'RadioButton9
@@ -225,10 +226,10 @@ Partial Class Form10
         Me.RadioButton9.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton9.Location = New System.Drawing.Point(8, 6)
         Me.RadioButton9.Name = "RadioButton9"
-        Me.RadioButton9.Size = New System.Drawing.Size(156, 21)
+        Me.RadioButton9.Size = New System.Drawing.Size(178, 21)
         Me.RadioButton9.TabIndex = 0
         Me.RadioButton9.TabStop = True
-        Me.RadioButton9.Text = "Same as source range"
+        Me.RadioButton9.Text = "Same as the source range"
         Me.RadioButton9.UseVisualStyleBackColor = True
         '
         'CustomGroupBox6

@@ -211,6 +211,9 @@
     <Compile Include="CustomGroupBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomPanel.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -220,7 +223,7 @@
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form10Unmerge Cells with Value.Designer.vb">
+    <Compile Include="Form10Unmerge Cells with Value.designer.vb">
       <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
     </Compile>
     <Compile Include="Form10Unmerge Cells with Value.vb">
@@ -238,42 +241,166 @@
     <Compile Include="Form12HideRanges.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form13.Designer.vb">
-      <DependentUpon>Form13.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form13.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form13HideAllExceptSelectedRange.Designer.vb">
       <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
     </Compile>
     <Compile Include="Form13HideAllExceptSelectedRange.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <Compile Include="Form14SpecifyScrollArea.Designer.vb">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form2.vb">
+    <Compile Include="Form14SpecifyScrollArea.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form28_Split_text_bypattern.Designer.vb">
-      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    <Compile Include="Form15CompareCells.Designer.vb">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form28_Split_text_bypattern.vb" />
+    <Compile Include="Form15CompareCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.Designer.vb">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form17DivideNames.designer.vb">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form17DivideNames.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.designer.vb">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.designer.vb">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.designer.vb">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.designer.vb">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.designer.vb">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form25_Split_Range.designer.vb">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_Split_Range.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form3.Designer.vb">
       <DependentUpon>Form3.vb</DependentUpon>
     </Compile>
     <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb" />
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form32_ExtendDropDownList.Designer.vb">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form32_ExtendDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form33_ColorBasedDropDownList.Designer.vb">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form33_ColorBasedDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form34_PictureBasedDropdownList.Designer.vb">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form34_PictureBasedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.designer.vb">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form36.designer.vb">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form36.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form37_MSDropDownCheckBox.designer.vb">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form37_MSDropDownCheckBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form38.designer.vb">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form38.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form39_DropdownlistwithSearchOption.designer.vb">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form39_DropdownlistwithSearchOption.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form4.Designer.vb">
       <DependentUpon>Form4.vb</DependentUpon>
     </Compile>
     <Compile Include="Form4.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form40.designer.vb">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form40.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.designer.vb">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form42.designer.vb">
+      <DependentUpon>Form42.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form42.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form7.Designer.vb">
@@ -288,12 +415,7 @@
     <Compile Include="Form8.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form9.Designer.vb">
-      <DependentUpon>Form9.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form9.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GlobalModule.vb" />
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -321,33 +443,92 @@
     <EmbeddedResource Include="Form12HideRanges.resx">
       <DependentUpon>Form12HideRanges.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form13.resx">
-      <DependentUpon>Form13.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
       <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form28_Split_text_bypattern.resx">
-      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    <EmbeddedResource Include="Form15CompareCells.resx">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form17DivideNames.resx">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form18_CombineRanges.resx">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form21FillEmtyCells.resx">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_Split_Cells.resx">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_Split_Range.resx">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx" />
+    <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form32_ExtendDropDownList.resx">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form33_ColorBasedDropDownList.resx">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form34_PictureBasedDropdownList.resx">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form35Multi SelectionbasedDropdown.resx">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form36.resx">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form37_MSDropDownCheckBox.resx">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form38.resx">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form39_DropdownlistwithSearchOption.resx">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form40.resx">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form41_RemoveAdavancedDropdownList.resx">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form42.resx">
+      <DependentUpon>Form42.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form7.resx">
       <DependentUpon>Form7.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form8.resx">
       <DependentUpon>Form8.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form9.resx">
-      <DependentUpon>Form9.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
@@ -392,6 +573,24 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel1">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Ribbon.xml" />
@@ -416,7 +615,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>DE8B8670BDF610E008FE7DD587CD73A99977FE97</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E2D8B69698DF74D2B7FA9D89E1B1140627D99A88</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
