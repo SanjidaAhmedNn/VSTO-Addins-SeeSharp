@@ -200,16 +200,12 @@ Public Class Ribbon1
         form.Show()
     End Sub
 
-    Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
-        Dim form As New Form12HideRanges
+    Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs)
 
-        form.Show()
     End Sub
 
     Private Sub Button11_Click(sender As Object, e As RibbonControlEventArgs)
-        Dim form As New Form13HideAllExceptSelectedRange
 
-        form.Show()
     End Sub
 
     Private Sub Button12_Click(sender As Object, e As RibbonControlEventArgs)
@@ -1748,5 +1744,26 @@ nextloop:
             MyForm33.Focus()
             MyForm33.BringToFront()
         End If
+    End Sub
+
+    Private Sub Button54_Click(sender As Object, e As RibbonControlEventArgs) Handles Button54.Click
+        Dim form As New Form12HideRanges
+
+        form.Show()
+    End Sub
+
+    Private Sub Button11_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button11.Click
+        Dim form As New Form13HideAllExceptSelectedRange
+
+        form.Show()
+    End Sub
+
+    Private Sub Button12_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button12.Click
+        Dim Myform As New Form14SpecifyScrollArea
+        Myform.Show()
+    End Sub
+
+    Private Sub Button2_Click_2(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
+
     End Sub
 End Class

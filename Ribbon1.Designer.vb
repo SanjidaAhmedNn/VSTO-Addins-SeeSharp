@@ -78,7 +78,6 @@
         Me.Menu4 = Me.Factory.CreateRibbonMenu
         Me.Button31 = Me.Factory.CreateRibbonButton
         Me.Button32 = Me.Factory.CreateRibbonButton
-        Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Group3 = Me.Factory.CreateRibbonGroup
         Me.Menu7 = Me.Factory.CreateRibbonMenu
         Me.Button37 = Me.Factory.CreateRibbonButton
@@ -317,7 +316,6 @@
         '
         Me.Group5.Items.Add(Me.Menu11)
         Me.Group5.Items.Add(Me.Menu4)
-        Me.Group5.Items.Add(Me.Button4)
         Me.Group5.Label = "Hide && Unhide"
         Me.Group5.Name = "Group5"
         '
@@ -358,11 +356,6 @@
         Me.Button32.Label = "Unhide Ranges from the Selection"
         Me.Button32.Name = "Button32"
         Me.Button32.ShowImage = True
-        '
-        'Button4
-        '
-        Me.Button4.Label = "Unhide Ranges"
-        Me.Button4.Name = "Button4"
         '
         'Group3
         '
@@ -577,7 +570,6 @@
     Friend WithEvents Group1 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button1 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
-    Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button5 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button6 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button7 As Microsoft.Office.Tools.Ribbon.RibbonButton
