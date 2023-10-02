@@ -21,10 +21,14 @@ Public Class Form17DivideNames
     Dim sourceRange, destRange As Excel.Range
     Dim selectedRange As Excel.Range
     Dim mainArr(6) As String
-    Dim name As String
     Dim changeState As Boolean = False
-    Dim textChanged As Boolean = False
+    Dim txtChanged As Boolean = False
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btnOK.PerformClick()
+        End If
+    End Sub
 
     Private Sub Form17DivideNames_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -56,7 +60,7 @@ Public Class Form17DivideNames
             worksheet = workbook.ActiveSheet
 
 
-            textChanged = True
+            txtChanged = True
             sourceRange = worksheet.Range(txtSourceRange.Text)
 
 
@@ -83,7 +87,7 @@ Public Class Form17DivideNames
 
         End Try
 
-        textChanged = False
+        txtChanged = False
 
         txtSourceRange.Focus()
         Call display()
@@ -99,7 +103,7 @@ Public Class Form17DivideNames
 
             changeState = True
 
-            textChanged = True
+            txtChanged = True
             destRange = worksheet.Range(txtDestRange.Text)
 
 
@@ -119,7 +123,7 @@ Public Class Form17DivideNames
 
         End Try
 
-        textChanged = False
+        txtChanged = False
         txtDestRange.Focus()
 
 
@@ -296,7 +300,7 @@ Public Class Form17DivideNames
             selectedRange.Select()
 
 
-            If textChanged = False Then
+            If txtChanged = False Then
 
 
                 If FocusedTxtBox = 1 Then
@@ -627,6 +631,7 @@ Public Class Form17DivideNames
 
             End If
 
+
             Me.Dispose()
 
 
@@ -636,6 +641,7 @@ Public Class Form17DivideNames
 
         End Try
 
+        Me.Dispose()
 
 
 
@@ -1205,13 +1211,13 @@ Public Class Form17DivideNames
 
 
 
-            Dim displayRng As Excel.Range
+            Dim displayRng As Excel.Range = worksheet.Cells(1, 1)
             Dim arrRng As String()
 
 
             Dim outputColumn As Integer
 
-                arrRng = Split(txtSourceRange.Text, ",")
+            arrRng = Split(txtSourceRange.Text, ",")
 
             For i = 0 To UBound(arrRng)
 
