@@ -1,0 +1,641 @@
+﻿<Project ToolsVersion="17.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--
+    This section defines project-level properties.
+
+    AssemblyName
+      Name of the output assembly.
+    Configuration
+      Specifies a default value for debug.
+    OutputType
+      Must be "Library" for VSTO.
+    Platform
+      Specifies what CPU the output of this project can run on.
+    NoStandardLibraries
+      Set to "false" for VSTO.
+    RootNamespace
+      In C#, this specifies the namespace given to new files. In VB, all objects are
+      wrapped in this namespace at runtime.
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{BAA0C2D2-18E2-41B9-852F-F413020CAA33};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>VSTO_Addins</RootNamespace>
+    <AssemblyName>VSTO Addins</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <DefineConstants>VSTO40</DefineConstants>
+    <StartupObject>
+    </StartupObject>
+    <IsWebBootstrapper>False</IsWebBootstrapper>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <PublishUrl>D:\Sudipta\</PublishUrl>
+    <InstallUrl />
+    <TargetCulture>en</TargetCulture>
+    <ApplicationVersion>1.0.0.3</ApplicationVersion>
+    <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>days</UpdateIntervalUnits>
+    <ProductName>VSTO Addins</ProductName>
+    <PublisherName />
+    <SupportUrl />
+    <FriendlyName>VSTO Addins</FriendlyName>
+    <OfficeApplicationDescription />
+    <LoadBehavior>3</LoadBehavior>
+  </PropertyGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Studio 2010 Tools for Office Runtime %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <PropertyGroup>
+    <!--
+      OfficeApplication
+        Add-in host application
+    -->
+    <OfficeApplication>Excel</OfficeApplication>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <!--
+    This section defines properties that are set when the "Debug" configuration is selected.
+
+    DebugSymbols
+      If "true", create symbols (.pdb). If "false", do not create symbols.
+    DefineConstants
+      Constants defined for the preprocessor.
+    EnableUnmanagedDebugging
+      If "true", starting the debugger will attach both managed and unmanaged debuggers.
+    Optimize
+      If "true", optimize the build output. If "false", do not optimize.
+    OutputPath
+      Output path of project relative to the project file.
+    WarningLevel
+      Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>VSTO Addins.xml</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <!--
+    This section defines properties that are set when the "Release" configuration is selected.
+
+    DebugSymbols
+      If "true", create symbols (.pdb). If "false", do not create symbols.
+    DefineConstants
+      Constants defined for the preprocessor.
+    EnableUnmanagedDebugging
+      If "true", starting the debugger will attach both managed and unmanaged debuggers.
+    Optimize
+      If "true", optimize the build output. If "false", do not optimize.
+    OutputPath
+      Output path of project relative to the project file.
+    WarningLevel
+      Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>VSTO Addins.xml</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <!--
+    This section specifies references for the project.
+  -->
+  <ItemGroup>
+    <Reference Include="Accessibility" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Tools.v4.0.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Tools.Applications.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools.Excel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Tools.Common.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <Private>False</Private>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <Private>False</Private>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <!-- Visual Basic supports importing namespaces (equivalent to "using" statements in C#). -->
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Text" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="Office = Microsoft.Office.Core" />
+    <Import Include="Excel = Microsoft.Office.Interop.Excel" />
+    <Import Include="Microsoft.Office.Tools.Excel" />
+  </ItemGroup>
+  <!--
+    This section defines the user source files that are part of the project.
+     
+    A "Compile" element specifies a source file to compile.
+    An "EmbeddedResource" element specifies an .resx file for embedded resources.
+    A "None" element specifies a file that is not to be passed to the compiler (for instance, 
+    a text file or XML file).
+    The "AppDesigner" element specifies the directory where the application properties files
+    can be found.
+  -->
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="CustomButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomGroupBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.designer.vb">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form10Unmerge Cells with Value.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form11SwapRanges.Designer.vb">
+      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form11SwapRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form12HideRanges.Designer.vb">
+      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form12HideRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form13HideAllExceptSelectedRange.Designer.vb">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form13HideAllExceptSelectedRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form14SpecifyScrollArea.Designer.vb">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form14SpecifyScrollArea.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form15CompareCells.Designer.vb">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form15CompareCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.Designer.vb">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form16PasteintoVisibleRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form17DivideNames.designer.vb">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form17DivideNames.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.designer.vb">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_CombineRanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.designer.vb">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form21FillEmtyCells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.designer.vb">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.designer.vb">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.designer.vb">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_Split_Cells.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form25_Split_Range.designer.vb">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_Split_Range.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form29_Simple_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.vb">
+      <DependentUpon>Form3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form3.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form32_ExtendDropDownList.Designer.vb">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form32_ExtendDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form33_ColorBasedDropDownList.Designer.vb">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form33_ColorBasedDropDownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form34_PictureBasedDropdownList.Designer.vb">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form34_PictureBasedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.designer.vb">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form35Multi SelectionbasedDropdown.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form36.designer.vb">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form36.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form37_MSDropDownCheckBox.designer.vb">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form37_MSDropDownCheckBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form38.designer.vb">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form38.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form39_DropdownlistwithSearchOption.designer.vb">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form39_DropdownlistwithSearchOption.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form4.Designer.vb">
+      <DependentUpon>Form4.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form4.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form40.designer.vb">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form40.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.designer.vb">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form42.designer.vb">
+      <DependentUpon>Form42.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form42.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form7.Designer.vb">
+      <DependentUpon>Form7.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form7.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form8.Designer.vb">
+      <DependentUpon>Form8.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form8.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GlobalModule.vb" />
+    <Compile Include="Ribbon.vb">
+      <XmlRibbon>true</XmlRibbon>
+    </Compile>
+    <Compile Include="Ribbon1.Designer.vb">
+      <DependentUpon>Ribbon1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Ribbon1.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThisAddIn.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="CustomGroupBox.resx">
+      <DependentUpon>CustomGroupBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form10Unmerge Cells with Value.resx">
+      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form11SwapRanges.resx">
+      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form12HideRanges.resx">
+      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
+      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
+      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form15CompareCells.resx">
+      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
+      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form17DivideNames.resx">
+      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form18_CombineRanges.resx">
+      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form21FillEmtyCells.resx">
+      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_Split_Cells.resx">
+      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_Split_Range.resx">
+      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
+      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form32_ExtendDropDownList.resx">
+      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form33_ColorBasedDropDownList.resx">
+      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form34_PictureBasedDropdownList.resx">
+      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form35Multi SelectionbasedDropdown.resx">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form36.resx">
+      <DependentUpon>Form36.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form37_MSDropDownCheckBox.resx">
+      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form38.resx">
+      <DependentUpon>Form38.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form39_DropdownlistwithSearchOption.resx">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form4.resx">
+      <DependentUpon>Form4.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form40.resx">
+      <DependentUpon>Form40.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form41_RemoveAdavancedDropdownList.resx">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form42.resx">
+      <DependentUpon>Form42.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form7.resx">
+      <DependentUpon>Form7.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form8.resx">
+      <DependentUpon>Form8.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ribbon1.resx">
+      <DependentUpon>Ribbon1.vb</DependentUpon>
+    </EmbeddedResource>
+    <None Include=".editorconfig" />
+    <None Include="ThisAddIn.Designer.xml">
+      <DependentUpon>ThisAddIn.vb</DependentUpon>
+    </None>
+    <Compile Include="ThisAddIn.Designer.vb">
+      <DependentUpon>ThisAddIn.Designer.xml</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="VSTO Addins_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel1">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Ribbon.xml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>EE9DDA031E0E356FFC25496B88EC4117558311E2</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MyType>Windows</MyType>
+  </PropertyGroup>
+  <!-- Include the build rules for a Visual Basic project. -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- Include additional build rules for an Office application add-in. -->
+  <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- This section defines VSTO properties that describe the host-changeable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
+        <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="vb" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{DCFE8D25-4715-4C33-9EAB-A34A9EBC9544}" />
+        <Host Name="Excel" PublishedHash="69C324AB27932AA2FBF2B7EA72250886FF164DE6" IconIndex="0">
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.vb" CanonicalName="AddIn" PublishedHash="501F60F3B8BAF1916C7D50AECC5342A51A6B73BE" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.vb" />
+        </Host>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -59,11 +59,50 @@
         Me.DropDown1 = Me.Factory.CreateRibbonDropDown
         Me.ComboBox1 = Me.Factory.CreateRibbonComboBox
         Me.Group3 = Me.Factory.CreateRibbonGroup
+        Me.SplitButton2 = Me.Factory.CreateRibbonSplitButton
+        Me.Button16 = Me.Factory.CreateRibbonButton
+        Me.Button17 = Me.Factory.CreateRibbonButton
+        Me.Button18 = Me.Factory.CreateRibbonButton
         Me.Button11 = Me.Factory.CreateRibbonButton
+        Me.Button12 = Me.Factory.CreateRibbonButton
+        Me.Button13 = Me.Factory.CreateRibbonButton
+        Me.Button14 = Me.Factory.CreateRibbonButton
+        Me.Button15 = Me.Factory.CreateRibbonButton
+        Me.Button19 = Me.Factory.CreateRibbonButton
+        Me.Button20 = Me.Factory.CreateRibbonButton
+        Me.Button21 = Me.Factory.CreateRibbonButton
+        Me.Group4 = Me.Factory.CreateRibbonGroup
+        Me.Button22 = Me.Factory.CreateRibbonButton
+        Me.Button23 = Me.Factory.CreateRibbonButton
+        Me.Menu2 = Me.Factory.CreateRibbonMenu
+        Me.Button24 = Me.Factory.CreateRibbonButton
+        Me.Button25 = Me.Factory.CreateRibbonButton
+        Me.Button26 = Me.Factory.CreateRibbonButton
+        Me.Button27 = Me.Factory.CreateRibbonButton
+        Me.Menu3 = Me.Factory.CreateRibbonMenu
+        Me.Button28 = Me.Factory.CreateRibbonButton
+        Me.Button29 = Me.Factory.CreateRibbonButton
+        Me.Button30 = Me.Factory.CreateRibbonButton
+        Me.Menu4 = Me.Factory.CreateRibbonMenu
+        Me.Button31 = Me.Factory.CreateRibbonButton
+        Me.Button32 = Me.Factory.CreateRibbonButton
+        Me.Menu5 = Me.Factory.CreateRibbonMenu
+        Me.Menu6 = Me.Factory.CreateRibbonMenu
+        Me.Button33 = Me.Factory.CreateRibbonButton
+        Me.Button34 = Me.Factory.CreateRibbonButton
+        Me.Button35 = Me.Factory.CreateRibbonButton
+        Me.Button36 = Me.Factory.CreateRibbonButton
+        Me.Menu7 = Me.Factory.CreateRibbonMenu
+        Me.Button37 = Me.Factory.CreateRibbonButton
+        Me.Button38 = Me.Factory.CreateRibbonButton
+        Me.Button39 = Me.Factory.CreateRibbonButton
+        Me.Button40 = Me.Factory.CreateRibbonButton
+        Me.Button41 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
         Me.Group3.SuspendLayout()
+        Me.Group4.SuspendLayout()
         Me.SuspendLayout()
         '
         'Tab1
@@ -72,6 +111,7 @@
         Me.Tab1.Groups.Add(Me.Group1)
         Me.Tab1.Groups.Add(Me.Group2)
         Me.Tab1.Groups.Add(Me.Group3)
+        Me.Tab1.Groups.Add(Me.Group4)
         Me.Tab1.Label = "TabAddIns"
         Me.Tab1.Name = "Tab1"
         '
@@ -176,14 +216,263 @@
         '
         'Group3
         '
+        Me.Group3.Items.Add(Me.SplitButton2)
         Me.Group3.Items.Add(Me.Button11)
+        Me.Group3.Items.Add(Me.Button12)
+        Me.Group3.Items.Add(Me.Button13)
+        Me.Group3.Items.Add(Me.Button14)
+        Me.Group3.Items.Add(Me.Button15)
+        Me.Group3.Items.Add(Me.Button19)
+        Me.Group3.Items.Add(Me.Button20)
+        Me.Group3.Items.Add(Me.Button21)
         Me.Group3.Label = "Test"
         Me.Group3.Name = "Group3"
+        '
+        'SplitButton2
+        '
+        Me.SplitButton2.Items.Add(Me.Button16)
+        Me.SplitButton2.Items.Add(Me.Button17)
+        Me.SplitButton2.Items.Add(Me.Button18)
+        Me.SplitButton2.Label = "Combine Range"
+        Me.SplitButton2.Name = "SplitButton2"
+        '
+        'Button16
+        '
+        Me.Button16.Label = "Form 18"
+        Me.Button16.Name = "Button16"
+        Me.Button16.ShowImage = True
+        '
+        'Button17
+        '
+        Me.Button17.Label = "Form 19"
+        Me.Button17.Name = "Button17"
+        Me.Button17.ShowImage = True
+        '
+        'Button18
+        '
+        Me.Button18.Label = "Form 20"
+        Me.Button18.Name = "Button18"
+        Me.Button18.ShowImage = True
         '
         'Button11
         '
         Me.Button11.Label = "Form 13"
         Me.Button11.Name = "Button11"
+        '
+        'Button12
+        '
+        Me.Button12.Label = "Form 14"
+        Me.Button12.Name = "Button12"
+        '
+        'Button13
+        '
+        Me.Button13.Label = "Form15"
+        Me.Button13.Name = "Button13"
+        '
+        'Button14
+        '
+        Me.Button14.Label = "Form 16"
+        Me.Button14.Name = "Button14"
+        '
+        'Button15
+        '
+        Me.Button15.Label = "Form 17"
+        Me.Button15.Name = "Button15"
+        '
+        'Button19
+        '
+        Me.Button19.Label = "Form 21 Fill Emty Cells"
+        Me.Button19.Name = "Button19"
+        '
+        'Button20
+        '
+        Me.Button20.Label = "Form 22 Merge Dupli"
+        Me.Button20.Name = "Button20"
+        '
+        'Button21
+        '
+        Me.Button21.Label = "Form 23 Merge Dupli Row"
+        Me.Button21.Name = "Button21"
+        '
+        'Group4
+        '
+        Me.Group4.Items.Add(Me.Button22)
+        Me.Group4.Items.Add(Me.Button23)
+        Me.Group4.Items.Add(Me.Menu2)
+        Me.Group4.Items.Add(Me.Button27)
+        Me.Group4.Items.Add(Me.Menu3)
+        Me.Group4.Items.Add(Me.Menu4)
+        Me.Group4.Items.Add(Me.Menu5)
+        Me.Group4.Label = "Group4"
+        Me.Group4.Name = "Group4"
+        '
+        'Button22
+        '
+        Me.Button22.Label = "Form 24 Split Cells"
+        Me.Button22.Name = "Button22"
+        '
+        'Button23
+        '
+        Me.Button23.Label = "Form 25 Split Range"
+        Me.Button23.Name = "Button23"
+        '
+        'Menu2
+        '
+        Me.Menu2.Items.Add(Me.Button24)
+        Me.Menu2.Items.Add(Me.Button25)
+        Me.Menu2.Items.Add(Me.Button26)
+        Me.Menu2.Label = "Split_26-27-28"
+        Me.Menu2.Name = "Menu2"
+        '
+        'Button24
+        '
+        Me.Button24.Label = "Form 26"
+        Me.Button24.Name = "Button24"
+        Me.Button24.ShowImage = True
+        '
+        'Button25
+        '
+        Me.Button25.Label = "Form 27"
+        Me.Button25.Name = "Button25"
+        Me.Button25.ShowImage = True
+        '
+        'Button26
+        '
+        Me.Button26.Label = "Form 28"
+        Me.Button26.Name = "Button26"
+        Me.Button26.ShowImage = True
+        '
+        'Button27
+        '
+        Me.Button27.Label = "Form 29"
+        Me.Button27.Name = "Button27"
+        '
+        'Menu3
+        '
+        Me.Menu3.Items.Add(Me.Button28)
+        Me.Menu3.Items.Add(Me.Button29)
+        Me.Menu3.Items.Add(Me.Button30)
+        Me.Menu3.Label = "Dynamic Drop-down List"
+        Me.Menu3.Name = "Menu3"
+        '
+        'Button28
+        '
+        Me.Button28.Label = "Create"
+        Me.Button28.Name = "Button28"
+        Me.Button28.ShowImage = True
+        '
+        'Button29
+        '
+        Me.Button29.Label = "Update"
+        Me.Button29.Name = "Button29"
+        Me.Button29.ShowImage = True
+        '
+        'Button30
+        '
+        Me.Button30.Label = "Delete"
+        Me.Button30.Name = "Button30"
+        Me.Button30.ShowImage = True
+        '
+        'Menu4
+        '
+        Me.Menu4.Items.Add(Me.Button31)
+        Me.Menu4.Items.Add(Me.Button32)
+        Me.Menu4.Label = "Unhide Ranges"
+        Me.Menu4.Name = "Menu4"
+        '
+        'Button31
+        '
+        Me.Button31.Label = "Unhide all ranges"
+        Me.Button31.Name = "Button31"
+        Me.Button31.ShowImage = True
+        '
+        'Button32
+        '
+        Me.Button32.Label = "Unhide ranges from the selection"
+        Me.Button32.Name = "Button32"
+        Me.Button32.ShowImage = True
+        '
+        'Menu5
+        '
+        Me.Menu5.Items.Add(Me.Menu6)
+        Me.Menu5.Items.Add(Me.Menu7)
+        Me.Menu5.Items.Add(Me.Button41)
+        Me.Menu5.Label = "Remove Blanks"
+        Me.Menu5.Name = "Menu5"
+        '
+        'Menu6
+        '
+        Me.Menu6.Items.Add(Me.Button33)
+        Me.Menu6.Items.Add(Me.Button34)
+        Me.Menu6.Items.Add(Me.Button35)
+        Me.Menu6.Items.Add(Me.Button36)
+        Me.Menu6.Label = "Empty Columns"
+        Me.Menu6.Name = "Menu6"
+        Me.Menu6.ShowImage = True
+        '
+        'Button33
+        '
+        Me.Button33.Label = "From Selected Range"
+        Me.Button33.Name = "Button33"
+        Me.Button33.ShowImage = True
+        '
+        'Button34
+        '
+        Me.Button34.Label = "From Active Sheet"
+        Me.Button34.Name = "Button34"
+        Me.Button34.ShowImage = True
+        '
+        'Button35
+        '
+        Me.Button35.Label = "From Selected Sheets"
+        Me.Button35.Name = "Button35"
+        Me.Button35.ShowImage = True
+        '
+        'Button36
+        '
+        Me.Button36.Label = "From All Sheets"
+        Me.Button36.Name = "Button36"
+        Me.Button36.ShowImage = True
+        '
+        'Menu7
+        '
+        Me.Menu7.Items.Add(Me.Button37)
+        Me.Menu7.Items.Add(Me.Button38)
+        Me.Menu7.Items.Add(Me.Button39)
+        Me.Menu7.Items.Add(Me.Button40)
+        Me.Menu7.Label = "Empty Rows"
+        Me.Menu7.Name = "Menu7"
+        Me.Menu7.ShowImage = True
+        '
+        'Button37
+        '
+        Me.Button37.Label = "From Selected Range"
+        Me.Button37.Name = "Button37"
+        Me.Button37.ShowImage = True
+        '
+        'Button38
+        '
+        Me.Button38.Label = "From Active Sheet"
+        Me.Button38.Name = "Button38"
+        Me.Button38.ShowImage = True
+        '
+        'Button39
+        '
+        Me.Button39.Label = "From Selected Sheets"
+        Me.Button39.Name = "Button39"
+        Me.Button39.ShowImage = True
+        '
+        'Button40
+        '
+        Me.Button40.Label = "From All Sheets"
+        Me.Button40.Name = "Button40"
+        Me.Button40.ShowImage = True
+        '
+        'Button41
+        '
+        Me.Button41.Label = "Empty Sheets"
+        Me.Button41.Name = "Button41"
+        Me.Button41.ShowImage = True
         '
         'Ribbon1
         '
@@ -198,6 +487,8 @@
         Me.Group2.PerformLayout()
         Me.Group3.ResumeLayout(False)
         Me.Group3.PerformLayout()
+        Me.Group4.ResumeLayout(False)
+        Me.Group4.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -221,6 +512,44 @@
     Friend WithEvents Button8 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Group3 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents Button11 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button12 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button13 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button14 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button15 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents SplitButton2 As Microsoft.Office.Tools.Ribbon.RibbonSplitButton
+    Friend WithEvents Button16 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button17 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button18 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button19 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button20 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button21 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Group4 As Microsoft.Office.Tools.Ribbon.RibbonGroup
+    Friend WithEvents Button22 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button23 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu2 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button24 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button25 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button26 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button27 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu3 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button28 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button29 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button30 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu4 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button31 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button32 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu5 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Menu6 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button33 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button34 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button35 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button36 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Menu7 As Microsoft.Office.Tools.Ribbon.RibbonMenu
+    Friend WithEvents Button41 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button37 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button38 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button39 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button40 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
