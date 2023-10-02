@@ -24,7 +24,7 @@ Public Class Form11SwapRanges
     Dim tempRng As Excel.Range
     Dim rng1_Address, rng2_Address As String
     Dim changeState As Boolean = False
-    Dim textChanged As Boolean = False
+    Dim txtChanged As Boolean = False
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -60,7 +60,7 @@ Public Class Form11SwapRanges
 
 
             'MsgBox(txtSourceRange1.Text)
-            TextChanged = True
+            txtChanged = True
             firstInputRng = worksheet.Range(txtSourceRange1.Text)
 
 
@@ -90,7 +90,7 @@ Public Class Form11SwapRanges
 
         End Try
 
-        TextChanged = False
+        txtChanged = False
 
         txtSourceRange1.Focus()
     End Sub
@@ -104,7 +104,7 @@ Public Class Form11SwapRanges
 
             changeState = True
 
-            textChanged = True
+            txtChanged = True
             secondInputRng = worksheet.Range(txtSourceRange2.Text)
 
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
@@ -125,7 +125,7 @@ Public Class Form11SwapRanges
 
         End Try
 
-        textChanged = False
+        txtChanged = False
         txtSourceRange2.Focus()
 
 
@@ -510,7 +510,7 @@ Public Class Form11SwapRanges
             selectedRange.Select()
 
 
-            If textChanged = False Then
+            If txtChanged = False Then
 
 
                 If FocusedTxtBox = 1 Then
@@ -761,7 +761,7 @@ Public Class Form11SwapRanges
     End Sub
     Public Function swapFormulaWithSheetName(currentFormula As String, sheetName As String) As String
         Dim pattern As String = "\b([A-Z]+[0-9]+(:[A-Z]+[0-9]+)?)\b"
-        Dim replacement As String
+        Dim replacement As String = ""
         Dim charToFind As Char = " "c
         Dim index As Integer
 

@@ -24,7 +24,7 @@ Public Class Form15CompareCells
     Dim count As Integer
     Dim rng1CellValue, rng2CellValue, WsName, coloredRng, rngKeyBoard, output As String
     Dim changeState As Boolean = False
-    Dim textChanged As Boolean = False
+    Dim txtChanged As Boolean = False
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -45,7 +45,7 @@ Public Class Form15CompareCells
 
 
             'MsgBox(txtSourceRange1.Text)
-            textChanged = True
+            txtChanged = True
             firstInputRng = worksheet.Range(txtSourceRange1.Text)
 
 
@@ -87,7 +87,7 @@ Public Class Form15CompareCells
         End Try
 
         Call Display()
-        textChanged = False
+        txtChanged = False
 
         txtSourceRange1.Focus()
 
@@ -107,7 +107,7 @@ Public Class Form15CompareCells
 
             changeState = True
 
-            textChanged = True
+            txtChanged = True
             secondInputRng = worksheet.Range(txtSourceRange2.Text)
 
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
@@ -141,7 +141,7 @@ Public Class Form15CompareCells
         End Try
 
         Call Display()
-        textChanged = False
+        txtChanged = False
         txtSourceRange2.Focus()
 
     End Sub
@@ -546,7 +546,7 @@ Public Class Form15CompareCells
             selectedRange.Select()
 
 
-            If textChanged = False Then
+            If txtChanged = False Then
 
 
                 If FocusedTxtBox = 1 Then
@@ -1211,6 +1211,11 @@ secondDisplay:
                 Exit Sub
             End If
 
+            If firstInputRng.Rows.Count > 50 Then
+                displayRng = firstInputRng.Rows("1:50")
+            Else
+                displayRng = firstInputRng
+            End If
 
             If displayRng.Rows.Count <> displayRng2.Rows.Count Or displayRng.Columns.Count <> displayRng2.Columns.Count Then
                 Exit Sub

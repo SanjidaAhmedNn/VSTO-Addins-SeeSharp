@@ -16,7 +16,7 @@ Public Class Form14SpecifyScrollArea
     Dim inputRng As Excel.Range
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
-    Dim textChanged As Boolean = False
+    Dim txtChanged As Boolean = False
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -45,7 +45,7 @@ Public Class Form14SpecifyScrollArea
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            textChanged = True
+            txtChanged = True
 
             inputRng = worksheet.Range(txtSourceRange.Text)
             inputRng.Select()
@@ -55,7 +55,7 @@ Public Class Form14SpecifyScrollArea
 
         End Try
 
-        textChanged = False
+        txtChanged = False
         txtSourceRange.Focus()
 
 
@@ -94,7 +94,7 @@ Public Class Form14SpecifyScrollArea
 
             txtSourceRange.Focus()
 
-            If textChanged = False Then
+            If txtChanged = False Then
 
                 If FocusedTxtBox = 1 Then
 

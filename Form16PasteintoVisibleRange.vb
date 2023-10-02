@@ -19,7 +19,7 @@ Public Class Form16PasteintoVisibleRange
     Dim sourceRange, destRange As Excel.Range
     Dim WsName As String
     Dim changeState As Boolean = False
-    Dim textChanged As Boolean = False
+    Dim txtChanged As Boolean = False
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -55,7 +55,7 @@ Public Class Form16PasteintoVisibleRange
 
 
             'MsgBox(txtSourceRange1.Text)
-            textChanged = True
+            txtChanged = True
             sourceRange = worksheet.Range(txtSourceRange.Text)
 
 
@@ -82,7 +82,7 @@ Public Class Form16PasteintoVisibleRange
 
         End Try
 
-        textChanged = False
+        txtChanged = False
 
         txtSourceRange.Focus()
 
@@ -97,7 +97,7 @@ Public Class Form16PasteintoVisibleRange
 
             changeState = True
 
-            textChanged = True
+            txtChanged = True
             destRange = worksheet.Range(txtDestRange.Text)
 
 
@@ -117,7 +117,7 @@ Public Class Form16PasteintoVisibleRange
 
         End Try
 
-        textChanged = False
+        txtChanged = False
         txtDestRange.Focus()
 
 
@@ -247,7 +247,7 @@ Public Class Form16PasteintoVisibleRange
             selectedRange.Select()
 
 
-            If textChanged = False Then
+            If txtChanged = False Then
 
 
                 If FocusedTxtBox = 1 Then
