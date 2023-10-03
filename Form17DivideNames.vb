@@ -24,6 +24,12 @@ Public Class Form17DivideNames
     Dim changeState As Boolean = False
     Dim txtChanged As Boolean = False
 
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
             btnOK.PerformClick()
@@ -1520,4 +1526,25 @@ Public Class Form17DivideNames
         Call display()
     End Sub
 
+    Private Sub Form17DivideNames_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Me.Dispose()
+    End Sub
+
+    Private Sub Form17DivideNames_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form17DivideNames_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             txtSourceRange.Text = sourceRange.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
+    End Sub
 End Class

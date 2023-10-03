@@ -11,6 +11,7 @@ Imports System.CodeDom
 Imports Microsoft.Office.Core
 Imports System.Data
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
 
 Public Class Form7
 
@@ -24,6 +25,13 @@ Public Class Form7
     Dim FocusedTextBox As Integer
     Dim opened As Integer
     Dim TextBoxChanged As Boolean
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
 
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
@@ -4222,5 +4230,23 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub Form7_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form7_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TextBox1.Text = rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
+    End Sub
+
+    Private Sub Form7_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
     End Sub
 End Class

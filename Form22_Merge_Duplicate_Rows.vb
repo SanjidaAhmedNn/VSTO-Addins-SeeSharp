@@ -1,4 +1,5 @@
-﻿Imports System.Diagnostics
+﻿Imports System.ComponentModel
+Imports System.Diagnostics
 Imports System.Drawing
 Imports System.Reflection
 Imports System.Reflection.Emit
@@ -28,6 +29,12 @@ Public Class Form22_Merge_Duplicate_Rows
     Dim comboBoxes As New List(Of System.Windows.Forms.ComboBox)()
     Dim clickedLabelNumber As Integer
     Dim EnteredLabelNumber As Integer
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
 
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
@@ -516,16 +523,16 @@ Public Class Form22_Merge_Duplicate_Rows
         Try
 
             Dim lbl = DirectCast(sender, System.Windows.Forms.Label)
-        Dim borderColor As Color = Color.FromArgb(245, 245, 245)
-        Dim borderWidth As Double = 0.4
+            Dim borderColor As Color = Color.FromArgb(245, 245, 245)
+            Dim borderWidth As Double = 0.4
 
-        Dim borderPen As New Pen(borderColor, borderWidth)
+            Dim borderPen As New Pen(borderColor, borderWidth)
 
-        borderPen.DashStyle = Drawing2D.DashStyle.Dash
+            borderPen.DashStyle = Drawing2D.DashStyle.Dash
 
-        e.Graphics.DrawRectangle(borderPen, 0, 0, lbl.Width - 1, lbl.Height - 1)
+            e.Graphics.DrawRectangle(borderPen, 0, 0, lbl.Width - 1, lbl.Height - 1)
 
-        borderPen.Dispose()
+            borderPen.Dispose()
 
         Catch ex As Exception
 
@@ -2428,5 +2435,23 @@ Public Class Form22_Merge_Duplicate_Rows
 
         End Try
 
+    End Sub
+
+    Private Sub Form22_Merge_Duplicate_Rows_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form22_Merge_Duplicate_Rows_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form22_Merge_Duplicate_Rows_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TextBox1.Text = rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class

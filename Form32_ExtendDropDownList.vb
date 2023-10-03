@@ -1,4 +1,5 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.ComponentModel
+Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
 
@@ -35,7 +36,7 @@ Public Class Form32_ExtendDropDownList
                 Me.Hide()
 
                 excelApp = Globals.ThisAddIn.Application
-                Workbook = excelApp.ActiveWorkbook
+                workBook = excelApp.ActiveWorkbook
 
                 Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
                 src_rng = userInput
@@ -48,8 +49,8 @@ Public Class Form32_ExtendDropDownList
                     sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
                 End If
 
-                Worksheet = Workbook.Worksheets(sheetName)
-                Worksheet.Activate()
+                workSheet = workBook.Worksheets(sheetName)
+                workSheet.Activate()
 
                 src_rng.Select()
 
@@ -79,7 +80,7 @@ Public Class Form32_ExtendDropDownList
             Me.Hide()
 
             excelApp = Globals.ThisAddIn.Application
-            Workbook = excelApp.ActiveWorkbook
+            workBook = excelApp.ActiveWorkbook
 
             'Dim userInput As String = excelApp.InputBox("Select a range", "Select range", "=$A$1")
 
@@ -95,8 +96,8 @@ Public Class Form32_ExtendDropDownList
                 sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
             End If
 
-            Worksheet = Workbook.Worksheets(sheetName)
-            Worksheet.Activate()
+            workSheet = workBook.Worksheets(sheetName)
+            workSheet.Activate()
 
             des_rng.Select()
             'MsgBox(src_rng.Address)
@@ -178,5 +179,23 @@ Public Class Form32_ExtendDropDownList
 
     Private Sub Btn_Cancel_Click(sender As Object, e As EventArgs) Handles Btn_Cancel.Click
         Close()
+    End Sub
+
+    Private Sub Form32_ExtendDropDownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form32_ExtendDropDownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form32_ExtendDropDownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_src_rng.Text = src_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class

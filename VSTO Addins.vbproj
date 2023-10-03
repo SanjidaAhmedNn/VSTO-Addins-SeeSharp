@@ -324,7 +324,7 @@
     <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.designer.vb">
       <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
     </Compile>
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
@@ -433,6 +433,9 @@
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="CustomButton.resx">
+      <DependentUpon>CustomButton.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomGroupBox.resx">
       <DependentUpon>CustomGroupBox.vb</DependentUpon>
     </EmbeddedResource>
@@ -620,7 +623,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>1706E0BCB89176B7CD053F70B8B75B1D5B14E072</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A5820B2488DE7BC5EFB424A6A2B01A23152C0F4F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
