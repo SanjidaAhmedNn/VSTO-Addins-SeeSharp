@@ -1,4 +1,5 @@
-﻿Imports System.Diagnostics
+﻿Imports System.ComponentModel
+Imports System.Diagnostics
 Imports System.Drawing
 Imports System.Reflection
 Imports System.Reflection.Emit
@@ -20,6 +21,14 @@ Public Class Form18_CombineRanges
     Dim opened As Integer
     Dim FocusedTextBox As Integer
     Dim TextBoxChanged As Boolean
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         'Checks whether a string is a valid cell reference or not.
@@ -1342,32 +1351,32 @@ Public Class Form18_CombineRanges
                                 End If
 
                                 For j = 1 To rng.Columns.Count - 1
-                                        If CheckBox3.Checked Then
-                                            If rng.Cells(i, j).value IsNot Nothing Then
-                                                combinedValue = combinedValue & rng.Cells(i, j).Value & Separator
-                                            End If
-                                        Else
+                                    If CheckBox3.Checked Then
+                                        If rng.Cells(i, j).value IsNot Nothing Then
                                             combinedValue = combinedValue & rng.Cells(i, j).Value & Separator
                                         End If
-                                    Next
-
-                                    If CheckBox3.Checked Then
-                                        If rng.Cells(i, rng.Columns.Count).value IsNot Nothing Then
-                                            combinedValue = combinedValue & rng.Cells(i, rng.Columns.Count).Value
-                                        Else
-                                            If Len(combinedValue) >= Len(Separator) Then
-                                                combinedValue = Mid(combinedValue, 1, Len(combinedValue) - Len(Separator))
-                                            End If
-                                        End If
-
                                     Else
+                                        combinedValue = combinedValue & rng.Cells(i, j).Value & Separator
+                                    End If
+                                Next
+
+                                If CheckBox3.Checked Then
+                                    If rng.Cells(i, rng.Columns.Count).value IsNot Nothing Then
                                         combinedValue = combinedValue & rng.Cells(i, rng.Columns.Count).Value
+                                    Else
+                                        If Len(combinedValue) >= Len(Separator) Then
+                                            combinedValue = Mid(combinedValue, 1, Len(combinedValue) - Len(Separator))
+                                        End If
                                     End If
 
-                                    rng.Cells(i, combinedColumn).value = combinedValue
-
                                 Else
-                                    Dim OperatedValue As Double
+                                    combinedValue = combinedValue & rng.Cells(i, rng.Columns.Count).Value
+                                End If
+
+                                rng.Cells(i, combinedColumn).value = combinedValue
+
+                            Else
+                                Dim OperatedValue As Double
                                 Dim Values(0) As Double
                                 Dim Index As Integer = -1
                                 For j = 1 To rng.Columns.Count
@@ -2681,5 +2690,23 @@ Public Class Form18_CombineRanges
             Call Display()
         Catch ex As Exception
         End Try
+    End Sub
+
+    Private Sub Form18_CombineRanges_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form18_CombineRanges_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form18_CombineRanges_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TextBox1.Text = rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class

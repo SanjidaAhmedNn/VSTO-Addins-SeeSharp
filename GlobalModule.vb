@@ -9,6 +9,7 @@
     Public Horizontal_CreateDP As Boolean
     Public Flag_CreateDDDL As Boolean
     Public sheetName As String
+    Public form_flag As Boolean
 
     'For form-34
     Public Flag_Picture As Boolean

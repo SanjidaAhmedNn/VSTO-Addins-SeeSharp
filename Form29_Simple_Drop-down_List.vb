@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿Imports System.ComponentModel
+Imports System.Drawing
 Imports System.Security.Cryptography
 Imports System.Text.RegularExpressions
 Imports System.Threading
@@ -358,7 +359,7 @@ Public Class Form29_Simple_Drop_down_List
 
         If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
             ' If item is selected, we'll use system colors to highlight.
-            BackColor = SystemColors.Highlight
+            backColor = SystemColors.Highlight
             textColor = SystemColors.HighlightText
         End If
 
@@ -740,6 +741,24 @@ Public Class Form29_Simple_Drop_down_List
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
 
+    End Sub
+
+    Private Sub Form29_Simple_Drop_down_List_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form29_Simple_Drop_down_List_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form29_Simple_Drop_down_List_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_dest_range.Text = des_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class
 

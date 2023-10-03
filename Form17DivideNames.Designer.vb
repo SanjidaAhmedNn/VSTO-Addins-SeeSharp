@@ -587,7 +587,7 @@ Partial Class Form17DivideNames
         Me.Controls.Add(Me.CB_Backup_Sheet)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.name = "Form17DivideNames"
+        Me.Name = "Form17DivideNames"
         Me.Text = "Divide Names"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()

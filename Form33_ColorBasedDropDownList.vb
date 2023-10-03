@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿Imports System.ComponentModel
+Imports System.Drawing
 Imports System.Reflection
 Imports System.Reflection.Emit
 Imports System.Text.RegularExpressions
@@ -602,8 +603,8 @@ Public Class Form33_ColorBasedDropDownList
         Catch ex As Exception
             If flag = False Then
                 Me.Hide()
-            form = New Form42
-            form.Show()
+                form = New Form42
+                form.Show()
                 If form.IsDisposed Or form Is Nothing Then
                     Me.Show()
                 End If
@@ -903,6 +904,24 @@ Public Class Form33_ColorBasedDropDownList
 
     Private Sub FlowLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles FlowLayoutPanel1.Paint
 
+    End Sub
+
+    Private Sub Form33_ColorBasedDropDownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form33_ColorBasedDropDownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form33_ColorBasedDropDownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_src_rng.Text = src_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class
 

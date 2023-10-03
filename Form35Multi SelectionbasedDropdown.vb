@@ -646,6 +646,14 @@ Public Class Form35Multi_SelectionbasedDropdown
         TB_src_rng.Focus()
 
     End Sub
+
+    Private Sub Form35Multi_SelectionbasedDropdown_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form35Multi_SelectionbasedDropdown_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
 End Class
 
 

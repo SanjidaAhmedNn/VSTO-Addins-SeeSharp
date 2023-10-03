@@ -577,4 +577,14 @@ Public Class Form39_DropdownlistwithSearchOption
         TB_src_rng.Focus()
 
     End Sub
+
+
+
+    Private Sub Form39_DropdownlistwithSearchOption_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form39_DropdownlistwithSearchOption_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
 End Class

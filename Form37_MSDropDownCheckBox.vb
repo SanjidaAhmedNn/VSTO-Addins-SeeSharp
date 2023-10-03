@@ -623,6 +623,14 @@ Public Class Form37_MSDropDownCheckBox
     Private Sub Form37_MSDropDownCheckBox_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         TB_src_rng.Focus()
     End Sub
+
+    Private Sub Form37_MSDropDownCheckBox_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form37_MSDropDownCheckBox_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
 End Class
 
 Public Class WorksheetHandler

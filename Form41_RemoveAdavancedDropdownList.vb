@@ -552,4 +552,12 @@ Public Class Form41_RemoveAdavancedDropdownList
             Btn_OK.PerformClick()
         End If
     End Sub
+
+    Private Sub Form41_RemoveAdavancedDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form41_RemoveAdavancedDropdownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
 End Class
