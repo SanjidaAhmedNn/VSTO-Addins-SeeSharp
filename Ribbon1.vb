@@ -285,8 +285,9 @@ Public Class Ribbon1
     End Sub
 
     Private Sub Button28_Click(sender As Object, e As RibbonControlEventArgs) Handles Button28.Click
-        'Dim form As New Form30_Create_Dynamic_Drop_down_List
-        'form.Show()
+        Dim form As New Form30_Create_Dynamic_Drop_down_List
+
+        form.Show()
     End Sub
 
     ''' <summary>
@@ -1594,7 +1595,24 @@ nextloop:
     End Sub
 
     Private Sub Button16_Click(sender As Object, e As RibbonControlEventArgs) Handles Button16.Click
+        Dim MyForm18 As New Form18_CombineRanges
 
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        If IsRangeEmpty(selection) = True Then
+            MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+        Else
+            MyForm18.TextBox1.Text = selection.Address
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton1.Checked = True
+        End If
     End Sub
 
     Private Sub Button20_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button20.Click
@@ -1734,16 +1752,7 @@ nextloop:
     Dim flag As Boolean = False
     Private Sub Button49_Click(sender As Object, e As RibbonControlEventArgs) Handles Button49.Click
         Dim MyForm33 As New Form33_ColorBasedDropDownList
-        'MyForm33 = Nothing
-        'If MyForm33 Is = False Then
-        If flag = False Then
-            'MsgBox("Yes")
-            MyForm33.Show()
-            flag = True
-        Else
-            MyForm33.Focus()
-            MyForm33.BringToFront()
-        End If
+        MyForm33.Show()
     End Sub
 
     Private Sub Button54_Click(sender As Object, e As RibbonControlEventArgs) Handles Button54.Click
@@ -1764,6 +1773,93 @@ nextloop:
     End Sub
 
     Private Sub Button2_Click_2(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
+        Dim form As New Form29_Simple_Drop_down_List
+        form.Show()
+    End Sub
 
+    Private Sub Button9_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button9.Click
+        Dim form As New Form34_PictureBasedDropdownList
+
+        form.Show()
+    End Sub
+
+    Private Sub Button29_Click(sender As Object, e As RibbonControlEventArgs) Handles Button29.Click
+        Dim form As New Form31_UpdateDynamicDropdownList
+
+        form.Show()
+    End Sub
+
+    Private Sub Button30_Click(sender As Object, e As RibbonControlEventArgs) Handles Button30.Click
+        Dim form As New Form32_ExtendDropDownList
+
+        form.Show()
+    End Sub
+
+    Private Sub Button24_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button24.Click
+        settingflag1 = False
+        Dim form As New Form35Multi_SelectionbasedDropdown
+
+        form.Show()
+    End Sub
+
+    Private Sub Button25_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button25.Click
+        settingflag2 = False
+        Dim form As New Form37_MSDropDownCheckBox
+
+        form.Show()
+    End Sub
+
+    Private Sub Button26_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button26.Click
+        Dim form As New Form39_DropdownlistwithSearchOption
+
+        form.Show()
+    End Sub
+
+    Private Sub Button27_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button27.Click
+        Dim form As New Form41_RemoveAdavancedDropdownList
+
+        form.Show()
+    End Sub
+
+    Private Sub Button17_Click(sender As Object, e As RibbonControlEventArgs) Handles Button17.Click
+        Dim MyForm18 As New Form18_CombineRanges
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        If IsRangeEmpty(selection) = True Then
+            MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+        Else
+            MyForm18.TextBox1.Text = selection.Address
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton2.Checked = True
+        End If
+    End Sub
+
+    Private Sub Button18_Click(sender As Object, e As RibbonControlEventArgs) Handles Button18.Click
+        Dim MyForm18 As New Form18_CombineRanges
+
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
+
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+        If IsRangeEmpty(selection) = True Then
+            MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+        Else
+            MyForm18.TextBox1.Text = selection.Address
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton3.Checked = True
+        End If
     End Sub
 End Class

@@ -507,7 +507,7 @@
         '
         'Button30
         '
-        Me.Button30.Label = "Delete"
+        Me.Button30.Label = "Extend"
         Me.Button30.Name = "Button30"
         Me.Button30.ShowImage = True
         '
