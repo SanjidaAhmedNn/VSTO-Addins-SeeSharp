@@ -654,6 +654,7 @@ Public Class Form35Multi_SelectionbasedDropdown
                                          End Sub))
     End Sub
 
+
     Private Sub Form35Multi_SelectionbasedDropdown_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False
     End Sub

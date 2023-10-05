@@ -12,11 +12,28 @@ Imports System.Runtime.InteropServices
 Imports Application = System.Windows.Forms.Application
 
 
+
 Public Class Ribbon1
 
     Dim excelApp As Excel.Application
     Dim workbook As Excel.Workbook
     Dim worksheet As Excel.Worksheet
+
+    Public Function Group1_Picture(ByVal control As Office.IRibbonControl) As stdole.IPictureDisp
+        Return ConvertImage(My.Resources.Group1)
+    End Function
+
+    Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
+        Return AxHostConverter.ImageToPictureDisp(image)
+    End Function
+
+
+
+
+    'Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
+    '    Return DirectCast(AxHost.GetIPictureDispFromPicture(image), stdole.IPictureDisp)
+    'End Function
+
 
     Private Function SplitText(Source, Pattern, Consecutive, KeepSeparator, Before)
 
@@ -1675,11 +1692,11 @@ nextloop:
         If form_flag = False Then
             Dim MyForm23 As New Form23_Merge_Duplicate_Columns
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             If IsRangeEmpty(selection) = True Then
                 MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -1721,11 +1738,11 @@ nextloop:
         If form_flag = False Then
             Dim MyForm24 As New Form24_Split_Cells
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             If IsRangeEmpty(selection) = True Then
                 MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -1932,11 +1949,11 @@ nextloop:
 
             Dim MyForm18 As New Form18_CombineRanges
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             If IsRangeEmpty(selection) = True Then
                 MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -1952,3 +1969,21 @@ nextloop:
         End If
     End Sub
 End Class
+
+
+'Imports System.Windows.Forms
+'Imports System.Drawing
+
+Public NotInheritable Class AxHostConverter
+    Inherits AxHost
+
+    Private Sub New()
+        MyBase.New(String.Empty)
+    End Sub
+
+    Public Shared Function ImageToPictureDisp(ByVal image As Image) As stdole.IPictureDisp
+        Return DirectCast(GetIPictureDispFromPicture(image), stdole.IPictureDisp)
+    End Function
+
+End Class
+

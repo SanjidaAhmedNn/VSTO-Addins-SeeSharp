@@ -631,6 +631,8 @@ Public Class Form37_MSDropDownCheckBox
                                          End Sub))
     End Sub
 
+
+
     Private Sub Form37_MSDropDownCheckBox_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False
     End Sub
