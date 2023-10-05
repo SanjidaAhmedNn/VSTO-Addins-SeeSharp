@@ -19,15 +19,6 @@ Public Class Ribbon1
     Dim workbook As Excel.Workbook
     Dim worksheet As Excel.Worksheet
 
-    Public Function Group1_Picture(ByVal control As Office.IRibbonControl) As stdole.IPictureDisp
-        Return ConvertImage(My.Resources.Group1)
-    End Function
-
-    Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
-        Return AxHostConverter.ImageToPictureDisp(image)
-    End Function
-
-
 
 
     'Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
@@ -1758,60 +1749,66 @@ nextloop:
     End Sub
 
     Private Sub Button45_Click(sender As Object, e As RibbonControlEventArgs) Handles Button45.Click
-        '    Dim MyForm26 As New Form26_split_text_bycharacters
+        If form_flag = False Then
+            Dim MyForm26 As New Form26_split_text_bycharacters
 
-        '    excelApp = Globals.ThisAddIn.Application
-        '    workbook = excelApp.ActiveWorkbook
-        '    worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
 
-        '    Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-        '    If IsRangeEmpty(selection) = True Then
-        '        MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If IsRangeEmpty(selection) = True Then
+                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
-        '    Else
-        '        MyForm26.TB_source_range.Text = selection.Address
-        '        MyForm26.ComboBox1.SelectedIndex = -1
-        '        MyForm26.ComboBox1.Text = "SOFTEKO"
-        '        MyForm26.Show()
-        '    End If
+            Else
+                MyForm26.TB_source_range.Text = selection.Address
+                MyForm26.ComboBox1.SelectedIndex = -1
+                MyForm26.ComboBox1.Text = "SOFTEKO"
+                MyForm26.Show()
+                form_flag = True
+            End If
+        End If
     End Sub
 
     Private Sub Button46_Click(sender As Object, e As RibbonControlEventArgs) Handles Button46.Click
-        'Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
-        'Dim pattern As String = "***,*,"
-        'Dim KeepSeparator As Boolean = True
-        'Dim Consecutive As Boolean = True
-        'Dim Before As Boolean = True
+        If form_flag = False Then
+            Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
+        Dim pattern As String = "***,*,"
+        Dim KeepSeparator As Boolean = True
+        Dim Consecutive As Boolean = True
+        Dim Before As Boolean = True
 
-        'Dim Values() As String
-        'Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
+        Dim Values() As String
+        Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
 
-        'For i = LBound(Values) To UBound(Values)
-        '    MsgBox(Values(i))
-        'Next
+        For i = LBound(Values) To UBound(Values)
+            MsgBox(Values(i))
+        Next
 
-        'Dim MyForm27 As New Form27_Split_text_bystrings
+        Dim MyForm27 As New Form27_Split_text_bystrings
 
-        'excelApp = Globals.ThisAddIn.Application
-        'workbook = excelApp.ActiveWorkbook
-        'worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
 
-        'Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-        'If IsRangeEmpty(selection) = True Then
-        '    MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If IsRangeEmpty(selection) = True Then
+                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
-        'Else
-        '    MyForm27.TB_source_range.Text = selection.Address
-        '    MyForm27.ComboBox1.SelectedIndex = -1
-        '    MyForm27.ComboBox1.Text = "SOFTEKO"
-        '    MyForm27.Show()
-        'End If
+            Else
+                MyForm27.TB_source_range.Text = selection.Address
+                MyForm27.ComboBox1.SelectedIndex = -1
+                MyForm27.ComboBox1.Text = "SOFTEKO"
+                MyForm27.Show()
+                form_flag = True
+            End If
+        End If
 
     End Sub
 
-    Dim flag As Boolean = False
+
     Private Sub Button49_Click(sender As Object, e As RibbonControlEventArgs) Handles Button49.Click
         If form_flag = False Then
             Dim MyForm33 As New Form33_ColorBasedDropDownList
@@ -1968,22 +1965,31 @@ nextloop:
             End If
         End If
     End Sub
-End Class
 
+    Private Sub Button47_Click(sender As Object, e As RibbonControlEventArgs) Handles Button47.Click
+        If form_flag = False Then
+            Dim MyForm28 As New Form28_Split_text_bypattern
 
-'Imports System.Windows.Forms
-'Imports System.Drawing
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-Public NotInheritable Class AxHostConverter
-    Inherits AxHost
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-    Private Sub New()
-        MyBase.New(String.Empty)
+            If IsRangeEmpty(selection) = True Then
+                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+            Else
+                MyForm28.TB_source_range.Text = selection.Address
+                MyForm28.ComboBox1.SelectedIndex = -1
+                MyForm28.ComboBox1.Text = "SOFTEKO"
+                MyForm28.Show()
+                form_flag = True
+            End If
+            End If
+
     End Sub
-
-    Public Shared Function ImageToPictureDisp(ByVal image As Image) As stdole.IPictureDisp
-        Return DirectCast(GetIPictureDispFromPicture(image), stdole.IPictureDisp)
-    End Function
-
 End Class
+
+
 
