@@ -207,7 +207,7 @@ Public Class Form1
 
         Dim Starters As String() = New String() {"--", "=", "(", ",", " ", "+", "-", "*", "/", "^", ")"}
 
-        Dim Arr() As String
+        Dim Arr(0) As String
 
         Dim Index As Integer
         Index = -1
@@ -217,7 +217,7 @@ Public Class Form1
         Dim Index1 As Integer
         Index1 = -1
 
-        Dim Refs() As String
+        Dim Refs(0) As String
 
         Dim i As Integer
         Dim j As Integer
