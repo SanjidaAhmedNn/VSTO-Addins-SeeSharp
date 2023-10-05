@@ -318,6 +318,18 @@
     <Compile Include="Form26_split_text_bycharacters.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form27_Split_text_bystrings.designer.vb">
+      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form27_Split_text_bystrings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form28_Split_text_bypattern.Designer.vb">
+      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form28_Split_text_bypattern.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
       <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
     </Compile>
@@ -489,6 +501,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form26_split_text_bycharacters.resx">
       <DependentUpon>Form26_split_text_bycharacters.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form27_Split_text_bystrings.resx">
+      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form28_Split_text_bypattern.resx">
+      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
       <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
