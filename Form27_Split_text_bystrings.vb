@@ -10,7 +10,7 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Imports Microsoft.Office.Interop.Excel
 
-Public Class Form28_Split_text_bypattern
+Public Class Form27_Split_text_bystrings
 
     Dim WithEvents excelApp As Excel.Application
     Dim workBook As Excel.Workbook
@@ -103,109 +103,75 @@ Public Class Form28_Split_text_bypattern
         MatchArr = Matched
 
     End Function
-    Private Function SplitText(Source As String, Pattern As String, Consecutive As Boolean, KeepSeparator As Boolean, Before As Boolean)
 
+    Private Function SplitText(Source, Separators, Consecutive, KeepSeparator, Before)
+
+        Dim Position As Integer = 1
         Dim SplitValues(0) As String
         Dim Index As Integer = -1
-        Dim Start As Integer = 1
-        Dim SearchStart As Integer = 1
-        Dim Ending As Integer
-        Dim separator As String = ""
+        Dim Separator As String
 
-        For i = 1 To Len(Pattern)
-
-            If Mid(Pattern, i, 1) <> "*" Then
-                Dim SeparatorLength As Integer = 1
-                While Mid(Pattern, i + SeparatorLength, 1) <> "*" And (i + SeparatorLength) <= Len(Pattern)
-                    SeparatorLength = SeparatorLength + 1
-                End While
-
-                separator = Mid(Pattern, i, SeparatorLength)
-
-                Ending = InStr(SearchStart, Source, separator)
-
-                If Ending <> 0 Then
-                    Index = Index + 1
-                    ReDim Preserve SplitValues(Index)
-                    If KeepSeparator = True Then
-                        If Before = True Then
-                            SplitValues(Index) = Mid(Source, Start, Ending - Start)
-                        Else
-                            SplitValues(Index) = Mid(Source, Start, Ending - Start + Len(separator))
-                        End If
+        For i = 1 To Len(Source)
+            If MatchArr(Separators, Source, i)(0) Then
+                Index = Index + 1
+                ReDim Preserve SplitValues(Index)
+                Separator = MatchArr(Separators, Source, i)(1)
+                If KeepSeparator = True Then
+                    If Before = True Then
+                        SplitValues(Index) = Mid(Source, Position, i - Position)
                     Else
-                        SplitValues(Index) = Mid(Source, Start, Ending - Start)
+                        SplitValues(Index) = Mid(Source, Position, i - Position + Len(Separator))
                     End If
-                    SearchStart = Ending + Len(separator)
-                    Start = Ending + Len(separator)
-                    If Consecutive = True Then
-                        While Mid(Source, SearchStart, Len(separator)) = separator
-                            SearchStart = SearchStart + Len(separator)
-                            Start = Start + Len(separator)
-                        End While
-                    End If
-                    If KeepSeparator = True Then
-                        If Before = True Then
-                            Start = Start - Len(separator)
-                        End If
-                    End If
+                Else
+                    SplitValues(Index) = Mid(Source, Position, i - Position)
                 End If
-
+                i = i + Len(Separator) - 1
+                If Consecutive = True Then
+                    While MatchArr(Separators, Source, i + 1)(0)
+                        Separator = MatchArr(Separators, Source, i + 1)(1)
+                        i = i + Len(Separator)
+                    End While
+                End If
+                If KeepSeparator = True Then
+                    If Before = True Then
+                        Position = i + 1 - Len(Separator)
+                    Else
+                        Position = i + 1
+                    End If
+                Else
+                    Position = i + 1
+                End If
             End If
-
         Next
 
-        Ending = Len(Source) + 1
-        Index = Index + 1
-        ReDim Preserve SplitValues(Index)
-
-        If KeepSeparator = True Then
-            If Before = True Then
-                SplitValues(Index) = Mid(Source, Start, Ending - Start)
-            Else
-                SplitValues(Index) = Mid(Source, Start, Ending - Start + Len(separator))
-            End If
-        Else
-            SplitValues(Index) = Mid(Source, Start, Ending - Start)
+        If Len(Source) + 1 - Position >= 0 Then
+            Index = Index + 1
+            ReDim Preserve SplitValues(Index)
+            SplitValues(Index) = Mid(Source, Position, Len(Source) + 1 - Position)
         End If
 
         SplitText = SplitValues
 
     End Function
-    Private Function SplitCount(Source As String, Pattern As String, Consecutive As Boolean)
+    Private Function SplitCount(Source, Separators, Consecutive)
 
         Dim Index As Integer = 0
-        Dim SearchStart As Integer = 1
-        Dim Ending As Integer
-        Dim separator As String = ""
+        Dim Separator As String
 
-        For i = 1 To Len(Pattern)
-
-            If Mid(Pattern, i, 1) <> "*" Then
-                Dim SeparatorLength As Integer = 1
-                While Mid(Pattern, i + SeparatorLength, 1) <> "*" And (i + SeparatorLength) <= Len(Pattern)
-                    SeparatorLength = SeparatorLength + 1
-                End While
-
-                separator = Mid(Pattern, i, SeparatorLength)
-
-                Ending = InStr(SearchStart, Source, separator)
-
-                If Ending <> 0 Then
-                    Index = Index + 1
-                    SearchStart = Ending + Len(separator)
-                    If Consecutive = True Then
-                        While Mid(Source, SearchStart, Len(separator)) = separator
-                            SearchStart = SearchStart + Len(separator)
-                        End While
-                    End If
+        For i = 1 To Len(Source)
+            If MatchArr(Separators, Source, i)(0) Then
+                Index = Index + 1
+                Separator = MatchArr(Separators, Source, i)(1)
+                i = i + Len(Separator) - 1
+                If Consecutive = True Then
+                    While MatchArr(Separators, Source, i)(0)
+                        Separator = MatchArr(Separators, Source, i)(1)
+                        i = i + Len(Separator)
+                    End While
                 End If
-
             End If
-
         Next
 
-        Ending = Len(Source) + 1
         Index = Index + 1
 
         SplitCount = Index
@@ -303,9 +269,21 @@ Public Class Form28_Split_text_bypattern
         Dim X2 As Boolean = RB_columns.Checked
 
 
-        If (X1 Or X2) And ComboBox2.Text <> "" Then
+        If (X1 Or X2) And TB_TypeString.Text <> "" Then
 
-            Dim pattern As String = ComboBox2.Text
+            Dim OldSeparators() As String
+            OldSeparators = Split(TB_TypeString.Text, vbNewLine)
+
+            Dim Separators(0) As String
+            Dim Indx As Integer = -1
+
+            For i = LBound(OldSeparators) To UBound(OldSeparators)
+                If OldSeparators(i) <> "" Then
+                    Indx = Indx + 1
+                    ReDim Preserve Separators(Indx)
+                    Separators(Indx) = OldSeparators(i)
+                End If
+            Next
 
             Dim Consecutive As Boolean
             If CB_consecutive_separators.Checked Then
@@ -334,7 +312,7 @@ Public Class Form28_Split_text_bypattern
                 For i = 1 To r
                     Dim source As String = displayRng.Cells(i, 1).value
                     Dim SplitValues() As String
-                    SplitValues = SplitText(source, pattern, Consecutive, KeepSeparator, Before)
+                    SplitValues = SplitText(source, Separators, Consecutive, KeepSeparator, Before)
                     For m = LBound(SplitValues) To UBound(SplitValues)
                         Index = Index + 1
                         ReDim Preserve values(Index)
@@ -351,7 +329,7 @@ Public Class Form28_Split_text_bypattern
                 For i = 1 To r
                     Dim source As String = displayRng.Cells(i, 1).value
                     Dim SplitValues() As String
-                    SplitValues = SplitText(source, pattern, Consecutive, KeepSeparator, Before)
+                    SplitValues = SplitText(source, Separators, Consecutive, KeepSeparator, Before)
 
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, 1).Value
@@ -525,7 +503,7 @@ Public Class Form28_Split_text_bypattern
                 Dim lengths(r - 1) As Integer
                 For i = 1 To displayRng.Rows.Count
                     Dim source As String = displayRng.Cells(i, 1).value
-                    lengths(i - 1) = SplitCount(source, pattern, Consecutive)
+                    lengths(i - 1) = SplitCount(source, Separators, Consecutive)
                 Next
                 Dim TotalWidth As Integer = FindMax(lengths)
 
@@ -534,7 +512,7 @@ Public Class Form28_Split_text_bypattern
                 For i = 1 To displayRng.Rows.Count
                     Dim source As String = displayRng.Cells(i, 1).value
                     Dim SplitValues() As String
-                    SplitValues = SplitText(source, pattern, Consecutive, KeepSeparator, Before)
+                    SplitValues = SplitText(source, Separators, Consecutive, KeepSeparator, Before)
                     For j = LBound(SplitValues) To UBound(SplitValues)
                         Values(i - 1, j) = SplitValues(j)
                     Next
@@ -658,10 +636,22 @@ Public Class Form28_Split_text_bypattern
 
             workSheet.Activate()
 
-            If (X1 Or X2) And ComboBox2.Text <> "" Then
+            If (X1 Or X2) And TB_TypeString.Text <> "" Then
 
 
-                Dim pattern As String = ComboBox2.Text
+                Dim OldSeparators() As String
+                OldSeparators = Split(TB_TypeString.Text, vbNewLine)
+
+                Dim Separators(0) As String
+                Dim Indx As Integer = -1
+
+                For i = LBound(OldSeparators) To UBound(OldSeparators)
+                    If OldSeparators(i) <> "" Then
+                        Indx = Indx + 1
+                        ReDim Preserve Separators(Indx)
+                        Separators(Indx) = OldSeparators(i)
+                    End If
+                Next
 
                 Dim Consecutive As Boolean
                 If CB_consecutive_separators.Checked Then
@@ -690,19 +680,19 @@ Public Class Form28_Split_text_bypattern
                     Dim Lengths(r - 1) As String
                     Dim RowNumber As Integer = 0
                     For i = 1 To r
-                        Dim source As String = rng.Cells(i, 1).Value
+                        Dim source As String = rng.Cells(i, 1).value
                         Arr(i - 1) = source
                         Dim SplitValues() As String
-                        SplitValues = SplitText(source, pattern, Consecutive, KeepSeparator, Before)
+                        SplitValues = SplitText(source, Separators, Consecutive, KeepSeparator, Before)
                         Lengths(i - 1) = UBound(SplitValues) + 1
                         For m = LBound(SplitValues) To UBound(SplitValues)
                             RowNumber = RowNumber + 1
                             rng.Cells(RowNumber, 2) = SplitValues(m)
                             If CB_formatting.Checked Then
-                                rng.Cells(i, 1).Copy()
+                                rng.Cells(i, 1).Copy
                                 rng.Cells(RowNumber, 2).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                             Else
-                                rng.Cells(RowNumber, 2).ClearFormats()
+                                rng.Cells(RowNumber, 2).ClearFormats
                             End If
                         Next
                     Next
@@ -712,19 +702,19 @@ Public Class Form28_Split_text_bypattern
                         RowNumber = RowNumber + 1
                         rng.Cells(RowNumber, 1) = Arr(i - 1)
                         If CB_formatting.Checked Then
-                            rng.Cells(RowNumber, 2).Copy()
+                            rng.Cells(RowNumber, 2).Copy
                             rng.Cells(RowNumber, 1).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                         Else
-                            rng.Cells(RowNumber, 1).ClearFormats()
+                            rng.Cells(RowNumber, 1).ClearFormats
                         End If
                         For m = 1 To Lengths(i - 1) - 1
                             RowNumber = RowNumber + 1
                             rng.Cells(RowNumber, 1) = ""
                             If CB_formatting.Checked Then
-                                rng.Cells(RowNumber, 2).Copy()
+                                rng.Cells(RowNumber, 2).Copy
                                 rng.Cells(RowNumber, 1).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                             Else
-                                rng.Cells(RowNumber, 1).ClearFormats()
+                                rng.Cells(RowNumber, 1).ClearFormats
                             End If
                         Next
                     Next
@@ -734,21 +724,21 @@ Public Class Form28_Split_text_bypattern
                     rng2 = workSheet.Range(rng.Cells(1, 1), rng.Cells(RowNumber, 2))
                     rng2.Select()
                     For j = 1 To rng2.Columns.Count
-                        rng2.Columns(j).AutoFit()
+                        rng2.Columns(j).Autofit
                     Next
 
                 ElseIf X2 Then
 
                     Dim MaxColumns As Integer = 1
                     For i = 1 To r
-                        Dim source As String = rng.Cells(i, 1).Value
+                        Dim source As String = rng.Cells(i, 1).value
                         Dim SplitValues() As String
-                        SplitValues = SplitText(source, pattern, Consecutive, KeepSeparator, Before)
+                        SplitValues = SplitText(source, Separators, Consecutive, KeepSeparator, Before)
                         If UBound(SplitValues) + 1 > MaxColumns Then
                             MaxColumns = UBound(SplitValues) + 1
                         End If
                         If CB_formatting.Checked = False Then
-                            rng.Cells(i, 1).ClearFormats()
+                            rng.Cells(i, 1).ClearFormats
                         End If
                         For m = LBound(SplitValues) To UBound(SplitValues)
                             rng.Cells(i, m + 2) = SplitValues(m)
@@ -756,14 +746,13 @@ Public Class Form28_Split_text_bypattern
                     Next
                     For i = 1 To r
                         If CB_formatting.Checked Then
-                            rng.Cells(i, 1).Copy()
-
+                            rng.Cells(i, 1).Copy
                             For m = 1 To MaxColumns
                                 rng.Cells(i, m + 1).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                             Next m
                         Else
                             For m = 1 To MaxColumns
-                                rng.Cells(i, m + 1).ClearFormats()
+                                rng.Cells(i, m + 1).ClearFormats
                             Next m
                         End If
                     Next
@@ -773,7 +762,7 @@ Public Class Form28_Split_text_bypattern
                     rng2 = workSheet.Range(rng.Cells(1, 1), rng.Cells(r, MaxColumns + 1))
                     rng2.Select()
                     For j = 1 To rng2.Columns.Count
-                        rng2.Columns(j).AutoFit()
+                        rng2.Columns(j).Autofit
                     Next
 
                 End If
@@ -836,7 +825,7 @@ Public Class Form28_Split_text_bypattern
 
     End Sub
 
-    Private Sub ComboBox2_TextChanged(sender As Object, e As EventArgs) Handles ComboBox2.TextChanged
+    Private Sub TB_TypeString_TextChanged(sender As Object, e As EventArgs) Handles TB_TypeString.TextChanged
 
         Try
             Call Display()
@@ -874,6 +863,7 @@ Public Class Form28_Split_text_bypattern
     End Sub
 
     Private Sub AutoSelection_Click(sender As Object, e As EventArgs) Handles AutoSelection.Click
+
         Try
 
             FocusedTextBox = 1
@@ -909,6 +899,7 @@ Public Class Form28_Split_text_bypattern
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub Selection_Click(sender As Object, e As EventArgs) Handles Selection.Click
