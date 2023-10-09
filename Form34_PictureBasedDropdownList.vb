@@ -8,7 +8,6 @@ Imports Microsoft.Office.Interop.Excel
 Imports System.Drawing
 Imports Microsoft.Office
 Imports System.Runtime
-Imports System.ComponentModel
 
 Public Class Form34_PictureBasedDropdownList
     Dim WithEvents excelApp As Excel.Application
@@ -120,13 +119,13 @@ Public Class Form34_PictureBasedDropdownList
 
 
     Private Sub worksheet2_Change(ByVal Target As Excel.Range)
-        excelApp = Globals.ThisAddIn.Application
-        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        'excelApp = Globals.ThisAddIn.Application
+        'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
         'MsgBox(workSheet.Shapes.Count)
 
-        For Each pic As Excel.Shape In worksheet.Shapes
+        For Each pic As Excel.Shape In workSheet.Shapes
             'MsgBox(pic.TopLeftCell.Address)
             If pic.TopLeftCell.Address = Target.Offset(0, 1).Address Then
 
@@ -143,32 +142,57 @@ Public Class Form34_PictureBasedDropdownList
         'excelApp = Globals.ThisAddIn.Application
         'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
         'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        Try
 
-        For i = 1 To src_rng.Rows.Count
-            If src_rng(i, 1).Value = Target.Value Then
-                ' MsgBox(3)
-                Try
-                    worksheet2_Change(Target)
-                    '    MsgBox(5)
-                Catch ex As Exception
-                    ' MsgBox(15)
-                End Try
+            For i = 1 To src_rng.Rows.Count
+                If src_rng(i, 1).Value = Target.Value Then
+                    ' MsgBox(3)
+                    Try
+                        worksheet2_Change(Target)
+                        '    MsgBox(5)
+                    Catch ex As Exception
+                        ' MsgBox(15)
+                    End Try
 
-                'MsgBox(6)
+                    'MsgBox(6)
 
-                Dim imageCell As Excel.Range = src_rng(i, 2)
-                imageCell.CopyPicture(
-    Appearance:=Excel.XlPictureAppearance.xlScreen,
-    Format:=Excel.XlCopyPictureFormat.xlPicture)
-                workSheet.Paste(Target.Offset(0, 1))
-                'Me.Refresh()
-                'MsgBox(2)
+                    '            Dim imageCell As Excel.Range = src_rng(i, 2)
+                    '            imageCell.CopyPicture(
+                    'Appearance:=Excel.XlPictureAppearance.xlScreen,
+                    'Format:=Excel.XlCopyPictureFormat.xlPicture)
+                    '            workSheet.Paste(Target.Offset(0, 1))
 
-                excelApp.CutCopyMode = False
-                'Exit Sub
+                    Dim x As Boolean = False
+                    'Try
+                    For Each pic As Excel.Shape In workSheet.Shapes
+                        'MsgBox(pic.TopLeftCell.Address)
+                        If pic.TopLeftCell.Address = src_rng(i, 2).Address Then
+                            pic.CopyPicture()
+                            workSheet.Paste(Target.Offset(0, 1))
+                            Target.Offset(0, 1).RowHeight = src_rng(i, 2).RowHeight
+                            ' Target.Offset(0, 1).RowHeight = src_rng(i, 2).C
+                            x = True
+                            Exit For
+                        Else
+                            x = False
 
-            End If
-        Next
+                        End If
+                        'x = x + 1
+                    Next
+
+                    ' MsgBox(x)
+
+                    'If x = False Then
+                    '    MessageBox.Show("There is no image.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    'End If
+
+                    excelApp.CutCopyMode = False
+                    'Exit Sub
+
+                End If
+            Next
+        Catch ex As Exception
+        End Try
 
 
     End Sub
@@ -284,7 +308,7 @@ Public Class Form34_PictureBasedDropdownList
         Catch ex As Exception
 
             Me.Show()
-            TB_src_rng.Focus()
+        TB_src_rng.Focus()
 
         End Try
     End Sub
@@ -532,23 +556,5 @@ Public Class Form34_PictureBasedDropdownList
 
         End Try
 
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TB_src_rng.Text = src_rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
     End Sub
 End Class
