@@ -35,6 +35,7 @@ Partial Class Form13HideAllExceptSelectedRange
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.checkBox_Header = New System.Windows.Forms.CheckBox()
         CType(Me.pctBoxSelectRange, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox6.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
@@ -80,7 +81,7 @@ Partial Class Form13HideAllExceptSelectedRange
         Me.btnOK.BackColor = System.Drawing.Color.White
         Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnOK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnOK.Location = New System.Drawing.Point(370, 234)
+        Me.btnOK.Location = New System.Drawing.Point(367, 255)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(62, 26)
         Me.btnOK.TabIndex = 190
@@ -91,7 +92,7 @@ Partial Class Form13HideAllExceptSelectedRange
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(15, 236)
+        Me.ComboBox1.Location = New System.Drawing.Point(12, 257)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(90, 25)
         Me.ComboBox1.TabIndex = 186
@@ -101,7 +102,7 @@ Partial Class Form13HideAllExceptSelectedRange
         '
         Me.checkBoxCopyWorksheet.AutoSize = True
         Me.checkBoxCopyWorksheet.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.checkBoxCopyWorksheet.Location = New System.Drawing.Point(15, 206)
+        Me.checkBoxCopyWorksheet.Location = New System.Drawing.Point(12, 227)
         Me.checkBoxCopyWorksheet.Name = "checkBoxCopyWorksheet"
         Me.checkBoxCopyWorksheet.Size = New System.Drawing.Size(257, 21)
         Me.checkBoxCopyWorksheet.TabIndex = 185
@@ -133,7 +134,7 @@ Partial Class Form13HideAllExceptSelectedRange
         Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox6.Controls.Add(Me.custPanExcpectedOutput)
         Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox6.Location = New System.Drawing.Point(287, 52)
+        Me.CustomGroupBox6.Location = New System.Drawing.Point(284, 73)
         Me.CustomGroupBox6.Name = "CustomGroupBox6"
         Me.CustomGroupBox6.Size = New System.Drawing.Size(222, 146)
         Me.CustomGroupBox6.TabIndex = 188
@@ -145,7 +146,7 @@ Partial Class Form13HideAllExceptSelectedRange
         Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox5.Controls.Add(Me.custPanInputRange)
         Me.CustomGroupBox5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox5.Location = New System.Drawing.Point(15, 52)
+        Me.CustomGroupBox5.Location = New System.Drawing.Point(12, 73)
         Me.CustomGroupBox5.Name = "CustomGroupBox5"
         Me.CustomGroupBox5.Size = New System.Drawing.Size(222, 146)
         Me.CustomGroupBox5.TabIndex = 187
@@ -157,7 +158,7 @@ Partial Class Form13HideAllExceptSelectedRange
         Me.btnCancel.BackColor = System.Drawing.Color.White
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCancel.Location = New System.Drawing.Point(447, 234)
+        Me.btnCancel.Location = New System.Drawing.Point(444, 255)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(62, 26)
         Me.btnCancel.TabIndex = 189
@@ -167,19 +168,31 @@ Partial Class Form13HideAllExceptSelectedRange
         'PictureBox2
         '
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(237, 113)
+        Me.PictureBox2.Location = New System.Drawing.Point(234, 134)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(50, 49)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 194
         Me.PictureBox2.TabStop = False
         '
+        'checkBox_Header
+        '
+        Me.checkBox_Header.AutoSize = True
+        Me.checkBox_Header.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.checkBox_Header.Location = New System.Drawing.Point(12, 46)
+        Me.checkBox_Header.Name = "checkBox_Header"
+        Me.checkBox_Header.Size = New System.Drawing.Size(194, 21)
+        Me.checkBox_Header.TabIndex = 195
+        Me.checkBox_Header.Text = "I have headers in my dataset"
+        Me.checkBox_Header.UseVisualStyleBackColor = True
+        '
         'Form13HideAllExceptSelectedRange
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(526, 279)
+        Me.ClientSize = New System.Drawing.Size(526, 296)
+        Me.Controls.Add(Me.checkBox_Header)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.pctBoxSelectRange)
         Me.Controls.Add(Me.btnOK)
@@ -215,4 +228,5 @@ Partial Class Form13HideAllExceptSelectedRange
     Friend WithEvents CustomGroupBox5 As CustomGroupBox
     Friend WithEvents btnCancel As Windows.Forms.Button
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
+    Friend WithEvents checkBox_Header As Windows.Forms.CheckBox
 End Class
