@@ -18,12 +18,6 @@ Public Class Form14SpecifyScrollArea
     Dim selectedRange As Excel.Range
     Dim txtChanged As Boolean = False
 
-    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
-    Private Const SWP_NOMOVE As UInteger = &H2
-    Private Const SWP_NOSIZE As UInteger = &H1
-    Private Const SWP_NOACTIVATE As UInteger = &H10
-    Private Const HWND_TOPMOST As Integer = -1
-
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
             Btn_OK.PerformClick()
@@ -173,19 +167,21 @@ Public Class Form14SpecifyScrollArea
             worksheet = workbook.ActiveSheet
 
 
-
+            'checks if the user clicked OK button with an empty sourceRange textbox
+            'if it is non-empty, then checks is the used range is a valid range or not
+            'if any of these are true then it will give user another chance to enter correct input
             If txtSourceRange.Text = "" Then
-                MsgBox("Please select the Source Range.", MsgBoxStyle.Exclamation, "Error!")
+                MsgBox("Please provide source range.", MsgBoxStyle.Exclamation, "Error!")
                 txtSourceRange.Focus()
                 Exit Sub
             ElseIf IsValidRng(txtSourceRange.Text.ToUpper) = False Then
-                MsgBox("Please use a valid range.", MsgBoxStyle.Exclamation, "Error!")
+                MsgBox("Please provide a valid source range.", MsgBoxStyle.Exclamation, "Error!")
                 txtSourceRange.Text = ""
                 txtSourceRange.Focus()
                 Exit Sub
             End If
 
-
+            'counts the number of ranges used by user
             Dim rngCount As Integer
             rngCount = 0
 
@@ -197,16 +193,12 @@ Public Class Form14SpecifyScrollArea
 
             Next
 
-
-
+            'calls different subs based on number of ranges in users' selection 
             If rngCount = 0 Then
-
                 Call singleRng()
             Else
                 Call multiRng()
             End If
-
-            Me.Dispose()
 
 
         Catch ex As Exception
@@ -219,6 +211,8 @@ Public Class Form14SpecifyScrollArea
 
     Private Sub singleRng()
 
+        'this sub will be called when user selected a single range as input
+
         Try
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
@@ -227,10 +221,12 @@ Public Class Form14SpecifyScrollArea
             Dim selectedRng As Excel.Range
             selectedRng = worksheet.Range(txtSourceRange.Text)
 
+            'keeps the range address from the textbox in a variable and keeps the worksheet info in another variable named "worksheet1"
             Dim temp As String
             temp = txtSourceRange.Text
             worksheet1 = inputRng.Worksheet
 
+            'checks if user opted to backup the sheet. If yes then create a copy and reactivate the original worksheet
             If CheckBox.Checked = True Then
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
@@ -241,9 +237,23 @@ Public Class Form14SpecifyScrollArea
 
             End If
 
-            If selectedRng.Rows.Count <= 2 And selectedRng.Columns.Count <= 2 Then
+            'cellCount variable is used to count the number of cells in users' selection.
+            'Our goal is to check whether the cellCount is <= 4 or not in the next block.
+            'if the cellCount exceeds 5 then exit from the loop.
+            Dim cellCount As Integer = 0
+            For i = 1 To selectedRng.Rows.Count
+                For j = 1 To selectedRng.Columns.Count
+                    cellCount += 1
+                    If cellCount > 5 Then Exit For
+                Next
+                If cellCount > 5 Then Exit For
+            Next
+
+            'checks if the cellCount is <=6 or not. If yes then show a YesNo msgbox as warning.
+            'If user select yes then continue excecuting next lines, else dispose the form
+            If cellCount <= 4 Then
                 Dim answer As MsgBoxResult
-                answer = MsgBox("You are about to set Scroll Area for only " & selectedRng.Rows.Count & " Rows and " & selectedRng.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                answer = MsgBox("Do you really want to hide everything except " & cellCount & " cells." & vbCrLf & "If yes, hide every cell except the selected cell range. If no, close the add-in.", MsgBoxStyle.YesNo, "Warning!")
                 If answer = MsgBoxResult.Yes Then
                     GoTo Proceed
                 Else
@@ -255,13 +265,9 @@ Proceed:
             worksheet.Rows.Hidden = True
             worksheet.Columns.Hidden = True
 
-            For i As Integer = 1 To selectedRng.Rows.Count
-                selectedRng.Rows(i).EntireRow.Hidden = False
-            Next
 
-            For i As Integer = 1 To selectedRng.Columns.Count
-                selectedRng.Columns(i).EntireColumn.Hidden = False
-            Next
+            selectedRng.EntireRow.Hidden = False
+            selectedRng.EntireColumn.Hidden = False
 
             selectedRng.Select()
 
@@ -280,6 +286,8 @@ break:
 
     Private Sub multiRng()
 
+        'this sub will be called when user selected multiple ranges as input
+
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
@@ -290,11 +298,12 @@ break:
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-
+            'keeps the range address from the textbox in a variable and keeps the worksheet info in another variable named "worksheet1"
             Dim temp As String
             temp = txtSourceRange.Text
             worksheet1 = inputRng.Worksheet
 
+            'checks if user opted to backup the sheet. If yes then create a copy and reactivate the original worksheet
             If CheckBox.Checked = True Then
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
@@ -305,8 +314,10 @@ break:
 
             End If
 
+            'keeps each of the range addresses from users' selecion in separate array elements of the arrRng array
             Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
+            'finds the start and end row, column numbers and store the range in scrollArea variable as range
             Dim minRow As Integer = Integer.MaxValue
             Dim maxRow As Integer = Integer.MinValue
             Dim minCol As Integer = Integer.MaxValue
@@ -321,22 +332,51 @@ break:
             Next
             Dim scrollArea As Excel.Range = worksheet.Range(worksheet.Cells(minRow, minCol), worksheet.Cells(maxRow, maxCol))
 
-            worksheet.Rows.Hidden = True
-            worksheet.Columns.Hidden = True
 
+            'declare a booolean variable named "flag" with Fasle value
+            'if the number of rows and the row number of 1st row of each range is same then flag will be True
+            'if the number of columns and the column number of 1st column of each range is same then flag will be True
+            'otherwise it flag will be false
+            Dim flag As Boolean = False
+            For i = 0 To UBound(arrRng) - 1
 
-            For i As Integer = minRow To maxRow
-                worksheet.Rows(i).EntireRow.Hidden = False
+                If worksheet.Range(arrRng(i)).Rows.Count = worksheet.Range(arrRng(i + 1)).Rows.Count And worksheet.Range(arrRng(i)).Row = worksheet.Range(arrRng(i + 1)).Row Then
+
+                    flag = True
+
+                ElseIf worksheet.Range(arrRng(i)).Columns.Count = worksheet.Range(arrRng(i + 1)).Columns.Count And worksheet.Range(arrRng(i)).Column = worksheet.Range(arrRng(i + 1)).Column Then
+
+                    flag = True
+
+                Else
+
+                    flag = False
+
+                End If
+
             Next
 
-            For i As Integer = minCol To maxCol
-                worksheet.Columns(i).EntireColumn.Hidden = False
-            Next
+            'checks if the flag is true or false
+            'muiltiple ranges will be hidden only if the the flag is true
+            'otherwise a msgbox will open and give user another chance to enter correct inputs
+            If flag = False Then
+                MsgBox("Multiple selection is not possible with this source range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Clear()
+                txtSourceRange.Focus()
+            Else
+                worksheet.Rows.Hidden = True
+                worksheet.Columns.Hidden = True
 
-            scrollArea.Select()
+                For i = 0 To UBound(arrRng)
+                    worksheet.Range(arrRng(i)).EntireRow.Hidden = False
+                    worksheet.Range(arrRng(i)).EntireColumn.Hidden = False
+                Next
 
+                scrollArea.Select()
+                Me.Dispose()
 
-            Me.Dispose()
+            End If
+
 
         Catch ex As Exception
 
@@ -344,23 +384,4 @@ break:
 
     End Sub
 
-    Private Sub Form14SpecifyScrollArea_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
-
-    Private Sub Form14SpecifyScrollArea_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
-
-
-
-    Private Sub Form14SpecifyScrollArea_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             txtSourceRange.Text = inputRng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
-    End Sub
 End Class
