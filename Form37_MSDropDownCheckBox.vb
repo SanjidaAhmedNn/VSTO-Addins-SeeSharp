@@ -622,7 +622,16 @@ Public Class Form37_MSDropDownCheckBox
 
     Private Sub Form37_MSDropDownCheckBox_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         TB_src_rng.Focus()
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_src_rng.Text = src_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
+
+
 
     Private Sub Form37_MSDropDownCheckBox_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False

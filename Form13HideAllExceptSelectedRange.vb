@@ -18,12 +18,6 @@ Public Class Form13HideAllExceptSelectedRange
     Dim selectedRange As Excel.Range
     Dim txtChanged As Boolean = False
 
-    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
-    Private Const SWP_NOMOVE As UInteger = &H2
-    Private Const SWP_NOSIZE As UInteger = &H1
-    Private Const SWP_NOACTIVATE As UInteger = &H10
-    Private Const HWND_TOPMOST As Integer = -1
-
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
             btnOK.PerformClick()
@@ -167,6 +161,9 @@ Public Class Form13HideAllExceptSelectedRange
     Private Sub singleRng()
 
         Try
+
+            'this sub will be called when user selected a single range as input
+
             Dim inputWsName As String
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
@@ -174,6 +171,7 @@ Public Class Form13HideAllExceptSelectedRange
             inputWsName = worksheet.Name
             Dim selectedRng As Excel.Range
             selectedRng = worksheet.Range(txtSourceRange.Text)
+
 
 
             Dim temp As String
@@ -200,11 +198,25 @@ Public Class Form13HideAllExceptSelectedRange
             lastRowNum = worksheet.Range(lastCell(1)).Row
             lastColNum = worksheet.Range(lastCell(1)).Column
 
+            Dim i As Integer
 
-            'Single rows Or Columns validation
-            If selectedRng.Rows.Count <= 2 And selectedRng.Columns.Count <= 2 Then
+            'cellCount variable is used to count the number of cells in users' selection.
+            'Our goal is to check whether the cellCount is <= 4 or not in the next block.
+            'if the cellCount exceeds 5 then exit from the loop.
+            Dim cellCount As Integer = 0
+            For i = 1 To selectedRng.Rows.Count
+                For j = 1 To selectedRng.Columns.Count
+                    cellCount += 1
+                    If cellCount > 5 Then Exit For
+                Next
+                If cellCount > 5 Then Exit For
+            Next
+
+            'checks if the cellCount is <=6 or not. If yes then show a YesNo msgbox as warning.
+            'If user select yes then continue excecuting next lines, else dispose the form
+            If cellCount <= 4 Then
                 Dim answer As MsgBoxResult
-                answer = MsgBox("You are about to hide all cells except " & selectedRng.Rows.Count & " Rows and " & selectedRng.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                answer = MsgBox("Do you really want to hide everything except " & cellCount & " cells." & vbCrLf & "If yes, hide every cell except the selected cell range. If no, close the add-in.", MsgBoxStyle.YesNo, "Warning!")
                 If answer = MsgBoxResult.Yes Then
                     GoTo Proceed
                 Else
@@ -213,17 +225,49 @@ Public Class Form13HideAllExceptSelectedRange
             End If
 
 Proceed:
-            worksheet.Range(worksheet.Cells(firstRowNum + 1, firstColNum), worksheet.Cells(lastRowNum, 1)).EntireRow.Hidden = True
-            worksheet.Range(worksheet.Cells(firstRowNum + 1, firstColNum), worksheet.Cells(1, lastColNum)).EntireColumn.Hidden = True
 
-            selectedRng.EntireRow.Hidden = False
-            selectedRng.EntireColumn.Hidden = False
-            selectedRng.Select()
+
+            If checkBox_Header.Checked = True Then
+
+
+                'find first row with data and exit from loop after finding the first data
+                For i = 1 To worksheet.Rows.Count
+                    For j = 1 To worksheet.Columns.Count
+                        If worksheet.Cells(i, j).value IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(worksheet.Cells(i, j).value.ToString()) Then
+                            GoTo exitLoop
+                        End If
+                    Next
+                Next
+exitLoop:
+                'hide all rows and columns of the used range of the worksheet
+                worksheet.UsedRange.EntireRow.Hidden = True
+                worksheet.UsedRange.EntireColumn.Hidden = True
+
+                'unhide the header row
+                worksheet.Rows(i).entirerow.hidden = False
+
+                'unhide users' selected range
+                selectedRng.EntireRow.Hidden = False
+                selectedRng.EntireColumn.Hidden = False
+                selectedRng = worksheet.Range(worksheet.Cells(i, selectedRng.Column), selectedRng.Cells(1, 1).offset(selectedRng.Rows.Count - 1, selectedRng.Columns.Count - 1))
+                selectedRng.Select()
+
+            Else
+
+                'hide all rows and columns of the used range of the worksheet
+                worksheet.UsedRange.EntireRow.Hidden = True
+                worksheet.UsedRange.EntireColumn.Hidden = True
+
+                'unhide users' selected range
+                selectedRng.EntireRow.Hidden = False
+                selectedRng.EntireColumn.Hidden = False
+                selectedRng.Select()
+
+            End If
 
 break:
 
             Me.Dispose()
-
 
         Catch ex As Exception
 
@@ -234,24 +278,25 @@ break:
 
     Private Sub multiRng()
 
-        Dim WsName As String
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
-        WsName = worksheet.Name
-
-
+        'this sub will be called when user selected multiple ranges as input
 
         Try
 
+            Dim WsName As String
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
+            Dim selectedRng As Excel.Range
+            selectedRng = worksheet.Range(txtSourceRange.Text)
+            WsName = worksheet.Name
 
+            'keeps the range address from the textbox in a variable and keeps the worksheet info in another variable named "worksheet1"
+            Dim i As Integer
             Dim temp As String
             temp = txtSourceRange.Text
             worksheet1 = inputRng.Worksheet
 
+            'checks if user opted to backup the sheet. If yes then create a copy and reactivate the original worksheet
             If checkBoxCopyWorksheet.Checked = True Then
 
                 workbook.ActiveSheet.Copy(After:=workbook.Sheets(workbook.Sheets.Count))
@@ -262,36 +307,94 @@ break:
 
             End If
 
-
-
-            Dim lastCell() As String
-            Dim firstRowNum, firstColNum, lastRowNum, lastColNum As Integer
-
-            lastCell = worksheet.UsedRange.Address.Split(":"c)
-            firstRowNum = worksheet.Range(lastCell(0)).Row
-            firstColNum = worksheet.Range(lastCell(0)).Column
-            lastRowNum = worksheet.Range(lastCell(1)).Row
-            lastColNum = worksheet.Range(lastCell(1)).Column
-
-            worksheet.Range(worksheet.Cells(firstRowNum + 1, firstColNum), worksheet.Cells(lastRowNum, 1)).EntireRow.Hidden = True
-            worksheet.Range(worksheet.Cells(firstRowNum + 1, firstColNum), worksheet.Cells(1, lastColNum)).EntireColumn.Hidden = True
-
-
-
+            'keeps each of the range addresses from users' selecion in separate array elements of the arrRng array
             Dim arrRng As String() = Split(txtSourceRange.Text, ",")
 
-            For i = 0 To UBound(arrRng)
+            'finds the start and end row, column numbers and store the range in scrollArea variable as range
+            Dim minRow As Integer = Integer.MaxValue
+            Dim maxRow As Integer = Integer.MinValue
+            Dim minCol As Integer = Integer.MaxValue
+            Dim maxCol As Integer = Integer.MinValue
 
-                worksheet.Range(arrRng(i)).EntireRow.Hidden = False
-                worksheet.Range(arrRng(i)).EntireColumn.Hidden = False
+            For Each address In arrRng
+                Dim range As Excel.Range = worksheet.Range(address)
+                minRow = Math.Min(minRow, range.Row)
+                maxRow = Math.Max(maxRow, range.Row + range.Rows.Count - 1)
+                minCol = Math.Min(minCol, range.Column)
+                maxCol = Math.Max(maxCol, range.Column + range.Columns.Count - 1)
+            Next
+            Dim visibleRange As Excel.Range = worksheet.Range(worksheet.Cells(minRow, minCol), worksheet.Cells(maxRow, maxCol))
 
+
+            'declare a booolean variable named "flag" with Fasle value
+            'if the number of rows and the row number of 1st row of each range is same then flag will be True
+            'if the number of columns and the column number of 1st column of each range is same then flag will be True
+            'otherwise it flag will be false
+            Dim flag As Boolean = False
+            For i = 0 To UBound(arrRng) - 1
+                If worksheet.Range(arrRng(i)).Rows.Count = worksheet.Range(arrRng(i + 1)).Rows.Count And worksheet.Range(arrRng(i)).Row = worksheet.Range(arrRng(i + 1)).Row Then
+                    flag = True
+                ElseIf worksheet.Range(arrRng(i)).Columns.Count = worksheet.Range(arrRng(i + 1)).Columns.Count And worksheet.Range(arrRng(i)).Column = worksheet.Range(arrRng(i + 1)).Column Then
+                    flag = True
+                Else
+                    flag = False
+                End If
             Next
 
+            'checks if the flag is true or false
+            'muiltiple ranges will be hidden only if the the flag is true
+            'otherwise a msgbox will open and give user another chance to enter correct inputs
+            If flag = False Then
+                MsgBox("Multiple selection is not possible with this source range.", MsgBoxStyle.Exclamation, "Error!")
+                txtSourceRange.Clear()
+                txtSourceRange.Focus()
+            Else
 
-            worksheet.Range(arrRng(0)).Cells(1, 1).select()
+                If checkBox_Header.Checked = True Then
+                    'find first row with data and exit from loop after finding the first data
+                    For i = 1 To worksheet.Rows.Count
+                        For j = 1 To worksheet.Columns.Count
+                            If worksheet.Cells(i, j).value IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(worksheet.Cells(i, j).value.ToString()) Then
+                                GoTo exitLoop
+                            End If
+                        Next
+                    Next
+exitLoop:
+                    'hide all rows and columns of the used range of the worksheet
+                    worksheet.UsedRange.EntireRow.Hidden = True
+                    worksheet.UsedRange.EntireColumn.Hidden = True
+
+                    'unhide the header row
+                    worksheet.Rows(i).entirerow.hidden = False
+
+                    'unhide users' selected ranges
+                    For k = 0 To UBound(arrRng)
+                        worksheet.Range(arrRng(k)).EntireRow.Hidden = False
+                        worksheet.Range(arrRng(k)).EntireColumn.Hidden = False
+                    Next
+
+                    selectedRng = worksheet.Range(worksheet.Cells(i, minCol), worksheet.Cells(maxRow, maxCol))
+                    selectedRng.Select()
 
 
-            Me.Dispose()
+                Else
+                    'hide all rows and columns of the used range of the worksheet
+                    worksheet.UsedRange.EntireRow.Hidden = True
+                    worksheet.UsedRange.EntireColumn.Hidden = True
+
+                    For k = 0 To UBound(arrRng)
+                        worksheet.Range(arrRng(k)).EntireRow.Hidden = False
+                        worksheet.Range(arrRng(k)).EntireColumn.Hidden = False
+                    Next
+
+                    visibleRange.Select()
+
+                End If
+
+                Me.Dispose()
+
+            End If
+
 
         Catch ex As Exception
 
@@ -356,21 +459,5 @@ break:
 
     End Sub
 
-    Private Sub Form13HideAllExceptSelectedRange_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
 
-    Private Sub Form13HideAllExceptSelectedRange_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
-
-    Private Sub Form13HideAllExceptSelectedRange_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             txtSourceRange.Text = inputRng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
-    End Sub
 End Class

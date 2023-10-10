@@ -342,7 +342,7 @@
     <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.Designer.vb">
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.designer.vb">
       <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
     </Compile>
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
@@ -439,6 +439,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalModule.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
@@ -451,6 +456,9 @@
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="CustomButton.resx">
+      <DependentUpon>CustomButton.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomGroupBox.resx">
       <DependentUpon>CustomGroupBox.vb</DependentUpon>
     </EmbeddedResource>
@@ -575,15 +583,10 @@
     <Compile Include="My Project\AssemblyInfo.vb" />
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -627,6 +630,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Ribbon.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -647,7 +653,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>1706E0BCB89176B7CD053F70B8B75B1D5B14E072</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A5820B2488DE7BC5EFB424A6A2B01A23152C0F4F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

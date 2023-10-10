@@ -37,4 +37,10 @@ Public Class CustomButton
         ' Draw border
         e.Graphics.DrawRectangle(borderPen, borderRectangle)
     End Sub
+
+    Private Sub InitializeComponent()
+        Me.SuspendLayout()
+        Me.ResumeLayout(False)
+
+    End Sub
 End Class

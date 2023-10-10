@@ -12,11 +12,19 @@ Imports System.Runtime.InteropServices
 Imports Application = System.Windows.Forms.Application
 
 
+
 Public Class Ribbon1
 
     Dim excelApp As Excel.Application
     Dim workbook As Excel.Workbook
     Dim worksheet As Excel.Worksheet
+
+
+
+    'Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
+    '    Return DirectCast(AxHost.GetIPictureDispFromPicture(image), stdole.IPictureDisp)
+    'End Function
+
 
     Private Function SplitText(Source, Pattern, Consecutive, KeepSeparator, Before)
 
@@ -44,21 +52,6 @@ Public Class Ribbon1
 
     End Function
 
-    Function IsRangeEmpty(rng As Excel.Range) As Boolean
-
-        Dim Result As Boolean = True
-
-        For Each cell In rng
-            If cell.Value IsNot Nothing AndAlso cell.Value.ToString() <> String.Empty Then
-                Result = False
-                Exit For
-            End If
-        Next
-
-        Return Result
-
-    End Function
-
 
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
@@ -73,21 +66,16 @@ Public Class Ribbon1
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
+            MyForm1.OpenSheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MyForm1.TextBox1.Text = selection.Address
+            MyForm1.ComboBox1.SelectedIndex = -1
+            MyForm1.ComboBox1.Text = "SOFTEKO"
 
-            Else
-                MyForm1.TextBox1.Text = selection.Address
-                MyForm1.ComboBox1.SelectedIndex = -1
-                MyForm1.ComboBox1.Text = "SOFTEKO"
-
-                MyForm1.Show()
-                form_flag = True
-            End If
+            MyForm1.Show()
+            form_flag = True
         End If
 
     End Sub
@@ -119,17 +107,12 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm3.TextBox1.Text = selection.Address
+            MyForm3.TextBox1.Text = selection.Address
                 MyForm3.ComboBox1.SelectedIndex = -1
                 MyForm3.ComboBox1.Text = "SOFTEKO"
 
                 MyForm3.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
 
     End Sub
@@ -146,16 +129,11 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm8.TextBox1.Text = selection.Address
+            MyForm8.TextBox1.Text = selection.Address
                 MyForm8.ComboBox1.SelectedIndex = -1
                 MyForm8.ComboBox1.Text = "SOFTEKO"
                 MyForm8.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
 
     End Sub
@@ -194,14 +172,9 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm7.TextBox1.Text = selection.Address
+            MyForm7.TextBox1.Text = selection.Address
                 MyForm7.Show()
-                form_flag = True
-            End If
+            form_flag = True
 
         End If
     End Sub
@@ -320,7 +293,7 @@ Public Class Ribbon1
     End Sub
 
     ''' <summary>
-    ''' Unhides any hidden rows and columns from the entire sheet.
+    ''' Unhides all  hidden rows and columns from the entire sheet.
     ''' </summary>
 
     Private Sub Button31_Click(sender As Object, e As RibbonControlEventArgs) Handles Button31.Click
@@ -336,33 +309,10 @@ Public Class Ribbon1
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            ' Declare variables to store row and column numbers
-            Dim data_Row_Num, data_Col_Num, last_Data_Row_Num, last_Data_Col_Num As Integer
+            'unhide all hidden rows and columns
+            worksheet.Rows.Hidden = False
+            worksheet.Columns.Hidden = False
 
-
-            'Calculate the last used row and column number in the worksheet
-            last_Data_Row_Num = worksheet.UsedRange.Rows.Count + worksheet.UsedRange.Row - 1
-            last_Data_Col_Num = worksheet.UsedRange.Columns.Count + worksheet.UsedRange.Column - 1
-
-
-            ' Loop through each row in the used range of the worksheet
-            ' Check if the entire row is hidden
-            ' If the row is hidden, unhide it
-            For data_Row_Num = worksheet.UsedRange.Row To last_Data_Row_Num
-                If worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = True Then
-                    worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = False
-                End If
-            Next
-
-
-            ' Loop through each column in the used range of the worksheet
-            ' Check if the entire column is hidden
-            ' If the column is hidden, unhide it
-            For data_Col_Num = worksheet.UsedRange.Column To last_Data_Col_Num
-                If worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = True Then
-                    worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = False
-                End If
-            Next
 
         Catch ex As Exception
 
@@ -1634,17 +1584,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton1.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1658,16 +1603,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm22.TextBox1.Text = selection.Address
+            MyForm22.TextBox1.Text = selection.Address
                 MyForm22.ComboBox1.SelectedIndex = -1
                 MyForm22.ComboBox1.Text = "SOFTEKO"
                 MyForm22.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1675,22 +1615,17 @@ nextloop:
         If form_flag = False Then
             Dim MyForm23 As New Form23_Merge_Duplicate_Columns
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm23.TextBox1.Text = selection.Address
+            MyForm23.TextBox1.Text = selection.Address
                 MyForm23.ComboBox1.SelectedIndex = -1
                 MyForm23.ComboBox1.Text = "SOFTEKO"
                 MyForm23.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1704,16 +1639,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm25.TextBox1.Text = selection.Address
+            MyForm25.TextBox1.Text = selection.Address
                 MyForm25.ComboBox1.SelectedIndex = -1
                 MyForm25.ComboBox1.Text = "SOFTEKO"
                 MyForm25.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1721,80 +1651,70 @@ nextloop:
         If form_flag = False Then
             Dim MyForm24 As New Form24_Split_Cells
 
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+            MyForm24.TextBox1.Text = selection.Address
+                MyForm24.ComboBox1.SelectedIndex = -1
+                MyForm24.ComboBox1.Text = "SOFTEKO"
+                MyForm24.Show()
+            form_flag = True
+        End If
+    End Sub
+
+    Private Sub Button45_Click(sender As Object, e As RibbonControlEventArgs) Handles Button45.Click
+        If form_flag = False Then
+            Dim MyForm26 As New Form26_split_text_bycharacters
+
         excelApp = Globals.ThisAddIn.Application
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm24.TextBox1.Text = selection.Address
-                MyForm24.ComboBox1.SelectedIndex = -1
-                MyForm24.ComboBox1.Text = "SOFTEKO"
-                MyForm24.Show()
-                form_flag = True
-            End If
+            MyForm26.TB_source_range.Text = selection.Address
+                MyForm26.ComboBox1.SelectedIndex = -1
+                MyForm26.ComboBox1.Text = "SOFTEKO"
+                MyForm26.Show()
+            form_flag = True
         End If
     End Sub
 
-    Private Sub Button45_Click(sender As Object, e As RibbonControlEventArgs) Handles Button45.Click
-        '    Dim MyForm26 As New Form26_split_text_bycharacters
-
-        '    excelApp = Globals.ThisAddIn.Application
-        '    workbook = excelApp.ActiveWorkbook
-        '    worksheet = workbook.ActiveSheet
-
-        '    Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
-
-        '    If IsRangeEmpty(selection) = True Then
-        '        MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-        '    Else
-        '        MyForm26.TB_source_range.Text = selection.Address
-        '        MyForm26.ComboBox1.SelectedIndex = -1
-        '        MyForm26.ComboBox1.Text = "SOFTEKO"
-        '        MyForm26.Show()
-        '    End If
-    End Sub
-
     Private Sub Button46_Click(sender As Object, e As RibbonControlEventArgs) Handles Button46.Click
-        'Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
-        'Dim pattern As String = "***,*,"
-        'Dim KeepSeparator As Boolean = True
-        'Dim Consecutive As Boolean = True
-        'Dim Before As Boolean = True
+        If form_flag = False Then
+            Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
+        Dim pattern As String = "***,*,"
+        Dim KeepSeparator As Boolean = True
+        Dim Consecutive As Boolean = True
+        Dim Before As Boolean = True
 
-        'Dim Values() As String
-        'Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
+        Dim Values() As String
+        Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
 
-        'For i = LBound(Values) To UBound(Values)
-        '    MsgBox(Values(i))
-        'Next
+        For i = LBound(Values) To UBound(Values)
+            MsgBox(Values(i))
+        Next
 
-        'Dim MyForm27 As New Form27_Split_text_bystrings
+        Dim MyForm27 As New Form27_Split_text_bystrings
 
-        'excelApp = Globals.ThisAddIn.Application
-        'workbook = excelApp.ActiveWorkbook
-        'worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        workbook = excelApp.ActiveWorkbook
+        worksheet = workbook.ActiveSheet
 
-        'Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
-
-        'If IsRangeEmpty(selection) = True Then
-        '    MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-        'Else
-        '    MyForm27.TB_source_range.Text = selection.Address
-        '    MyForm27.ComboBox1.SelectedIndex = -1
-        '    MyForm27.ComboBox1.Text = "SOFTEKO"
-        '    MyForm27.Show()
-        'End If
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            MyForm27.TB_source_range.Text = selection.Address
+                MyForm27.ComboBox1.SelectedIndex = -1
+                MyForm27.ComboBox1.Text = "SOFTEKO"
+                MyForm27.Show()
+            form_flag = True
+        End If
 
     End Sub
 
-    Dim flag As Boolean = False
+
     Private Sub Button49_Click(sender As Object, e As RibbonControlEventArgs) Handles Button49.Click
         If form_flag = False Then
             Dim MyForm33 As New Form33_ColorBasedDropDownList
@@ -1912,17 +1832,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton2.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1932,23 +1847,40 @@ nextloop:
 
             Dim MyForm18 As New Form18_CombineRanges
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton3.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
+
+    Private Sub Button47_Click(sender As Object, e As RibbonControlEventArgs) Handles Button47.Click
+        If form_flag = False Then
+            Dim MyForm28 As New Form28_Split_text_bypattern
+
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+
+            MyForm28.TB_source_range.Text = selection.Address
+                MyForm28.ComboBox1.SelectedIndex = -1
+                MyForm28.ComboBox1.Text = "SOFTEKO"
+                MyForm28.Show()
+            form_flag = True
+        End If
+
+    End Sub
 End Class
+
+
+

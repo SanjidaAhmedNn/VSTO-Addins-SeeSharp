@@ -575,6 +575,13 @@ Public Class Form39_DropdownlistwithSearchOption
 
     Private Sub Form39_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         TB_src_rng.Focus()
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_src_rng.Text = src_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
 
     End Sub
 
