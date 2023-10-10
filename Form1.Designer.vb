@@ -23,8 +23,6 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.btn_OK = New System.Windows.Forms.Button()
@@ -35,6 +33,13 @@ Partial Class Form1
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
+        Me.CustomGroupBox10 = New VSTO_Addins.CustomGroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton9 = New System.Windows.Forms.RadioButton()
+        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.RadioButton5 = New System.Windows.Forms.RadioButton()
@@ -53,15 +58,12 @@ Partial Class Form1
         Me.panel2 = New VSTO_Addins.CustomPanel()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.panel1 = New VSTO_Addins.CustomPanel()
-        Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
-        Me.CustomGroupBox10 = New VSTO_Addins.CustomGroupBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.RadioButton10 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton9 = New System.Windows.Forms.RadioButton()
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CustomGroupBox7.SuspendLayout()
+        Me.CustomGroupBox10.SuspendLayout()
+        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -73,30 +75,7 @@ Partial Class Form1
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox1.SuspendLayout()
-        Me.CustomGroupBox7.SuspendLayout()
-        Me.CustomGroupBox10.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'PictureBox9
-        '
-        Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
-        Me.PictureBox9.Location = New System.Drawing.Point(308, 53)
-        Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox9.Name = "PictureBox9"
-        Me.PictureBox9.Size = New System.Drawing.Size(24, 25)
-        Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox9.TabIndex = 112
-        Me.PictureBox9.TabStop = False
-        '
-        'TextBox2
-        '
-        Me.TextBox2.BackColor = System.Drawing.Color.White
-        Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TextBox2.Location = New System.Drawing.Point(144, 53)
-        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(188, 25)
-        Me.TextBox2.TabIndex = 110
         '
         'PictureBox8
         '
@@ -217,6 +196,91 @@ Partial Class Form1
         Me.Label1.Size = New System.Drawing.Size(175, 20)
         Me.Label1.TabIndex = 98
         Me.Label1.Text = "Source Range:"
+        '
+        'CustomGroupBox7
+        '
+        Me.CustomGroupBox7.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox7.Controls.Add(Me.CustomGroupBox10)
+        Me.CustomGroupBox7.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CustomGroupBox7.Location = New System.Drawing.Point(15, 209)
+        Me.CustomGroupBox7.Name = "CustomGroupBox7"
+        Me.CustomGroupBox7.Size = New System.Drawing.Size(344, 108)
+        Me.CustomGroupBox7.TabIndex = 117
+        Me.CustomGroupBox7.TabStop = False
+        Me.CustomGroupBox7.Text = "Destination Range"
+        '
+        'CustomGroupBox10
+        '
+        Me.CustomGroupBox10.BackColor = System.Drawing.Color.White
+        Me.CustomGroupBox10.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox10.Controls.Add(Me.Label3)
+        Me.CustomGroupBox10.Controls.Add(Me.RadioButton10)
+        Me.CustomGroupBox10.Controls.Add(Me.RadioButton9)
+        Me.CustomGroupBox10.Controls.Add(Me.PictureBox9)
+        Me.CustomGroupBox10.Controls.Add(Me.TextBox2)
+        Me.CustomGroupBox10.Location = New System.Drawing.Point(1, 22)
+        Me.CustomGroupBox10.Name = "CustomGroupBox10"
+        Me.CustomGroupBox10.Size = New System.Drawing.Size(343, 86)
+        Me.CustomGroupBox10.TabIndex = 0
+        Me.CustomGroupBox10.TabStop = False
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Enabled = False
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(28, 54)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(109, 17)
+        Me.Label3.TabIndex = 2
+        Me.Label3.Text = "Select the range :"
+        '
+        'RadioButton10
+        '
+        Me.RadioButton10.AutoSize = True
+        Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton10.Location = New System.Drawing.Point(8, 28)
+        Me.RadioButton10.Name = "RadioButton10"
+        Me.RadioButton10.Size = New System.Drawing.Size(174, 21)
+        Me.RadioButton10.TabIndex = 1
+        Me.RadioButton10.TabStop = True
+        Me.RadioButton10.Text = "Store into different range"
+        Me.RadioButton10.UseVisualStyleBackColor = True
+        '
+        'RadioButton9
+        '
+        Me.RadioButton9.AutoSize = True
+        Me.RadioButton9.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton9.Location = New System.Drawing.Point(8, 6)
+        Me.RadioButton9.Name = "RadioButton9"
+        Me.RadioButton9.Size = New System.Drawing.Size(156, 21)
+        Me.RadioButton9.TabIndex = 0
+        Me.RadioButton9.TabStop = True
+        Me.RadioButton9.Text = "Same as source range"
+        Me.RadioButton9.UseVisualStyleBackColor = True
+        '
+        'PictureBox9
+        '
+        Me.PictureBox9.Enabled = False
+        Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
+        Me.PictureBox9.Location = New System.Drawing.Point(308, 53)
+        Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox9.Name = "PictureBox9"
+        Me.PictureBox9.Size = New System.Drawing.Size(24, 25)
+        Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox9.TabIndex = 112
+        Me.PictureBox9.TabStop = False
+        '
+        'TextBox2
+        '
+        Me.TextBox2.BackColor = System.Drawing.Color.White
+        Me.TextBox2.Enabled = False
+        Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TextBox2.Location = New System.Drawing.Point(144, 53)
+        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(188, 25)
+        Me.TextBox2.TabIndex = 110
         '
         'CustomGroupBox4
         '
@@ -452,67 +516,6 @@ Partial Class Form1
         Me.panel1.Size = New System.Drawing.Size(239, 92)
         Me.panel1.TabIndex = 0
         '
-        'CustomGroupBox7
-        '
-        Me.CustomGroupBox7.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox7.Controls.Add(Me.CustomGroupBox10)
-        Me.CustomGroupBox7.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox7.Location = New System.Drawing.Point(15, 209)
-        Me.CustomGroupBox7.Name = "CustomGroupBox7"
-        Me.CustomGroupBox7.Size = New System.Drawing.Size(344, 108)
-        Me.CustomGroupBox7.TabIndex = 117
-        Me.CustomGroupBox7.TabStop = False
-        Me.CustomGroupBox7.Text = "Destination Range"
-        '
-        'CustomGroupBox10
-        '
-        Me.CustomGroupBox10.BackColor = System.Drawing.Color.White
-        Me.CustomGroupBox10.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox10.Controls.Add(Me.Label3)
-        Me.CustomGroupBox10.Controls.Add(Me.RadioButton10)
-        Me.CustomGroupBox10.Controls.Add(Me.RadioButton9)
-        Me.CustomGroupBox10.Controls.Add(Me.PictureBox9)
-        Me.CustomGroupBox10.Controls.Add(Me.TextBox2)
-        Me.CustomGroupBox10.Location = New System.Drawing.Point(1, 22)
-        Me.CustomGroupBox10.Name = "CustomGroupBox10"
-        Me.CustomGroupBox10.Size = New System.Drawing.Size(343, 86)
-        Me.CustomGroupBox10.TabIndex = 0
-        Me.CustomGroupBox10.TabStop = False
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(28, 54)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(109, 17)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "Select the range :"
-        '
-        'RadioButton10
-        '
-        Me.RadioButton10.AutoSize = True
-        Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton10.Location = New System.Drawing.Point(8, 28)
-        Me.RadioButton10.Name = "RadioButton10"
-        Me.RadioButton10.Size = New System.Drawing.Size(174, 21)
-        Me.RadioButton10.TabIndex = 1
-        Me.RadioButton10.TabStop = True
-        Me.RadioButton10.Text = "Store into different range"
-        Me.RadioButton10.UseVisualStyleBackColor = True
-        '
-        'RadioButton9
-        '
-        Me.RadioButton9.AutoSize = True
-        Me.RadioButton9.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RadioButton9.Location = New System.Drawing.Point(8, 6)
-        Me.RadioButton9.Name = "RadioButton9"
-        Me.RadioButton9.Size = New System.Drawing.Size(156, 21)
-        Me.RadioButton9.TabIndex = 0
-        Me.RadioButton9.TabStop = True
-        Me.RadioButton9.Text = "Same as source range"
-        Me.RadioButton9.UseVisualStyleBackColor = True
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -541,10 +544,13 @@ Partial Class Form1
         Me.MinimizeBox = False
         Me.Name = "Form1"
         Me.Text = "Flip"
-        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CustomGroupBox7.ResumeLayout(False)
+        Me.CustomGroupBox10.ResumeLayout(False)
+        Me.CustomGroupBox10.PerformLayout()
+        CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox4.ResumeLayout(False)
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox5.PerformLayout()
@@ -558,9 +564,6 @@ Partial Class Form1
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox1.ResumeLayout(False)
-        Me.CustomGroupBox7.ResumeLayout(False)
-        Me.CustomGroupBox10.ResumeLayout(False)
-        Me.CustomGroupBox10.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

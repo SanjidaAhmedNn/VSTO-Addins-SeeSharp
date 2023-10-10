@@ -16,6 +16,7 @@ Public Class Form1
     Dim workBook As Excel.Workbook
     Dim workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
     Dim rng As Excel.Range
     Dim rng2 As Excel.Range
     Dim selectedRange As Excel.Range
@@ -52,26 +53,52 @@ Public Class Form1
         End If
 
     End Function
+    Private Function MaxOfColumn(cRng As Excel.Range)
+
+        Dim max As Integer
+        Dim CharNumbers As Integer
+
+        If IsNumeric(cRng.Cells(1, 1).value) Then
+            max = Len(Str(cRng.Cells(1, 1).value))
+        Else
+            max = Len(cRng.Cells(1, 1).value)
+        End If
+
+        For i = 2 To cRng.Rows.Count
+            If IsNumeric(cRng.Cells(i, 1).value) Then
+                CharNumbers = Len(Str(cRng.Cells(i, 1).value))
+            Else
+                CharNumbers = Len(cRng.Cells(i, 1).value)
+            End If
+            If CharNumbers > max Then
+                max = CharNumbers
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfColumn = max
+
+    End Function
+
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
-
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
+        Dim refArr() As String = Split(cellReference, "!")
+
+        Dim reference As String = refArr(UBound(refArr))
+
+        If regex.IsMatch(reference) Then
             Return True
         Else
             Return False
         End If
-
 
     End Function
     Private Function IsWithin(rng1 As Excel.Range, rng2 As Excel.Range)
@@ -334,9 +361,9 @@ Public Class Form1
                 displayRng = rng
             End If
 
-
             Dim height As Double
-            Dim width As Double
+            Dim BaseWidth As Double
+            Dim Width As Double
 
             If displayRng.Rows.Count <= 4 Then
                 height = panel1.Height / displayRng.Rows.Count
@@ -344,19 +371,23 @@ Public Class Form1
                 height = (119 / 4)
             End If
 
-            If displayRng.Columns.Count <= 3 Then
-                width = panel1.Width / displayRng.Columns.Count
-            Else
-                width = (260 / 3)
-            End If
+            BaseWidth = 260 / 3
 
-            For i = 1 To displayRng.Rows.Count
-                For j = 1 To displayRng.Columns.Count
+            Dim Ordinate As Double = 0
+            Dim CRng As Excel.Range
+
+            Dim widths(displayRng.Columns.Count - 1)
+            For j = 1 To displayRng.Columns.Count
+
+                CRng = workSheet.Range(displayRng.Cells(1, j), displayRng.Cells(displayRng.Rows.Count, j))
+                widths(j - 1) = (MaxOfColumn(CRng) * BaseWidth) / 10
+
+                For i = 1 To displayRng.Rows.Count
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, j).Value
-                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                    label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                     label.Height = height
-                    label.Width = width
+                    label.Width = widths(j - 1)
                     label.BorderStyle = BorderStyle.FixedSingle
                     label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -367,7 +398,6 @@ Public Class Form1
                         Dim fontStyle As FontStyle = FontStyle.Regular
                         If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
                         If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
 
                         Dim fontSize As Single = Convert.ToSingle(font.Size)
 
@@ -393,6 +423,7 @@ Public Class Form1
                     End If
                     panel1.Controls.Add(label)
                 Next
+                Ordinate = Ordinate + widths(j - 1)
             Next
 
             panel1.AutoScroll = True
@@ -400,14 +431,14 @@ Public Class Form1
             If (RadioButton1.Checked = True Or RadioButton4.Checked = True Or RadioButton5.Checked = True) And (RadioButton3.Checked = True Or RadioButton2.Checked = True) Then
 
                 If RadioButton3.Checked = True Then
-
-                    For i = 1 To displayRng.Rows.Count
-                        For j = 1 To displayRng.Columns.Count
+                    Ordinate = 0
+                    For j = 1 To displayRng.Columns.Count
+                        For i = 1 To displayRng.Rows.Count
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, displayRng.Columns.Count - j + 1).Value
-                            label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                            label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                             label.Height = height
-                            label.Width = width
+                            label.Width = widths(displayRng.Columns.Count - j + 1 - 1)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -444,20 +475,20 @@ Public Class Form1
 
                             panel2.Controls.Add(label)
                         Next
+                        Ordinate = Ordinate + widths(displayRng.Columns.Count - j + 1 - 1)
                     Next
 
                 End If
 
-
                 If RadioButton2.Checked = True Then
-
-                    For i = 1 To displayRng.Rows.Count
-                        For j = 1 To displayRng.Columns.Count
+                    Ordinate = 0
+                    For j = 1 To displayRng.Columns.Count
+                        For i = 1 To displayRng.Rows.Count
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(displayRng.Rows.Count - i + 1, j).Value
-                            label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                            label.Location = New System.Drawing.Point((j - 1) * Width, (i - 1) * height)
                             label.Height = height
-                            label.Width = width
+                            label.Width = widths(j - 1)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -495,6 +526,7 @@ Public Class Form1
 
                             panel2.Controls.Add(label)
                         Next
+                        Ordinate = Ordinate + widths(j - 1)
                     Next
 
                 End If
@@ -502,6 +534,7 @@ Public Class Form1
                 panel2.AutoScroll = True
 
             End If
+
 
         Catch ex As Exception
 
@@ -534,11 +567,43 @@ Public Class Form1
 
             rng.Select()
 
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
+
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
+
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(workSheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
+
+            'Find the lower boundary
+            Do While Not IsNothing(workSheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
+
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(workSheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
+
+            'Find the right boundary
+            Do While Not IsNothing(workSheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            rng = workSheet.Range(workSheet.Cells(startRow, startColumn), workSheet.Cells(endRow, endColumn))
 
             rng.Select()
-            Me.TextBox1.Text = rng.Address
+
+            If workSheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = workSheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
             Me.Show()
             Me.TextBox1.Focus()
@@ -577,7 +642,11 @@ Public Class Form1
 
             rng.Select()
 
-            TextBox1.Text = rng.Address
+            If workSheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = workSheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
             Me.Show()
             TextBox1.Focus()
@@ -659,7 +728,6 @@ Public Class Form1
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
-
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
@@ -672,13 +740,20 @@ Public Class Form1
                 Exit Sub
             End If
 
-            If TextBox2.Text = "" Then
+            If RadioButton9.Checked = False And RadioButton10.Checked = False Then
+                MessageBox.Show("Select a Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                workSheet.Activate()
+                rng.Select()
+                Exit Sub
+            End If
+
+            If RadioButton10.Checked = True And TextBox2.Text = "" Then
                 MessageBox.Show("Select a Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox2.Focus()
                 Exit Sub
             End If
 
-            If IsValidExcelCellReference(TextBox2.Text) = False Then
+            If RadioButton10.Checked = True And IsValidExcelCellReference(TextBox2.Text) = False Then
                 MessageBox.Show("Select a Valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox2.Focus()
                 Exit Sub
@@ -702,11 +777,15 @@ Public Class Form1
                 workSheet2.Activate()
             End If
 
+            If RadioButton9.Checked = True Then
+                rng2 = rng
+            Else
+                rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
+            End If
 
-            rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(rng.Rows.Count, rng.Columns.Count))
             Dim rng2Address As String = rng2.Address
-            workSheet2.Activate()
 
+            workSheet2.Activate()
 
             Dim i As Integer
             Dim j As Integer
@@ -860,29 +939,50 @@ Public Class Form1
 
                             Formulas(i, j) = cell.Formula
                             Dim font As Excel.Font = cell.Font
-                            FontNames(i, j) = font.Name
+
+                            If IsDBNull(font.Name) = False Then
+                                FontNames(i, j) = font.Name
+                            Else
+                                FontNames(i, j) = "Calibri"
+                            End If
+
                             FontBolds(i, j) = cell.Font.Bold
                             Fontitalics(i, j) = cell.Font.Italic
 
+                            If IsDBNull(font.Size) = False Then
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                FontSizes(i, j) = fontSize
+                            Else
+                                FontSizes(i, j) = 11
+                            End If
 
-                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-                            FontSizes(i, j) = fontSize
+                            If IsDBNull(cell.Interior.Color) Then
+                                Red1s(i, j) = 0
+                                Green1s(i, j) = 0
+                                Blue1s(i, j) = 0
+                            Else
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                Red1s(i, j) = red1
+                                Green1s(i, j) = green1
+                                Blue1s(i, j) = blue1
+                            End If
 
-                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                            Dim red1 As Integer = colorValue1 Mod 256
-                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                            Red1s(i, j) = red1
-                            Green1s(i, j) = green1
-                            Blue1s(i, j) = blue1
-                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                            Dim red2 As Integer = colorValue2 Mod 256
-                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                            Red2s(i, j) = red2
-                            Green2s(i, j) = green2
-                            Blue2s(i, j) = blue2
-
+                            If IsDBNull(cell.Font.Color) Then
+                                Red2s(i, j) = 0
+                                Green2s(i, j) = 0
+                                Blue2s(i, j) = 0
+                            Else
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                Red2s(i, j) = red2
+                                Green2s(i, j) = green2
+                                Blue2s(i, j) = blue2
+                            End If
                         Next
                     Next
                     If RadioButton3.Checked = True Then
@@ -999,9 +1099,14 @@ Public Class Form1
 
                 rng2.Select()
 
+                For j = 1 To rng2.Columns.Count
+                    rng2.Columns(j).Autofit
+                Next
+
                 Me.Close()
 
             End If
+
         Catch ex As Exception
 
         End Try
@@ -1042,7 +1147,11 @@ Public Class Form1
 
             rng2.Select()
 
-            TextBox2.Text = rng2.Address
+            If workSheet2.Name <> OpenSheet.Name Then
+                TextBox2.Text = workSheet2.Name & "!" & rng2.Address
+            Else
+                TextBox2.Text = rng2.Address
+            End If
 
             Me.Show()
             TextBox2.Focus()
@@ -1103,6 +1212,8 @@ Public Class Form1
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
+            Me.KeyPreview = True
+
             opened = opened + 1
 
         Catch ex As Exception
@@ -1121,13 +1232,21 @@ Public Class Form1
 
             If TextBoxChanged = False Then
                 If FocusedTextBox = 1 Then
-                    TextBox1.Text = selectedRange.Address
                     workSheet = workBook.ActiveSheet
+                    If workSheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = workSheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
                     rng = selectedRange
                     TextBox1.Focus()
                 ElseIf FocusedTextBox = 2 Then
-                    TextBox2.Text = selectedRange.Address
                     workSheet2 = workBook.ActiveSheet
+                    If workSheet2.Name <> OpenSheet.Name Then
+                        TextBox2.Text = workSheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox2.Text = selectedRange.Address
+                    End If
                     rng2 = selectedRange
                     TextBox2.Focus()
                 End If
@@ -1140,361 +1259,6 @@ Public Class Form1
     End Sub
 
 
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-
-    Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        If e.KeyCode = Keys.Enter Then
-
-            Call btn_OK_Click(sender, e)
-
-        End If
-    End Sub
-
-    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox9_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-
-    Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel1_KeyDown(sender As Object, e As KeyEventArgs) Handles panel1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel2_KeyDown(sender As Object, e As KeyEventArgs) Handles panel2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub btn_OK_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_OK.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub btn_cancel_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_cancel.KeyDown
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call btn_OK_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
 
     Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
 
@@ -1750,7 +1514,78 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Try
+
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+
+        Try
+            Me.Focus()
+            Me.BringToFront()
+            Me.Activate()
+            Me.BeginInvoke(New System.Action(Sub()
+                                                 TextBox1.Text = rng.Address
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Form1_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+
+        Try
+
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton10_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton10.CheckedChanged
+
+        Try
+            If RadioButton10.Checked = True Then
+                Label3.Enabled = True
+                TextBox2.Enabled = True
+                TextBox2.Focus()
+                PictureBox9.Enabled = True
+            Else
+                Label3.Enabled = False
+                TextBox2.Clear()
+                TextBox2.Enabled = False
+                PictureBox9.Enabled = False
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RadioButton9_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton9.CheckedChanged
+        Try
+            If RadioButton9.Checked = True Then
+                workSheet2 = workSheet
+                rng2 = rng
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         Try
             If e.KeyCode = Keys.Enter Then
 
@@ -1763,21 +1598,4 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
-
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TextBox1.Text = rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
-    End Sub
-
-    Private Sub Form1_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
 End Class
