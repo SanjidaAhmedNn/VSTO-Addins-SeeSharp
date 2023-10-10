@@ -293,7 +293,7 @@ Public Class Ribbon1
     End Sub
 
     ''' <summary>
-    ''' Unhides any hidden rows and columns from the entire sheet.
+    ''' Unhides all  hidden rows and columns from the entire sheet.
     ''' </summary>
 
     Private Sub Button31_Click(sender As Object, e As RibbonControlEventArgs) Handles Button31.Click
@@ -309,33 +309,10 @@ Public Class Ribbon1
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            ' Declare variables to store row and column numbers
-            Dim data_Row_Num, data_Col_Num, last_Data_Row_Num, last_Data_Col_Num As Integer
+            'unhide all hidden rows and columns
+            worksheet.Rows.Hidden = False
+            worksheet.Columns.Hidden = False
 
-
-            'Calculate the last used row and column number in the worksheet
-            last_Data_Row_Num = worksheet.UsedRange.Rows.Count + worksheet.UsedRange.Row - 1
-            last_Data_Col_Num = worksheet.UsedRange.Columns.Count + worksheet.UsedRange.Column - 1
-
-
-            ' Loop through each row in the used range of the worksheet
-            ' Check if the entire row is hidden
-            ' If the row is hidden, unhide it
-            For data_Row_Num = worksheet.UsedRange.Row To last_Data_Row_Num
-                If worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = True Then
-                    worksheet.Range(worksheet.Cells(data_Row_Num, 1), worksheet.Cells(data_Row_Num, 3)).EntireRow.Hidden = False
-                End If
-            Next
-
-
-            ' Loop through each column in the used range of the worksheet
-            ' Check if the entire column is hidden
-            ' If the column is hidden, unhide it
-            For data_Col_Num = worksheet.UsedRange.Column To last_Data_Col_Num
-                If worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = True Then
-                    worksheet.Range(worksheet.Cells(1, data_Col_Num), worksheet.Cells(3, data_Col_Num)).EntireColumn.Hidden = False
-                End If
-            Next
 
         Catch ex As Exception
 
