@@ -52,21 +52,6 @@ Public Class Ribbon1
 
     End Function
 
-    Function IsRangeEmpty(rng As Excel.Range) As Boolean
-
-        Dim Result As Boolean = True
-
-        For Each cell In rng
-            If cell.Value IsNot Nothing AndAlso cell.Value.ToString() <> String.Empty Then
-                Result = False
-                Exit For
-            End If
-        Next
-
-        Return Result
-
-    End Function
-
 
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
@@ -81,21 +66,16 @@ Public Class Ribbon1
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
+            MyForm1.OpenSheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MyForm1.TextBox1.Text = selection.Address
+            MyForm1.ComboBox1.SelectedIndex = -1
+            MyForm1.ComboBox1.Text = "SOFTEKO"
 
-            Else
-                MyForm1.TextBox1.Text = selection.Address
-                MyForm1.ComboBox1.SelectedIndex = -1
-                MyForm1.ComboBox1.Text = "SOFTEKO"
-
-                MyForm1.Show()
-                form_flag = True
-            End If
+            MyForm1.Show()
+            form_flag = True
         End If
 
     End Sub
@@ -127,17 +107,12 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm3.TextBox1.Text = selection.Address
+            MyForm3.TextBox1.Text = selection.Address
                 MyForm3.ComboBox1.SelectedIndex = -1
                 MyForm3.ComboBox1.Text = "SOFTEKO"
 
                 MyForm3.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
 
     End Sub
@@ -154,16 +129,11 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm8.TextBox1.Text = selection.Address
+            MyForm8.TextBox1.Text = selection.Address
                 MyForm8.ComboBox1.SelectedIndex = -1
                 MyForm8.ComboBox1.Text = "SOFTEKO"
                 MyForm8.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
 
     End Sub
@@ -202,14 +172,9 @@ Public Class Ribbon1
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm7.TextBox1.Text = selection.Address
+            MyForm7.TextBox1.Text = selection.Address
                 MyForm7.Show()
-                form_flag = True
-            End If
+            form_flag = True
 
         End If
     End Sub
@@ -1642,17 +1607,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton1.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1666,16 +1626,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm22.TextBox1.Text = selection.Address
+            MyForm22.TextBox1.Text = selection.Address
                 MyForm22.ComboBox1.SelectedIndex = -1
                 MyForm22.ComboBox1.Text = "SOFTEKO"
                 MyForm22.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1689,16 +1644,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm23.TextBox1.Text = selection.Address
+            MyForm23.TextBox1.Text = selection.Address
                 MyForm23.ComboBox1.SelectedIndex = -1
                 MyForm23.ComboBox1.Text = "SOFTEKO"
                 MyForm23.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1712,16 +1662,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm25.TextBox1.Text = selection.Address
+            MyForm25.TextBox1.Text = selection.Address
                 MyForm25.ComboBox1.SelectedIndex = -1
                 MyForm25.ComboBox1.Text = "SOFTEKO"
                 MyForm25.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1735,16 +1680,11 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm24.TextBox1.Text = selection.Address
+            MyForm24.TextBox1.Text = selection.Address
                 MyForm24.ComboBox1.SelectedIndex = -1
                 MyForm24.ComboBox1.Text = "SOFTEKO"
                 MyForm24.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1758,16 +1698,11 @@ nextloop:
 
         Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm26.TB_source_range.Text = selection.Address
+            MyForm26.TB_source_range.Text = selection.Address
                 MyForm26.ComboBox1.SelectedIndex = -1
                 MyForm26.ComboBox1.Text = "SOFTEKO"
                 MyForm26.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1792,18 +1727,12 @@ nextloop:
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
-
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm27.TB_source_range.Text = selection.Address
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
+            MyForm27.TB_source_range.Text = selection.Address
                 MyForm27.ComboBox1.SelectedIndex = -1
                 MyForm27.ComboBox1.Text = "SOFTEKO"
                 MyForm27.Show()
-                form_flag = True
-            End If
+            form_flag = True
         End If
 
     End Sub
@@ -1926,17 +1855,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton2.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1952,17 +1876,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm18.TextBox1.Text = selection.Address
+            MyForm18.TextBox1.Text = selection.Address
                 MyForm18.ComboBox1.SelectedIndex = -1
                 MyForm18.ComboBox1.Text = "SOFTEKO"
                 MyForm18.Show()
                 MyForm18.RadioButton3.Checked = True
-                form_flag = True
-            End If
+            form_flag = True
         End If
     End Sub
 
@@ -1976,17 +1895,12 @@ nextloop:
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
-            If IsRangeEmpty(selection) = True Then
-                MessageBox.Show("You have not selected any data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
-            Else
-                MyForm28.TB_source_range.Text = selection.Address
+            MyForm28.TB_source_range.Text = selection.Address
                 MyForm28.ComboBox1.SelectedIndex = -1
                 MyForm28.ComboBox1.Text = "SOFTEKO"
                 MyForm28.Show()
-                form_flag = True
-            End If
-            End If
+            form_flag = True
+        End If
 
     End Sub
 End Class
