@@ -31,7 +31,6 @@ Public Class ThisAddIn
 
         Globals.ThisAddIn.Application.DisplayAlerts = False
         Application.EnableEvents = True
-        form_flag = False
 
         AddHandler Globals.ThisAddIn.Application.WorkbookActivate, AddressOf Workbook_Activated
     End Sub
@@ -1091,13 +1090,29 @@ Public Class ThisAddIn
 
                 'MsgBox(6)
 
-                Dim imageCell As Excel.Range = worksheet.Range(src_rng(i, 2).address)
-                imageCell.CopyPicture(
-    Appearance:=Excel.XlPictureAppearance.xlScreen,
-    Format:=Excel.XlCopyPictureFormat.xlPicture)
-                worksheet.Paste(Target.Offset(0, 1))
-                'Me.Refresh()
-                'MsgBox(2)
+                '            Dim imageCell As Excel.Range = worksheet.Range(src_rng(i, 2).address)
+                '            imageCell.CopyPicture(
+                'Appearance:=Excel.XlPictureAppearance.xlScreen,
+                'Format:=Excel.XlCopyPictureFormat.xlPicture)
+                '            worksheet.Paste(Target.Offset(0, 1))
+                '            Me.Refresh()
+                '            MsgBox(2)
+
+                Dim x As Boolean = False
+
+                For Each pic As Excel.Shape In worksheet.Shapes
+                    'MsgBox(pic.TopLeftCell.Address)
+                    If pic.TopLeftCell.Address = src_rng(i, 2).Address Then
+
+                        pic.CopyPicture()
+                        worksheet.Paste(Target.Offset(0, 1))
+                        Target.Offset(0, 1).RowHeight = src_rng(i, 2).RowHeight
+                        ' Target.Offset(0, 1).RowHeight = src_rng(i, 2).C
+                        x = True
+                        Exit For
+                    End If
+                    'x = x + 1
+                Next
 
                 excelApp.CutCopyMode = False
                 'Exit Sub
