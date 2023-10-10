@@ -20,6 +20,7 @@ Public Class Form3
 
     Public worksheet As Excel.Worksheet
     Public worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
 
     Public rng As Excel.Range
     Public rng2 As Excel.Range
