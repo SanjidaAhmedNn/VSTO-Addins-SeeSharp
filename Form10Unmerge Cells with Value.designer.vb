@@ -282,6 +282,7 @@ Partial Class Form10
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(516, 459)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.CustomGroupBox4)
@@ -295,6 +296,8 @@ Partial Class Form10
         Me.Controls.Add(Me.CustomGroupBox6)
         Me.Controls.Add(Me.CustomGroupBox5)
         Me.Controls.Add(Me.Button1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form10"
         Me.Text = "Unmerge Cells with Value"
         CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()

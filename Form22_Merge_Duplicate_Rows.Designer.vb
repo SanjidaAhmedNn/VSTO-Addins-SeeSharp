@@ -407,6 +407,7 @@ Partial Class Form22_Merge_Duplicate_Rows
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(740, 629)
         Me.Controls.Add(Me.CheckBox6)
         Me.Controls.Add(Me.Info)
@@ -425,6 +426,8 @@ Partial Class Form22_Merge_Duplicate_Rows
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.TextBox1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form22_Merge_Duplicate_Rows"
         Me.Text = "Merge Duplicate Rows"
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()

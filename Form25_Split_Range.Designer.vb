@@ -631,6 +631,7 @@ Partial Class Form25_Split_Range
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(643, 640)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ComboBox3)
@@ -650,6 +651,8 @@ Partial Class Form25_Split_Range
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.TextBox1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form25_Split_Range"
         Me.Text = "Split Range"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()

@@ -190,6 +190,7 @@ Partial Class Form14SpecifyScrollArea
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(526, 279)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.PictureBox2)
@@ -202,6 +203,8 @@ Partial Class Form14SpecifyScrollArea
         Me.Controls.Add(Me.GB_ExpectedOutput)
         Me.Controls.Add(Me.GB_InputRange)
         Me.Controls.Add(Me.Btn_Cancel)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form14SpecifyScrollArea"
         Me.Text = "Specify Scroll Area"
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()

@@ -567,6 +567,7 @@ Partial Class Form7
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(753, 475)
         Me.Controls.Add(Me.PictureBox8)
@@ -585,6 +586,8 @@ Partial Class Form7
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Label1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form7"
         Me.Text = "Transform"
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()

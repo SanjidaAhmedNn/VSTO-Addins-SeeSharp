@@ -304,6 +304,7 @@ Partial Class Form29_Simple_Drop_down_List
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(650, 553)
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.Btn_Cancel)

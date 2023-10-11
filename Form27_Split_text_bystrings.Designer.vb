@@ -446,6 +446,7 @@ Partial Class Form27_Split_text_bystrings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(635, 546)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CB_consecutive_separators)

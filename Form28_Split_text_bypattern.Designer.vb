@@ -430,6 +430,7 @@ Partial Class Form28_Split_text_bypattern
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(616, 503)
         Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.PictureBox2)

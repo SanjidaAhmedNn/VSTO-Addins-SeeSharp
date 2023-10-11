@@ -407,6 +407,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(745, 599)
         Me.Controls.Add(Me.CheckBox6)
         Me.Controls.Add(Me.CustomGroupBox6)
@@ -425,6 +426,8 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.TextBox1)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form23_Merge_Duplicate_Columns"
         Me.Text = "Merge Duplicate Columns"
         CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()

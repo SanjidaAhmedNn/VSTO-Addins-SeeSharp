@@ -760,6 +760,10 @@ Public Class Form29_Simple_Drop_down_List
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
     End Sub
+
+    Private Sub Selection(sender As Object, e As EventArgs) Handles ComboBox1.SelectedValueChanged
+
+    End Sub
 End Class
 
 Public Class ColoredItem1

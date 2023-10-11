@@ -450,6 +450,7 @@ Partial Class Form18_CombineRanges
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(669, 547)
         Me.Controls.Add(Me.ComboBox3)
         Me.Controls.Add(Me.Label3)
