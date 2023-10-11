@@ -17,6 +17,7 @@ Public Class Form12HideRanges
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
     Dim txtChanged As Boolean = False
+    Dim rngCount As Integer
 
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
@@ -41,7 +42,22 @@ Public Class Form12HideRanges
         Dim selectedRng As Excel.Range = excelApp.Selection
         txtSourceRange.Text = selectedRng.Address
 
-        RB_Single_Range.Checked = True
+
+        rngCount = 0
+        For Each c As Char In txtSourceRange.Text
+
+            If c = "," Then
+                rngCount = rngCount + 1
+            End If
+
+        Next
+
+        If rngCount = 0 Then
+            RB_Single_Range.Checked = True
+        ElseIf rngCount > 0 Then
+            RB_Multiple_Range.Checked = True
+        End If
+
         RB_Row.Checked = True
 
         Me.KeyPreview = True
@@ -59,9 +75,28 @@ Public Class Form12HideRanges
             inputRng.Select()
 
 
+            rngCount = 0
+            For Each c As Char In txtSourceRange.Text
+
+                If c = "," Then
+                    rngCount = rngCount + 1
+                End If
+
+            Next
+
+            If rngCount = 0 Then
+                RB_Single_Range.Checked = True
+            ElseIf rngCount > 0 Then
+                RB_Multiple_Range.Checked = True
+            End If
+
+
         Catch ex As Exception
 
         End Try
+
+
+
 
         txtChanged = False
         txtSourceRange.Focus()
@@ -308,31 +343,14 @@ Public Class Form12HideRanges
             End If
 
 
-
-            Dim rngCount As Integer
-            rngCount = 0
-            For Each c As Char In txtSourceRange.Text
-
-                If c = "," Then
-                    rngCount = rngCount + 1
-                End If
-
-            Next
-
-
-            If rngCount = 0 And RB_Single_Range.Checked = True Then
+            If RB_Single_Range.Checked = True Then
                 Call singleRng()
                 Me.Dispose()
-            ElseIf rngCount = 0 And RB_Multiple_Range.Checked = True Then
-                MsgBox("Please select the correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
-                RB_Single_Range.Focus()
-            ElseIf rngCount <> 0 And RB_Multiple_Range.Checked = True Then
+            ElseIf RB_Multiple_Range.Checked = True Then
                 Call multiRng()
                 Me.Dispose()
-            ElseIf rngCount <> 0 And RB_Single_Range.Checked = True Then
-                MsgBox("Please select the correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
-                RB_Multiple_Range.Focus()
             End If
+
 
 
 
