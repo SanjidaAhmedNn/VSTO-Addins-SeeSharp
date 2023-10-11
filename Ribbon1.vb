@@ -100,6 +100,7 @@ Public Class Ribbon1
             MyForm3.worksheet = worksheet
             MyForm3.workbook2 = workbook
             MyForm3.worksheet2 = worksheet
+            MyForm3.OpenSheet = worksheet
 
             MyForm3.FocusedTextBox = 0
             MyForm3.Form4Open = 0
