@@ -83,7 +83,7 @@ Partial Class Form1
         Me.PictureBox8.Location = New System.Drawing.Point(331, 38)
         Me.PictureBox8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox8.Name = "PictureBox8"
-        Me.PictureBox8.Size = New System.Drawing.Size(26, 24)
+        Me.PictureBox8.Size = New System.Drawing.Size(25, 24)
         Me.PictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox8.TabIndex = 108
         Me.PictureBox8.TabStop = False
@@ -156,10 +156,10 @@ Partial Class Form1
         'PictureBox4
         '
         Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(297, 39)
+        Me.PictureBox4.Location = New System.Drawing.Point(300, 39)
         Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox4.Size = New System.Drawing.Size(24, 22)
         Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox4.TabIndex = 101
         Me.PictureBox4.TabStop = False
@@ -167,12 +167,12 @@ Partial Class Form1
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(15, 38)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(342, 26)
+        Me.TextBox1.Size = New System.Drawing.Size(342, 25)
         Me.TextBox1.TabIndex = 100
         '
         'CheckBox2
@@ -263,7 +263,7 @@ Partial Class Form1
         '
         Me.PictureBox9.Enabled = False
         Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
-        Me.PictureBox9.Location = New System.Drawing.Point(308, 53)
+        Me.PictureBox9.Location = New System.Drawing.Point(307, 53)
         Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox9.Name = "PictureBox9"
         Me.PictureBox9.Size = New System.Drawing.Size(24, 25)
@@ -275,6 +275,7 @@ Partial Class Form1
         '
         Me.TextBox2.BackColor = System.Drawing.Color.White
         Me.TextBox2.Enabled = False
+        Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox2.Location = New System.Drawing.Point(144, 53)
         Me.TextBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
