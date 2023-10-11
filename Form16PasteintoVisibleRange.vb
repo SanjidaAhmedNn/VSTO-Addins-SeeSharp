@@ -64,17 +64,17 @@ Public Class Form16PasteintoVisibleRange
 
 
 
-            If changeState = True Then
+            'If changeState = True Then
 
 
-                If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
+            '    If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
 
-                    txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
+            '        txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
 
-                End If
+            '    End If
 
 
-            End If
+            'End If
 
 
 
@@ -139,10 +139,10 @@ Public Class Form16PasteintoVisibleRange
 
 
 
-            'firstInputRng.Worksheet.Activate()
+            sourceRange.Worksheet.Activate()
 
 
-            txtSourceRange.Text = sourceRange.Worksheet.Name & "!" & sourceRange.Address
+            txtSourceRange.Text = sourceRange.Address
 
             sourceRange.Select()
 
@@ -173,8 +173,9 @@ Public Class Form16PasteintoVisibleRange
             Me.Show()
 
 
+            destRange.Worksheet.Activate()
 
-
+            'txtDestRange.Text = destRange.Address
             txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
 
             destRange.Select()
@@ -326,8 +327,9 @@ Public Class Form16PasteintoVisibleRange
 
 
     Public Function IsValidRng(input As String) As Boolean
+        '"^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
 
-        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Dim pattern As String = "^(.*!)?(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
         Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
 
     End Function
