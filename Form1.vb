@@ -663,22 +663,21 @@ Public Class Form1
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         Try
-
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
             TextBox1.SelectionStart = TextBox1.Text.Length
             TextBox1.ScrollToCaret()
-
-            rng = workSheet.Range(TextBox1.Text)
+            Dim rngArray() As String = Split(TextBox1.Text, "!")
+            Dim rngAddress As String = rngArray(UBound(rngArray))
+            rng = workSheet.Range(rngAddress)
             TextBoxChanged = True
             rng.Select()
 
             Call Display()
 
             TextBoxChanged = False
-
         Catch ex As Exception
 
         End Try
@@ -727,8 +726,7 @@ Public Class Form1
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        Try
-            If TextBox1.Text = "" Then
+        If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
                 Exit Sub
@@ -1107,9 +1105,6 @@ Public Class Form1
 
             End If
 
-        Catch ex As Exception
-
-        End Try
 
     End Sub
 
@@ -1175,7 +1170,9 @@ Public Class Form1
             TextBox2.SelectionStart = TextBox2.Text.Length
             TextBox2.ScrollToCaret()
 
-            rng2 = workSheet2.Range(TextBox2.Text)
+            Dim rng2Array() As String = Split(TextBox2.Text, "!")
+            Dim rng2Address As String = rng2Array(UBound(rng2Array))
+            rng2 = workSheet2.Range(rng2Address)
 
             TextBoxChanged = True
 

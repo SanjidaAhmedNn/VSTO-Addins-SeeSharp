@@ -283,6 +283,7 @@ Public Class Form3
                 MyForm4.rng = Me.rng
                 MyForm4.Opened = Me.Opened
                 MyForm4.FocusedTextBox = Me.FocusedTextBox
+                MyForm4.TextBoxChanged = Me.TextBoxChanged
                 MyForm4.Form4Open = Me.Form4Open
                 MyForm4.Workbook2Opened = False
                 If Me.RadioButton3.Checked = True Then
@@ -513,7 +514,6 @@ Public Class Form3
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
-
             If TextBox1.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False Then
                 MessageBox.Show("Enter a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 worksheet.Activate()
@@ -555,7 +555,6 @@ Public Class Form3
                 End If
 
                 worksheet2.Activate()
-                rng2.Select()
 
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
 
@@ -565,10 +564,10 @@ Public Class Form3
                                 rng2.Cells(j, i).Value = rng.Cells(i, j).Value
                                 rng2 = worksheet2.Range(rng2Address)
                                 If CheckBox2.Checked = True Then
+                                    MsgBox(rng.Cells(i, j).Address)
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                     rng2 = worksheet2.Range(rng2Address)
-
                                     Dim sourceCell As Excel.Range = rng.Cells(i, j)
                                     Dim targetCell As Excel.Range = rng2.Cells(j, i)
 
@@ -818,13 +817,14 @@ Public Class Form3
                 worksheet = workbook.ActiveSheet
                 TextBox1.SelectionStart = TextBox1.Text.Length
                 TextBox1.ScrollToCaret()
-                rng = worksheet.Range(TextBox1.Text)
+                Dim rngArray() As String = Split(TextBox1.Text, "!")
+                Dim rngAddress As String = rngArray(UBound(rngArray))
+                rng = worksheet.Range(rngAddress)
                 TextBoxChanged = True
                 rng.Select()
                 Call Display()
                 TextBoxChanged = False
             End If
-
         Catch ex As Exception
 
         End Try
@@ -838,7 +838,9 @@ Public Class Form3
                 worksheet2 = workbook.ActiveSheet
                 TextBox2.SelectionStart = TextBox2.Text.Length
                 TextBox2.ScrollToCaret()
-                rng2 = worksheet2.Range(TextBox2.Text)
+                Dim rng2Array() As String = Split(TextBox2.Text, "!")
+                Dim rng2Address As String = rng2Array(UBound(rng2Array))
+                rng2 = worksheet2.Range(rng2Address)
                 TextBoxChanged = True
                 rng2.Select()
                 TextBoxChanged = False
@@ -1220,25 +1222,26 @@ Public Class Form3
 
     End Sub
 
-    Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
+    'Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    '    form_flag = False
+    'End Sub
 
-    Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TextBox1.Text = rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
-    End Sub
+    ''Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    ''    Me.Focus()
+    ''    Me.BringToFront()
+    ''    Me.Activate()
+    ''    Me.BeginInvoke(New System.Action(Sub()
+    ''                                         TextBox1.Text = rng.Address
+    ''                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+    ''                                     End Sub))
+    ''End Sub
 
-    Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
+    'Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+    '    form_flag = False
+    'End Sub
 
-    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
+
         Try
 
             If e.KeyCode = Keys.Enter Then
@@ -1248,5 +1251,6 @@ Public Class Form3
         Catch ex As Exception
 
         End Try
+
     End Sub
 End Class

@@ -28,6 +28,7 @@ Public Class Form4
     Public Workbook2Opened As Boolean
     Public CB1 As Integer
     Public CB2 As Integer
+    Public TextBoxChanged As Boolean
 
     Private Function IsValidExcelFile(filePath As String) As Boolean
         ' Check if the file exists.
@@ -177,7 +178,7 @@ Public Class Form4
             MyForm3.worksheet2 = Me.worksheet2
             MyForm3.OpenSheet = Me.OpenSheet
             MyForm3.rng2 = Me.rng2
-            MyForm3.KeyPreview = True
+            MyForm3.TextBoxChanged = Me.TextBoxChanged
             If worksheet.Name <> OpenSheet.Name Then
                 MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
             Else
@@ -201,7 +202,6 @@ Public Class Form4
             MyForm3.RadioButton5.Checked = True
             MyForm3.Opened = Me.Opened
             MyForm3.Show()
-            MsgBox(MyForm3.TextBox1.Text)
             Me.Close()
 
         Catch ex As Exception
@@ -278,7 +278,7 @@ Public Class Form4
             MyForm3.workbook = Me.workbook
             MyForm3.worksheet = Me.worksheet
             MyForm3.OpenSheet = Me.OpenSheet
-            MyForm3.KeyPreview = True
+            MyForm3.TextBoxChanged = Me.TextBoxChanged
             If worksheet.Name <> OpenSheet.Name Then
                 MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
             Else
@@ -332,6 +332,7 @@ Public Class Form4
         Try
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
+            Me.KeyPreview = True
 
             Call Setup()
 
@@ -506,7 +507,7 @@ Public Class Form4
             MyForm3.workbook = Me.workbook
             MyForm3.worksheet = Me.worksheet
             MyForm3.OpenSheet = Me.OpenSheet
-            MyForm3.KeyPreview = True
+            MyForm3.TextBoxChanged = Me.TextBoxChanged
 
             If worksheet.Name <> OpenSheet.Name Then
                 MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
@@ -623,7 +624,7 @@ Public Class Form4
 
     End Sub
 
-    Private Sub Button1_KeyDown(sender As Object, e As KeyEventArgs) Handles Button1.KeyDown
+    Private Sub Form4_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
         Try
 
@@ -637,185 +638,4 @@ Public Class Form4
 
     End Sub
 
-    Private Sub Button2_KeyDown(sender As Object, e As KeyEventArgs) Handles Button2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Button3_KeyDown(sender As Object, e As KeyEventArgs) Handles Button3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub GroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles GroupBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label1_KeyDown(sender As Object, e As KeyEventArgs) Handles Label1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call Button1_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
 End Class
