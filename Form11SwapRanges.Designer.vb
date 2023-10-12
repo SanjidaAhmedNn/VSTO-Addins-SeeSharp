@@ -91,7 +91,7 @@ Partial Class Form11SwapRanges
         Me.btnCancel.BackColor = System.Drawing.Color.White
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCancel.Location = New System.Drawing.Point(518, 346)
+        Me.btnCancel.Location = New System.Drawing.Point(520, 349)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(62, 26)
         Me.btnCancel.TabIndex = 155
@@ -103,7 +103,7 @@ Partial Class Form11SwapRanges
         Me.btnOK.BackColor = System.Drawing.Color.White
         Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnOK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnOK.Location = New System.Drawing.Point(446, 346)
+        Me.btnOK.Location = New System.Drawing.Point(448, 349)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(62, 26)
         Me.btnOK.TabIndex = 156
@@ -152,10 +152,10 @@ Partial Class Form11SwapRanges
         'AutoSelection2
         '
         Me.AutoSelection2.Image = CType(resources.GetObject("AutoSelection2.Image"), System.Drawing.Image)
-        Me.AutoSelection2.Location = New System.Drawing.Point(206, 96)
+        Me.AutoSelection2.Location = New System.Drawing.Point(212, 94)
         Me.AutoSelection2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.AutoSelection2.Name = "AutoSelection2"
-        Me.AutoSelection2.Size = New System.Drawing.Size(27, 23)
+        Me.AutoSelection2.Size = New System.Drawing.Size(25, 23)
         Me.AutoSelection2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.AutoSelection2.TabIndex = 171
         Me.AutoSelection2.TabStop = False
@@ -163,10 +163,10 @@ Partial Class Form11SwapRanges
         'rngSelection2
         '
         Me.rngSelection2.Image = CType(resources.GetObject("rngSelection2.Image"), System.Drawing.Image)
-        Me.rngSelection2.Location = New System.Drawing.Point(241, 95)
+        Me.rngSelection2.Location = New System.Drawing.Point(242, 94)
         Me.rngSelection2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.rngSelection2.Name = "rngSelection2"
-        Me.rngSelection2.Size = New System.Drawing.Size(27, 23)
+        Me.rngSelection2.Size = New System.Drawing.Size(25, 23)
         Me.rngSelection2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.rngSelection2.TabIndex = 170
         Me.rngSelection2.TabStop = False
@@ -184,7 +184,7 @@ Partial Class Form11SwapRanges
         'lblSourceRng2
         '
         Me.lblSourceRng2.AutoSize = True
-        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng2.Location = New System.Drawing.Point(8, 65)
         Me.lblSourceRng2.Name = "lblSourceRng2"
         Me.lblSourceRng2.Size = New System.Drawing.Size(256, 17)
@@ -194,10 +194,10 @@ Partial Class Form11SwapRanges
         'AutoSelection1
         '
         Me.AutoSelection1.Image = CType(resources.GetObject("AutoSelection1.Image"), System.Drawing.Image)
-        Me.AutoSelection1.Location = New System.Drawing.Point(206, 31)
+        Me.AutoSelection1.Location = New System.Drawing.Point(212, 31)
         Me.AutoSelection1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.AutoSelection1.Name = "AutoSelection1"
-        Me.AutoSelection1.Size = New System.Drawing.Size(27, 23)
+        Me.AutoSelection1.Size = New System.Drawing.Size(25, 23)
         Me.AutoSelection1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.AutoSelection1.TabIndex = 167
         Me.AutoSelection1.TabStop = False
@@ -205,10 +205,10 @@ Partial Class Form11SwapRanges
         'rngSelection1
         '
         Me.rngSelection1.Image = CType(resources.GetObject("rngSelection1.Image"), System.Drawing.Image)
-        Me.rngSelection1.Location = New System.Drawing.Point(241, 31)
+        Me.rngSelection1.Location = New System.Drawing.Point(242, 31)
         Me.rngSelection1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.rngSelection1.Name = "rngSelection1"
-        Me.rngSelection1.Size = New System.Drawing.Size(27, 23)
+        Me.rngSelection1.Size = New System.Drawing.Size(25, 23)
         Me.rngSelection1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.rngSelection1.TabIndex = 166
         Me.rngSelection1.TabStop = False
@@ -226,7 +226,7 @@ Partial Class Form11SwapRanges
         'lblSourceRng1
         '
         Me.lblSourceRng1.AutoSize = True
-        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng1.Location = New System.Drawing.Point(8, 6)
         Me.lblSourceRng1.Name = "lblSourceRng1"
         Me.lblSourceRng1.Size = New System.Drawing.Size(249, 17)
@@ -381,7 +381,7 @@ Partial Class Form11SwapRanges
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(596, 387)
+        Me.ClientSize = New System.Drawing.Size(602, 393)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CustomGroupBox6)
         Me.Controls.Add(Me.CustomGroupBox5)

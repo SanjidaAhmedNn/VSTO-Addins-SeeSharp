@@ -1306,7 +1306,7 @@ Public Class Form8
         End Try
     End Sub
 
-    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs)
         Try
             FocusedTextBox = 0
 
@@ -1707,7 +1707,7 @@ Public Class Form8
 
     End Sub
 
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
+    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs)
 
         Try
             If e.KeyCode = Keys.Enter Then

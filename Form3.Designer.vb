@@ -24,7 +24,6 @@ Partial Class Form3
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form3))
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.btn_OK = New System.Windows.Forms.Button()
         Me.btn_cancel = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
@@ -50,8 +49,8 @@ Partial Class Form3
         Me.panel2 = New VSTO_Addins.CustomPanel()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.panel1 = New VSTO_Addins.CustomPanel()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox5.SuspendLayout()
@@ -62,29 +61,19 @@ Partial Class Form3
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
         Me.CustomGroupBox1.SuspendLayout()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PictureBox8
         '
         Me.PictureBox8.Image = CType(resources.GetObject("PictureBox8.Image"), System.Drawing.Image)
-        Me.PictureBox8.Location = New System.Drawing.Point(239, 42)
+        Me.PictureBox8.Location = New System.Drawing.Point(242, 43)
         Me.PictureBox8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox8.Name = "PictureBox8"
-        Me.PictureBox8.Size = New System.Drawing.Size(26, 24)
+        Me.PictureBox8.Size = New System.Drawing.Size(25, 24)
         Me.PictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox8.TabIndex = 126
         Me.PictureBox8.TabStop = False
-        '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(444, 140)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 125
-        Me.PictureBox7.TabStop = False
         '
         'btn_OK
         '
@@ -94,7 +83,7 @@ Partial Class Form3
         Me.btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_OK.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_OK.Location = New System.Drawing.Point(430, 349)
+        Me.btn_OK.Location = New System.Drawing.Point(402, 351)
         Me.btn_OK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_OK.Name = "btn_OK"
         Me.btn_OK.Size = New System.Drawing.Size(62, 26)
@@ -111,7 +100,7 @@ Partial Class Form3
         Me.btn_cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btn_cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_cancel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_cancel.Location = New System.Drawing.Point(502, 349)
+        Me.btn_cancel.Location = New System.Drawing.Point(481, 349)
         Me.btn_cancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_cancel.Name = "btn_cancel"
         Me.btn_cancel.Size = New System.Drawing.Size(62, 26)
@@ -145,10 +134,10 @@ Partial Class Form3
         'PictureBox4
         '
         Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(204, 42)
+        Me.PictureBox4.Location = New System.Drawing.Point(212, 44)
         Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox4.Size = New System.Drawing.Size(24, 22)
         Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox4.TabIndex = 119
         Me.PictureBox4.TabStop = False
@@ -156,13 +145,12 @@ Partial Class Form3
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
-        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.TextBox1.Location = New System.Drawing.Point(15, 42)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(253, 26)
+        Me.TextBox1.Size = New System.Drawing.Size(253, 25)
         Me.TextBox1.TabIndex = 118
         '
         'CheckBox2
@@ -364,7 +352,7 @@ Partial Class Form3
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox2.Controls.Add(Me.panel2)
         Me.CustomGroupBox2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(324, 193)
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(304, 195)
         Me.CustomGroupBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -391,7 +379,7 @@ Partial Class Form3
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox1.Controls.Add(Me.panel1)
         Me.CustomGroupBox1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox1.Location = New System.Drawing.Point(323, 12)
+        Me.CustomGroupBox1.Location = New System.Drawing.Point(303, 15)
         Me.CustomGroupBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CustomGroupBox1.Name = "CustomGroupBox1"
         Me.CustomGroupBox1.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -413,18 +401,29 @@ Partial Class Form3
         Me.panel1.Size = New System.Drawing.Size(239, 92)
         Me.panel1.TabIndex = 0
         '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
+        Me.PictureBox7.Location = New System.Drawing.Point(402, 143)
+        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(48, 50)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox7.TabIndex = 108
+        Me.PictureBox7.TabStop = False
+        '
         'Form3
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(585, 394)
+        Me.ClientSize = New System.Drawing.Size(565, 394)
+        Me.Controls.Add(Me.PictureBox7)
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Controls.Add(Me.PictureBox8)
-        Me.Controls.Add(Me.PictureBox7)
         Me.Controls.Add(Me.btn_OK)
         Me.Controls.Add(Me.btn_cancel)
         Me.Controls.Add(Me.ComboBox1)
@@ -438,7 +437,6 @@ Partial Class Form3
         Me.Name = "Form3"
         Me.Text = "Transpose"
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox4.ResumeLayout(False)
         Me.CustomGroupBox5.ResumeLayout(False)
@@ -451,6 +449,7 @@ Partial Class Form3
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox2.ResumeLayout(False)
         Me.CustomGroupBox1.ResumeLayout(False)
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -466,7 +465,6 @@ Partial Class Form3
     Friend WithEvents panel1 As CustomPanel
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
     Friend WithEvents PictureBox8 As Windows.Forms.PictureBox
-    Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
     Friend WithEvents btn_OK As Windows.Forms.Button
     Friend WithEvents btn_cancel As Windows.Forms.Button
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
@@ -482,4 +480,5 @@ Partial Class Form3
     Friend WithEvents RadioButton5 As Windows.Forms.RadioButton
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents TextBox2 As Windows.Forms.TextBox
+    Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
 End Class

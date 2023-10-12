@@ -272,6 +272,7 @@ Partial Class Form37_MSDropDownCheckBox
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(613, 393)
         Me.Controls.Add(Me.GB_Sample)
         Me.Controls.Add(Me.CustomGroupBox1)

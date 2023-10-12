@@ -20,6 +20,7 @@ Public Class Form3
 
     Public worksheet As Excel.Worksheet
     Public worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
 
     Public rng As Excel.Range
     Public rng2 As Excel.Range
@@ -41,24 +42,20 @@ Public Class Form3
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
-
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
+        Dim refArr() As String = Split(cellReference, "!")
+
+        Dim reference As String = refArr(UBound(refArr))
+
+        If regex.IsMatch(reference) Then
             Return True
         Else
             Return False
         End If
-
 
     End Function
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
@@ -282,6 +279,7 @@ Public Class Form3
                 MyForm4.excelApp = Me.excelApp
                 MyForm4.workbook = Me.workbook
                 MyForm4.worksheet = Me.worksheet
+                MyForm4.OpenSheet = Me.OpenSheet
                 MyForm4.rng = Me.rng
                 MyForm4.Opened = Me.Opened
                 MyForm4.FocusedTextBox = Me.FocusedTextBox
@@ -366,7 +364,11 @@ Public Class Form3
 
             rng.Select()
 
-            TextBox1.Text = rng.Address
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
             Me.Show()
             TextBox1.Focus()
@@ -404,12 +406,43 @@ Public Class Form3
 
             rng.Select()
 
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
+
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
+
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
+
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
+
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
+
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            rng = worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn))
 
             rng.Select()
 
-            Me.TextBox1.Text = rng.Address
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
             Me.Show()
             Me.TextBox1.Focus()
@@ -459,7 +492,11 @@ Public Class Form3
 
             rng2.Select()
 
-            TextBox2.Text = rng2.Address
+            If worksheet2.Name <> OpenSheet.Name Then
+                TextBox2.Text = worksheet2.Name & "!" & rng2.Address
+            Else
+                TextBox2.Text = rng2.Address
+            End If
 
             Me.Show()
             TextBox2.Focus()
@@ -476,6 +513,7 @@ Public Class Form3
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
+
             If TextBox1.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False Then
                 MessageBox.Show("Enter a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 worksheet.Activate()
@@ -712,6 +750,10 @@ Public Class Form3
 
                 rng2.Select()
 
+                For j = 1 To rng2.Columns.Count
+                    rng2.Columns(j).Autofit
+                Next
+
                 Me.Close()
 
             End If
@@ -808,38 +850,14 @@ Public Class Form3
 
     End Sub
 
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                MessageBox.Show("You pressed the Enter key.")
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Form3_Loaded(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Try
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
             Opened = Opened + 1
+            Me.KeyPreview = True
 
         Catch ex As Exception
 
@@ -856,14 +874,22 @@ Public Class Form3
 
             If TextBoxChanged = False Then
                 If FocusedTextBox = 1 Then
-                    TextBox1.Text = selectedRange.Address
                     worksheet = workbook.ActiveSheet
+                    If worksheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = worksheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
                     rng = selectedRange
                     TextBox1.Focus()
 
                 ElseIf FocusedTextBox = 2 Then
-                    TextBox2.Text = selectedRange.Address
                     worksheet2 = workbook.ActiveSheet
+                    If worksheet2.Name <> OpenSheet.Name Then
+                        TextBox2.Text = worksheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox2.Text = selectedRange.Address
+                    End If
                     rng2 = selectedRange
                     TextBox2.Focus()
                 End If
@@ -1194,370 +1220,6 @@ Public Class Form3
 
     End Sub
 
-    Private Sub btn_cancel_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_cancel.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub btn_OK_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_OK.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox6.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label1_KeyDown(sender As Object, e As KeyEventArgs) Handles Label1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel1_KeyDown(sender As Object, e As KeyEventArgs) Handles panel1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel2_KeyDown(sender As Object, e As KeyEventArgs) Handles panel2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton5_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
     Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False
     End Sub
@@ -1574,5 +1236,17 @@ Public Class Form3
 
     Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
         form_flag = False
+    End Sub
+
+    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        Try
+
+            If e.KeyCode = Keys.Enter Then
+                Call btn_OK_Click(sender, e)
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class

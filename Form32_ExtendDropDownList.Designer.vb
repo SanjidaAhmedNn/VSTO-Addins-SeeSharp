@@ -161,6 +161,7 @@ Partial Class Form32_ExtendDropDownList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(353, 234)
         Me.Controls.Add(Me.L_warning)
         Me.Controls.Add(Me.Dest_selection)

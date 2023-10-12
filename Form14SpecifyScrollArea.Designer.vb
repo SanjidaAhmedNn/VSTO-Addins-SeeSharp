@@ -23,57 +23,18 @@ Partial Class Form14SpecifyScrollArea
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form14SpecifyScrollArea))
-        Me.CP_Input_Range = New VSTO_Addins.CustomPanel()
-        Me.CP_Output_Range = New VSTO_Addins.CustomPanel()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Selection = New System.Windows.Forms.PictureBox()
         Me.Btn_OK = New System.Windows.Forms.Button()
         Me.ComboBox = New System.Windows.Forms.ComboBox()
         Me.CheckBox = New System.Windows.Forms.CheckBox()
         Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.GB_ExpectedOutput = New VSTO_Addins.CustomGroupBox()
-        Me.GB_InputRange = New VSTO_Addins.CustomGroupBox()
         Me.Btn_Cancel = New System.Windows.Forms.Button()
         Me.Info = New System.Windows.Forms.PictureBox()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GB_sample = New VSTO_Addins.CustomGroupBox()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GB_ExpectedOutput.SuspendLayout()
-        Me.GB_InputRange.SuspendLayout()
         CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'CP_Input_Range
-        '
-        Me.CP_Input_Range.BackColor = System.Drawing.Color.White
-        Me.CP_Input_Range.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CP_Input_Range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CP_Input_Range.BorderWidth = 1
-        Me.CP_Input_Range.Location = New System.Drawing.Point(1, 30)
-        Me.CP_Input_Range.Name = "CP_Input_Range"
-        Me.CP_Input_Range.Size = New System.Drawing.Size(220, 115)
-        Me.CP_Input_Range.TabIndex = 0
-        '
-        'CP_Output_Range
-        '
-        Me.CP_Output_Range.BackColor = System.Drawing.Color.White
-        Me.CP_Output_Range.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CP_Output_Range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CP_Output_Range.BorderWidth = 1
-        Me.CP_Output_Range.Location = New System.Drawing.Point(1, 30)
-        Me.CP_Output_Range.Name = "CP_Output_Range"
-        Me.CP_Output_Range.Size = New System.Drawing.Size(220, 115)
-        Me.CP_Output_Range.TabIndex = 11
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(238, 116)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(50, 49)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 204
-        Me.PictureBox2.TabStop = False
         '
         'Selection
         '
@@ -133,36 +94,12 @@ Partial Class Form14SpecifyScrollArea
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(15, 18)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(98, 17)
         Me.Label1.TabIndex = 195
         Me.Label1.Text = "Source Range :"
-        '
-        'GB_ExpectedOutput
-        '
-        Me.GB_ExpectedOutput.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_ExpectedOutput.Controls.Add(Me.CP_Output_Range)
-        Me.GB_ExpectedOutput.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_ExpectedOutput.Location = New System.Drawing.Point(288, 55)
-        Me.GB_ExpectedOutput.Name = "GB_ExpectedOutput"
-        Me.GB_ExpectedOutput.Size = New System.Drawing.Size(222, 146)
-        Me.GB_ExpectedOutput.TabIndex = 200
-        Me.GB_ExpectedOutput.TabStop = False
-        Me.GB_ExpectedOutput.Text = "Expected Output"
-        '
-        'GB_InputRange
-        '
-        Me.GB_InputRange.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_InputRange.Controls.Add(Me.CP_Input_Range)
-        Me.GB_InputRange.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_InputRange.Location = New System.Drawing.Point(15, 55)
-        Me.GB_InputRange.Name = "GB_InputRange"
-        Me.GB_InputRange.Size = New System.Drawing.Size(222, 146)
-        Me.GB_InputRange.TabIndex = 199
-        Me.GB_InputRange.TabStop = False
-        Me.GB_InputRange.Text = "Input Range"
         '
         'Btn_Cancel
         '
@@ -186,45 +123,50 @@ Partial Class Form14SpecifyScrollArea
         Me.Info.TabIndex = 205
         Me.Info.TabStop = False
         '
+        'GB_sample
+        '
+        Me.GB_sample.BackColor = System.Drawing.Color.White
+        Me.GB_sample.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.GB_sample.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GB_sample.Location = New System.Drawing.Point(15, 60)
+        Me.GB_sample.Name = "GB_sample"
+        Me.GB_sample.Size = New System.Drawing.Size(494, 140)
+        Me.GB_sample.TabIndex = 400
+        Me.GB_sample.TabStop = False
+        Me.GB_sample.Text = "Sample Image"
+        '
         'Form14SpecifyScrollArea
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(526, 279)
+        Me.Controls.Add(Me.GB_sample)
         Me.Controls.Add(Me.Info)
-        Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.Selection)
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.ComboBox)
         Me.Controls.Add(Me.CheckBox)
         Me.Controls.Add(Me.txtSourceRange)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.GB_ExpectedOutput)
-        Me.Controls.Add(Me.GB_InputRange)
         Me.Controls.Add(Me.Btn_Cancel)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form14SpecifyScrollArea"
         Me.Text = "Specify Scroll Area"
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GB_ExpectedOutput.ResumeLayout(False)
-        Me.GB_InputRange.ResumeLayout(False)
         CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents CP_Input_Range As CustomPanel
-    Friend WithEvents CP_Output_Range As CustomPanel
-    Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents Selection As Windows.Forms.PictureBox
     Friend WithEvents Btn_OK As Windows.Forms.Button
     Friend WithEvents ComboBox As Windows.Forms.ComboBox
     Friend WithEvents CheckBox As Windows.Forms.CheckBox
     Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
-    Friend WithEvents GB_ExpectedOutput As CustomGroupBox
-    Friend WithEvents GB_InputRange As CustomGroupBox
     Friend WithEvents Btn_Cancel As Windows.Forms.Button
     Friend WithEvents Info As Windows.Forms.PictureBox
+    Friend WithEvents GB_sample As CustomGroupBox
 End Class

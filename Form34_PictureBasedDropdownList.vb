@@ -8,6 +8,7 @@ Imports Microsoft.Office.Interop.Excel
 Imports System.Drawing
 Imports Microsoft.Office
 Imports System.Runtime
+Imports System.ComponentModel
 
 Public Class Form34_PictureBasedDropdownList
     Dim WithEvents excelApp As Excel.Application
@@ -119,9 +120,9 @@ Public Class Form34_PictureBasedDropdownList
 
 
     Private Sub worksheet2_Change(ByVal Target As Excel.Range)
-        'excelApp = Globals.ThisAddIn.Application
-        'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-        'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
         'MsgBox(workSheet.Shapes.Count)
 
@@ -139,9 +140,9 @@ Public Class Form34_PictureBasedDropdownList
 
     Private Sub worksheet1_Change(ByVal Target As Excel.Range)
 
-        'excelApp = Globals.ThisAddIn.Application
-        'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-        'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
         Try
 
             For i = 1 To src_rng.Rows.Count
@@ -308,7 +309,7 @@ Public Class Form34_PictureBasedDropdownList
         Catch ex As Exception
 
             Me.Show()
-        TB_src_rng.Focus()
+            TB_src_rng.Focus()
 
         End Try
     End Sub
@@ -556,5 +557,23 @@ Public Class Form34_PictureBasedDropdownList
 
         End Try
 
+    End Sub
+
+    Private Sub Form34_PictureBasedDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form34_PictureBasedDropdownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form34_PictureBasedDropdownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TB_src_rng.Text = src_rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class

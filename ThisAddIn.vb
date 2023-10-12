@@ -1070,7 +1070,7 @@ Public Class ThisAddIn
     'For picturebox Drop-down
     Private Sub worksheet6_Change(ByVal Target As Excel.Range)
 
-        'excelApp = Globals.ThisAddIn.Application
+        excelApp = Globals.ThisAddIn.Application
         Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
         Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
@@ -1125,7 +1125,7 @@ Public Class ThisAddIn
 
     Private Sub worksheet7_Change(ByVal Target As Excel.Range)
 
-        'excelApp = Globals.ThisAddIn.Application
+        excelApp = Globals.ThisAddIn.Application
         Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
         Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 

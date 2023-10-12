@@ -17,6 +17,7 @@ Public Class Form4
     Public worksheet As Excel.Worksheet
     Public worksheet1 As Excel.Worksheet
     Public worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
     Public rng As Excel.Range
     Public rng2 As Excel.Range
     Public FocusedTextBox As Integer
@@ -174,8 +175,14 @@ Public Class Form4
             MyForm3.workbook2 = Me.workbook2
             MyForm3.worksheet = Me.worksheet
             MyForm3.worksheet2 = Me.worksheet2
+            MyForm3.OpenSheet = Me.OpenSheet
             MyForm3.rng2 = Me.rng2
-            MyForm3.TextBox1.Text = Me.rng.Address
+            MyForm3.KeyPreview = True
+            If worksheet.Name <> OpenSheet.Name Then
+                MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
+            Else
+                MyForm3.TextBox1.Text = Me.rng.Address
+            End If
             MyForm3.Workbook2Opened = Me.Workbook2Opened
 
             If Me.GB6 = 3 Then
@@ -194,6 +201,7 @@ Public Class Form4
             MyForm3.RadioButton5.Checked = True
             MyForm3.Opened = Me.Opened
             MyForm3.Show()
+            MsgBox(MyForm3.TextBox1.Text)
             Me.Close()
 
         Catch ex As Exception
@@ -269,7 +277,13 @@ Public Class Form4
             MyForm3.rng = Me.rng
             MyForm3.workbook = Me.workbook
             MyForm3.worksheet = Me.worksheet
-            MyForm3.TextBox1.Text = Me.rng.Address
+            MyForm3.OpenSheet = Me.OpenSheet
+            MyForm3.KeyPreview = True
+            If worksheet.Name <> OpenSheet.Name Then
+                MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
+            Else
+                MyForm3.TextBox1.Text = Me.rng.Address
+            End If
             MyForm3.workbook2Opened = Me.Workbook2Opened
 
             If Me.GB6 = 3 Then
@@ -491,7 +505,14 @@ Public Class Form4
             MyForm3.rng = Me.rng
             MyForm3.workbook = Me.workbook
             MyForm3.worksheet = Me.worksheet
-            MyForm3.TextBox1.Text = Me.rng.Address
+            MyForm3.OpenSheet = Me.OpenSheet
+            MyForm3.KeyPreview = True
+
+            If worksheet.Name <> OpenSheet.Name Then
+                MyForm3.TextBox1.Text = worksheet.Name & "!" & Me.rng.Address
+            Else
+                MyForm3.TextBox1.Text = Me.rng.Address
+            End If
 
             If Me.GB6 = 3 Then
                 MyForm3.RadioButton3.Checked = True

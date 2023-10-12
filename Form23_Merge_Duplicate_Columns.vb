@@ -2261,7 +2261,7 @@ Public Class Form23_Merge_Duplicate_Columns
         End Try
     End Sub
 
-    Private Sub Info_KeyDown(sender As Object, e As KeyEventArgs) Handles Info.KeyDown
+    Private Sub Info_KeyDown(sender As Object, e As KeyEventArgs)
         Try
             If e.KeyCode = Keys.Enter Then
 
@@ -2490,5 +2490,9 @@ Public Class Form23_Merge_Duplicate_Columns
                                              TextBox1.Text = rng.Address
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
+    End Sub
+
+    Private Sub Info_Click(sender As Object, e As EventArgs)
+
     End Sub
 End Class

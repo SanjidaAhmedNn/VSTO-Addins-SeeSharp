@@ -208,6 +208,7 @@ Partial Class Form41_RemoveAdavancedDropdownList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(321, 352)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.Btn_OK)
