@@ -567,6 +567,7 @@ Public Class Form41_RemoveAdavancedDropdownList
         form_flag = False
     End Sub
 
+
     Private Sub Form41_RemoveAdavancedDropdownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         TB_src_rng.Focus()
         Me.Focus()

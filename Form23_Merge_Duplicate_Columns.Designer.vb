@@ -98,7 +98,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.CheckBox5.AutoSize = True
         Me.CheckBox5.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox5.Location = New System.Drawing.Point(12, 65)
+        Me.CheckBox5.Location = New System.Drawing.Point(15, 75)
         Me.CheckBox5.Name = "CheckBox5"
         Me.CheckBox5.Size = New System.Drawing.Size(189, 23)
         Me.CheckBox5.TabIndex = 284
@@ -120,7 +120,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.AutoSelection.BackColor = System.Drawing.Color.White
         Me.AutoSelection.Image = CType(resources.GetObject("AutoSelection.Image"), System.Drawing.Image)
-        Me.AutoSelection.Location = New System.Drawing.Point(296, 34)
+        Me.AutoSelection.Location = New System.Drawing.Point(300, 43)
         Me.AutoSelection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.AutoSelection.Name = "AutoSelection"
         Me.AutoSelection.Size = New System.Drawing.Size(24, 23)
@@ -133,7 +133,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.Selection.BackColor = System.Drawing.Color.White
         Me.Selection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Selection.Image = CType(resources.GetObject("Selection.Image"), System.Drawing.Image)
-        Me.Selection.Location = New System.Drawing.Point(323, 33)
+        Me.Selection.Location = New System.Drawing.Point(326, 42)
         Me.Selection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Selection.Name = "Selection"
         Me.Selection.Size = New System.Drawing.Size(24, 25)
@@ -180,7 +180,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.Location = New System.Drawing.Point(15, 15)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(101, 19)
         Me.Label1.TabIndex = 274
@@ -202,7 +202,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(12, 33)
+        Me.TextBox1.Location = New System.Drawing.Point(15, 42)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(335, 25)
         Me.TextBox1.TabIndex = 281
@@ -238,7 +238,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.CustomGroupBox1.Controls.Add(Me.Label2)
         Me.CustomGroupBox1.Controls.Add(Me.CustomGroupBox7)
         Me.CustomGroupBox1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox1.Location = New System.Drawing.Point(12, 93)
+        Me.CustomGroupBox1.Location = New System.Drawing.Point(15, 105)
         Me.CustomGroupBox1.Name = "CustomGroupBox1"
         Me.CustomGroupBox1.Size = New System.Drawing.Size(335, 162)
         Me.CustomGroupBox1.TabIndex = 285

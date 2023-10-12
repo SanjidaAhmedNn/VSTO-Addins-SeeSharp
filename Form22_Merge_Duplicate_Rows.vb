@@ -2203,7 +2203,7 @@ Public Class Form22_Merge_Duplicate_Rows
         End Try
     End Sub
 
-    Private Sub Info_KeyDown(sender As Object, e As KeyEventArgs) Handles Info.KeyDown
+    Private Sub Info_KeyDown(sender As Object, e As KeyEventArgs)
         Try
             If e.KeyCode = Keys.Enter Then
 
