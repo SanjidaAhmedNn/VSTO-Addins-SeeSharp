@@ -343,16 +343,30 @@ Public Class Form12HideRanges
             End If
 
 
-            If RB_Single_Range.Checked = True Then
+            Dim rngCount As Integer
+            rngCount = 0
+            For Each c As Char In txtSourceRange.Text
+
+                If c = "," Then
+                    rngCount = rngCount + 1
+                End If
+
+            Next
+
+
+            If rngCount = 0 And RB_Single_Range.Checked = True Then
                 Call singleRng()
                 Me.Dispose()
-            ElseIf RB_Multiple_Range.Checked = True Then
+            ElseIf rngCount = 0 And RB_Multiple_Range.Checked = True Then
+                MsgBox("Please select correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
+                RB_Single_Range.Focus()
+            ElseIf rngCount <> 0 And RB_Multiple_Range.Checked = True Then
                 Call multiRng()
                 Me.Dispose()
+            ElseIf rngCount <> 0 And RB_Single_Range.Checked = True Then
+                MsgBox("Please select correct Range Type.", MsgBoxStyle.Exclamation, "Error!")
+                RB_Multiple_Range.Focus()
             End If
-
-
-
 
 
         Catch ex As Exception
