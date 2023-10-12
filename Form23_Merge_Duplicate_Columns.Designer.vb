@@ -24,7 +24,6 @@ Partial Class Form23_Merge_Duplicate_Columns
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form23_Merge_Duplicate_Columns))
         Me.CheckBox6 = New System.Windows.Forms.CheckBox()
-        Me.Info = New System.Windows.Forms.PictureBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.CheckBox5 = New System.Windows.Forms.CheckBox()
@@ -52,7 +51,6 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.Label3 = New System.Windows.Forms.Label()
         Me.RadioButton10 = New System.Windows.Forms.RadioButton()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox6.SuspendLayout()
@@ -66,31 +64,21 @@ Partial Class Form23_Merge_Duplicate_Columns
         'CheckBox6
         '
         Me.CheckBox6.AutoSize = True
-        Me.CheckBox6.Font = New System.Drawing.Font("Segoe UI", 9.34!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox6.Location = New System.Drawing.Point(566, 268)
+        Me.CheckBox6.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox6.Location = New System.Drawing.Point(557, 234)
         Me.CheckBox6.Name = "CheckBox6"
-        Me.CheckBox6.Size = New System.Drawing.Size(138, 21)
+        Me.CheckBox6.Size = New System.Drawing.Size(145, 23)
         Me.CheckBox6.TabIndex = 290
         Me.CheckBox6.Text = "Remove Duplicates"
         Me.CheckBox6.UseVisualStyleBackColor = True
         '
-        'Info
-        '
-        Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
-        Me.Info.Location = New System.Drawing.Point(327, 36)
-        Me.Info.Name = "Info"
-        Me.Info.Size = New System.Drawing.Size(20, 20)
-        Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Info.TabIndex = 289
-        Me.Info.TabStop = False
-        '
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox4.Location = New System.Drawing.Point(12, 268)
+        Me.CheckBox4.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox4.Location = New System.Drawing.Point(393, 206)
         Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(122, 21)
+        Me.CheckBox4.Size = New System.Drawing.Size(128, 23)
         Me.CheckBox4.TabIndex = 288
         Me.CheckBox4.Text = "Keep formatting"
         Me.CheckBox4.UseVisualStyleBackColor = True
@@ -98,10 +86,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox3.Location = New System.Drawing.Point(393, 268)
+        Me.CheckBox3.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox3.Location = New System.Drawing.Point(557, 206)
         Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(115, 21)
+        Me.CheckBox3.Size = New System.Drawing.Size(121, 23)
         Me.CheckBox3.TabIndex = 287
         Me.CheckBox3.Text = "Skip blank cells"
         Me.CheckBox3.UseVisualStyleBackColor = True
@@ -109,10 +97,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'CheckBox5
         '
         Me.CheckBox5.AutoSize = True
-        Me.CheckBox5.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox5.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CheckBox5.Location = New System.Drawing.Point(12, 65)
         Me.CheckBox5.Name = "CheckBox5"
-        Me.CheckBox5.Size = New System.Drawing.Size(180, 21)
+        Me.CheckBox5.Size = New System.Drawing.Size(189, 23)
         Me.CheckBox5.TabIndex = 284
         Me.CheckBox5.Text = "My range contains header"
         Me.CheckBox5.UseVisualStyleBackColor = True
@@ -120,10 +108,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(181, 268)
+        Me.CheckBox1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox1.Location = New System.Drawing.Point(394, 234)
         Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(144, 21)
+        Me.CheckBox1.Size = New System.Drawing.Size(153, 23)
         Me.CheckBox1.TabIndex = 275
         Me.CheckBox1.Text = "Case-sensitive event"
         Me.CheckBox1.UseVisualStyleBackColor = True
@@ -132,7 +120,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.AutoSelection.BackColor = System.Drawing.Color.White
         Me.AutoSelection.Image = CType(resources.GetObject("AutoSelection.Image"), System.Drawing.Image)
-        Me.AutoSelection.Location = New System.Drawing.Point(265, 34)
+        Me.AutoSelection.Location = New System.Drawing.Point(296, 34)
         Me.AutoSelection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.AutoSelection.Name = "AutoSelection"
         Me.AutoSelection.Size = New System.Drawing.Size(24, 23)
@@ -145,7 +133,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.Selection.BackColor = System.Drawing.Color.White
         Me.Selection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Selection.Image = CType(resources.GetObject("Selection.Image"), System.Drawing.Image)
-        Me.Selection.Location = New System.Drawing.Point(295, 33)
+        Me.Selection.Location = New System.Drawing.Point(323, 33)
         Me.Selection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Selection.Name = "Selection"
         Me.Selection.Size = New System.Drawing.Size(24, 25)
@@ -156,10 +144,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(14, 518)
+        Me.CheckBox2.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox2.Location = New System.Drawing.Point(15, 490)
         Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
+        Me.CheckBox2.Size = New System.Drawing.Size(270, 23)
         Me.CheckBox2.TabIndex = 276
         Me.CheckBox2.Text = "Create a copy of the original worksheet"
         Me.CheckBox2.UseVisualStyleBackColor = True
@@ -168,8 +156,8 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.Button2.BackColor = System.Drawing.Color.White
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(578, 550)
+        Me.Button2.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button2.Location = New System.Drawing.Point(582, 527)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(62, 26)
         Me.Button2.TabIndex = 280
@@ -180,32 +168,32 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.Button1.BackColor = System.Drawing.Color.White
         Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Button1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(657, 549)
+        Me.Button1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Location = New System.Drawing.Point(657, 527)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(62, 26)
-        Me.Button1.TabIndex = 279
+        Me.Button1.TabIndex = 280
         Me.Button1.Text = "Cancel"
         Me.Button1.UseVisualStyleBackColor = False
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(12, 9)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(91, 17)
+        Me.Label1.Size = New System.Drawing.Size(101, 19)
         Me.Label1.TabIndex = 274
         Me.Label1.Text = "Source Range"
         '
         'ComboBox1
         '
-        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
-        Me.ComboBox1.Location = New System.Drawing.Point(12, 552)
+        Me.ComboBox1.Location = New System.Drawing.Point(12, 528)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
+        Me.ComboBox1.Size = New System.Drawing.Size(154, 27)
         Me.ComboBox1.TabIndex = 277
         Me.ComboBox1.Text = "SOFTEKO"
         '
@@ -216,15 +204,15 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.Location = New System.Drawing.Point(12, 33)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(307, 25)
+        Me.TextBox1.Size = New System.Drawing.Size(335, 25)
         Me.TextBox1.TabIndex = 281
         '
         'CustomGroupBox6
         '
         Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox6.Controls.Add(Me.CustomPanel2)
-        Me.CustomGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox6.Location = New System.Drawing.Point(13, 305)
+        Me.CustomGroupBox6.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CustomGroupBox6.Location = New System.Drawing.Point(12, 275)
         Me.CustomGroupBox6.Name = "CustomGroupBox6"
         Me.CustomGroupBox6.Size = New System.Drawing.Size(706, 204)
         Me.CustomGroupBox6.TabIndex = 278
@@ -258,36 +246,36 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         'Label5
         '
-        Me.Label5.BackColor = System.Drawing.Color.CadetBlue
+        Me.Label5.BackColor = System.Drawing.Color.LightSteelBlue
         Me.Label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.ForeColor = System.Drawing.Color.White
+        Me.Label5.ForeColor = System.Drawing.Color.Black
         Me.Label5.Location = New System.Drawing.Point(227, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(108, 40)
-        Me.Label5.TabIndex = 3
+        Me.Label5.TabIndex = 0
         Me.Label5.Text = "Combine with"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label4
         '
-        Me.Label4.BackColor = System.Drawing.Color.CadetBlue
+        Me.Label4.BackColor = System.Drawing.Color.LightSteelBlue
         Me.Label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.Color.White
+        Me.Label4.ForeColor = System.Drawing.Color.Black
         Me.Label4.Location = New System.Drawing.Point(100, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(127, 40)
         Me.Label4.TabIndex = 2
-        Me.Label4.Text = "First Column Content"
+        Me.Label4.Text = "First Column Contains"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label2
         '
-        Me.Label2.BackColor = System.Drawing.Color.CadetBlue
+        Me.Label2.BackColor = System.Drawing.Color.LightSteelBlue
         Me.Label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.White
+        Me.Label2.ForeColor = System.Drawing.Color.Black
         Me.Label2.Location = New System.Drawing.Point(1, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(99, 40)
@@ -309,8 +297,8 @@ Partial Class Form23_Merge_Duplicate_Columns
         '
         Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
         Me.CustomGroupBox2.Controls.Add(Me.CustomGroupBox10)
-        Me.CustomGroupBox2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(393, 93)
+        Me.CustomGroupBox2.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(393, 33)
         Me.CustomGroupBox2.Name = "CustomGroupBox2"
         Me.CustomGroupBox2.Size = New System.Drawing.Size(326, 162)
         Me.CustomGroupBox2.TabIndex = 286
@@ -371,10 +359,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(42, 62)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(109, 17)
+        Me.Label3.Size = New System.Drawing.Size(116, 19)
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "Select the range :"
         Me.Label3.Visible = False
@@ -382,10 +370,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'RadioButton10
         '
         Me.RadioButton10.AutoSize = True
-        Me.RadioButton10.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton10.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton10.Location = New System.Drawing.Point(8, 34)
         Me.RadioButton10.Name = "RadioButton10"
-        Me.RadioButton10.Size = New System.Drawing.Size(185, 21)
+        Me.RadioButton10.Size = New System.Drawing.Size(195, 23)
         Me.RadioButton10.TabIndex = 1
         Me.RadioButton10.TabStop = True
         Me.RadioButton10.Text = "Store into a different range"
@@ -394,10 +382,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         'RadioButton3
         '
         Me.RadioButton3.AutoSize = True
-        Me.RadioButton3.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton3.Font = New System.Drawing.Font("Microsoft YaHei UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RadioButton3.Location = New System.Drawing.Point(8, 8)
         Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(178, 21)
+        Me.RadioButton3.Size = New System.Drawing.Size(186, 23)
         Me.RadioButton3.TabIndex = 0
         Me.RadioButton3.TabStop = True
         Me.RadioButton3.Text = "Same as the source range"
@@ -408,11 +396,10 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(745, 599)
+        Me.ClientSize = New System.Drawing.Size(745, 570)
         Me.Controls.Add(Me.CheckBox6)
         Me.Controls.Add(Me.CustomGroupBox6)
         Me.Controls.Add(Me.CustomGroupBox1)
-        Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.CheckBox4)
         Me.Controls.Add(Me.CheckBox3)
         Me.Controls.Add(Me.CustomGroupBox2)
@@ -429,8 +416,7 @@ Partial Class Form23_Merge_Duplicate_Columns
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form23_Merge_Duplicate_Columns"
-        Me.Text = "Merge Duplicate Columns"
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Text = "Combine Duplicate Columns"
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox6.ResumeLayout(False)
@@ -460,7 +446,6 @@ Partial Class Form23_Merge_Duplicate_Columns
     Friend WithEvents RadioButton10 As Windows.Forms.RadioButton
     Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
     Friend WithEvents CustomGroupBox10 As CustomGroupBox
-    Friend WithEvents Info As Windows.Forms.PictureBox
     Friend WithEvents CheckBox4 As Windows.Forms.CheckBox
     Friend WithEvents CheckBox3 As Windows.Forms.CheckBox
     Friend WithEvents CustomGroupBox2 As CustomGroupBox

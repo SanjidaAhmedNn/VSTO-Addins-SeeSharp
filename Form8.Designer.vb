@@ -128,10 +128,10 @@ Partial Class Form8
         '
         Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.Location = New System.Drawing.Point(15, 39)
-        Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(260, 26)
+        Me.TextBox1.Size = New System.Drawing.Size(260, 25)
         Me.TextBox1.TabIndex = 130
         '
         'Label1
@@ -371,10 +371,10 @@ Partial Class Form8
         'PictureBox9
         '
         Me.PictureBox9.Image = CType(resources.GetObject("PictureBox9.Image"), System.Drawing.Image)
-        Me.PictureBox9.Location = New System.Drawing.Point(210, 41)
+        Me.PictureBox9.Location = New System.Drawing.Point(216, 41)
         Me.PictureBox9.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox9.Name = "PictureBox9"
-        Me.PictureBox9.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox9.Size = New System.Drawing.Size(24, 22)
         Me.PictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox9.TabIndex = 145
         Me.PictureBox9.TabStop = False
@@ -382,10 +382,10 @@ Partial Class Form8
         'PictureBox4
         '
         Me.PictureBox4.Image = CType(resources.GetObject("PictureBox4.Image"), System.Drawing.Image)
-        Me.PictureBox4.Location = New System.Drawing.Point(247, 41)
+        Me.PictureBox4.Location = New System.Drawing.Point(249, 41)
         Me.PictureBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(27, 23)
+        Me.PictureBox4.Size = New System.Drawing.Size(25, 23)
         Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox4.TabIndex = 143
         Me.PictureBox4.TabStop = False
@@ -393,12 +393,12 @@ Partial Class Form8
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(434, 170)
+        Me.PictureBox7.Location = New System.Drawing.Point(422, 167)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(32, 49)
+        Me.PictureBox7.Size = New System.Drawing.Size(57, 61)
         Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 142
+        Me.PictureBox7.TabIndex = 146
         Me.PictureBox7.TabStop = False
         '
         'Form8
@@ -408,12 +408,12 @@ Partial Class Form8
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(617, 451)
+        Me.Controls.Add(Me.PictureBox7)
         Me.Controls.Add(Me.PictureBox9)
         Me.Controls.Add(Me.PictureBox4)
         Me.Controls.Add(Me.CustomGroupBox5)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.CustomGroupBox6)
-        Me.Controls.Add(Me.PictureBox7)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.ComboBox1)

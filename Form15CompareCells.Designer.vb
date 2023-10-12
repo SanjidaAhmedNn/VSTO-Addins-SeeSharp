@@ -476,7 +476,7 @@ Partial Class Form15CompareCells
         'lblSourceRng2
         '
         Me.lblSourceRng2.AutoSize = True
-        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng2.Location = New System.Drawing.Point(8, 68)
         Me.lblSourceRng2.Name = "lblSourceRng2"
         Me.lblSourceRng2.Size = New System.Drawing.Size(256, 17)
@@ -486,7 +486,7 @@ Partial Class Form15CompareCells
         'lblSourceRng1
         '
         Me.lblSourceRng1.AutoSize = True
-        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng1.Location = New System.Drawing.Point(8, 8)
         Me.lblSourceRng1.Name = "lblSourceRng1"
         Me.lblSourceRng1.Size = New System.Drawing.Size(249, 17)

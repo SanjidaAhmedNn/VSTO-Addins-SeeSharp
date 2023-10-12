@@ -104,7 +104,7 @@ Partial Class Form1
         Me.btn_OK.BackColor = System.Drawing.Color.White
         Me.btn_OK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_OK.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.btn_OK.Location = New System.Drawing.Point(482, 355)
         Me.btn_OK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -120,7 +120,7 @@ Partial Class Form1
         Me.btn_cancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btn_cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btn_cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_cancel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.btn_cancel.Location = New System.Drawing.Point(566, 354)
         Me.btn_cancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -188,7 +188,7 @@ Partial Class Form1
         '
         'Label1
         '
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Black
         Me.Label1.Location = New System.Drawing.Point(15, 15)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)

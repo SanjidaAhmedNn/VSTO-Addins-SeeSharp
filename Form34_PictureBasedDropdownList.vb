@@ -120,9 +120,9 @@ Public Class Form34_PictureBasedDropdownList
 
 
     Private Sub worksheet2_Change(ByVal Target As Excel.Range)
-        'excelApp = Globals.ThisAddIn.Application
-        'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-        'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
         'MsgBox(workSheet.Shapes.Count)
 
@@ -140,9 +140,9 @@ Public Class Form34_PictureBasedDropdownList
 
     Private Sub worksheet1_Change(ByVal Target As Excel.Range)
 
-        'excelApp = Globals.ThisAddIn.Application
-        'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-        'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
         Try
 
             For i = 1 To src_rng.Rows.Count

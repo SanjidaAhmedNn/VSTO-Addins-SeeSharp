@@ -2450,7 +2450,7 @@ Public Class Form18_CombineRanges
 
     End Sub
 
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
+    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) 
 
         Try
             If e.KeyCode = Keys.Enter Then
@@ -2465,7 +2465,7 @@ Public Class Form18_CombineRanges
 
     End Sub
 
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
+    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) 
 
         Try
             If e.KeyCode = Keys.Enter Then
@@ -2480,7 +2480,7 @@ Public Class Form18_CombineRanges
 
     End Sub
 
-    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
+    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) 
 
         Try
             If e.KeyCode = Keys.Enter Then

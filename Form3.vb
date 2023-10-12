@@ -1142,11 +1142,11 @@ Public Class Form3
         End Try
     End Sub
 
-    Private Sub PictureBox7_Click(sender As Object, e As EventArgs) Handles PictureBox7.Click
+    Private Sub PictureBox7_Click(sender As Object, e As EventArgs)
 
     End Sub
 
-    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs)
         Try
             FocusedTextBox = 0
         Catch ex As Exception
@@ -1446,7 +1446,7 @@ Public Class Form3
 
     End Sub
 
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
+    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs)
 
         Try
 
