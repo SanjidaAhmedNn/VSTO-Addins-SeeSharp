@@ -6,6 +6,7 @@ Imports Microsoft.Office.Interop
 
 Imports Microsoft.Office.Interop.Excel
 Imports System.ComponentModel
+Imports System.Linq.Expressions
 
 Public Class Form34_PictureBasedDropdownList
     Dim WithEvents excelApp As Excel.Application
@@ -117,69 +118,71 @@ BreakAllLoops:
             Exit Sub
 
         Else
+            Try
+                ' Set up validation list for 1st Column
+                Dim rangeValues As Excel.Range = src_rng.Columns(1).cells
+                Dim listString As String = ""
+                'MsgBox(rangeValues.Address)
+                For Each cell As Excel.Range In rangeValues
+                    If listString <> "" Then
+                        listString &= ","
+                    End If
+                    listString &= cell.Value
+                Next
 
-            ' Set up validation list for 1st Column
-            Dim rangeValues As Excel.Range = src_rng.Columns(1).cells
-            Dim listString As String = ""
-            'MsgBox(rangeValues.Address)
-            For Each cell As Excel.Range In rangeValues
-                If listString <> "" Then
-                    listString &= ","
+                ' Set data validation in C1
+                validationRange = des_rng.Columns(1).cells
+                With validationRange.Validation
+                    .Delete() ' Delete any previous validation
+                    .Add(Type:=Excel.XlDVType.xlValidateList, AlertStyle:=Excel.XlDVAlertStyle.xlValidAlertStop, Operator:=Excel.XlFormatConditionOperator.xlBetween, Formula1:=listString)
+                    .IgnoreBlank = True
+                    .ShowInput = True
+                    .ShowError = True
+                End With
+                ' MsgBox(2)
+                des_rng.Columns(2).ColumnWidth = src_rng.Columns(2).ColumnWidth
+                des_rng.Rows.RowHeight = src_rng.Rows.RowHeight
+
+
+
+                AddHandler worksheet.Change, AddressOf worksheet1_Change
+
+                '2 ta event handler dile valo vabe kaj korena. Seijonno ektar event handler er moddhe arekta call kora hoise.
+
+                'AddHandler worksheet.Change, AddressOf worksheet2_Change
+
+
+                Dim targetWorksheet As Excel.Worksheet = Nothing
+                For Each ws As Excel.Worksheet In excelApp.Worksheets
+                    If ws.Name = "SoftekoPictureBasedDropDown" Then
+                        targetWorksheet = ws
+                        Exit For
+                    End If
+                Next
+
+                ' If "MySpecialSheet" does not exist, add it
+                If targetWorksheet Is Nothing Then
+                    targetWorksheet = CType(excelApp.Worksheets.Add(After:=excelApp.Worksheets(excelApp.Worksheets.Count)), Excel.Worksheet)
+                    targetWorksheet.Name = "SoftekoPictureBasedDropDown"
                 End If
-                listString &= cell.Value
-            Next
-
-            ' Set data validation in C1
-            validationRange = des_rng.Columns(1).cells
-            With validationRange.Validation
-                .Delete() ' Delete any previous validation
-                .Add(Type:=Excel.XlDVType.xlValidateList, AlertStyle:=Excel.XlDVAlertStyle.xlValidAlertStop, Operator:=Excel.XlFormatConditionOperator.xlBetween, Formula1:=listString)
-                .IgnoreBlank = True
-                .ShowInput = True
-                .ShowError = True
-            End With
-            ' MsgBox(2)
-            des_rng.Columns(2).ColumnWidth = src_rng.Columns(2).ColumnWidth
-            des_rng.Rows.RowHeight = src_rng.Rows.RowHeight
 
 
+                Flag_Picture = True
+                sheetName2 = worksheet.Name
+                Src_Rng_of_PictureDDL = TB_src_rng.Text
+                Des_Rng_of_PictureDDL = TB_des_rng.Text
 
-            AddHandler worksheet.Change, AddressOf worksheet1_Change
+                ' Write something in cell A1 of the target worksheet
+                targetWorksheet.Range("A1").Value = "Do not delete the sheet!"
+                targetWorksheet.Range("A2").Value = Flag_Picture
+                targetWorksheet.Range("A3").Value = sheetName2
+                targetWorksheet.Range("A4").Value = Src_Rng_of_PictureDDL
+                targetWorksheet.Range("A5").Value = Des_Rng_of_PictureDDL
+                targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
 
-            '2 ta event handler dile valo vabe kaj korena. Seijonno ektar event handler er moddhe arekta call kora hoise.
-
-            'AddHandler worksheet.Change, AddressOf worksheet2_Change
-
-
-            Dim targetWorksheet As Excel.Worksheet = Nothing
-            For Each ws As Excel.Worksheet In excelApp.Worksheets
-                If ws.Name = "SoftekoPictureBasedDropDown" Then
-                    targetWorksheet = ws
-                    Exit For
-                End If
-            Next
-
-            ' If "MySpecialSheet" does not exist, add it
-            If targetWorksheet Is Nothing Then
-                targetWorksheet = CType(excelApp.Worksheets.Add(After:=excelApp.Worksheets(excelApp.Worksheets.Count)), Excel.Worksheet)
-                targetWorksheet.Name = "SoftekoPictureBasedDropDown"
-            End If
-
-
-            Flag_Picture = True
-            sheetName2 = worksheet.Name
-            Src_Rng_of_PictureDDL = TB_src_rng.Text
-            Des_Rng_of_PictureDDL = TB_des_rng.Text
-
-            ' Write something in cell A1 of the target worksheet
-            targetWorksheet.Range("A1").Value = "Do not delete the sheet!"
-            targetWorksheet.Range("A2").Value = Flag_Picture
-            targetWorksheet.Range("A3").Value = sheetName2
-            targetWorksheet.Range("A4").Value = Src_Rng_of_PictureDDL
-            targetWorksheet.Range("A5").Value = Des_Rng_of_PictureDDL
-            targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
-
-            Me.Close()
+            Catch ex As Exception
+            End Try
+            Me.Dispose()
         End If
 
     End Sub
@@ -190,17 +193,18 @@ BreakAllLoops:
         Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
         Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
-        'MsgBox(workSheet.Shapes.Count)
+        Try
 
-        For Each pic As Excel.Shape In worksheet.Shapes
-            'MsgBox(pic.TopLeftCell.Address)
-            If pic.TopLeftCell.Address = Target.Offset(0, 1).Address Then
+            For Each pic As Excel.Shape In worksheet.Shapes
+                'MsgBox(pic.TopLeftCell.Address)
+                If pic.TopLeftCell.Address = Target.Offset(0, 1).Address Then
 
-                pic.Delete()
-                'Exit For
-            End If
-        Next
-        'MsgBox(4)
+                    pic.Delete()
+                    'Exit For
+                End If
+            Next
+        Catch ex As Exception
+        End Try
     End Sub
 
 
@@ -375,48 +379,53 @@ BreakAllLoops:
     End Sub
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles Des_selection.Click
-        If selectedRange Is Nothing Then
-        Else
-            ' TB_src_range.Text = selectedRange.Address
+        Try
+            If selectedRange Is Nothing Then
+            Else
+                ' TB_src_range.Text = selectedRange.Address
 
 
-            Me.Hide()
+                Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
+                excelApp = Globals.ThisAddIn.Application
+                workBook = excelApp.ActiveWorkbook
 
-            'Dim userInput As String = excelApp.InputBox("Select a range", "Select range", "=$A$1")
+                'Dim userInput As String = excelApp.InputBox("Select a range", "Select range", "=$A$1")
 
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
-            des_rng = userInput
+                Dim userInput As Excel.Range = excelApp.InputBox("Select a range", "Select a range", "=$A$1", Type:=8)
+                des_rng = userInput
 
-            Dim sheetName As String
-            sheetName = Split(des_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
+                Dim sheetName As String
+                sheetName = Split(des_rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+                sheetName = Split(sheetName, "!")(0)
 
-            If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+                End If
+
+                workSheet = workBook.Worksheets(sheetName)
+                workSheet.Activate()
+
+                des_rng.Select()
+                'MsgBox(src_rng.Address)
+
+                TB_des_rng.Text = des_rng.Address
+
+                Me.Show()
+                TB_des_rng.Focus()
+
             End If
-
-            workSheet = workBook.Worksheets(sheetName)
-            workSheet.Activate()
-
-            des_rng.Select()
-            'MsgBox(src_rng.Address)
-
-            TB_des_rng.Text = des_rng.Address
-
-            Me.Show()
+        Catch ex As Exception
             TB_des_rng.Focus()
-
-        End If
+        End Try
     End Sub
 
 
 
     Private Sub Btn_Cancel_Click(sender As Object, e As EventArgs) Handles Btn_Cancel.Click
-        Me.Close()
+        Me.Dispose()
+
     End Sub
 
 
@@ -587,13 +596,25 @@ BreakAllLoops:
     End Sub
 
     Private Sub Form34_PictureBasedDropdownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+
         Me.Focus()
         Me.BringToFront()
         Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TB_src_rng.Text = src_rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
+        Try
+            If TB_src_rng.Text <> "" Then
+
+                Me.BeginInvoke(New System.Action(Sub()
+                                                 TB_src_rng.Text = src_rng.Address
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
+
+
+            End If
+
+        Catch ex As Exception
+            TB_src_rng.Focus()
+
+        End Try
     End Sub
 
 End Class
