@@ -563,8 +563,8 @@ Public Class Form3
                             For j = 1 To rng.Columns.Count
                                 rng2.Cells(j, i).Value = rng.Cells(i, j).Value
                                 rng2 = worksheet2.Range(rng2Address)
+                                MsgBox("OK")
                                 If CheckBox2.Checked = True Then
-                                    MsgBox(rng.Cells(i, j).Address)
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                     rng2 = worksheet2.Range(rng2Address)
@@ -981,7 +981,6 @@ Public Class Form3
 
     Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
 
-
         Try
             FocusedTextBox = 1
         Catch ex As Exception
@@ -1050,6 +1049,7 @@ Public Class Form3
     End Sub
 
     Private Sub CustomGroupBox3_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox3.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
@@ -1060,19 +1060,23 @@ Public Class Form3
 
 
     Private Sub CustomGroupBox6_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox6.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CustomGroupBox5_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox5.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
@@ -1104,11 +1108,13 @@ Public Class Form3
     End Sub
 
     Private Sub CheckBox2_GotFocus(sender As Object, e As EventArgs) Handles CheckBox2.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
@@ -1240,7 +1246,7 @@ Public Class Form3
     '    form_flag = False
     'End Sub
 
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
+    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
 
         Try
 
@@ -1253,21 +1259,5 @@ Public Class Form3
         End Try
 
     End Sub
-    Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
 
-    Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TextBox1.Text = rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
-    End Sub
-
-    Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
 End Class
