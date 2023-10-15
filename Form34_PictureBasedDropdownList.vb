@@ -5,10 +5,6 @@ Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
 
 Imports Microsoft.Office.Interop.Excel
-Imports System.Drawing
-Imports Microsoft.Office
-Imports System.Runtime
-Imports System.ComponentModel
 
 Public Class Form34_PictureBasedDropdownList
     Dim WithEvents excelApp As Excel.Application
@@ -39,7 +35,34 @@ Public Class Form34_PictureBasedDropdownList
 
         sheetName2 = worksheet.Name
 
-        If TB_src_rng.Text = "" Then
+
+        Dim x As Boolean = False
+
+        If IsValidExcelCellReference(TB_src_rng.Text) = True Then
+
+            For Each pic As Excel.Shape In worksheet.Shapes
+                For i = 1 To src_rng.Rows.Count
+                    If pic.TopLeftCell.Address = src_rng(i, 2).Address Then
+
+                        x = True
+                        GoTo BreakAllLoops
+                    Else
+                        x = False
+
+                    End If
+                Next i
+
+            Next
+BreakAllLoops:
+        End If
+
+        If TB_src_rng.Text = "" And TB_des_rng.Text = "" Then
+            MessageBox.Show("Select all necessary options.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf TB_src_rng.Text = "" Then
             MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             'Me.Close()
@@ -50,6 +73,48 @@ Public Class Form34_PictureBasedDropdownList
             TB_des_rng.Focus()
             'Me.Close()
             Exit Sub
+
+
+        ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
+            MessageBox.Show("Select a valid source cell range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            Exit Sub
+
+        ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False Then
+            MessageBox.Show("Select a valid destination cell range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            Exit Sub
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field. Please select two columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+
+            Exit Sub
+
+        ElseIf src_rng.Columns.Count = 1 Then
+            MessageBox.Show("Please select both of the columns that contain the data and the relevant images.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf src_rng.Columns.Count > 2 Then
+            MessageBox.Show("Please, Select two columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf des_rng.Columns.Count <> 2 Then
+            MessageBox.Show("Please, Select two columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+
+        ElseIf x = False Then
+            MessageBox.Show("Please select both of the columns that contain the data And the relevant images.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+
+            Exit Sub
+
         Else
 
             ' Set up validation list for 1st Column
@@ -181,14 +246,8 @@ Public Class Form34_PictureBasedDropdownList
                         'x = x + 1
                     Next
 
-                    ' MsgBox(x)
-
-                    'If x = False Then
-                    '    MessageBox.Show("There is no image.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    'End If
-
                     excelApp.CutCopyMode = False
-                    'Exit Sub
+
 
                 End If
             Next
@@ -309,7 +368,7 @@ Public Class Form34_PictureBasedDropdownList
         Catch ex As Exception
 
             Me.Show()
-            TB_src_rng.Focus()
+        TB_src_rng.Focus()
 
         End Try
     End Sub
@@ -359,46 +418,7 @@ Public Class Form34_PictureBasedDropdownList
         Me.Close()
     End Sub
 
-    'Private Sub Button3_Click(sender As Object, e As EventArgs)
-    '    'Dim imageCell As Excel.Range = src_rng
-    '    'imageCell.Copy()
-    '    'des_rng.PasteSpecial(Excel.XlPasteType.xlPasteAll)
-    '    'excelApp.CutCopyMode = False
 
-
-    '    Dim sourceRange As Excel.Range = workSheet.Range("A1:A3") ' Adjust as needed
-    '    Dim targetCell As Excel.Range = workSheet.Range("D1") ' This is the top-left cell of the target range
-
-    '    For Each shape As Excel.Shape In workSheet.Shapes
-    '        If Not shape.TopLeftCell Is Nothing AndAlso Not shape.BottomRightCell Is Nothing Then
-    '            ' Check if shape is within sourceRange
-    '            If sourceRange.AddressLocal.Contains(shape.TopLeftCell.AddressLocal) AndAlso
-    '               sourceRange.AddressLocal.Contains(shape.BottomRightCell.AddressLocal) Then
-
-    '                shape.Copy()
-
-    '                ' Paste the picture at the target location
-    '                workSheet.Paste(targetCell)
-
-    '                ' Optionally, you can offset the targetCell for the next picture
-    '                targetCell = targetCell.Offset(0, shape.Width / targetCell.Width)
-    '            End If
-    '        End If
-    '    Next
-    'End Sub
-
-    'Private Sub Button3_Click_1(sender As Object, e As EventArgs)
-    '    excelApp = Globals.ThisAddIn.Application
-    '    Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-    '    Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
-
-    '    For Each pic As Excel.Picture In worksheet.Pictures
-    '        If pic.TopLeftCell.Address = "$E$1" Then
-    '            pic.Delete()
-    '            Exit For
-    '        End If
-    '    Next
-    'End Sub
 
     Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
         Try
@@ -422,7 +442,6 @@ Public Class Form34_PictureBasedDropdownList
 
         End Try
     End Sub
-
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
         ' Regular expression pattern for a cell reference.
@@ -431,20 +450,19 @@ Public Class Form34_PictureBasedDropdownList
 
         ' Regular expression pattern for an Excel reference.
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
-
+        Return regex.IsMatch(cellReference)
 
     End Function
+
 
     Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
         Try
@@ -557,23 +575,5 @@ Public Class Form34_PictureBasedDropdownList
 
         End Try
 
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
-    End Sub
-
-    Private Sub Form34_PictureBasedDropdownList_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TB_src_rng.Text = src_rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
     End Sub
 End Class
