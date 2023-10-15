@@ -1270,5 +1270,4 @@ Public Class Form3
     Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
         form_flag = False
     End Sub
-
 End Class
