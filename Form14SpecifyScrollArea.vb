@@ -6,6 +6,7 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Drawing
 Imports System.ComponentModel
 Imports System.Linq.Expressions
+Imports System.Collections.Generic
 
 Public Class Form14SpecifyScrollArea
 
@@ -17,6 +18,9 @@ Public Class Form14SpecifyScrollArea
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
     Dim txtChanged As Boolean = False
+    Public Shared all_hidden_Row_No As New List(Of Integer)
+    Public Shared all_hidden_Col_No As New List(Of Integer)
+    Public Shared scroll_Area_Specified As Boolean = False
 
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -25,15 +29,44 @@ Public Class Form14SpecifyScrollArea
     End Sub
 
     Private Sub Form14SpecifyScrollArea_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Try
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selectedRng As Excel.Range = excelApp.Selection
-        txtSourceRange.Text = selectedRng.Address
+            Dim selectedRng As Excel.Range = excelApp.Selection
+            txtSourceRange.Text = selectedRng.Address
 
-        Me.KeyPreview = True
+            Me.KeyPreview = True
+
+
+
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+
+            'store the row numbers in a list, if a row of the used range of the worksheet is hidden
+
+            For i = 1 To worksheet.UsedRange.Rows.Count
+                If worksheet.UsedRange.Cells(i, 1).entirerow.hidden = True Then
+                    all_hidden_Row_No.Add(worksheet.UsedRange.Cells(i, 1).row)
+                End If
+            Next
+
+            'store the column numbers in a list, if a column of the used range of the worksheet is hidden
+
+            For j = 1 To worksheet.UsedRange.Columns.Count
+                If worksheet.UsedRange.Cells(1, j).entirecolumn.hidden = True Then
+                    all_hidden_Col_No.Add(worksheet.UsedRange.Cells(1, j).column)
+                End If
+            Next
+
+
+        Catch ex As Exception
+
+        End Try
+
 
 
     End Sub
@@ -262,12 +295,44 @@ Public Class Form14SpecifyScrollArea
             End If
 
 Proceed:
+            'store the row numbers in a list, if a row of the selected range is hidden
+            Dim hidden_Row_No As New List(Of Integer)
+            For i = 1 To selectedRng.Rows.Count
+                If selectedRng.Cells(i, 1).entirerow.hidden = True Then
+                    hidden_Row_No.Add(selectedRng.Cells(i, 1).row)
+                End If
+            Next
+
+            'store the column numbers in a list, if a column of the selected range is hidden
+            Dim hidden_Col_No As New List(Of Integer)
+            For j = 1 To selectedRng.Columns.Count
+                If selectedRng.Cells(1, j).entirecolumn.hidden = True Then
+                    hidden_Col_No.Add(selectedRng.Cells(1, j).column)
+                End If
+            Next
+
+            'hide all rows and columns
             worksheet.Rows.Hidden = True
             worksheet.Columns.Hidden = True
 
 
+            'unhide all rows and columns of the selected range
             selectedRng.EntireRow.Hidden = False
             selectedRng.EntireColumn.Hidden = False
+
+            scroll_Area_Specified = True
+
+            'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+            'hide those rows
+            For i = 0 To hidden_Row_No.Count - 1
+                worksheet.Rows(hidden_Row_No(i)).hidden = True
+            Next
+
+            'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+            'hide those columns
+            For i = 0 To hidden_Col_No.Count - 1
+                worksheet.Columns(hidden_Col_No(i)).hidden = True
+            Next
 
             selectedRng.Select()
 
@@ -332,6 +397,29 @@ break:
             Next
             Dim scrollArea As Excel.Range = worksheet.Range(worksheet.Cells(minRow, minCol), worksheet.Cells(maxRow, maxCol))
 
+            Dim hidden_Row_No As New List(Of Integer)
+            Dim hidden_Col_No As New List(Of Integer)
+
+            'loop through each range that user have selected
+            'store the hidden row and column numbers of the selected ranges in 2 lists that decalred above
+            For k = 0 To UBound(arrRng)
+
+                'store the row numbers in a list, if a row of the selected range is hidden
+                For i = 1 To worksheet.Range(arrRng(k)).Rows.Count
+                    If worksheet.Range(arrRng(k)).Cells(i, 1).entirerow.hidden = True Then
+                        hidden_Row_No.Add(worksheet.Range(arrRng(k)).Cells(i, 1).row)
+                    End If
+                Next
+
+                'store the column numbers in a list, if a column of the selected range is hidden
+                For j = 1 To worksheet.Range(arrRng(k)).Columns.Count
+                    If worksheet.Range(arrRng(k)).Cells(1, j).entirecolumn.hidden = True Then
+                        hidden_Col_No.Add(worksheet.Range(arrRng(k)).Cells(1, j).column)
+                    End If
+                Next
+            Next
+
+
 
             'declare a booolean variable named "flag" with Fasle value
             'if the number of rows and the row number of 1st row of each range is same then flag will be True
@@ -370,6 +458,20 @@ break:
                 For i = 0 To UBound(arrRng)
                     worksheet.Range(arrRng(i)).EntireRow.Hidden = False
                     worksheet.Range(arrRng(i)).EntireColumn.Hidden = False
+                Next
+
+                scroll_Area_Specified = True
+
+                'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+                'hide those rows
+                For i = 0 To hidden_Row_No.Count - 1
+                    worksheet.Rows(hidden_Row_No(i)).hidden = True
+                Next
+
+                'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+                'hide those columns
+                For i = 0 To hidden_Col_No.Count - 1
+                    worksheet.Columns(hidden_Col_No(i)).hidden = True
                 Next
 
                 scrollArea.Select()
