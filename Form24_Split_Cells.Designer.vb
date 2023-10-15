@@ -142,10 +142,10 @@ Partial Class Form24_Split_Cells
         'PictureBox7
         '
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(440, 238)
+        Me.PictureBox7.Location = New System.Drawing.Point(447, 238)
         Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(65, 65)
+        Me.PictureBox7.Size = New System.Drawing.Size(58, 60)
         Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox7.TabIndex = 257
         Me.PictureBox7.TabStop = False

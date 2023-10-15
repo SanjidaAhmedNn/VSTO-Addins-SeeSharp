@@ -173,7 +173,7 @@ Partial Class Form31_UpdateDynamicDropdownList
         '
         Me.PictureBox3.BackColor = System.Drawing.Color.White
         Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(263, 115)
+        Me.PictureBox3.Location = New System.Drawing.Point(262, 115)
         Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(24, 23)
