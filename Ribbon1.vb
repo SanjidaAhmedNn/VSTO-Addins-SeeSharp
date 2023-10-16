@@ -20,7 +20,6 @@ Public Class Ribbon1
     Dim worksheet As Excel.Worksheet
 
 
-
     'Public Function ConvertImage(ByVal image As Image) As stdole.IPictureDisp
     '    Return DirectCast(AxHost.GetIPictureDispFromPicture(image), stdole.IPictureDisp)
     'End Function
@@ -52,8 +51,8 @@ Public Class Ribbon1
 
     End Function
 
-
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
+
 
     End Sub
 
@@ -1879,6 +1878,45 @@ nextloop:
                 MyForm28.Show()
             form_flag = True
         End If
+
+    End Sub
+
+    Private Sub Button10_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button10.Click
+        'Clear Scroll Area
+        Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
+
+            'checks if a scroll area is specified or not in the worksheet
+            If Form14SpecifyScrollArea.scroll_Area_Specified = True Then
+
+                'unhide all the rows and columns of the worksheet
+                worksheet.Rows.Hidden = False
+                worksheet.Columns.Hidden = False
+
+                'loop through each element of the all_hidden_Row_No list from form14, and fetch the row numbers that were hidden in the selected range
+                'hide those rows
+                For i = 0 To Form14SpecifyScrollArea.all_hidden_Row_No.Count - 1
+                    worksheet.Rows(Form14SpecifyScrollArea.all_hidden_Row_No(i)).hidden = True
+                Next
+
+                'loop through each element of the all_hidden_Col_No list from form14, and fetch the column numbers that were hidden in the selected range
+                'hide those columns
+                For i = 0 To Form14SpecifyScrollArea.all_hidden_Col_No.Count - 1
+                    worksheet.Columns(Form14SpecifyScrollArea.all_hidden_Col_No(i)).hidden = True
+                Next
+
+
+            End If
+
+
+        Catch ex As Exception
+
+        End Try
+
+
+
 
     End Sub
 End Class
