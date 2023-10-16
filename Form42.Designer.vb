@@ -32,6 +32,7 @@ Partial Class Form42
         Me.RB_Dynamic = New System.Windows.Forms.RadioButton()
         Me.RB_No = New System.Windows.Forms.RadioButton()
         Me.RB_Yes = New System.Windows.Forms.RadioButton()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.CustomGroupBox3.SuspendLayout()
         Me.CGB.SuspendLayout()
         Me.SuspendLayout()
@@ -55,7 +56,7 @@ Partial Class Form42
         Me.Btn_OK.BackColor = System.Drawing.Color.White
         Me.Btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_OK.Location = New System.Drawing.Point(158, 229)
+        Me.Btn_OK.Location = New System.Drawing.Point(167, 248)
         Me.Btn_OK.Name = "Btn_OK"
         Me.Btn_OK.Size = New System.Drawing.Size(62, 26)
         Me.Btn_OK.TabIndex = 424
@@ -67,7 +68,7 @@ Partial Class Form42
         Me.Btn_Cancel.BackColor = System.Drawing.Color.White
         Me.Btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.Btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_Cancel.Location = New System.Drawing.Point(235, 229)
+        Me.Btn_Cancel.Location = New System.Drawing.Point(235, 248)
         Me.Btn_Cancel.Name = "Btn_Cancel"
         Me.Btn_Cancel.Size = New System.Drawing.Size(62, 26)
         Me.Btn_Cancel.TabIndex = 423
@@ -78,7 +79,7 @@ Partial Class Form42
         '
         Me.CB_About.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CB_About.FormattingEnabled = True
-        Me.CB_About.Location = New System.Drawing.Point(12, 229)
+        Me.CB_About.Location = New System.Drawing.Point(12, 248)
         Me.CB_About.Name = "CB_About"
         Me.CB_About.Size = New System.Drawing.Size(98, 25)
         Me.CB_About.TabIndex = 422
@@ -156,12 +157,24 @@ Partial Class Form42
         Me.RB_Yes.Text = "Yes, I want to create a Data Validation List"
         Me.RB_Yes.UseVisualStyleBackColor = True
         '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox1.Location = New System.Drawing.Point(12, 215)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(253, 21)
+        Me.CheckBox1.TabIndex = 428
+        Me.CheckBox1.Text = "Don't show this for this current session"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
         'Form42
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(318, 275)
+        Me.ClientSize = New System.Drawing.Size(318, 286)
+        Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.Btn_Cancel)
@@ -176,6 +189,7 @@ Partial Class Form42
         Me.CGB.ResumeLayout(False)
         Me.CGB.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -189,4 +203,5 @@ Partial Class Form42
     Friend WithEvents RB_No As Windows.Forms.RadioButton
     Friend WithEvents RB_Yes As Windows.Forms.RadioButton
     Friend WithEvents CGB As CustomGroupBox
+    Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
 End Class

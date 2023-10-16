@@ -374,6 +374,7 @@ Partial Class Form33_ColorBasedDropDownList
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.FlowLayoutPanel1)
         Me.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form33_ColorBasedDropDownList"

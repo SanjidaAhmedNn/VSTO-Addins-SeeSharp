@@ -10,6 +10,9 @@
     Public Flag_CreateDDDL As Boolean
     Public sheetName As String
     Public form_flag As Boolean
+    Public sessionflag1 As Boolean
+    Public sessionflag2 As Boolean
+
 
     'For form-34
     Public Flag_Picture As Boolean

@@ -106,14 +106,12 @@
         Me.Button25 = Me.Factory.CreateRibbonButton
         Me.Button26 = Me.Factory.CreateRibbonButton
         Me.Button27 = Me.Factory.CreateRibbonButton
-        Me.Tab2 = Me.Factory.CreateRibbonTab
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
         Me.Group5.SuspendLayout()
         Me.Group3.SuspendLayout()
         Me.Group4.SuspendLayout()
-        Me.Tab2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Tab1
@@ -547,17 +545,11 @@
         Me.Button27.Name = "Button27"
         Me.Button27.ShowImage = True
         '
-        'Tab2
-        '
-        Me.Tab2.Label = "Tab2"
-        Me.Tab2.Name = "Tab2"
-        '
         'Ribbon1
         '
         Me.Name = "Ribbon1"
         Me.RibbonType = "Microsoft.Excel.Workbook"
         Me.Tabs.Add(Me.Tab1)
-        Me.Tabs.Add(Me.Tab2)
         Me.Tab1.ResumeLayout(False)
         Me.Tab1.PerformLayout()
         Me.Group1.ResumeLayout(False)
@@ -570,8 +562,6 @@
         Me.Group3.PerformLayout()
         Me.Group4.ResumeLayout(False)
         Me.Group4.PerformLayout()
-        Me.Tab2.ResumeLayout(False)
-        Me.Tab2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -641,7 +631,6 @@
     Friend WithEvents Button25 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button26 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button27 As Microsoft.Office.Tools.Ribbon.RibbonButton
-    Friend WithEvents Tab2 As Microsoft.Office.Tools.Ribbon.RibbonTab
 End Class
 
 Partial Class ThisRibbonCollection

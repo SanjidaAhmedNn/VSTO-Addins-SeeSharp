@@ -21,6 +21,8 @@ Public Class Form33_ColorBasedDropDownList
     Public focuschange As Boolean
     Public form As Form42 = Nothing
     Dim flag As Boolean = False
+    Public form2 As Form43 = Nothing
+    Dim flag2 As Boolean = False
 
 
 
@@ -31,6 +33,20 @@ Public Class Form33_ColorBasedDropDownList
     Private Const HWND_TOPMOST As Integer = -1
     ' Declare the tooltip at class level
     Private tooltip As New ToolTip()
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' btn_OK.PerformClick()
+            MsgBox(1)
+            If Me.ActiveControl Is Btn_NC And e.KeyCode = Keys.Enter Then
+                ' Prevent the 'Ding' sound when pressing Enter (optional)
+                e.SuppressKeyPress = True
+
+                ' Perform the click operation for btn2
+                btn_OK.PerformClick()
+            End If
+
+        End If
+    End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'ReDim mybtn(List_Preview.Items.Count)
@@ -145,8 +161,6 @@ Public Class Form33_ColorBasedDropDownList
         item.Color = c
         clickedButton.Focus()
 
-        'MsgBox(List_Preview.SelectedIndex.ToString)
-        'MsgBox(List_Preview.Items.Count)
         mybtn(List_Preview.SelectedIndex) = clickedButton
         Btn_color.BackColor = c
         Me.Refresh()
@@ -187,87 +201,6 @@ Public Class Form33_ColorBasedDropDownList
 
         e.DrawFocusRectangle()
     End Sub
-
-
-
-    'Private Sub ListBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles List_Preview.MouseDoubleClick
-    '    Dim index As Integer = List_Preview.IndexFromPoint(e.Location)
-    '    If index < 0 Then Return
-
-    '    Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
-
-    '    Using colorDialog As New ColorDialog()
-    '        If colorDialog.ShowDialog() = DialogResult.OK Then
-    '            item.Color = colorDialog.Color
-    '            List_Preview.Refresh() ' Redraw the ListBox to reflect color changes
-    '        End If
-    '    End Using
-    'End Sub
-
-
-    'Private Sub ListBox1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles List_Preview.DrawItem
-    '    If e.Index < 0 Then Return
-
-    '    Dim item As ColoredItem = CType(List_Preview.Items(e.Index), ColoredItem)
-
-    '    ' Determine colors for text and background.
-    '    Dim textColor As Color = Color.Black
-    '    Dim backColor As Color = item.Color
-
-    '    If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
-    '        ' If item is selected, we'll use system colors to highlight.
-    '        backColor = SystemColors.Highlight
-    '        textColor = SystemColors.HighlightText
-    '    End If
-
-    '    ' Use the determined colors.
-    '    Using brush As New SolidBrush(backColor)
-    '        e.Graphics.FillRectangle(brush, e.Bounds)
-    '    End Using
-
-    '    ' Draw the text in the determined text color.
-    '    Using brush As New SolidBrush(textColor)
-    '        e.Graphics.DrawString(item.Text, e.Font, brush, e.Bounds.Left, e.Bounds.Top)
-    '    End Using
-
-    '    e.DrawFocusRectangle()
-    'End Sub
-
-    'Private Sub SheetSelectionChange(ByVal Sh As Object, ByVal selectionRange1 As Excel.Range) Handles excelApp.SheetSelectionChange
-    '    Try
-
-    '        excelApp = Globals.ThisAddIn.Application
-
-    '        If Me.ActiveControl Is TB_des_rng Then
-    '            des_rng = selectionRange1
-    '            ' This will run on the Excel thread, so you need to use Invoke to update the UI
-    '            'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
-    '            Me.Activate()
-    '            Me.BeginInvoke(New System.Action(Sub()
-    '                                                 TB_des_rng.Text = des_rng.Address
-    '                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-    '                                             End Sub))
-    '            TB_des_rng.Focus()
-
-    '        ElseIf Me.ActiveControl Is TB_src_rng Then
-    '            src_rng = selectionRange1
-    '            Me.Activate()
-
-
-    '            Me.BeginInvoke(New System.Action(Sub()
-    '                                                 TB_src_rng.Text = src_rng.Address
-    '                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-    '                                             End Sub))
-    '            TB_des_rng.Focus()
-    '        End If
-
-
-
-    '    Catch ex As Exception
-
-    '    End Try
-
-    'End Sub
 
     Private Sub ColorButton_MouseHover(sender As Object, e As EventArgs)
         Dim hoveredButton As Button = CType(sender, Button)
@@ -329,8 +262,9 @@ Public Class Form33_ColorBasedDropDownList
                 Me.Show()
                 TB_src_rng.Focus()
 
-
                 Dim ran As Excel.Range = src_rng(1, 1)
+
+
 
                 ' Clear the ListBox
                 List_Preview.Items.Clear()
@@ -350,35 +284,11 @@ Public Class Form33_ColorBasedDropDownList
                     items.AddRange(formula.Split(","))
                 End If
 
-                'Dim items As String() = formula.Split(","c)
-
-                'Dim items As List(Of String) = GetValidationList(src_rng)
-                'MsgBox(items.Count)
 
                 For Each item As String In items
-                    'MsgBox(item.ToString)
                     List_Preview.Items.Add(New ColoredItem(item.Trim))
                 Next
-                'Dim startPositionY As Integer = 263  ' Starting vertical position for labels
-                'Dim gap As Integer = 20  ' Vertical gap between labels
 
-                'For Each item As String In items
-                '    'List_Preview.Items.Add(New ColoredItem(item.Trim()))
-                '    'MsgBox(item)
-                '    Dim newLabel As New Windows.Forms.Label()
-                '    newLabel.Text = item.Trim()
-                '    newLabel.Location = New Point(17, startPositionY)
-                '    startPositionY += gap
-                '    Me.Controls.Add(newLabel)
-                '    newLabel.BringToFront()
-                '    newLabel.Width = 122
-                '    newLabel.Height = 20
-                '    newLabel.FlatStyle = FlatStyle.Popup
-
-                '    ' Add event handlers for hover effect
-                '    AddHandler newLabel.MouseEnter, AddressOf Label_MouseEnter
-                '    AddHandler newLabel.MouseLeave, AddressOf Label_MouseLeave
-                '    AddHandler newLabel.Click, AddressOf Label_Click
 
                 'Next
 
@@ -394,41 +304,6 @@ Public Class Form33_ColorBasedDropDownList
         End Try
     End Sub
 
-    'Private Function GetValidationList(cell As Excel.Range) As List(Of String)
-    '    Dim items As New List(Of String)()
-    '    'MsgBox(cell.Address)
-    '    ' Check if the cell has validation and it's a List validation
-
-    '    If cell.HasFormula = True Then
-    '        Dim formula As String = cell.Validation.Formula1
-    '        MsgBox(formula)
-    '        ' If the formula is referencing a range, get the values from that range
-    '        If formula.Contains(":") Then
-    '            Dim range As Excel.Range = excelApp.Range(formula)
-    '            For Each r In range
-    '                items.Add(r.Value.ToString())
-    '            Next
-    '        Else
-    '            ' Else, split the formula to get the individual items
-    '            items.AddRange(formula.Split(","))
-    '        End If
-    '    End If
-
-    '    Return items
-    'End Function
-
-
-    Private Sub Label_MouseEnter(sender As Object, e As EventArgs)
-        ' Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
-        'lbl.BackColor = SystemColors.Highlight
-        'lbl.ForeColor = SystemColors.HighlightText
-    End Sub
-
-    Private Sub Label_MouseLeave(sender As Object, e As EventArgs)
-        ' Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
-        'lbl.BackColor = Color.White
-        ' lbl.ForeColor = Color.Black
-    End Sub
     Private Sub Label_Click(sender As Object, e As EventArgs)
         Dim lbl As Windows.Forms.Label = DirectCast(sender, Windows.Forms.Label)
         ' Reset all labels to their default colors
@@ -523,9 +398,6 @@ Public Class Form33_ColorBasedDropDownList
 
     End Sub
 
-    Private Sub List_Preview_SelectedIndexChanged(sender As Object, e As EventArgs) Handles List_Preview.SelectedIndexChanged
-
-    End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
         Try
@@ -576,8 +448,6 @@ Public Class Form33_ColorBasedDropDownList
             src_rng.Select()
 
 
-
-
             For Each cell In src_rng
                 If cell.Validation.Type = Excel.XlDVType.xlValidateList Then
                     flag = True
@@ -585,20 +455,35 @@ Public Class Form33_ColorBasedDropDownList
                 End If
 
             Next
-            'MsgBox(flag)
 
-            If flag = False Then
+            For Each item In List_Preview.Items
+                If item.color = Color.White Or item.color = SystemColors.Highlight Then
+                    flag2 = False
+                Else
+                    flag2 = True
+                    Exit For
+                End If
+            Next
+            'MsgBox(flag2)
+
+            If flag = False And sessionflag2 = True Then
                 form = New Form42
                 form.Show()
                 Me.Hide()
                 ' MsgBox(1)
-            Else
+            ElseIf flag2 = False And sessionflag1 = True Then
+                form2 = New Form43
+                form2.Show()
+                Me.Hide()
                 'MsgBox(2)
+
+            Else
+
                 Me.Close()
 
             End If
 
-            Me.Show()
+            'Me.Show()
 
         Catch ex As Exception
             If flag = False Then
@@ -606,6 +491,14 @@ Public Class Form33_ColorBasedDropDownList
                 form = New Form42
                 form.Show()
                 If form.IsDisposed Or form Is Nothing Then
+                    Me.Show()
+                End If
+
+            ElseIf flag2 = False Then
+                Me.Hide()
+                form2 = New Form43
+                form2.Show()
+                If form2.IsDisposed Or form2 Is Nothing Then
                     Me.Show()
                 End If
             End If
@@ -715,64 +608,96 @@ Public Class Form33_ColorBasedDropDownList
 
 
 
-    Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+    'Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
-        Try
-            If e.KeyCode = Keys.Enter Then
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
 
-                Call btn_OK_Click(sender, e)
+    '            Call btn_OK_Click(sender, e)
 
-            End If
+    '        End If
 
-        Catch ex As Exception
+    '    Catch ex As Exception
 
-        End Try
+    '    End Try
 
-    End Sub
+    'End Sub
 
-    Private Sub RB_cell_KeyDown(sender As Object, e As KeyEventArgs) Handles RB_cell.KeyDown
+    'Private Sub RB_cell_KeyDown(sender As Object, e As KeyEventArgs) Handles RB_cell.KeyDown
 
-        Try
-            If e.KeyCode = Keys.Enter Then
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
 
-                Call btn_OK_Click(sender, e)
+    '            Call btn_OK_Click(sender, e)
 
-            End If
+    '        End If
 
-        Catch ex As Exception
+    '    Catch ex As Exception
 
-        End Try
+    '    End Try
 
-    End Sub
+    'End Sub
 
-    Private Sub RB_row_KeyDown(sender As Object, e As KeyEventArgs) Handles RB_Row.KeyDown
 
-        Try
-            If e.KeyCode = Keys.Enter Then
+    'Private Sub RB_row_KeyDown(sender As Object, e As KeyEventArgs) Handles Btn_NC.KeyDown
 
-                Call btn_OK_Click(sender, e)
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
 
-            End If
+    '            btn_OK.PerformClick()
 
-        Catch ex As Exception
+    '        End If
 
-        End Try
+    '    Catch ex As Exception
 
-    End Sub
-    Private Sub Sample_Image_KeyDown(sender As Object, e As KeyEventArgs) Handles GB_sample.KeyDown
+    '    End Try
 
-        Try
-            If e.KeyCode = Keys.Enter Then
+    'End Sub
+    'Private Sub Sample_Image_KeyDown(sender As Object, e As KeyEventArgs) Handles Btn_NC.KeyDown
 
-                Call btn_OK_Click(sender, e)
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
 
-            End If
+    '            Call btn_OK_Click(sender, e)
 
-        Catch ex As Exception
+    '        End If
 
-        End Try
+    '    Catch ex As Exception
+    '        MsgBox(1)
+    '    End Try
 
-    End Sub
+    'End Sub
+
+
+    'Private Sub TextBox_Destination_KeyDown(sender As Object, e As KeyEventArgs) Handles TB_des_rng.KeyDown
+
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
+
+    '            Call btn_OK_Click(sender, e)
+
+    '        End If
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+    'Private Sub TextBox_Source_KeyDown(sender As Object, e As KeyEventArgs) Handles TB_src_rng.KeyDown
+
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
+
+    '            Call btn_OK_Click(sender, e)
+
+    '        End If
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim index As Integer = 0
@@ -827,44 +752,75 @@ Public Class Form33_ColorBasedDropDownList
 
     End Function
 
-    Private Sub TB_dest_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_des_rng.KeyDown
-        'If Enter key is pressed then check if the text is a valid address
-        If IsValidExcelCellReference(TB_des_rng.Text) = True And e.KeyCode = Keys.Enter Then
-            des_rng = excelApp.Range(TB_des_rng.Text)
-            TB_des_rng.Focus()
-            des_rng.Select()
+    'Private Sub TB_dest_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_des_rng.KeyDown
+    '    'If Enter key is pressed then check if the text is a valid address
+    '    If IsValidExcelCellReference(TB_des_rng.Text) = True And e.KeyCode = Keys.Enter Then
+    '        des_rng = excelApp.Range(TB_des_rng.Text)
+    '        TB_des_rng.Focus()
+    '        des_rng.Select()
 
-            Call btn_OK_Click(sender, e)   'OK button click event called
+    '        Call btn_OK_Click(sender, e)   'OK button click event called
 
-            'MsgBox(des_rng.Address)
-        ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And e.KeyCode = Keys.Enter Then
-            MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_des_rng.Text = ""
-            TB_des_rng.Focus()
-            'Me.Close()
-            Exit Sub
-        End If
-    End Sub
+    '        'MsgBox(des_rng.Address)
+    '    ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And e.KeyCode = Keys.Enter Then
+    '        MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '        TB_des_rng.Text = ""
+    '        TB_des_rng.Focus()
+    '        'Me.Close()
+    '        Exit Sub
+    '    End If
+    'End Sub
 
-    Private Sub TB_src_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_src_rng.KeyDown
-        'If Enter key is pressed then check if the text is a valid address
+    'Private Sub TB_src_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_src_rng.KeyDown
+    '    'If Enter key is pressed then check if the text is a valid address
 
-        If IsValidExcelCellReference(TB_src_rng.Text) = True And e.KeyCode = Keys.Enter Then
-            src_rng = excelApp.Range(TB_src_rng.Text)
-            TB_src_rng.Focus()
-            src_rng.Select()
+    '    If IsValidExcelCellReference(TB_src_rng.Text) = True And e.KeyCode = Keys.Enter Then
+    '        src_rng = excelApp.Range(TB_src_rng.Text)
+    '        TB_src_rng.Focus()
+    '        src_rng.Select()
 
-            Call btn_OK_Click(sender, e)   'OK button click event called
+    '        Call btn_OK_Click(sender, e)   'OK button click event called
 
-            'MsgBox(des_rng.Address)
-        ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False And e.KeyCode = Keys.Enter Then
-            MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_src_rng.Text = ""
-            TB_src_rng.Focus()
-            'Me.Close()
-            Exit Sub
-        End If
-    End Sub
+    '        'MsgBox(des_rng.Address)
+    '    ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False And e.KeyCode = Keys.Enter Then
+    '        MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '        TB_src_rng.Text = ""
+    '        TB_src_rng.Focus()
+    '        'Me.Close()
+    '        Exit Sub
+    '    End If
+    'End Sub
+    'Private Sub FlowLayout_KeyDown(sender As Object, e As KeyEventArgs) Handles FlowLayoutPanel1.KeyDown
+
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
+
+    '            Call btn_OK_Click(sender, e)
+
+    '        End If
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+
+
+    'Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+
+    '    Try
+    '        If e.KeyCode = Keys.Enter And TB_src_rng.Focus = False And TB_des_rng.Focus = False Then
+
+    '            Call btn_OK_Click(sender, e)
+
+    '        End If
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
 
     Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
         Try
@@ -902,9 +858,6 @@ Public Class Form33_ColorBasedDropDownList
         End Try
     End Sub
 
-    Private Sub FlowLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles FlowLayoutPanel1.Paint
-
-    End Sub
 
     Private Sub Form33_ColorBasedDropDownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False
@@ -922,7 +875,17 @@ Public Class Form33_ColorBasedDropDownList
                                              TB_src_rng.Text = src_rng.Address
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
+        TB_src_rng.Focus()
     End Sub
+
+    Private Sub RB_cell_CheckedChanged(sender As Object, e As EventArgs) Handles RB_cell.CheckedChanged
+        If RB_cell.Checked = True Then
+            Selection_destination.Enabled = False
+            TB_des_rng.Enabled = False
+        End If
+    End Sub
+
+
 End Class
 
 Public Class ColoredItem
