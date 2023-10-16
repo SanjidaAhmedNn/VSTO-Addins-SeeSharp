@@ -79,6 +79,53 @@ Public Class Form3
         End If
 
     End Function
+    Private Function MaxOfColumn(cRng As Excel.Range)
+
+        Dim max As Integer
+        Dim CharNumbers As Integer
+
+        If IsNumeric(cRng.Cells(1, 1).value) Then
+            max = Len(Str(cRng.Cells(1, 1).value))
+        Else
+            max = Len(cRng.Cells(1, 1).value)
+        End If
+
+        For i = 2 To cRng.Rows.Count
+            If IsNumeric(cRng.Cells(i, 1).value) Then
+                CharNumbers = Len(Str(cRng.Cells(i, 1).value))
+            Else
+                CharNumbers = Len(cRng.Cells(i, 1).value)
+            End If
+            If CharNumbers > max Then
+                max = CharNumbers
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfColumn = max
+
+    End Function
+    Private Function MaxOfArray(Arr)
+
+        Dim max As Integer
+        max = Len(Arr(LBound(Arr)))
+
+        For i = LBound(Arr) + 1 To UBound(Arr)
+            If Len(Arr(i)) > max Then
+                max = Len(Arr(i))
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfArray = max
+
+    End Function
 
     Private Sub Display()
 
@@ -102,25 +149,28 @@ Public Class Form3
             c = displayRng.Columns.Count
 
             Dim height As Single
-            Dim width As Single
+            Dim Basewidth As Double
+            Dim width As Double
+            Basewidth = 260 / 3
 
-            If r <= 6 Then
-                height = panel1.Height / r
+            If displayRng.Rows.Count <= 4 Then
+                height = panel1.Height / displayRng.Rows.Count
             Else
-                height = panel1.Height / 6
+                height = (119 / 4)
             End If
 
-            If c <= 4 Then
-                width = panel1.Width / c
-            Else
-                width = panel1.Width / 4
-            End If
+            Dim CRng As Excel.Range
+            Dim Ordinate As Double = 0
 
-            For i = 1 To displayRng.Rows.Count
-                For j = 1 To displayRng.Columns.Count
+            For j = 1 To c
+
+                CRng = worksheet.Range(displayRng.Cells(1, j), displayRng.Cells(r, j))
+                width = (MaxOfColumn(CRng) * Basewidth) / 10
+
+                For i = 1 To r
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, j).Value
-                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                    label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                     label.Height = height
                     label.Width = width
                     label.BorderStyle = BorderStyle.FixedSingle
@@ -158,31 +208,38 @@ Public Class Form3
                     End If
                     panel1.Controls.Add(label)
                 Next
+                Ordinate = Ordinate + width
             Next
 
             panel1.AutoScroll = True
 
             If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
-                If c <= 6 Then
+                Dim Values(c - 1) As Object
+                Dim Widths(r - 1) As Object
+
+                If c <= 4 Then
                     height = panel2.Height / c
                 Else
-                    height = panel2.Height / 6
+                    height = panel2.Height / 4
                 End If
 
-                If r <= 4 Then
-                    width = panel2.Width / r
-                Else
-                    width = panel2.Width / 4
-                End If
+                For i = 1 To r
+                    For j = 1 To c
+                        Values(j - 1) = displayRng.Cells(i, j).value
+                    Next
+                    Widths(i - 1) = (MaxOfArray(Values) * Basewidth) / 10
+                Next
+
+                Ordinate = 0
 
                 For i = 1 To displayRng.Rows.Count
                     For j = 1 To displayRng.Columns.Count
                         Dim label As New System.Windows.Forms.Label
                         label.Text = displayRng.Cells(i, j).Value
-                        label.Location = New System.Drawing.Point((i - 1) * width, (j - 1) * height)
+                        label.Location = New System.Drawing.Point(Ordinate, (j - 1) * height)
                         label.Height = height
-                        label.Width = width
+                        label.Width = Widths(i - 1)
                         label.BorderStyle = BorderStyle.FixedSingle
                         label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -215,9 +272,9 @@ Public Class Form3
                                 label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                             End If
                         End If
-
                         panel2.Controls.Add(label)
                     Next
+                    Ordinate = Ordinate + Widths(i - 1)
                 Next
 
                 panel2.AutoScroll = True
@@ -514,6 +571,7 @@ Public Class Form3
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
+            TextBoxChanged = True
             If TextBox1.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False Then
                 MessageBox.Show("Enter a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 worksheet.Activate()
@@ -563,7 +621,6 @@ Public Class Form3
                             For j = 1 To rng.Columns.Count
                                 rng2.Cells(j, i).Value = rng.Cells(i, j).Value
                                 rng2 = worksheet2.Range(rng2Address)
-                                MsgBox("OK")
                                 If CheckBox2.Checked = True Then
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
@@ -752,6 +809,8 @@ Public Class Form3
                 For j = 1 To rng2.Columns.Count
                     rng2.Columns(j).Autofit
                 Next
+
+                TextBoxChanged = False
 
                 Me.Close()
 
@@ -1176,10 +1235,6 @@ Public Class Form3
         End Try
     End Sub
 
-    Private Sub PictureBox7_Click(sender As Object, e As EventArgs) Handles PictureBox7.Click
-
-    End Sub
-
     Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
         Try
             FocusedTextBox = 0
@@ -1228,29 +1283,57 @@ Public Class Form3
 
     End Sub
 
-    'Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-    '    form_flag = False
-    'End Sub
+    Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
 
-    ''Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-    ''    Me.Focus()
-    ''    Me.BringToFront()
-    ''    Me.Activate()
-    ''    Me.BeginInvoke(New System.Action(Sub()
-    ''                                         TextBox1.Text = rng.Address
-    ''                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-    ''                                     End Sub))
-    ''End Sub
+        Try
+            form_flag = False
 
-    'Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-    '    form_flag = False
-    'End Sub
+        Catch ex As Exception
 
-    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
+        End Try
+
+    End Sub
+
+    Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+
+        Try
+            Me.Focus()
+            Me.BringToFront()
+            Me.Activate()
+
+            Dim TextBoxText As String
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBoxText = worksheet.Name & "!" & rng.Address
+            Else
+                TextBoxText = rng.Address
+            End If
+
+            Me.BeginInvoke(New System.Action(Sub()
+                                                 TextBox1.Text = TextBoxText
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        Try
+            form_flag = False
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+
 
         Try
 
             If e.KeyCode = Keys.Enter Then
+                btn_OK.Focus()
                 Call btn_OK_Click(sender, e)
             End If
 

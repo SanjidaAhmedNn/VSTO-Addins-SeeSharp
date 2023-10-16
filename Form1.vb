@@ -726,7 +726,10 @@ Public Class Form1
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
-        If TextBox1.Text = "" Then
+        Try
+
+            TextBoxChanged = True
+            If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
                 Exit Sub
@@ -1101,10 +1104,14 @@ Public Class Form1
                     rng2.Columns(j).Autofit
                 Next
 
+                TextBoxChanged = False
+
                 Me.Close()
 
             End If
+        Catch ex As Exception
 
+        End Try
 
     End Sub
 
@@ -1527,8 +1534,15 @@ Public Class Form1
             Me.Focus()
             Me.BringToFront()
             Me.Activate()
+            Dim TextBoxText As String
+
+            If workSheet.Name <> OpenSheet.Name Then
+                TextBoxText = workSheet.Name & "!" & rng.Address
+            Else
+                TextBoxText = rng.Address
+            End If
             Me.BeginInvoke(New System.Action(Sub()
-                                                 TextBox1.Text = rng.Address
+                                                 TextBox1.Text = TextBoxText
                                                  SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                              End Sub))
 
@@ -1586,6 +1600,7 @@ Public Class Form1
         Try
             If e.KeyCode = Keys.Enter Then
 
+                btn_OK.Focus()
                 Call btn_OK_Click(sender, e)
 
             End If
