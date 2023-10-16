@@ -232,6 +232,21 @@ Public Class Form13HideAllExceptSelectedRange
             End If
 
 Proceed:
+            'store the row numbers in a list, if a row of the selected range is hidden
+            Dim hidden_Row_No As New List(Of Integer)
+            For i = 1 To selectedRng.Rows.Count
+                If selectedRng.Cells(i, 1).entirerow.hidden = True Then
+                    hidden_Row_No.Add(selectedRng.Cells(i, 1).row)
+                End If
+            Next
+
+            'store the column numbers in a list, if a column of the selected range is hidden
+            Dim hidden_Col_No As New List(Of Integer)
+            For j = 1 To selectedRng.Columns.Count
+                If selectedRng.Cells(1, j).entirecolumn.hidden = True Then
+                    hidden_Col_No.Add(selectedRng.Cells(1, j).column)
+                End If
+            Next
 
 
             If checkBox_Header.Checked = True Then
@@ -256,6 +271,20 @@ exitLoop:
                 'unhide users' selected range
                 selectedRng.EntireRow.Hidden = False
                 selectedRng.EntireColumn.Hidden = False
+
+                'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+                'hide those rows
+                For i = 0 To hidden_Row_No.Count - 1
+                    worksheet.Rows(hidden_Row_No(i)).hidden = True
+                Next
+
+                'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+                'hide those columns
+                For i = 0 To hidden_Col_No.Count - 1
+                    worksheet.Columns(hidden_Col_No(i)).hidden = True
+                Next
+
+
                 selectedRng = worksheet.Range(worksheet.Cells(i, selectedRng.Column), selectedRng.Cells(1, 1).offset(selectedRng.Rows.Count - 1, selectedRng.Columns.Count - 1))
                 selectedRng.Select()
 
@@ -268,6 +297,21 @@ exitLoop:
                 'unhide users' selected range
                 selectedRng.EntireRow.Hidden = False
                 selectedRng.EntireColumn.Hidden = False
+
+
+                'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+                'hide those rows
+                For i = 0 To hidden_Row_No.Count - 1
+                    worksheet.Rows(hidden_Row_No(i)).hidden = True
+                Next
+
+                'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+                'hide those columns
+                For i = 0 To hidden_Col_No.Count - 1
+                    worksheet.Columns(hidden_Col_No(i)).hidden = True
+                Next
+
+
                 selectedRng.Select()
 
             End If
