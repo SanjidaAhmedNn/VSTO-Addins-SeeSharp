@@ -376,6 +376,28 @@ break:
             Next
             Dim visibleRange As Excel.Range = worksheet.Range(worksheet.Cells(minRow, minCol), worksheet.Cells(maxRow, maxCol))
 
+            Dim hidden_Row_No As New List(Of Integer)
+            Dim hidden_Col_No As New List(Of Integer)
+
+            'loop through each range that user have selected
+            'store the hidden row and column numbers of the selected ranges in 2 lists that decalred above
+            For k = 0 To UBound(arrRng)
+
+                'store the row numbers in a list, if a row of the selected range is hidden
+                For i = 1 To worksheet.Range(arrRng(k)).Rows.Count
+                    If worksheet.Range(arrRng(k)).Cells(i, 1).entirerow.hidden = True Then
+                        hidden_Row_No.Add(worksheet.Range(arrRng(k)).Cells(i, 1).row)
+                    End If
+                Next
+
+                'store the column numbers in a list, if a column of the selected range is hidden
+                For j = 1 To worksheet.Range(arrRng(k)).Columns.Count
+                    If worksheet.Range(arrRng(k)).Cells(1, j).entirecolumn.hidden = True Then
+                        hidden_Col_No.Add(worksheet.Range(arrRng(k)).Cells(1, j).column)
+                    End If
+                Next
+            Next
+
 
             'declare a booolean variable named "flag" with Fasle value
             'if the number of rows and the row number of 1st row of each range is same then flag will be True
@@ -424,6 +446,18 @@ exitLoop:
                         worksheet.Range(arrRng(k)).EntireColumn.Hidden = False
                     Next
 
+                    'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+                    'hide those rows
+                    For i = 0 To hidden_Row_No.Count - 1
+                        worksheet.Rows(hidden_Row_No(i)).hidden = True
+                    Next
+
+                    'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+                    'hide those columns
+                    For i = 0 To hidden_Col_No.Count - 1
+                        worksheet.Columns(hidden_Col_No(i)).hidden = True
+                    Next
+
                     selectedRng = worksheet.Range(worksheet.Cells(i, minCol), worksheet.Cells(maxRow, maxCol))
                     selectedRng.Select()
 
@@ -437,6 +471,20 @@ exitLoop:
                         worksheet.Range(arrRng(k)).EntireRow.Hidden = False
                         worksheet.Range(arrRng(k)).EntireColumn.Hidden = False
                     Next
+
+
+                    'loop through each element of the hidden_Row_No list, and fetch the row numbers that were hidden in the selected range
+                    'hide those rows
+                    For i = 0 To hidden_Row_No.Count - 1
+                        worksheet.Rows(hidden_Row_No(i)).hidden = True
+                    Next
+
+                    'loop through each element of the hidden_Col_No list, and fetch the column numbers that were hidden in the selected range
+                    'hide those columns
+                    For i = 0 To hidden_Col_No.Count - 1
+                        worksheet.Columns(hidden_Col_No(i)).hidden = True
+                    Next
+
 
                     visibleRange.Select()
 

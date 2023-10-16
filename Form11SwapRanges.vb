@@ -22,9 +22,10 @@ Public Class Form11SwapRanges
     Dim selectedRange As Excel.Range
     Dim firstRngRows, firstRngCols As Integer
     Dim tempRng As Excel.Range
-    Dim rng1_Address, rng2_Address As String
+    Dim rng1_Address, rng2_Address, initialWsName As String
     Dim changeState As Boolean = False
     Dim txtChanged As Boolean = False
+
 
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
@@ -49,6 +50,8 @@ Public Class Form11SwapRanges
         txtSourceRange1.Text = selectedRng.Address
         txtSourceRange1.Focus()
 
+        initialWsName = worksheet.Name
+
         radBtnValues.Checked = True
 
         Me.KeyPreview = True
@@ -66,7 +69,6 @@ Public Class Form11SwapRanges
             worksheet = workbook.ActiveSheet
 
 
-            'MsgBox(txtSourceRange1.Text)
             txtChanged = True
             firstInputRng = worksheet.Range(txtSourceRange1.Text)
 
@@ -80,15 +82,9 @@ Public Class Form11SwapRanges
             firstRngCols = worksheet.Range(txtSourceRange1.Text).Columns.Count
 
 
-            If changeState = True Then
+            If firstInputRng.Worksheet.Name <> initialWsName Then
 
-
-                If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
-
-                    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
-
-                End If
-
+                txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
 
             End If
 
@@ -116,16 +112,15 @@ Public Class Form11SwapRanges
 
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
 
-
-
             secondInputRng.Select()
 
 
-            If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+            If secondInputRng.Worksheet.Name <> initialWsName Then
 
                 txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
 
             End If
+
 
 
         Catch ex As Exception
@@ -154,10 +149,11 @@ Public Class Form11SwapRanges
 
 
 
-            'firstInputRng.Worksheet.Activate()
+            firstInputRng.Worksheet.Activate()
 
 
-            txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
+            'txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
+            txtSourceRange1.Text = firstInputRng.Address
 
             firstInputRng.Select()
 
@@ -187,7 +183,7 @@ Public Class Form11SwapRanges
             secondInputRng = excelApp.InputBox("Please Select the Second Range", "Second Range Selection", selectedRange.Address, Type:=8)
             Me.Show()
 
-
+            secondInputRng.Worksheet.Activate()
 
 
             txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
@@ -535,6 +531,9 @@ Public Class Form11SwapRanges
 
         End Try
 
+
+
+
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -543,8 +542,9 @@ Public Class Form11SwapRanges
 
     End Sub
     Public Function IsValidRng(input As String) As Boolean
+        '"^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
 
-        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Dim pattern As String = "^(.*!)?(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
         Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
 
     End Function

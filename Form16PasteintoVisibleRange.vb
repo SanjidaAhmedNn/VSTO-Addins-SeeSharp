@@ -17,9 +17,10 @@ Public Class Form16PasteintoVisibleRange
     Dim FocusedTxtBox As Integer
     Dim selectedRange As Excel.Range
     Dim sourceRange, destRange As Excel.Range
-    Dim WsName As String
+    Dim WsName, initialWsName As String
     Dim changeState As Boolean = False
     Dim txtChanged As Boolean = False
+
 
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
@@ -48,6 +49,9 @@ Public Class Form16PasteintoVisibleRange
         txtSourceRange.Text = selectedRng.Address
         txtSourceRange.Focus()
 
+
+        initialWsName = worksheet.Name
+
         Me.KeyPreview = True
 
     End Sub
@@ -63,25 +67,17 @@ Public Class Form16PasteintoVisibleRange
 
             'MsgBox(txtSourceRange1.Text)
             txtChanged = True
+
             sourceRange = worksheet.Range(txtSourceRange.Text)
+
+            If sourceRange.Worksheet.Name <> initialWsName Then
+
+                txtSourceRange.Text = sourceRange.Worksheet.Name & "!" & sourceRange.Address
+
+            End If
 
 
             sourceRange.Select()
-
-
-
-
-            'If changeState = True Then
-
-
-            '    If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
-
-            '        txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
-
-            '    End If
-
-
-            'End If
 
 
 
@@ -107,13 +103,9 @@ Public Class Form16PasteintoVisibleRange
             txtChanged = True
             destRange = worksheet.Range(txtDestRange.Text)
 
-
-
-
             destRange.Select()
 
-
-            If destRange.Worksheet.Name <> sourceRange.Worksheet.Name Then
+            If destRange.Worksheet.Name <> initialWsName Then
 
                 txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
 
@@ -183,7 +175,7 @@ Public Class Form16PasteintoVisibleRange
             destRange.Worksheet.Activate()
 
             'txtDestRange.Text = destRange.Address
-            txtDestRange.Text = destRange.Worksheet.Name & "!" & destRange.Address
+            txtDestRange.Text = destRange.Address
 
             destRange.Select()
             txtDestRange.Focus()
@@ -254,9 +246,8 @@ Public Class Form16PasteintoVisibleRange
             selectedRange = excelApp.Selection
             selectedRange.Select()
 
-
+            'checks if the text is changed in ano of the textboxes
             If txtChanged = False Then
-
 
                 If FocusedTxtBox = 1 Then
                     txtSourceRange.Text = selectedRange.Address
@@ -406,7 +397,7 @@ Public Class Form16PasteintoVisibleRange
         workbook = excelApp.ActiveWorkbook
         worksheet = workbook.ActiveSheet
         WsName = worksheet.Name
-        destRange = worksheet.Range(txtDestRange.Text).Cells(1, 1)
+        destRange = destRange.Cells(1, 1)
 
 
         If CB_copyWs.Checked = True Then

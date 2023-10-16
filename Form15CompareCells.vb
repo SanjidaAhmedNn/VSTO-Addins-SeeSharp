@@ -22,7 +22,7 @@ Public Class Form15CompareCells
     Dim firstRngRows, firstRngCols As Integer
     Dim colorPick As DialogResult
     Dim count As Integer
-    Dim rng1CellValue, rng2CellValue, WsName, coloredRng, rngKeyBoard, output As String
+    Dim rng1CellValue, rng2CellValue, WsName, coloredRng, rngKeyBoard, output, initialWsName As String
     Dim changeState As Boolean = False
     Dim txtChanged As Boolean = False
 
@@ -68,22 +68,29 @@ Public Class Form15CompareCells
 
 
 
+            If firstInputRng.Worksheet.Name <> initialWsName Then
 
-            If changeState = True Then
-
-
-                If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
-
-                    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
-                    '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
-                    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-                    'Else
-                    '    txtSourceRange2.Text = secondInputRng.Address
-                    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-                End If
+                txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
 
 
             End If
+
+
+
+
+            'If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+
+            '    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+            '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+            '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+            'Else
+            '    txtSourceRange2.Text = secondInputRng.Address
+            '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+            'End If
+
+
+
+
 
 
 
@@ -125,16 +132,24 @@ Public Class Form15CompareCells
 
 
 
-            If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+            If secondInputRng.Worksheet.Name <> initialWsName Then
 
                 txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
-                '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
-                '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
-                'Else
-                '    txtSourceRange2.Text = secondInputRng.Address
-                '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+
 
             End If
+
+
+            'If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
+
+            '    txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+            '    '    secondInputRng = worksheet.Range(Microsoft.VisualBasic.Right(txtSourceRange2.Text, Len(txtSourceRange2.Text) - txtSourceRange2.Text.IndexOf("!") - 1))
+            '    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+            '    'Else
+            '    '    txtSourceRange2.Text = secondInputRng.Address
+            '    '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
+
+            'End If
 
 
 
@@ -169,6 +184,7 @@ Public Class Form15CompareCells
 
         radBtnSameValues.Checked = True
 
+        initialWsName = worksheet.Name
 
         Me.KeyPreview = True
 
@@ -192,10 +208,10 @@ Public Class Form15CompareCells
 
 
 
-            'firstInputRng.Worksheet.Activate()
+            firstInputRng.Worksheet.Activate()
 
 
-            txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
+            txtSourceRange1.Text = firstInputRng.Address
 
             firstInputRng.Select()
 
@@ -226,10 +242,10 @@ Public Class Form15CompareCells
             secondInputRng = excelApp.InputBox("Please Select the Second Range", "Second Range Selection", selectedRange.Address, Type:=8)
             Me.Show()
 
+            secondInputRng.Worksheet.Activate()
 
 
-
-            txtSourceRange2.Text = secondInputRng.Worksheet.Name & "!" & secondInputRng.Address
+            txtSourceRange2.Text = secondInputRng.Address
 
             secondInputRng.Select()
             txtSourceRange2.Focus()
@@ -557,31 +573,12 @@ Public Class Form15CompareCells
 
 
                 If FocusedTxtBox = 1 Then
-
                     txtSourceRange1.Text = selectedRange.Address
-
-                    'Call Display()
-                    'worksheet = workbook.ActiveSheet
-                    'firstInputRng = selectedRange
-                    'firstInputRng.Select()
-                    'firstInputRng = worksheet.Range(selectedRange.Address)
-
                     txtSourceRange1.Focus()
 
                 ElseIf FocusedTxtBox = 2 Then
                     txtSourceRange2.Text = selectedRange.Address
-
-                    'Call Display()
-                    'worksheet = workbook.ActiveSheet
-                    ''secondInputRng = selectedRange
-                    'secondInputRng = worksheet.Range(txtSourceRange2.Text)
-
-                    'txtSourceRange2.Focus()
-
-
                 End If
-
-
 
             End If
 
@@ -598,8 +595,11 @@ Public Class Form15CompareCells
         Me.Dispose()
     End Sub
     Public Function IsValidRng(input As String) As Boolean
-        Dim pattern As String = "^\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?$"
+        '"^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+
+        Dim pattern As String = "^(.*!)?(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
         Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
+
     End Function
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
@@ -1422,6 +1422,8 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
+                                        'label.BackColor = Color.Transparent
+                                        'label.ForeColor = CbFillFont.BackColor
                                         label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
 
@@ -1541,11 +1543,21 @@ secondDisplay:
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
 
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
 
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    CP_Output_Range.Controls.Add(label)
+
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -1635,11 +1647,21 @@ secondDisplay:
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
 
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
 
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                    CP_Output_Range.Controls.Add(label)
+
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -1729,13 +1751,23 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
+
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
 
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
 
+                                    CP_Output_Range.Controls.Add(label)
 
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -1745,6 +1777,8 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
+                                        'label.BackColor = Color.Transparent
+                                        'label.ForeColor = CbFillFont.BackColor
                                         label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
 
@@ -1825,38 +1859,51 @@ secondDisplay:
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
 
-
-                                Dim label As New System.Windows.Forms.Label
-                                label.Text = displayRng.Cells(i, j).Value
-                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-                                'label.BackColor = Color.Transparent
-                                'label.ForeColor = Nothing
-                                If checkBoxFormatting.Checked = True Then
-
-                                    'background fill color
-                                    lblColor = displayRng.Cells(i, j).Interior.Color
-                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                    label.BackColor = rgbColor
-
-                                    'font color
-                                    lblColor = displayRng.Cells(i, j).Font.Color
-                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                    label.ForeColor = rgbColor
-
-                                Else
-                                    label.BackColor = Color.Transparent
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
                                     label.ForeColor = Nothing
 
+                                    CP_Output_Range.Controls.Add(label)
+                                Else
+
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    'label.BackColor = Color.Transparent
+                                    'label.ForeColor = Nothing
+                                    If checkBoxFormatting.Checked = True Then
+
+                                        'background fill color
+                                        lblColor = displayRng.Cells(i, j).Interior.Color
+                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                        label.BackColor = rgbColor
+
+                                        'font color
+                                        lblColor = displayRng.Cells(i, j).Font.Color
+                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                        label.ForeColor = rgbColor
+
+                                    Else
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                    End If
+
+                                    CP_Output_Range.Controls.Add(label)
+
                                 End If
 
-                                CP_Output_Range.Controls.Add(label)
                             Next
                         Next
 
@@ -2130,10 +2177,23 @@ secondDisplay:
                             For j = 1 To displayRng.Columns.Count
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
+
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -2204,10 +2264,23 @@ secondDisplay:
                             For j = 1 To displayRng.Columns.Count
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
+
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -2269,6 +2342,7 @@ secondDisplay:
                                     CP_Output_Range.Controls.Add(label)
 
                                 End If
+
                             Next
                         Next
 
@@ -2278,10 +2352,22 @@ secondDisplay:
                             For j = 1 To displayRng.Columns.Count
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
+
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
-                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
+                                    label.ForeColor = Nothing
+
+                                    CP_Output_Range.Controls.Add(label)
+
+                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -2352,39 +2438,55 @@ secondDisplay:
                             For j = 1 To displayRng.Columns.Count
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
+
                                 If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-                                    Exit Sub
-                                End If
 
-                                Dim label As New System.Windows.Forms.Label
-                                label.Text = displayRng.Cells(i, j).Value
-                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-
-                                If checkBoxFormatting.Checked = True Then
-
-                                    'background fill color
-                                    lblColor = displayRng.Cells(i, j).Interior.Color
-                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                    label.BackColor = rgbColor
-
-                                    'font color
-                                    lblColor = displayRng.Cells(i, j).Font.Color
-                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                    label.ForeColor = rgbColor
-
-                                Else
-                                    label.BackColor = Color.Transparent
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+                                    label.BackColor = CBFillBackground.BackColor
                                     label.ForeColor = Nothing
 
+                                    CP_Output_Range.Controls.Add(label)
+
+                                Else
+
+
+                                    Dim label As New System.Windows.Forms.Label
+                                    label.Text = displayRng.Cells(i, j).Value
+                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                    label.Height = height
+                                    label.Width = width
+                                    label.BorderStyle = BorderStyle.FixedSingle
+                                    label.TextAlign = ContentAlignment.MiddleCenter
+
+
+                                    If checkBoxFormatting.Checked = True Then
+
+                                        'background fill color
+                                        lblColor = displayRng.Cells(i, j).Interior.Color
+                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                        label.BackColor = rgbColor
+
+                                        'font color
+                                        lblColor = displayRng.Cells(i, j).Font.Color
+                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                        label.ForeColor = rgbColor
+
+                                    Else
+                                        label.BackColor = Color.Transparent
+                                        label.ForeColor = Nothing
+
+                                    End If
+
+
+                                    CP_Output_Range.Controls.Add(label)
                                 End If
 
-
-                                CP_Output_Range.Controls.Add(label)
 
 
                             Next
