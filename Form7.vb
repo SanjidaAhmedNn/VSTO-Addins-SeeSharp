@@ -1262,7 +1262,7 @@ Public Class Form7
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
         Try
-
+            TextBoxChanged = True
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
@@ -2798,7 +2798,7 @@ Public Class Form7
                 MessageBox.Show("Select One Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
             End If
-
+            TextBoxChanged = False
         Catch ex As Exception
 
         End Try
