@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Runtime.InteropServices
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
@@ -17,7 +18,7 @@ Public Class Form32_ExtendDropDownList
     Public firstRow As Excel.Range
 
     Dim opened As Integer
-
+    Public focuschange As Boolean
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
     Private Const SWP_NOMOVE As UInteger = &H2
@@ -138,29 +139,30 @@ Public Class Form32_ExtendDropDownList
         Try
 
             excelApp = Globals.ThisAddIn.Application
+            If focuschange = False Then
 
-            If Me.ActiveControl Is TB_des_rng Then
-                'des_rng = selectionRange1
-                ' This will run on the Excel thread, so you need to use Invoke to update the UI
-                'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
-                Me.Activate()
-                Me.BeginInvoke(New System.Action(Sub()
-                                                     TB_des_rng.Text = des_rng.Address
-                                                     SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                                 End Sub))
+                If Me.ActiveControl Is TB_des_rng Then
+                    des_rng = selectionRange1
+                    ' This will run on the Excel thread, so you need to use Invoke to update the UI
+                    'Me.BeginInvoke(New System.Action(Sub() TB_dest_range.Text = selectionRange1.Address))
+                    Me.Activate()
+                    Me.BeginInvoke(New System.Action(Sub()
+                                                         TB_des_rng.Text = des_rng.Address
+                                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                                     End Sub))
 
-            ElseIf Me.ActiveControl Is TB_src_rng Then
-                'src_rng = selectionRange1
-                Me.Activate()
+                ElseIf Me.ActiveControl Is TB_src_rng Then
+                    src_rng = selectionRange1
+                    Me.Activate()
 
 
-                Me.BeginInvoke(New System.Action(Sub()
-                                                     TB_src_rng.Text = src_rng.Address
-                                                     SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                                 End Sub))
+                    Me.BeginInvoke(New System.Action(Sub()
+                                                         TB_src_rng.Text = src_rng.Address
+                                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                                     End Sub))
+                End If
+
             End If
-
-
 
         Catch ex As Exception
 
@@ -169,12 +171,59 @@ Public Class Form32_ExtendDropDownList
     End Sub
 
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
-        For i As Integer = 1 To des_rng.Rows.Count
-            'MsgBox(firstRow.Address)
-            'MsgBox(des_rng.Address)
-            src_rng.Rows(1).Copy(des_rng.Rows(i))
-        Next
-        Me.Close()
+        If TB_src_rng.Text = "" And TB_des_rng.Text = "" Then
+            MessageBox.Show("Please, Select updated source range and destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf TB_src_rng.Text = "" Then
+            MessageBox.Show("Please, Select updated source range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
+            MessageBox.Show("Select a valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+
+
+        ElseIf TB_des_rng.Text = "" Then
+            MessageBox.Show("Please, Select destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+        ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False Then
+            MessageBox.Show("Select a valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf excelApp.Intersect(src_rng, des_rng) Is Nothing Then
+            MessageBox.Show(" These two ranges must intersect each other.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+
+        Else
+            Try
+                For i As Integer = 1 To des_rng.Rows.Count
+
+                    src_rng.Rows(1).Copy(des_rng.Rows(i))
+                Next
+
+                Me.Refresh()
+                Me.Close()
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 
     Private Sub Btn_Cancel_Click(sender As Object, e As EventArgs) Handles Btn_Cancel.Click
@@ -197,5 +246,66 @@ Public Class Form32_ExtendDropDownList
                                              TB_src_rng.Text = src_rng.Address
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
+    End Sub
+
+    Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
+        Try
+            If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                TB_des_rng.Text = TB_des_rng.Text.ToUpper
+                des_rng = excelApp.Range(TB_des_rng.Text)
+                des_rng.Select()
+                Dim range As Excel.Range = des_rng
+
+
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_des_rng.SelectionStart = TB_des_rng.Text.Length
+                focuschange = False
+
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Function IsValidExcelCellReference(cellReference As String) As Boolean
+
+        ' Regular expression pattern for a cell reference.
+        ' This pattern will match references like A1, $A$1, etc.
+        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+
+        ' Regular expression pattern for an Excel reference.
+        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+
+        ' Create a regex object with the pattern.
+        Dim regex As New Regex(referencePattern)
+
+        ' Test the input string against the regex pattern.
+        Return regex.IsMatch(cellReference.ToUpper)
+
+    End Function
+
+    Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
+        If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text.ToUpper) = True Then
+            focuschange = True
+
+            ' Define the range of cells to read (for example, cells A1 to A10)
+            src_rng = excelApp.Range(TB_src_rng.Text)
+            src_rng.Select()
+            Dim range As Excel.Range = src_rng
+
+
+            Me.Activate()
+            'TB_src_range.Focus()
+            TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+            focuschange = False
+
+        End If
     End Sub
 End Class

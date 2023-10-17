@@ -167,6 +167,11 @@ Public Class Form29_Simple_Drop_down_List
             '  TB_src_range.Focus()
             'Me.Close()
             ' Exit Sub
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_range.Focus()
+
+            Exit Sub
         Else
             Dim stringItems As New List(Of String)()
 
@@ -633,18 +638,16 @@ Public Class Form29_Simple_Drop_down_List
 
         ' Regular expression pattern for an Excel reference.
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
-
+        Return regex.IsMatch(cellReference.ToUpper)
 
     End Function
 

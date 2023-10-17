@@ -201,25 +201,63 @@ Public Class Form31_UpdateDynamicDropdownList
 
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
 
-        Try
-            Dim result As DialogResult = MessageBox.Show("The Original Source Range is :" & Variable1 & ". AND the Drop-down list is in :" & Variable2 & "Do you want to continue?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If TB_src_rng.Text = "" And TB_des_rng2.Text = "" And TB_des_rng2.Enabled = True Then
+            MessageBox.Show("Please, Select updated source range and destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
 
-            ' Check if the user clicked 'Yes'
-            If result = DialogResult.Yes Then
+        ElseIf TB_src_rng.Text = "" Then
+            MessageBox.Show("Please, Select updated source range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
 
-                Variable1 = TB_src_rng.Text
-                'For Each cell In des_rng
-                '    cell.Validation.Delete()
-                'Next
-                'Btn_OK.PerformClick()
+        ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
+            MessageBox.Show("Select a valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
 
-                OutPut()
-                'Variable1 = TB_src_rng.Text
 
-            End If
-        Catch ex As Exception
-            des_rng.Select()
-        End Try
+
+        ElseIf TB_des_rng2.Enabled = True And TB_des_rng2.Text = "" Then
+            MessageBox.Show("Please, Select destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+        ElseIf TB_des_rng2.Enabled = True And IsValidExcelCellReference(TB_des_rng2.Text) = False Then
+            MessageBox.Show("Select a valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf RB_diff_rng.Checked = False And RB_same_source.Checked = False Then
+            MessageBox.Show("Select Destination Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng2.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+
+        Else
+            Try
+                Dim result As DialogResult = MessageBox.Show("The Original Source Range is :" & Variable1 & ". AND the Drop-down list is in :" & Variable2 & "Do you want to continue?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+                ' Check if the user clicked 'Yes'
+                If result = DialogResult.Yes Then
+
+                    Variable1 = TB_src_rng.Text
+
+                    OutPut()
+
+                End If
+            Catch ex As Exception
+                des_rng.Select()
+            End Try
+        End If
 
     End Sub
 
@@ -276,28 +314,44 @@ Public Class Form31_UpdateDynamicDropdownList
         Try
             Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
             Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
-            'MsgBox(src_rng.Address)
-            ' MsgBox(des_rng.Address)
 
-            If TB_src_rng.Text = "" Then
-                MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_src_rng.Focus()
-                'Me.Close()
-                Exit Sub
-                'End If
 
-            ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
-                MessageBox.Show("Select a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_src_rng.Focus()
-                'Me.Close()
-                Exit Sub
-            ElseIf RB_diff_rng.Checked = False And RB_same_source.Checked = False Then
-                MessageBox.Show("Select Destination Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_des_rng2.Focus()
-                'Me.Close()
-                Exit Sub
+            Dim rng As Excel.Range
+                If Header = True Then
+                    'Dim adjustRange As Excel.Range
+                    rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
 
-            Else
+                Else
+
+                    rng = src_rng 'Assuming you have a range from A1 to A100
+                End If
+                'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
+                'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
+
+                Dim uniqueValues As New List(Of String)
+
+                'Extract unique values from the range
+                For Each cell As Excel.Range In rng.Columns(1).Cells
+                    Dim value As String = cell.Value
+                    If Not uniqueValues.Contains(value) Then
+                        uniqueValues.Add(value)
+                    End If
+                Next
+
+                If Ascending = True Then
+                    'Sort the list in ascending order
+                    uniqueValues.Sort()
+                ElseIf Descending = True Then
+                    'Sort the list in ascending order
+                    uniqueValues.Sort()
+                    uniqueValues.Reverse()
+                End If
+
+                'Create drop-down list at B1 with the unique values
+                Dim dropDownRange As Excel.Range = des_rng.Columns(1)
+                Dim validation As Excel.Validation = dropDownRange.Validation
+                validation.Delete() 'Remove any existing validation
+                validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
                 Dim range1 As Excel.Range = excelApp.Range(Variable2)
                 If RB_diff_rng.Checked = True And range1.Address(1, 1) <> des_rng.Address(1, 1) Then
 
@@ -311,8 +365,7 @@ Public Class Form31_UpdateDynamicDropdownList
                 des_rng.Select()
 
 
-                Me.Close()
-            End If
+            Me.Close()
         Catch ex As Exception
             Me.Close()
         End Try
@@ -327,18 +380,16 @@ Public Class Form31_UpdateDynamicDropdownList
 
         ' Regular expression pattern for an Excel reference.
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
-
+        Return regex.IsMatch(cellReference.ToUpper)
 
     End Function
 
@@ -458,6 +509,7 @@ Public Class Form31_UpdateDynamicDropdownList
             focuschange = True
 
             ' Define the range of cells to read (for example, cells A1 to A10)
+            TB_src_rng.Text = TB_src_rng.Text.ToUpper
             src_rng = excelApp.Range(TB_src_rng.Text)
             src_rng.Select()
             Dim range As Excel.Range = src_rng
@@ -476,8 +528,9 @@ Public Class Form31_UpdateDynamicDropdownList
             focuschange = True
 
             ' Define the range of cells to read (for example, cells A1 to A10)
-            TB_des_rng2 = excelApp.Range(TB_des_rng2.Text)
-            src_rng.Select()
+            TB_des_rng2.Text = TB_des_rng2.Text.ToUpper
+            des_rng = excelApp.Range(TB_des_rng2.Text)
+            des_rng.Select()
             Dim range As Excel.Range = des_rng
 
 
@@ -506,4 +559,6 @@ Public Class Form31_UpdateDynamicDropdownList
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
     End Sub
+
+
 End Class

@@ -7,6 +7,7 @@ Imports Microsoft.Office.Interop
 
 Imports Microsoft.Office.Interop.Excel
 Imports System.Data
+Imports System.Text.RegularExpressions
 
 Public Class Form41_RemoveAdavancedDropdownList
 
@@ -24,9 +25,11 @@ Public Class Form41_RemoveAdavancedDropdownList
     Dim srcRng3 As String
 
     Dim form As Form36 = Nothing
+    Public focuschange As Boolean
 
     Dim src_rng As Excel.Range
     Dim frm1 As Form35Multi_SelectionbasedDropdown = Nothing
+    Dim selectedRange As Excel.Range
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
     Private Const SWP_NOMOVE As UInteger = &H2
@@ -57,6 +60,10 @@ Public Class Form41_RemoveAdavancedDropdownList
             TB_src_rng.Focus()
             'Me.Close()
             Exit Sub
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
 
         Else
 
@@ -547,10 +554,75 @@ Public Class Form41_RemoveAdavancedDropdownList
             TB_src_rng.Enabled = False
             Selection_source.Enabled = False
         End If
+
+        If excelApp.Selection IsNot Nothing Then
+            selectedRange = excelApp.Selection
+            src_rng = selectedRange
+            TB_src_rng.Text = selectedRange.Address
+            TB_src_rng.Focus()
+            TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+            'MsgBox(TB_src_rng.Text.Length)
+        End If
+
+
+        TB_src_rng.Focus()
+    End Sub
+
+    Private Sub excelApp_SheetSelectionChange(ByVal Sh As Object, ByVal selectionRange1 As Excel.Range) Handles excelApp.SheetSelectionChange
+        Try
+
+            excelApp = Globals.ThisAddIn.Application
+            If focuschange = False Then
+
+
+                If Me.ActiveControl Is TB_src_rng Then
+                    src_rng = selectionRange1
+                    Me.Activate()
+
+
+                    Me.BeginInvoke(New System.Action(Sub()
+                                                         TB_src_rng.Text = src_rng.Address
+                                                         SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                                     End Sub))
+                    'TB_src_rng.Focus()
+
+                    'TB_src_rng.Focus()
+                End If
+
+
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
     Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
+        Try
+            ' TB_src_rng.Focus()
 
+
+            If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                src_rng = excelApp.Range(TB_src_rng.Text)
+                src_rng.Select()
+                Dim range As Excel.Range = src_rng
+
+                Me.Activate()
+                TB_src_rng.Focus()
+                'TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+                TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+                focuschange = False
+
+            End If
+
+        Catch ex As Exception
+            TB_src_rng.Focus()
+        End Try
     End Sub
 
     Private Sub Form41_RemoveAdavancedDropdownList_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -558,6 +630,27 @@ Public Class Form41_RemoveAdavancedDropdownList
             Btn_OK.PerformClick()
         End If
     End Sub
+
+    Private Function IsValidExcelCellReference(cellReference As String) As Boolean
+
+        ' Regular expression pattern for a cell reference.
+        ' This pattern will match references like A1, $A$1, etc.
+        Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
+
+        ' Regular expression pattern for an Excel reference.
+        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+
+        ' Create a regex object with the pattern.
+        Dim regex As New Regex(referencePattern)
+
+        ' Test the input string against the regex pattern.
+        Return regex.IsMatch(cellReference.ToUpper)
+
+    End Function
 
     Private Sub Form41_RemoveAdavancedDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         form_flag = False
@@ -573,6 +666,7 @@ Public Class Form41_RemoveAdavancedDropdownList
         Me.Focus()
         Me.BringToFront()
         Me.Activate()
+
         Me.BeginInvoke(New System.Action(Sub()
                                              TB_src_rng.Text = src_rng.Address
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)

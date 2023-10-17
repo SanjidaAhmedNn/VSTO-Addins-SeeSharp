@@ -160,136 +160,150 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             'Me.Close()
             Exit Sub
             ' End If
+        ElseIf RB_Dropdown_35_Labels.Checked = True And src_rng.Columns.Count > 5 Then
+            MessageBox.Show("You can maximum select 5 columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            src_rng.Select()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_range.Focus()
 
 
-            'MsgBox(src_rng.Rows.Count)
         Else
+            Try
+                If RB_Dropdown_35_Labels.Checked = True Then
+                    Dim rng As Excel.Range
+                    If CB_header.Checked = True Then
+                        'Dim adjustRange As Excel.Range
+                        rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
 
-            If RB_Dropdown_35_Labels.Checked = True Then
-                Dim rng As Excel.Range
-                If CB_header.Checked = True Then
-                    'Dim adjustRange As Excel.Range
-                    rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
+                    Else
 
-                Else
+                        rng = src_rng 'Assuming you have a range from A1 to A100
+                    End If
+                    'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
+                    'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
 
-                    rng = src_rng 'Assuming you have a range from A1 to A100
+                    Dim uniqueValues As New List(Of String)
+
+                    'Extract unique values from the range
+                    For Each cell As Excel.Range In rng.Columns(1).Cells
+                        Dim value As String = cell.Value
+                        If Not uniqueValues.Contains(value) Then
+                            uniqueValues.Add(value)
+                        End If
+                    Next
+
+                    If CB_ascending.Checked = True Then
+                        'Sort the list in ascending order
+                        uniqueValues.Sort()
+                    ElseIf CB_descending.Checked = True Then
+                        'Sort the list in ascending order
+                        uniqueValues.Sort()
+                        uniqueValues.Reverse()
+                    End If
+
+                    'Create drop-down list at B1 with the unique values
+                    Dim dropDownRange As Excel.Range = des_rng.Columns(1)
+                    Dim validation As Excel.Validation = dropDownRange.Validation
+                    validation.Delete() 'Remove any existing validation
+                    validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
+
+
+                    'MsgBox(i)
+
+                    AddHandler worksheet.Change, AddressOf worksheet1_Change
+
+                ElseIf RB_Dropdown_2_Labels.Checked = True Then
+                    ' Extract headers from A1:C1
+                    Dim headersRange As Excel.Range = src_rng.Rows(1)
+                    Dim headers As List(Of String) = New List(Of String)
+                    ' Dim workbook As excelapp.workbook
+
+                    For Each cell As Excel.Range In headersRange.Cells
+                        headers.Add(cell.Value.ToString())
+                    Next
+                    'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+                    'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+                    ' Create the dropdown list with headers in cell E1
+                    'CreateValidationList(excelApp.ActiveSheet.Range("$E$1"), String.Join(",", headers))
+                    'Create drop-down list at B1 with the unique values
+                    Dim dropDownRange As Excel.Range = des_rng(1, 1)
+                    Dim validation As Excel.Validation = dropDownRange.Validation
+                    validation.Delete() 'Remove any existing validation
+                    validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", headers))
+
+                    ' Add event handler to listen for changes in E1
+
+                    AddHandler worksheet.Change, AddressOf worksheet1_Change
                 End If
-                'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
-                'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
 
-                Dim uniqueValues As New List(Of String)
+                If CB_text.Checked = True Then
+                    des_rng.NumberFormat = "@"
+                End If
 
-                'Extract unique values from the range
-                For Each cell As Excel.Range In rng.Columns(1).Cells
-                    Dim value As String = cell.Value
-                    If Not uniqueValues.Contains(value) Then
-                        uniqueValues.Add(value)
+                Variable1 = TB_src_range.Text
+                Variable2 = TB_dest_range.Text
+                Header = CB_header.Checked
+                Ascending = CB_ascending.Checked
+                Descending = CB_descending.Checked
+                TextConvert = CB_text.Checked
+                ' MsgBox(CB_header.Checked)
+
+
+
+                Dim targetWorksheet As Excel.Worksheet = Nothing
+                For Each ws As Excel.Worksheet In excelApp.Worksheets
+                    If ws.Name = "MySpecialSheet" Then
+                        targetWorksheet = ws
+                        Exit For
                     End If
                 Next
 
-                If CB_ascending.Checked = True Then
-                    'Sort the list in ascending order
-                    uniqueValues.Sort()
-                ElseIf CB_descending.Checked = True Then
-                    'Sort the list in ascending order
-                    uniqueValues.Sort()
-                    uniqueValues.Reverse()
+                ' If "MySpecialSheet" does not exist, add it
+                If targetWorksheet Is Nothing Then
+                    targetWorksheet = CType(excelApp.Worksheets.Add(After:=excelApp.Worksheets(excelApp.Worksheets.Count)), Excel.Worksheet)
+                    targetWorksheet.Name = "MySpecialSheet"
                 End If
 
-                'Create drop-down list at B1 with the unique values
-                Dim dropDownRange As Excel.Range = des_rng.Columns(1)
-                Dim validation As Excel.Validation = dropDownRange.Validation
-                validation.Delete() 'Remove any existing validation
-                validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
+                If RB_Dropdown_2_Labels.Checked = True Then
+                    OptionType = False
+                Else
+                    OptionType = True
 
-
-                'MsgBox(i)
-
-                AddHandler worksheet.Change, AddressOf worksheet1_Change
-
-            ElseIf RB_Dropdown_2_Labels.Checked = True Then
-                ' Extract headers from A1:C1
-                Dim headersRange As Excel.Range = src_rng.Rows(1)
-                Dim headers As List(Of String) = New List(Of String)
-                ' Dim workbook As excelapp.workbook
-
-                For Each cell As Excel.Range In headersRange.Cells
-                    headers.Add(cell.Value.ToString())
-                Next
-                'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-                'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
-                ' Create the dropdown list with headers in cell E1
-                'CreateValidationList(excelApp.ActiveSheet.Range("$E$1"), String.Join(",", headers))
-                'Create drop-down list at B1 with the unique values
-                Dim dropDownRange As Excel.Range = des_rng(1, 1)
-                Dim validation As Excel.Validation = dropDownRange.Validation
-                validation.Delete() 'Remove any existing validation
-                validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", headers))
-
-                ' Add event handler to listen for changes in E1
-
-                AddHandler worksheet.Change, AddressOf worksheet1_Change
-            End If
-
-            If CB_text.Checked = True Then
-                des_rng.NumberFormat = "@"
-            End If
-
-            Variable1 = TB_src_range.Text
-            Variable2 = TB_dest_range.Text
-            Header = CB_header.Checked
-            Ascending = CB_ascending.Checked
-            Descending = CB_descending.Checked
-            TextConvert = CB_text.Checked
-            ' MsgBox(CB_header.Checked)
-
-            Me.Close()
-
-            Dim targetWorksheet As Excel.Worksheet = Nothing
-            For Each ws As Excel.Worksheet In excelApp.Worksheets
-                If ws.Name = "MySpecialSheet" Then
-                    targetWorksheet = ws
-                    Exit For
                 End If
-            Next
 
-            ' If "MySpecialSheet" does not exist, add it
-            If targetWorksheet Is Nothing Then
-                targetWorksheet = CType(excelApp.Worksheets.Add(After:=excelApp.Worksheets(excelApp.Worksheets.Count)), Excel.Worksheet)
-                targetWorksheet.Name = "MySpecialSheet"
-            End If
+                If RB_Horizon.Checked = True And CustomGroupBox5.Enabled = True Then
+                    Horizontal_CreateDP = True
+                ElseIf RB_Verti.Checked = True And CustomGroupBox5.Enabled = True Then
+                    Horizontal_CreateDP = False
+                End If
 
-            If RB_Dropdown_2_Labels.Checked = True Then
-                OptionType = False
-            Else
-                OptionType = True
+                Flag_CreateDDDL = True
+                sheetName = worksheet.Name
 
-            End If
+                ' Write something in cell A1 of the target worksheet
+                targetWorksheet.Range("A1").Value = Variable1
+                targetWorksheet.Range("A2").Value = Variable2
+                targetWorksheet.Range("A3").Value = Header
+                targetWorksheet.Range("A4").Value = Ascending
+                targetWorksheet.Range("A5").Value = Descending
+                targetWorksheet.Range("A6").Value = TextConvert
+                targetWorksheet.Range("A7").Value = OptionType
+                targetWorksheet.Range("A8").Value = Horizontal_CreateDP
+                targetWorksheet.Range("A9").Value = Flag_CreateDDDL
+                targetWorksheet.Range("A10").Value = sheetName
 
-            If RB_Horizon.Checked = True And CustomGroupBox5.Enabled = True Then
-                Horizontal_CreateDP = True
-            ElseIf RB_Verti.Checked = True And CustomGroupBox5.Enabled = True Then
-                Horizontal_CreateDP = False
-            End If
+                ' Hide the target worksheet
+                targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
 
-            Flag_CreateDDDL = True
-            sheetName = worksheet.Name
-
-            ' Write something in cell A1 of the target worksheet
-            targetWorksheet.Range("A1").Value = Variable1
-            targetWorksheet.Range("A2").Value = Variable2
-            targetWorksheet.Range("A3").Value = Header
-            targetWorksheet.Range("A4").Value = Ascending
-            targetWorksheet.Range("A5").Value = Descending
-            targetWorksheet.Range("A6").Value = TextConvert
-            targetWorksheet.Range("A7").Value = OptionType
-            targetWorksheet.Range("A8").Value = Horizontal_CreateDP
-            targetWorksheet.Range("A9").Value = Flag_CreateDDDL
-            targetWorksheet.Range("A10").Value = sheetName
-
-            ' Hide the target worksheet
-            targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
+                Me.Dispose()
+            Catch ex As Exception
+                Me.Dispose()
+            End Try
         End If
 
     End Sub
@@ -617,18 +631,16 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
         ' Regular expression pattern for an Excel reference.
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
-
+        Return regex.IsMatch(cellReference.ToUpper)
 
     End Function
 

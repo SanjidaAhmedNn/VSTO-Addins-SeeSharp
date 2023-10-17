@@ -88,7 +88,7 @@ BreakAllLoops:
             Exit Sub
         ElseIf src_rng.Areas.Count > 1 Then
             MessageBox.Show("Multiple selection is not possible in the Source Range field. Please select two columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_des_rng.Focus()
+            TB_src_rng.Focus()
 
             Exit Sub
 
@@ -469,7 +469,7 @@ BreakAllLoops:
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        Return regex.IsMatch(cellReference)
+        Return regex.IsMatch(cellReference.ToUpper)
 
     End Function
 

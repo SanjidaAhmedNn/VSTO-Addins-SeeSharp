@@ -35,15 +35,16 @@ Public Class Form33_ColorBasedDropDownList
     Private tooltip As New ToolTip()
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
-            ' btn_OK.PerformClick()
-            MsgBox(1)
-            If Me.ActiveControl Is Btn_NC And e.KeyCode = Keys.Enter Then
-                ' Prevent the 'Ding' sound when pressing Enter (optional)
-                e.SuppressKeyPress = True
-
-                ' Perform the click operation for btn2
-                btn_OK.PerformClick()
-            End If
+            btn_OK.PerformClick()
+            'MsgBox(1)
+            'If Me.ActiveControl Is Btn_NC And e.KeyCode = Keys.Enter Then
+            '    ' Prevent the 'Ding' sound when pressing Enter (optional)
+            '    e.SuppressKeyPress = True
+            '    MsgBox(2)
+            '    ' Perform the click operation for btn2
+            '    btn_OK.PerformClick()
+            '    MsgBox(3)
+            'End If
 
         End If
     End Sub
@@ -398,6 +399,21 @@ Public Class Form33_ColorBasedDropDownList
 
     End Sub
 
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        ' Check if Enter is pressed and btn1 is focused
+        If keyData = Keys.Enter AndAlso Me.ActiveControl Is Btn_NC Then
+            btn_OK.PerformClick() ' Perform the btn2 click operation
+            Return True ' The key is handled
+        End If
+        For Each ctrl As Control In FlowLayoutPanel1.Controls
+            If TypeOf ctrl Is Button Then
+                btn_OK.PerformClick() ' Perform the btn2 click operation
+                Return True ' The key is handled
+            End If
+        Next
+        Return MyBase.ProcessCmdKey(msg, keyData)
+    End Function
+
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
         Try
@@ -409,11 +425,30 @@ Public Class Form33_ColorBasedDropDownList
                 TB_src_rng.Focus()
                 'Me.Close()
                 Exit Sub
+
+            ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
+                MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_src_rng.Focus()
+                'Me.Close()
+                Exit Sub
+
             ElseIf TB_des_rng.Text = "" And RB_Row.Checked = True Then
                 MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TB_des_rng.Focus()
                 'Me.Close()
                 Exit Sub
+
+
+            ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And RB_Row.Checked = True Then
+                MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_des_rng.Focus()
+                'Me.Close()
+                Exit Sub
+
+            ElseIf src_rng.Areas.Count > 1 Then
+                MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_src_rng.Focus()
+
             Else
 
                 ' Retrieve data validation items
@@ -737,18 +772,16 @@ Public Class Form33_ColorBasedDropDownList
 
         ' Regular expression pattern for an Excel reference.
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
-        Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
+        Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
+
+        ' Regular expression pattern to allow multiple cell references separated by commas
+        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
         ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
-            Return True
-        Else
-            Return False
-        End If
-
+        Return regex.IsMatch(cellReference.ToUpper)
 
     End Function
 
