@@ -32,6 +32,9 @@ Public Class ThisAddIn
         Globals.ThisAddIn.Application.DisplayAlerts = False
         Application.EnableEvents = True
         form_flag = False
+        sessionflag1 = False
+        sessionflag2 = False
+
 
         AddHandler Globals.ThisAddIn.Application.WorkbookActivate, AddressOf Workbook_Activated
     End Sub
