@@ -918,7 +918,19 @@ Public Class Form33_ColorBasedDropDownList
         End If
     End Sub
 
+    Private Sub Btn_NC_Click(sender As Object, e As EventArgs) Handles Btn_NC.Click
+        Dim clickedButton As Button = CType(sender, Button)
+        objectPosition = clickedButton.Location
+        Dim index As Integer = List_Preview.SelectedIndex
 
+        Dim item As ColoredItem = CType(List_Preview.Items(index), ColoredItem)
+        item.Color = Color.White
+        Button2.Focus()
+
+        mybtn(List_Preview.SelectedIndex) = Button2
+        Btn_color.BackColor = Color.White
+        Me.Refresh()
+    End Sub
 End Class
 
 Public Class ColoredItem
