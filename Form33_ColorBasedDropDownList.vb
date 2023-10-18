@@ -406,7 +406,7 @@ Public Class Form33_ColorBasedDropDownList
             Return True ' The key is handled
         End If
         For Each ctrl As Control In FlowLayoutPanel1.Controls
-            If TypeOf ctrl Is Button Then
+            If keyData = Keys.Enter AndAlso TypeOf ctrl Is Button Then
                 btn_OK.PerformClick() ' Perform the btn2 click operation
                 Return True ' The key is handled
             End If
