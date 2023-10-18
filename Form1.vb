@@ -545,27 +545,6 @@ Public Class Form1
 
         Try
             FocusedTextBox = 1
-            Me.Hide()
-
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng = userInput
-
-
-            Dim sheetName As String
-            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-            sheetName = Split(sheetName, "!")(0)
-
-            If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
-            End If
-
-            workSheet = workBook.Worksheets(sheetName)
-            workSheet.Activate()
-
-            rng.Select()
 
             Dim activeRange As Excel.Range = excelApp.ActiveCell
 
@@ -599,13 +578,24 @@ Public Class Form1
 
             rng.Select()
 
+            Dim sheetName As String
+
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet = workBook.Worksheets(sheetName)
+            workSheet.Activate()
+
             If workSheet.Name <> OpenSheet.Name Then
                 TextBox1.Text = workSheet.Name & "!" & rng.Address
             Else
                 TextBox1.Text = rng.Address
             End If
 
-            Me.Show()
             Me.TextBox1.Focus()
 
         Catch ex As Exception

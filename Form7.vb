@@ -20,6 +20,7 @@ Public Class Form7
     Dim workbook2 As Excel.Workbook
     Dim worksheet As Excel.Worksheet
     Dim worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
     Dim rng As Excel.Range
     Dim rng2 As Excel.Range
     Dim FocusedTextBox As Integer
@@ -202,7 +203,8 @@ Public Class Form7
 
     End Function
     Private Function GetLengths(Arr)
-        Dim Arr2() As Integer
+
+        Dim Arr2(0) As Integer
         Dim Index As Integer
         Index = -1
         Dim position As Integer
@@ -2945,38 +2947,64 @@ Public Class Form7
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
-
             FocusedTextBox = 1
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng = userInput
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
 
-                If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
-                End If
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
 
-                worksheet = workbook.Worksheets(sheetName)
-                worksheet.Activate()
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
 
-            Catch ex As Exception
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
 
-            End Try
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            rng = worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn))
 
             rng.Select()
 
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
+            Dim sheetName As String
 
-            rng.Select()
-            Me.TextBox1.Text = rng.Address
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
+
             Me.TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -3007,7 +3035,12 @@ Public Class Form7
 
             rng.Select()
 
-            TextBox1.Text = rng.Address
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
+
             TextBox1.Focus()
 
         Catch ex As Exception
