@@ -720,6 +720,23 @@ Public Class Form15CompareCells
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
 
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop1
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop1
+
+                            End If
+
                             'handles comparison of different type o variables
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop1
@@ -743,6 +760,21 @@ nextLoop1:
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
 
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop2
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop2
+
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop2
 
@@ -761,6 +793,23 @@ nextLoop2:
 
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
+
+
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop3
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop3
+
+                            End If
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop3
@@ -781,6 +830,21 @@ nextLoop3:
 
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
+
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop4
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop4
+
+                            End If
+
 
                             'If variable type of two compared cell are different
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
@@ -804,6 +868,20 @@ nextLoop4:
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
 
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop5
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop5
+
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop5
 
@@ -826,6 +904,23 @@ nextLoop5:
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
 
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                firstInputRng.Cells(i, j).Interior.Color = CBFillBackground.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop6
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop6
+
+                            End If
+
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop6
 
@@ -846,6 +941,21 @@ nextLoop6:
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+
+                                firstInputRng.Cells(i, j).Font.Color = CbFillFont.BackColor
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop7
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop7
+
+                            End If
+
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop7
@@ -868,6 +978,20 @@ nextLoop7:
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+
+                                count = count + 1
+                                coloredRng = coloredRng & "," & firstInputRng.Cells(i, j).address
+
+                                GoTo nextLoop8
+
+                            ElseIf rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                GoTo nextLoop8
+
+                            End If
+
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop8
 
@@ -891,6 +1015,13 @@ nextLoop8:
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
 
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop9
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop9
 
@@ -910,6 +1041,13 @@ nextLoop9:
                 ElseIf checkBoxFillBack.Checked = True And checkBoxFillFont.Checked = False Then
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
+
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop10
+                            End If
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop10
@@ -931,6 +1069,13 @@ nextLoop10:
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
 
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop11
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop11
 
@@ -949,6 +1094,13 @@ nextLoop11:
 
                     For i = 1 To firstInputRng.Rows.Count
                         For j = 1 To firstInputRng.Columns.Count
+
+                            rng1CellValue = firstInputRng.Cells(i, j).value
+                            rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop12
+                            End If
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop12
@@ -974,6 +1126,10 @@ nextLoop12:
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
 
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop13
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop13
 
@@ -997,6 +1153,10 @@ nextLoop13:
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
 
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop14
+                            End If
+
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop14
 
@@ -1018,6 +1178,10 @@ nextLoop14:
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop15
+                            End If
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop15
@@ -1042,6 +1206,13 @@ nextLoop15:
                         For j = 1 To firstInputRng.Columns.Count
                             rng1CellValue = firstInputRng.Cells(i, j).value
                             rng2CellValue = secondInputRng.Cells(i, j).value
+
+                            If rng1CellValue Is Nothing And rng2CellValue Is Nothing Then
+                                Continue For
+
+                            ElseIf (rng1CellValue Is Nothing AndAlso Not rng2CellValue Is Nothing) OrElse (Not rng1CellValue Is Nothing AndAlso rng2CellValue Is Nothing) Then
+                                GoTo nextLoop16
+                            End If
 
                             If VarType(firstInputRng.Cells(i, j).value) <> VarType(secondInputRng.Cells(i, j).value) Then
                                 GoTo nextLoop16
@@ -1335,7 +1506,15 @@ secondDisplay:
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
                                         label.BackColor = CBFillBackground.BackColor
-                                        label.ForeColor = Nothing
+
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Font.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.ForeColor = rgbColor
+                                        Else
+                                            label.ForeColor = Nothing
+                                        End If
+
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -1422,22 +1601,27 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = CbFillFont.BackColor
-                                        label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
 
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Interior.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.BackColor = rgbColor
+                                        Else
+                                            label.BackColor = Color.Transparent
+
+                                        End If
+
+
                                         CP_Output_Range.Controls.Add(label)
-                                    Else
-                                        Dim label As New System.Windows.Forms.Label
+                                        Else
+                                            Dim label As New System.Windows.Forms.Label
                                         label.Text = displayRng.Cells(i, j).Value
                                         label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
                                         label.Height = height
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -1469,8 +1653,6 @@ secondDisplay:
                                     label.Width = width
                                     label.BorderStyle = BorderStyle.FixedSingle
                                     label.TextAlign = ContentAlignment.MiddleCenter
-                                    'label.BackColor = Color.Transparent
-                                    'label.ForeColor = Nothing
 
                                     If checkBoxFormatting.Checked = True Then
 
@@ -1542,21 +1724,7 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
 
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
@@ -1612,8 +1780,6 @@ secondDisplay:
                                     label.Width = width
                                     label.BorderStyle = BorderStyle.FixedSingle
                                     label.TextAlign = ContentAlignment.MiddleCenter
-                                    'label.BackColor = Color.Transparent
-                                    'label.ForeColor = Nothing
 
                                     If checkBoxFormatting.Checked = True Then
 
@@ -1646,21 +1812,7 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
 
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
@@ -1672,7 +1824,15 @@ secondDisplay:
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
                                         label.BackColor = CBFillBackground.BackColor
-                                        label.ForeColor = Nothing
+
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Font.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.ForeColor = rgbColor
+                                        Else
+                                            label.ForeColor = Nothing
+
+                                        End If
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -1683,8 +1843,6 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -1716,8 +1874,6 @@ secondDisplay:
                                     label.Width = width
                                     label.BorderStyle = BorderStyle.FixedSingle
                                     label.TextAlign = ContentAlignment.MiddleCenter
-                                    'label.BackColor = Color.Transparent
-                                    'label.ForeColor = Nothing
 
                                     If checkBoxFormatting.Checked = True Then
 
@@ -1752,21 +1908,7 @@ secondDisplay:
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
 
                                     If rng1CellValue.ToUpper = rng2CellValue.ToUpper Then
 
@@ -1777,10 +1919,16 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = CbFillFont.BackColor
-                                        label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
+
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Interior.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.BackColor = rgbColor
+                                        Else
+                                            label.BackColor = Color.Transparent
+                                        End If
+
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -1791,8 +1939,6 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -1824,8 +1970,6 @@ secondDisplay:
                                     label.Width = width
                                     label.BorderStyle = BorderStyle.FixedSingle
                                     label.TextAlign = ContentAlignment.MiddleCenter
-                                    'label.BackColor = Color.Transparent
-                                    'label.ForeColor = Nothing
 
                                     If checkBoxFormatting.Checked = True Then
 
@@ -1858,51 +2002,34 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
 
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
+                                If checkBoxFormatting.Checked = True Then
+
+                                    'background fill color
+                                    lblColor = displayRng.Cells(i, j).Interior.Color
+                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                    label.BackColor = rgbColor
+
+                                    'font color
+                                    lblColor = displayRng.Cells(i, j).Font.Color
+                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                    label.ForeColor = rgbColor
+
+                                Else
+                                    label.BackColor = Color.Transparent
                                     label.ForeColor = Nothing
 
-                                    CP_Output_Range.Controls.Add(label)
-                                Else
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    'label.BackColor = Color.Transparent
-                                    'label.ForeColor = Nothing
-                                    If checkBoxFormatting.Checked = True Then
-
-                                        'background fill color
-                                        lblColor = displayRng.Cells(i, j).Interior.Color
-                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                        label.BackColor = rgbColor
-
-                                        'font color
-                                        lblColor = displayRng.Cells(i, j).Font.Color
-                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                        label.ForeColor = rgbColor
-
-                                    Else
-                                        label.BackColor = Color.Transparent
-                                        label.ForeColor = Nothing
-
-                                    End If
-
-                                    CP_Output_Range.Controls.Add(label)
-
                                 End If
+
+                                CP_Output_Range.Controls.Add(label)
+
 
                             Next
                         Next
@@ -1910,6 +2037,7 @@ secondDisplay:
                     End If
 
                 End If
+
 
             ElseIf radBtnDifferentValues.Checked = True Then
 
@@ -1942,8 +2070,7 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
+
                                         If checkBoxFormatting.Checked = True Then
 
                                             'background fill color
@@ -2001,7 +2128,15 @@ secondDisplay:
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
                                         label.BackColor = CBFillBackground.BackColor
-                                        label.ForeColor = Nothing
+
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Font.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.ForeColor = rgbColor
+                                        Else
+                                            label.ForeColor = Nothing
+                                        End If
+
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -2070,8 +2205,15 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
+                                        If checkBoxFormatting.Checked = True Then
+
+                                            lblColor = displayRng.Cells(i, j).Interior.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.BackColor = rgbColor
+                                        Else
+                                            label.BackColor = Color.Transparent
+                                        End If
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -2082,8 +2224,6 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -2178,21 +2318,7 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
 
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
@@ -2215,8 +2341,6 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -2265,21 +2389,8 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
 
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
 
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
@@ -2291,7 +2402,14 @@ secondDisplay:
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
                                         label.BackColor = CBFillBackground.BackColor
-                                        label.ForeColor = Nothing
+
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Font.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.ForeColor = rgbColor
+                                        Else
+                                            label.ForeColor = Nothing
+                                        End If
 
                                         CP_Output_Range.Controls.Add(label)
                                     Else
@@ -2302,8 +2420,7 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
+
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -2353,21 +2470,8 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
 
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
-
-                                    CP_Output_Range.Controls.Add(label)
-
-                                ElseIf VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
+                                If VarType(displayRng.Cells(i, j).value) = VarType(displayRng2.Cells(i, j).value) Then
                                     If rng1CellValue.ToUpper <> rng2CellValue.ToUpper Then
 
                                         Dim label As New System.Windows.Forms.Label
@@ -2377,20 +2481,27 @@ secondDisplay:
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        label.BackColor = Color.Transparent
                                         label.ForeColor = CbFillFont.BackColor
 
+                                        If checkBoxFormatting.Checked = True Then
+                                            lblColor = displayRng.Cells(i, j).Interior.Color
+                                            rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                            label.BackColor = rgbColor
+                                        Else
+                                            label.BackColor = Color.Transparent
+
+                                        End If
+
                                         CP_Output_Range.Controls.Add(label)
-                                    Else
-                                        Dim label As New System.Windows.Forms.Label
+                                        Else
+                                            Dim label As New System.Windows.Forms.Label
                                         label.Text = displayRng.Cells(i, j).Value
                                         label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
                                         label.Height = height
                                         label.Width = width
                                         label.BorderStyle = BorderStyle.FixedSingle
                                         label.TextAlign = ContentAlignment.MiddleCenter
-                                        'label.BackColor = Color.Transparent
-                                        'label.ForeColor = Nothing
+
 
                                         If checkBoxFormatting.Checked = True Then
 
@@ -2429,8 +2540,11 @@ secondDisplay:
                                     CP_Output_Range.Controls.Add(label)
 
                                 End If
+
+
                             Next
                         Next
+
 
                         '1st range >> 2nd range >> radBtnDifferentValues checked >> case sensitive unchecked >> fill/font color not selected
                     Else
@@ -2439,58 +2553,43 @@ secondDisplay:
                                 rng1CellValue = displayRng.Cells(i, j).value
                                 rng2CellValue = displayRng2.Cells(i, j).value
 
-                                If rng1CellValue Is Nothing Or rng2CellValue Is Nothing Then
 
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-                                    label.BackColor = CBFillBackground.BackColor
-                                    label.ForeColor = Nothing
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = displayRng.Cells(i, j).Value
+                                label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                                label.Height = height
+                                label.Width = width
+                                label.BorderStyle = BorderStyle.FixedSingle
+                                label.TextAlign = ContentAlignment.MiddleCenter
 
-                                    CP_Output_Range.Controls.Add(label)
+
+                                If checkBoxFormatting.Checked = True Then
+
+                                    'background fill color
+                                    lblColor = displayRng.Cells(i, j).Interior.Color
+                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                    label.BackColor = rgbColor
+
+                                    'font color
+                                    lblColor = displayRng.Cells(i, j).Font.Color
+                                    rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
+                                    label.ForeColor = rgbColor
 
                                 Else
+                                    label.BackColor = Color.Transparent
+                                    label.ForeColor = Nothing
 
-
-                                    Dim label As New System.Windows.Forms.Label
-                                    label.Text = displayRng.Cells(i, j).Value
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                    label.Height = height
-                                    label.Width = width
-                                    label.BorderStyle = BorderStyle.FixedSingle
-                                    label.TextAlign = ContentAlignment.MiddleCenter
-
-
-                                    If checkBoxFormatting.Checked = True Then
-
-                                        'background fill color
-                                        lblColor = displayRng.Cells(i, j).Interior.Color
-                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                        label.BackColor = rgbColor
-
-                                        'font color
-                                        lblColor = displayRng.Cells(i, j).Font.Color
-                                        rgbColor = System.Drawing.Color.FromArgb(CInt(lblColor Mod 256), CInt((lblColor \ 256) Mod 256), CInt((lblColor \ 65536) Mod 256))
-                                        label.ForeColor = rgbColor
-
-                                    Else
-                                        label.BackColor = Color.Transparent
-                                        label.ForeColor = Nothing
-
-                                    End If
-
-
-                                    CP_Output_Range.Controls.Add(label)
                                 End If
+
+
+                                CP_Output_Range.Controls.Add(label)
+                                'End If
 
 
 
                             Next
                         Next
+
 
 
                     End If
