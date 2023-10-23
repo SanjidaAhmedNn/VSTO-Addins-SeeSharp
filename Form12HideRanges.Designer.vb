@@ -31,6 +31,7 @@ Partial Class Form12HideRanges
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
         Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.GB_sample = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.RB_Single_Range = New System.Windows.Forms.RadioButton()
@@ -40,7 +41,6 @@ Partial Class Form12HideRanges
         Me.RB_bidirection = New System.Windows.Forms.RadioButton()
         Me.RB_Row = New System.Windows.Forms.RadioButton()
         Me.RB_Column = New System.Windows.Forms.RadioButton()
-        Me.GB_sample = New VSTO_Addins.CustomGroupBox()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox3.SuspendLayout()
@@ -150,6 +150,18 @@ Partial Class Form12HideRanges
         Me.Label1.Size = New System.Drawing.Size(175, 20)
         Me.Label1.TabIndex = 117
         Me.Label1.Text = "Source Range:"
+        '
+        'GB_sample
+        '
+        Me.GB_sample.BackColor = System.Drawing.Color.White
+        Me.GB_sample.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.GB_sample.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GB_sample.Location = New System.Drawing.Point(296, 15)
+        Me.GB_sample.Name = "GB_sample"
+        Me.GB_sample.Size = New System.Drawing.Size(249, 296)
+        Me.GB_sample.TabIndex = 399
+        Me.GB_sample.TabStop = False
+        Me.GB_sample.Text = "Sample Image"
         '
         'CustomGroupBox3
         '
@@ -270,18 +282,6 @@ Partial Class Form12HideRanges
         Me.RB_Column.TabStop = True
         Me.RB_Column.Text = "Column-wise only"
         Me.RB_Column.UseVisualStyleBackColor = True
-        '
-        'GB_sample
-        '
-        Me.GB_sample.BackColor = System.Drawing.Color.White
-        Me.GB_sample.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_sample.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_sample.Location = New System.Drawing.Point(296, 15)
-        Me.GB_sample.Name = "GB_sample"
-        Me.GB_sample.Size = New System.Drawing.Size(249, 296)
-        Me.GB_sample.TabIndex = 399
-        Me.GB_sample.TabStop = False
-        Me.GB_sample.Text = "Sample Image"
         '
         'Form12HideRanges
         '

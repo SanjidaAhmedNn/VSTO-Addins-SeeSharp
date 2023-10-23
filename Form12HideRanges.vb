@@ -6,7 +6,8 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Drawing
 Imports System.ComponentModel
 Imports System.Linq.Expressions
-
+Imports System.Text.RegularExpressions
+Imports System.Diagnostics
 
 Public Class Form12HideRanges
     Dim WithEvents excelApp As Excel.Application
@@ -18,6 +19,7 @@ Public Class Form12HideRanges
     Dim selectedRange As Excel.Range
     Dim txtChanged As Boolean = False
     Dim rngCount As Integer
+    Dim arrRng As String()
 
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
@@ -57,6 +59,8 @@ Public Class Form12HideRanges
         ElseIf rngCount > 0 Then
             RB_Multiple_Range.Checked = True
         End If
+
+
 
         RB_Row.Checked = True
 
@@ -317,7 +321,9 @@ Public Class Form12HideRanges
 
     Public Function IsValidRng(input As String) As Boolean
 
-        Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        'Dim pattern As String = "^(\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)(,\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)*$"
+        Dim pattern As String = "^((\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)|(\$?[A-Z]{1,2}:\$?[A-Z]{1,2})|(\$?[1-9][0-9]{0,6}:\$?[1-9][0-9]{0,6})|([A-Z]{1,2})|([1-9][0-9]{0,6}))(,((\$?[A-Z]+\$?[0-9]+(:\$?[A-Z]+\$?[0-9]+)?)|(\$?[A-Z]{1,2}:\$?[A-Z]{1,2})|(\$?[1-9][0-9]{0,6}:\$?[1-9][0-9]{0,6})|([A-Z]{1,2})|([1-9][0-9]{0,6})))*$"
+
         Return System.Text.RegularExpressions.Regex.IsMatch(input, pattern)
 
     End Function
@@ -353,6 +359,7 @@ Public Class Form12HideRanges
 
             Next
 
+            Call IsEntireWsHidden()
 
             If rngCount = 0 And RB_Single_Range.Checked = True Then
                 Call singleRng()
@@ -386,8 +393,12 @@ Public Class Form12HideRanges
             inputWsName = worksheet.Name
 
             Dim temp As String
+            Dim answer As MsgBoxResult
             temp = txtSourceRange.Text
             worksheet1 = inputRng.Worksheet
+
+
+
 
             If CheckBox1.Checked = True Then
 
@@ -408,9 +419,18 @@ Public Class Form12HideRanges
             firstColumn = selectedRange.Column
             lastColumn = firstColumn + selectedRange.Columns.Count - 1
 
+            If IsEntireWsHidden() = True Then
+                answer = MsgBox("You are about to hide the entire worksheet." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                If answer = MsgBoxResult.Yes Then
+                    GoTo Proceed2
+                Else
+                    GoTo break2
+                End If
+            End If
+
             If RB_Single_Range.Checked = True And RB_Row.Checked = True Then
                 If selectedRange.Rows.Count <= 2 Then
-                    Dim answer As MsgBoxResult
+
                     answer = MsgBox("You are about to hide " & selectedRange.Rows.Count & " Rows." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
                     If answer = MsgBoxResult.Yes Then
                         GoTo Proceed1
@@ -425,7 +445,6 @@ break1:
 
             ElseIf RB_Single_Range.Checked = True And RB_Column.Checked = True Then
                 If selectedRange.Columns.Count <= 2 Then
-                    Dim answer As MsgBoxResult
                     answer = MsgBox("You are about to hide " & selectedRange.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
                     If answer = MsgBoxResult.Yes Then
                         GoTo Proceed2
@@ -440,7 +459,6 @@ break2:
 
             ElseIf RB_Single_Range.Checked = True And RB_bidirection.Checked = True Then
                 If selectedRange.Columns.Count <= 2 Then
-                    Dim answer As MsgBoxResult
                     answer = MsgBox("You are about to hide " & selectedRange.Rows.Count & " Rows and" & selectedRange.Columns.Count & " Columns." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
                     If answer = MsgBoxResult.Yes Then
                         GoTo Proceed3
@@ -476,6 +494,7 @@ break3:
             inputWsName = worksheet.Name
 
             Dim temp As String
+            Dim answer As MsgBoxResult
             temp = txtSourceRange.Text
             worksheet1 = inputRng.Worksheet
 
@@ -491,9 +510,18 @@ break3:
             End If
 
 
+            If IsEntireWsHidden() = True Then
+                answer = MsgBox("You are about to hide the entire worksheet." & vbCrLf & "Do you want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                If answer = MsgBoxResult.Yes Then
+                    GoTo proceed
+                Else
+                    GoTo break
+                End If
+            End If
+proceed:
             Dim visRows, followingRows As Integer
             Dim visColumns, followingColumns As Integer
-            Dim arrRng As String() = Split(txtSourceRange.Text, ",")
+            arrRng = Split(txtSourceRange.Text, ",")
 
             If RB_Multiple_Range.Checked = True And RB_Row.Checked = True Then
                 For i = 0 To UBound(arrRng)
@@ -539,13 +567,62 @@ break3:
 
 
 
-
+break:
+            Me.Dispose()
 
 
         Catch ex As Exception
 
         End Try
     End Sub
+
+    Private Function IsEntireWsHidden() As Boolean
+
+        Dim selectedRng As Excel.Range = excelApp.Selection
+        Dim flag As Boolean = False
+        arrRng = Split(txtSourceRange.Text, ",")
+          
+        If RB_Row.Checked = True Then
+            If selectedRng.Address(Excel.XlReferenceStyle.xlA1) = "$1:$1048576" Then
+                flag = True
+            End If
+
+            For i = 0 To UBound(arrRng)
+                If Regex.IsMatch(arrRng(i).ToUpper, "^(\$?[A-Z]{1,3}):(\$?[A-Z]{1,3})$") Then
+                    flag = True
+                    Exit For
+                End If
+            Next
+
+        ElseIf RB_Column.Checked = True Then
+            If selectedRng.Address(Excel.XlReferenceStyle.xlA1) = "$1:$1048576" Then
+                flag = True
+            End If
+
+            For i = 0 To UBound(arrRng)
+                If Regex.IsMatch(arrRng(i).ToUpper, "^(\$?[1-9][0-9]*):(\$?[1-9][0-9]*)$") Then
+                    flag = True
+                    Exit For
+                End If
+            Next
+
+        ElseIf RB_bidirection.Checked = True Then
+            If selectedRng.Address(Excel.XlReferenceStyle.xlA1) = "$1:$1048576" Then
+                flag = True
+            End If
+
+            For i = 0 To UBound(arrRng)
+                If Regex.IsMatch(arrRng(i).ToUpper, "^(\$?[A-Z]{1,3}):(\$?[A-Z]{1,3})$") Or Regex.IsMatch(arrRng(i).ToUpper, "^(\$?[1-9][0-9]*):(\$?[1-9][0-9]*)$") Then
+                    flag = True
+                    Exit For
+                End If
+            Next
+
+        End If
+
+        Return flag
+
+    End Function
 
     Private Sub btn_Cancel_Click(sender As Object, e As EventArgs) Handles btn_Cancel.Click
         Me.Dispose()
