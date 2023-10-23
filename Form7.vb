@@ -69,24 +69,20 @@ Public Class Form7
     End Function
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
-
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
+        Dim refArr() As String = Split(cellReference, "!")
+
+        Dim reference As String = refArr(UBound(refArr))
+
+        If regex.IsMatch(reference) Then
             Return True
         Else
             Return False
         End If
-
 
     End Function
 
@@ -226,6 +222,8 @@ Public Class Form7
     Private Sub Display()
 
         Try
+
+            TextBoxChanged = True
 
             CustomPanel1.Controls.Clear()
             CustomPanel2.Controls.Clear()
@@ -1208,6 +1206,8 @@ Public Class Form7
 
             End If
 
+            TextBoxChanged = False
+
         Catch ex As Exception
 
         End Try
@@ -1222,6 +1222,7 @@ Public Class Form7
             workbook2 = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             worksheet2 = workbook2.ActiveSheet
+            Me.KeyPreview = True
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
@@ -1243,14 +1244,22 @@ Public Class Form7
 
             If TextBoxChanged = False Then
                 If FocusedTextBox = 1 Then
-                    TextBox1.Text = selectedRange.Address
                     worksheet = workbook.ActiveSheet
+                    If worksheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = worksheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
                     rng = selectedRange
                     TextBox1.Focus()
 
                 ElseIf FocusedTextBox = 3 Then
-                    TextBox3.Text = selectedRange.Address
                     worksheet2 = workbook2.ActiveSheet
+                    If worksheet2.Name <> OpenSheet.Name Then
+                        TextBox3.Text = worksheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox3.Text = selectedRange.Address
+                    End If
                     rng2 = selectedRange
                     TextBox3.Focus()
                 End If
@@ -1264,6 +1273,7 @@ Public Class Form7
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
         Try
+
             TextBoxChanged = True
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -1458,34 +1468,53 @@ Public Class Form7
                                 Bolds(i - 1, j - 1) = cell.Font.Bold
                                 Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                fontNames(i - 1, j - 1) = font.Name
-
-                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                    greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                    blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
                                 Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
                                     reds1(i - 1, j - 1) = 255
                                     greens1(i - 1, j - 1) = 255
                                     blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
                                 End If
 
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                    greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                    blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
                                 Else
-                                    reds2(i - 1, j - 1) = 255
-                                    greens2(i - 1, j - 1) = 255
-                                    blues2(i - 1, j - 1) = 255
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
                                 End If
                             End If
 
                         Next
                     Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
 
                     Dim count As Integer
                     count = 1
@@ -1512,19 +1541,17 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1554,19 +1581,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1667,34 +1690,54 @@ Public Class Form7
                                 Bolds(i - 1, j - 1) = cell.Font.Bold
                                 Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                fontNames(i - 1, j - 1) = font.Name
 
-                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                    greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                    blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
                                 Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
                                     reds1(i - 1, j - 1) = 255
                                     greens1(i - 1, j - 1) = 255
                                     blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
                                 End If
 
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                    greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                    blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
                                 Else
-                                    reds2(i - 1, j - 1) = 255
-                                    greens2(i - 1, j - 1) = 255
-                                    blues2(i - 1, j - 1) = 255
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
                                 End If
                             End If
 
                         Next
                     Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
 
                     Dim count As Integer
                     count = 1
@@ -1722,19 +1765,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1764,19 +1803,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1895,34 +1930,54 @@ Public Class Form7
                                     Bolds(i - 1, j - 1) = cell.Font.Bold
                                     Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                    fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                    fontNames(i - 1, j - 1) = font.Name
 
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                        greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                        blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
                                     Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
                                         reds1(i - 1, j - 1) = 255
                                         greens1(i - 1, j - 1) = 255
                                         blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
                                     End If
 
-                                    If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                        greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                        blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
                                     Else
-                                        reds2(i - 1, j - 1) = 255
-                                        greens2(i - 1, j - 1) = 255
-                                        blues2(i - 1, j - 1) = 255
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
                                     End If
                                 End If
 
                             Next
                         Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
 
                         If X5 Then
                             Dim iRow As Integer
@@ -1949,19 +2004,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -1993,19 +2044,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2079,34 +2126,54 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
+
+                            rng.ClearContents()
+                            rng.ClearFormats()
 
                             For i = 1 To r
                                 For j = 1 To c
@@ -2130,19 +2197,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2215,34 +2278,54 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
+
+                            rng.ClearContents()
+                            rng.ClearFormats()
 
                             For j = 1 To c
                                 For i = 1 To r
@@ -2266,19 +2349,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2400,34 +2479,54 @@ Public Class Form7
                                     Bolds(i - 1, j - 1) = cell.Font.Bold
                                     Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                    fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                    fontNames(i - 1, j - 1) = font.Name
 
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                        greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                        blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
                                     Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
                                         reds1(i - 1, j - 1) = 255
                                         greens1(i - 1, j - 1) = 255
                                         blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
                                     End If
 
-                                    If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                        greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                        blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
                                     Else
-                                        reds2(i - 1, j - 1) = 255
-                                        greens2(i - 1, j - 1) = 255
-                                        blues2(i - 1, j - 1) = 255
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
                                     End If
                                 End If
 
                             Next
                         Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
 
                         If X5 Then
 
@@ -2455,19 +2554,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2499,19 +2594,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2586,34 +2677,54 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
+
+                            rng.ClearContents()
+                            rng.ClearFormats()
 
                             For i = 1 To r
                                 For j = 1 To c
@@ -2637,19 +2748,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2719,34 +2826,54 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
+
+                            rng.ClearContents()
+                            rng.ClearFormats()
 
                             For j = 1 To c
                                 For i = 1 To r
@@ -2770,19 +2897,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(i - 1, j - 1)
+                                            Dim green1 As Integer = greens1(i - 1, j - 1)
+                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(i - 1, j - 1)
+                                            Dim green2 As Integer = greens2(i - 1, j - 1)
+                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2800,7 +2923,15 @@ Public Class Form7
                 MessageBox.Show("Select One Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
             End If
+
+            For j = 1 To rng2.Columns.Count
+                rng2.Columns(j).Autofit
+            Next
+
+            Me.Close()
+
             TextBoxChanged = False
+
         Catch ex As Exception
 
         End Try
@@ -2816,17 +2947,15 @@ Public Class Form7
 
             TextBox1.SelectionStart = TextBox1.Text.Length
             TextBox1.ScrollToCaret()
-
-            rng = worksheet.Range(TextBox1.Text)
-
+            Dim rngArray() As String = Split(TextBox1.Text, "!")
+            Dim rngAddress As String = rngArray(UBound(rngArray))
+            rng = worksheet.Range(rngAddress)
             TextBoxChanged = True
             rng.Select()
 
             Call Display()
 
-            Call Setup()
             TextBoxChanged = False
-
         Catch ex As Exception
 
         End Try
@@ -2843,6 +2972,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
@@ -2856,6 +2986,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
@@ -2868,9 +2999,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
+
         Try
             If RadioButton4.Checked = True Then
                 Call Display()
@@ -2879,18 +3012,22 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+
         Try
             Call Display()
             Call Setup()
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton5_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton5.CheckedChanged
+
         Try
             If RadioButton5.Checked = True Then
                 Call Display()
@@ -2899,9 +3036,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton6_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton6.CheckedChanged
+
         Try
             If RadioButton6.Checked = True Then
                 Call Display()
@@ -2910,9 +3049,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton7_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton7.CheckedChanged
+
         Try
             If RadioButton7.Checked = True Then
                 Call Display()
@@ -2921,6 +3062,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton8_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton8.CheckedChanged
@@ -2933,15 +3075,18 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+
         Try
             Call Display()
             Call Setup()
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
@@ -3151,15 +3296,21 @@ Public Class Form7
     Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
 
         Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook2 = excelApp.ActiveWorkbook
             worksheet2 = workbook2.ActiveSheet
 
             TextBox3.SelectionStart = TextBox3.Text.Length
             TextBox3.ScrollToCaret()
 
-            rng2 = worksheet2.Range(TextBox3.Text)
+            Dim rng2Array() As String = Split(TextBox3.Text, "!")
+            Dim rng2Address As String = rng2Array(UBound(rng2Array))
+            rng2 = worksheet2.Range(rng2Address)
 
             TextBoxChanged = True
+
             rng2.Select()
+
             TextBoxChanged = False
 
         Catch ex As Exception
@@ -3175,621 +3326,6 @@ Public Class Form7
                 worksheet2 = worksheet
                 rng2 = rng
             End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Button1_KeyDown(sender As Object, e As KeyEventArgs) Handles Button1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Button2_KeyDown(sender As Object, e As KeyEventArgs) Handles Button2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox10.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox9_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomPanel1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomPanel1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomPanel2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomPanel2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label1_KeyDown(sender As Object, e As KeyEventArgs) Handles Label1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label2_KeyDown(sender As Object, e As KeyEventArgs) Handles Label2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs)
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton10_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton10.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton5_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton6_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton7_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton8_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton9_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub VScrollBar1_KeyDown(sender As Object, e As KeyEventArgs) Handles VScrollBar1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
         Catch ex As Exception
 
         End Try
@@ -4266,20 +3802,57 @@ Public Class Form7
     End Sub
 
     Private Sub Form7_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        form_flag = False
+        Try
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
     Private Sub Form7_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
-        Me.BringToFront()
-        Me.Activate()
-        Me.BeginInvoke(New System.Action(Sub()
-                                             TextBox1.Text = rng.Address
-                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
-                                         End Sub))
+
+        Try
+            Me.Focus()
+            Me.BringToFront()
+            Me.Activate()
+            Me.BeginInvoke(New System.Action(Sub()
+                                                 TextBox1.Text = rng.Address
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
+
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
     Private Sub Form7_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        form_flag = False
+
+        Try
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+
     End Sub
+
+    Private Sub Form7_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Button2.Focus()
+                Call Button2_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
 End Class

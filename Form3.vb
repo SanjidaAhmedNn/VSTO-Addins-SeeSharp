@@ -750,20 +750,55 @@ Public Class Form3
                             For j = LBound(Arr, 2) To UBound(Arr, 2)
                                 Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
                                 Dim font As Excel.Font = cell.Font
-                                FontNames(i, j) = CStr(cell.Font.Name)
-                                FontSizes(i, j) = Convert.ToSingle(font.Size)
+
+                                If IsDBNull(font.Name) = False Then
+                                    FontNames(i, j) = font.Name
+                                Else
+                                    FontNames(i, j) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    FontSizes(i, j) = fontSize
+                                Else
+                                    FontSizes(i, j) = 11
+                                End If
+
                                 Bolds(i, j) = cell.Font.Bold
                                 Italics(i, j) = cell.Font.Italic
-                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                Reds1(i, j) = colorValue1 Mod 256
-                                Greens1(i, j) = (colorValue1 \ 256) Mod 256
-                                Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
-                                Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                Reds2(i, j) = colorValue2 Mod 256
-                                Greens2(i, j) = (colorValue2 \ 256) Mod 256
-                                Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
+
+                                If IsDBNull(cell.Interior.Color) Then
+                                    Reds1(i, j) = 255
+                                    Greens1(i, j) = 255
+                                    Blues1(i, j) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    Reds1(i, j) = red1
+                                    Greens1(i, j) = green1
+                                    Blues1(i, j) = blue1
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    Reds2(i, j) = 0
+                                    Greens2(i, j) = 0
+                                    Blues2(i, j) = 0
+                                Else
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    Reds2(i, j) = red2
+                                    Greens2(i, j) = green2
+                                    Blues2(i, j) = blue2
+                                End If
                             Next
                         Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
 
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count

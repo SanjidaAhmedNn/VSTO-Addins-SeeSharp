@@ -937,9 +937,6 @@ Public Class Form1
                                 FontNames(i, j) = "Calibri"
                             End If
 
-                            FontBolds(i, j) = cell.Font.Bold
-                            Fontitalics(i, j) = cell.Font.Italic
-
                             If IsDBNull(font.Size) = False Then
                                 Dim fontSize As Single = Convert.ToSingle(font.Size)
                                 FontSizes(i, j) = fontSize
@@ -947,10 +944,13 @@ Public Class Form1
                                 FontSizes(i, j) = 11
                             End If
 
+                            FontBolds(i, j) = cell.Font.Bold
+                            Fontitalics(i, j) = cell.Font.Italic
+
                             If IsDBNull(cell.Interior.Color) Then
-                                Red1s(i, j) = 0
-                                Green1s(i, j) = 0
-                                Blue1s(i, j) = 0
+                                Red1s(i, j) = 255
+                                Green1s(i, j) = 255
+                                Blue1s(i, j) = 255
                             Else
                                 Dim colorValue1 As Long = CLng(cell.Interior.Color)
                                 Dim red1 As Integer = colorValue1 Mod 256
@@ -976,6 +976,10 @@ Public Class Form1
                             End If
                         Next
                     Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
                     If RadioButton3.Checked = True Then
 
                         For i = 1 To rng.Rows.Count
