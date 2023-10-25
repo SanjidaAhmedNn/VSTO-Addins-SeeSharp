@@ -35,13 +35,13 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Btn_OK = New System.Windows.Forms.Button()
         Me.Btn_Cancel = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.Selection_Source = New System.Windows.Forms.PictureBox()
         Me.Info = New System.Windows.Forms.PictureBox()
@@ -165,15 +165,6 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Btn_Cancel.Text = "Cancel"
         Me.Btn_Cancel.UseVisualStyleBackColor = False
         '
-        'ComboBox1
-        '
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(14, 217)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(230, 25)
-        Me.ComboBox1.TabIndex = 351
-        Me.ToolTip1.SetToolTip(Me.ComboBox1, "Please, Enter the items separated by Comma (,)")
-        '
         'CustomGroupBox2
         '
         Me.CustomGroupBox2.BackColor = System.Drawing.Color.White
@@ -251,6 +242,15 @@ Partial Class Form29_Simple_Drop_down_List
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 352
         Me.PictureBox1.TabStop = False
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(14, 217)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(230, 25)
+        Me.ComboBox1.TabIndex = 351
+        Me.ToolTip1.SetToolTip(Me.ComboBox1, "Please, Enter the items separated by Comma (,)")
         '
         'ListBox1
         '

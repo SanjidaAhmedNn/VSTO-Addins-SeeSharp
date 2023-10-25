@@ -19,7 +19,7 @@ Public Class Form29_Simple_Drop_down_List
     Public des_rng As Excel.Range
     Dim selectedRange As Excel.Range
     Public focuschange As Boolean = False
-
+    Dim ax As String
 
     Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
     Private Const SWP_NOMOVE As UInteger = &H2
@@ -104,9 +104,16 @@ Public Class Form29_Simple_Drop_down_List
 
     Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
         ' Check if the key pressed was 'Enter'
-        If e.KeyCode = Keys.Enter Then
-            AddNewItem(ComboBox1.Text)
-        End If
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ComboBox1_Leave(sender As Object, e As EventArgs) Handles ComboBox1.Leave
@@ -147,56 +154,109 @@ Public Class Form29_Simple_Drop_down_List
         excelApp = Globals.ThisAddIn.Application
         workBook = excelApp.ActiveWorkbook
         workSheet = workBook.ActiveSheet
+        Try
 
-        If TB_dest_range.Text = "" Then
-            MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_dest_range.Focus()
-            'Me.Close()
-            Exit Sub
-        ElseIf List_Preview.Items.Count = 0 Then
-            MessageBox.Show("Input for Drop-down list is missing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_src_range.Focus()
-            Exit Sub
-            'ElseIf IsValidExcelCellReference(TB_dest_range.Text) = False Then
-            '   MessageBox.Show("Select a Valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            '  TB_dest_range.Focus()
-            'Me.Close()
-            ' Exit Sub
-            'ElseIf IsValidExcelCellReference(TB_src_range.Text) = False Then
-            '   MessageBox.Show("Select a Valid Source Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            '  TB_src_range.Focus()
-            'Me.Close()
-            ' Exit Sub
-        ElseIf src_rng.Areas.Count > 1 Then
-            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_src_range.Focus()
+            If TB_dest_range.Text = "" Then
 
-            Exit Sub
-        Else
-            Dim stringItems As New List(Of String)()
+                If RadioButton1.Checked = True And TB_src_range.Text = "" Then
+                    MessageBox.Show("Please Provide all inputs.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_dest_range.Focus()
+                    Exit Sub
 
-            For Each item As Object In List_Preview.Items
-                stringItems.Add(item.ToString())
-            Next
+                ElseIf RadioButton2.Checked = True And ListBox1.SelectedIndex = -1 Then
+                    MessageBox.Show("Please Provide all inputs.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_dest_range.Focus()
+                    Exit Sub
 
-            ' Join the string representations into a single string
-            Dim items As String = String.Join(", ", stringItems)
+                ElseIf RadioButton3.Checked = True And ComboBox1.Text = "" Then ' No item selected
+                    MessageBox.Show("Please Provide all inputs.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_dest_range.Focus()
+                    Exit Sub
+                Else
+                    MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_dest_range.Focus()
 
-            des_rng.Validation.Delete()
+                    Exit Sub
+                End If
 
-            ' Create a new validation rule
-            Dim validation As Excel.Validation = des_rng.Validation
 
-            ' Add a drop-down list validation rule
-            validation.Delete()
-            validation.Add(Excel.XlDVType.xlValidateList, Excel.XlDVAlertStyle.xlValidAlertStop, Excel.XlFormatConditionOperator.xlBetween, items, Type.Missing)
-            validation.IgnoreBlank = True
-            validation.InCellDropdown = True
+            ElseIf IsValidExcelCellReference(TB_dest_range.Text) = False Then
+                MessageBox.Show("Please Enter valid Destination Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_dest_range.Focus()
+                Exit Sub
 
-            des_rng.Select()
+            ElseIf RadioButton1.Checked = True And IsValidExcelCellReference(TB_src_range.Text) = False Then
+                MessageBox.Show("Please Enter valid Source Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_src_range.Focus()
+                Exit Sub
 
+
+            ElseIf RadioButton2.Checked = True And ListBox1.SelectedIndex = -1 Then ' No item selected
+                ' Show message box to the user
+                MessageBox.Show("Please Select one Predefined Lists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ListBox1.Focus()
+                Exit Sub
+
+            ElseIf RadioButton3.Checked = True And ComboBox1.Text = "" Then ' No item selected
+                ' Show message box to the user
+                MessageBox.Show("Please provide Source Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ComboBox1.Focus()
+                Exit Sub
+
+            ElseIf RadioButton1.Checked = True Then
+
+                If src_rng.Areas.Count > 1 Then
+                    MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_src_range.Focus()
+                    Exit Sub
+
+                ElseIf TB_src_range.Text = "" Then
+                    MessageBox.Show("Select the Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_src_range.Focus()
+                    Exit Sub
+
+                ElseIf IsValidExcelCellReference(TB_src_range.Text) = False Then
+                    MessageBox.Show("Please Enter valid Source Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_src_range.Focus()
+                    Exit Sub
+
+                ElseIf ax <> workSheet2.Name Then
+                    MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    TB_src_range.Focus()
+                    Exit Sub
+                Else
+                    GoTo GotoExpression
+                End If
+            Else
+GotoExpression:
+                Dim stringItems As New List(Of String)()
+
+                For Each item As Object In List_Preview.Items
+                    stringItems.Add(item.ToString())
+                Next
+
+                ' Join the string representations into a single string
+                Dim items As String = String.Join(", ", stringItems)
+
+                des_rng.Validation.Delete()
+
+                ' Create a new validation rule
+                Dim validation As Excel.Validation = des_rng.Validation
+
+                ' Add a drop-down list validation rule
+                validation.Delete()
+                validation.Add(Excel.XlDVType.xlValidateList, Excel.XlDVAlertStyle.xlValidAlertStop, Excel.XlFormatConditionOperator.xlBetween, items, Type.Missing)
+                validation.IgnoreBlank = True
+                validation.InCellDropdown = True
+
+                des_rng.Select()
+                des_rng.Value = Nothing
+
+                Me.Close()
+            End If
+        Catch ex As Exception
             Me.Close()
-        End If
+        End Try
     End Sub
 
     Private Sub Btn_Cancel_Click(sender As Object, e As EventArgs) Handles Btn_Cancel.Click
@@ -451,12 +511,20 @@ Public Class Form29_Simple_Drop_down_List
     End Sub
 
     Private Sub TB_src_range_TextChanged(sender As Object, e As EventArgs) Handles TB_src_range.TextChanged
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
         Try
 
             If TB_src_range.Text IsNot Nothing And IsValidExcelCellReference(TB_src_range.Text) = True Then
                 focuschange = True
 
                 ' Define the range of cells to read (for example, cells A1 to A10)
+                If workSheet2.Name <> workSheet.Name Then
+                    TB_src_range.Text = workSheet.Name & "!" & src_rng.Address
+                    src_rng = excelApp.Range(TB_src_range.Text)
+                End If
                 src_rng = excelApp.Range(TB_src_range.Text)
                 src_rng.Select()
                 Dim range As Excel.Range = src_rng
@@ -478,6 +546,7 @@ Public Class Form29_Simple_Drop_down_List
                 'TB_src_range.Focus()
                 TB_src_range.SelectionStart = TB_src_range.Text.Length
                 focuschange = False
+                ax = workSheet.Name
 
             End If
 
@@ -487,6 +556,9 @@ Public Class Form29_Simple_Drop_down_List
     End Sub
 
     Private Sub TB_dest_rane_TextChanged(sender As Object, e As EventArgs) Handles TB_dest_range.TextChanged
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
         Try
 
             If TB_dest_range.Text IsNot Nothing And IsValidExcelCellReference(TB_dest_range.Text) = True Then
@@ -514,6 +586,7 @@ Public Class Form29_Simple_Drop_down_List
                 'TB_src_range.Focus()
                 TB_dest_range.SelectionStart = TB_dest_range.Text.Length
                 focuschange = False
+                workSheet2 = workSheet
 
             End If
 
@@ -615,20 +688,52 @@ Public Class Form29_Simple_Drop_down_List
     End Sub
 
 
-    Private Sub TB_src(sender As Object, e As KeyEventArgs) Handles TB_src_range.KeyDown
+    Private Sub RB_1(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
 
-        'Try
-        '    If e.KeyCode = Keys.Enter Then
+        Try
+            If e.KeyCode = Keys.Enter Then
 
-        '        Call Btn_OK_Click(sender, e)
+                Call Btn_OK_Click(sender, e)
 
-        '    End If
+            End If
 
-        'Catch ex As Exception
+        Catch ex As Exception
 
-        'End Try
+        End Try
 
     End Sub
+
+    Private Sub RB_2(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub RB_3(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
@@ -682,42 +787,62 @@ Public Class Form29_Simple_Drop_down_List
 
 
     Private Sub TB_dest_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_dest_range.KeyDown
-        'If Enter key is pressed then check if the text is a valid address
-        If IsValidExcelCellReference(TB_dest_range.Text) = True And e.KeyCode = Keys.Enter Then
-            des_rng = excelApp.Range(TB_dest_range.Text)
-            TB_dest_range.Focus()
-            des_rng.Select()
+        ''If Enter key is pressed then check if the text is a valid address
+        'If IsValidExcelCellReference(TB_dest_range.Text) = True And e.KeyCode = Keys.Enter Then
+        '    des_rng = excelApp.Range(TB_dest_range.Text)
+        '    TB_dest_range.Focus()
+        '    des_rng.Select()
 
-            Call Btn_OK_Click(sender, e)   'OK button click event called
+        '    Call Btn_OK_Click(sender, e)   'OK button click event called
 
-            'MsgBox(des_rng.Address)
-        ElseIf IsValidExcelCellReference(TB_dest_range.Text) = False And e.KeyCode = Keys.Enter Then
-            MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_dest_range.Text = ""
-            TB_dest_range.Focus()
-            'Me.Close()
-            Exit Sub
-        End If
+        'MsgBox(des_rng.Address)
+        'ElseIf IsValidExcelCellReference(TB_dest_range.Text) = False And e.KeyCode = Keys.Enter Then
+        '    MessageBox.Show("Please Enter valid Destination Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    TB_dest_range.Text = ""
+        '    TB_dest_range.Focus()
+        '    'Me.Close()
+        '    Exit Sub
+        'End If
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub TB_src_range_Enter(sender As Object, e As KeyEventArgs) Handles TB_src_range.KeyDown
         'If Enter key is pressed then check if the text is a valid address
 
-        If IsValidExcelCellReference(TB_src_range.Text) = True And e.KeyCode = Keys.Enter Then
-            src_rng = excelApp.Range(TB_src_range.Text)
-            TB_src_range.Focus()
-            src_rng.Select()
+        'If IsValidExcelCellReference(TB_src_range.Text) = True And e.KeyCode = Keys.Enter Then
+        '    src_rng = excelApp.Range(TB_src_range.Text)
+        '    TB_src_range.Focus()
+        '    src_rng.Select()
 
-            Call Btn_OK_Click(sender, e)   'OK button click event called
+        '    Call Btn_OK_Click(sender, e)   'OK button click event called
 
-            'MsgBox(des_rng.Address)
-        ElseIf IsValidExcelCellReference(TB_src_range.Text) = False And e.KeyCode = Keys.Enter Then
-            MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_src_range.Text = ""
-            TB_src_range.Focus()
-            'Me.Close()
-            Exit Sub
-        End If
+        '    'MsgBox(des_rng.Address)
+        'ElseIf IsValidExcelCellReference(TB_src_range.Text) = False And e.KeyCode = Keys.Enter Then
+        '    MessageBox.Show("Please Enter valid Source Range", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    TB_src_range.Text = ""
+        '    TB_src_range.Focus()
+        '    'Me.Close()
+        '    Exit Sub
+        'End If
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub ComboBox1_TextUpdate(sender As Object, e As EventArgs) Handles ComboBox1.TextUpdate
@@ -727,18 +852,49 @@ Public Class Form29_Simple_Drop_down_List
             ' Clear the list box
             List_Preview.Items.Clear()
             Dim selectedItem As String = ComboBox1.Text
-            ' Split the string into an array of strings
-            Dim items As String() = selectedItem.Split(","c)
 
-            For i As Integer = 0 To items.Length - 1
-                items(i) = items(i).TrimStart()
-            Next
+            ' Check if the text has two consecutive commas.
+            If ComboBox1.Text.Contains(",,") Then
+                ' Display a message to the user.
+                MessageBox.Show("Consecutive commas are not allowed.")
+
+                ' Remove the last comma entered to prevent consecutive commas.
+                ' Set the cursor at the end of the current text.
+                ComboBox1.Text = ComboBox1.Text.Remove(ComboBox1.Text.LastIndexOf(","), 1)
+                ComboBox1.SelectionStart = ComboBox1.Text.Length
+                'Me.Refresh()
+
+                ' Split the string into an array of strings
+                Dim items As String() = ComboBox1.Text.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
+
+                For i As Integer = 0 To items.Length - 1
+
+                    items(i) = items(i).TrimStart()
+
+                Next
 
 
-            'ComboBox1.Items.AddRange(items)
-            List_Preview.Items.AddRange(items)
-            Label7.Visible = True
-            Label7.Text = items.Count
+                'ComboBox1.Items.AddRange(items)
+                List_Preview.Items.AddRange(items)
+                Label7.Visible = True
+                Label7.Text = items.Count
+            Else
+
+                ' Split the string into an array of strings
+                ' Dim items As String() = selectedItem.Split(","c)
+                Dim items As String() = selectedItem.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
+
+                For i As Integer = 0 To items.Length - 1
+                    items(i) = items(i).TrimStart()
+                Next
+
+
+                'ComboBox1.Items.AddRange(items)
+                List_Preview.Items.AddRange(items)
+                Label7.Visible = True
+                Label7.Text = items.Count
+
+            End If
         End If
     End Sub
 
@@ -766,6 +922,31 @@ Public Class Form29_Simple_Drop_down_List
 
     Private Sub Selection(sender As Object, e As EventArgs) Handles ComboBox1.SelectedValueChanged
 
+    End Sub
+
+    Private Sub List_Preview_SelectedIndexChanged(sender As Object, e As EventArgs) Handles List_Preview.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub ComboBox2_MouseLeave(sender As Object, e As EventArgs) Handles ComboBox2.MouseLeave
+
+    End Sub
+
+    Private Sub ComboBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox2.KeyDown
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Call Btn_OK_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class
 
