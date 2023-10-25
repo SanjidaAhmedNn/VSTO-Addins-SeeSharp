@@ -77,7 +77,7 @@ Partial Class Form33_ColorBasedDropDownList
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 407
         Me.PictureBox1.TabStop = False
-        Me.ToolTip1.SetToolTip(Me.PictureBox1, "Please, select a range that contains a data validation list")
+        Me.ToolTip1.SetToolTip(Me.PictureBox1, "Please select a range that contains a data validation list")
         '
         'PictureBox3
         '
@@ -88,7 +88,7 @@ Partial Class Form33_ColorBasedDropDownList
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox3.TabIndex = 408
         Me.PictureBox3.TabStop = False
-        Me.ToolTip1.SetToolTip(Me.PictureBox3, "Please, select a range intersecting data validation list")
+        Me.ToolTip1.SetToolTip(Me.PictureBox3, "Please select a range intersecting data validation list")
         '
         'Label1
         '

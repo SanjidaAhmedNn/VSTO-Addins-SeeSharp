@@ -1,15 +1,18 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
+Imports System.Linq.Expressions
 Imports System.Reflection
 Imports System.Reflection.Emit
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
 
 Public Class Form33_ColorBasedDropDownList
     Dim WithEvents excelApp As Excel.Application
     Dim workBook As Excel.Workbook
     Public Shared workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Dim workSheet3 As Excel.Worksheet
     Dim src_rng As Excel.Range
     Public des_rng As Excel.Range
     Dim selectedRange As Excel.Range
@@ -36,15 +39,7 @@ Public Class Form33_ColorBasedDropDownList
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
             btn_OK.PerformClick()
-            'MsgBox(1)
-            'If Me.ActiveControl Is Btn_NC And e.KeyCode = Keys.Enter Then
-            '    ' Prevent the 'Ding' sound when pressing Enter (optional)
-            '    e.SuppressKeyPress = True
-            '    MsgBox(2)
-            '    ' Perform the click operation for btn2
-            '    btn_OK.PerformClick()
-            '    MsgBox(3)
-            'End If
+
 
         End If
     End Sub
@@ -167,6 +162,7 @@ Public Class Form33_ColorBasedDropDownList
         Me.Refresh()
     End Sub
     Private Sub List_Box_IndexChanged() Handles List_Preview.SelectedIndexChanged
+
         Dim item As ColoredItem = CType(List_Preview.Items(List_Preview.SelectedIndex), ColoredItem)
 
         If item.Color = Color.White Then
@@ -416,40 +412,99 @@ Public Class Form33_ColorBasedDropDownList
 
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
-        Try
-            If des_rng IsNot Nothing Then
-                des_rng.FormatConditions.Delete()
-            End If
-            If TB_src_rng.Text = "" Then
-                MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_src_rng.Focus()
-                'Me.Close()
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        'Try
+        If des_rng IsNot Nothing Then
+            des_rng.FormatConditions.Delete()
+        End If
+        If RB_Row.Checked = False Then
+            des_rng = Nothing
+        End If
+
+
+        If TB_src_rng.Text = "" And RB_cell.Checked = True Then
+            MessageBox.Show("Select all necessary options", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf TB_src_rng.Text <> "" And IsValidExcelCellReference(TB_src_rng.Text) = False Then
+            MessageBox.Show("Select a valid data validation range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf TB_src_rng.Text = "" And RB_Row.Checked = True And TB_des_rng.Text = "" Then
+            MessageBox.Show("Select all necessary options", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+
+        ElseIf TB_des_rng.Text = "" And RB_Row.Checked = True Then
+            MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+
+        ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And RB_Row.Checked = True Then
+
+            MessageBox.Show("Select a valid range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            'Me.Close()
+            Exit Sub
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Data Validation Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            Exit Sub
+
+
+
+
+            'ElseIf RB_Row.Checked = True And src_rng.row <> des_rng.row Then
+            '    MsgBox("so")
+            'ElseIf RB_Row.Checked = True And (src_rng.Row >= des_rng.Row) AndAlso
+            '   ((src_rng.Row + src_rng.Rows.Count - 1) <= (des_rng.Row + des_rng.Rows.Count - 1)) AndAlso
+            '   (src_rng.Column >= des_rng.Column) AndAlso
+            '   ((src_rng.Column + src_rng.Columns.Count - 1) <= (des_rng.Column + des_rng.Columns.Count - 1)) Then
+
+
+
+        ElseIf RB_Row.Checked = True Then
+            If workSheet3.Name <> des_rng.Worksheet.Name Then
+                MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                TB_des_rng.Focus()
                 Exit Sub
 
-            ElseIf IsValidExcelCellReference(TB_src_rng.Text) = False Then
-                MessageBox.Show("Select the valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_src_rng.Focus()
-                'Me.Close()
-                Exit Sub
+            ElseIf ((src_rng.Row + src_rng.Rows.Count - 1) < (des_rng.Row + des_rng.Rows.Count - 1)) Or (src_rng.Row <> des_rng.Row) Or excelApp.Intersect(src_rng, des_rng) Is Nothing Then
 
-            ElseIf TB_des_rng.Text = "" And RB_Row.Checked = True Then
-                MessageBox.Show("Select the Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                MessageBox.Show("Please select the range of the same data table.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TB_des_rng.Focus()
                 'Me.Close()
                 Exit Sub
 
-
-            ElseIf IsValidExcelCellReference(TB_des_rng.Text) = False And RB_Row.Checked = True Then
-                MessageBox.Show("Select the valid Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TB_des_rng.Focus()
-                'Me.Close()
-                Exit Sub
-
-            ElseIf src_rng.Areas.Count > 1 Then
-                MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ElseIf RB_Row.Checked = True AndAlso des_rng.Areas.Count > 1 Then
+                MessageBox.Show("Select Case a valid range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TB_src_rng.Focus()
-
+                Exit Sub
             Else
+                GoTo GotoExpression
+            End If
+
+        Else
+
+GotoExpression:
+
+            If Backup_sheet.Checked = True Then
+                    workSheet.Copy(After:=workBook.Sheets(workSheet.Name))
+                End If
+
+                workBook.Sheets(workSheet.Name).Activate
 
                 ' Retrieve data validation items
 
@@ -472,9 +527,11 @@ Public Class Form33_ColorBasedDropDownList
                         ' Color the destination range
                         Dim i As Integer = 0
                         For Each cell In src_rng
-                            i = i + 1
+                        i = i + 1
+                        If item.Color <> Color.White Then
                             AddColorCondition2(des_rng.Rows(i), cell, item.ToString, item.Color)
-                        Next
+                        End If
+                    Next
                     Next
                 End If
 
@@ -483,15 +540,16 @@ Public Class Form33_ColorBasedDropDownList
             src_rng.Select()
 
 
-            For Each cell In src_rng
-                If cell.Validation.Type = Excel.XlDVType.xlValidateList Then
-                    flag = True
-                    Exit For
-                End If
+        For Each cell In src_rng
+            If cell.Validation.Type = Excel.XlDVType.xlValidateList Then
+                flag = True
+                Exit For
+            End If
 
-            Next
+        Next
 
-            For Each item In List_Preview.Items
+
+        For Each item In List_Preview.Items
                 If item.color = Color.White Or item.color = SystemColors.Highlight Then
                     flag2 = False
                 Else
@@ -499,18 +557,18 @@ Public Class Form33_ColorBasedDropDownList
                     Exit For
                 End If
             Next
-            'MsgBox(flag2)
+
 
             If flag = False And sessionflag2 = True Then
                 form = New Form42
                 form.Show()
                 Me.Hide()
-                ' MsgBox(1)
+
             ElseIf flag2 = False And sessionflag1 = True Then
                 form2 = New Form43
                 form2.Show()
                 Me.Hide()
-                'MsgBox(2)
+
 
             Else
 
@@ -520,32 +578,32 @@ Public Class Form33_ColorBasedDropDownList
 
             'Me.Show()
 
-        Catch ex As Exception
-            If flag = False Then
-                Me.Hide()
-                form = New Form42
-                form.Show()
-                If form.IsDisposed Or form Is Nothing Then
-                    Me.Show()
-                End If
+            ' Catch ex As Exception
+            'If flag = False Then
+            '    Me.Hide()
+            '    form = New Form42
+            '    form.Show()
+            '    If form.IsDisposed Or form Is Nothing Then
+            '        Me.Show()
+            '    End If
 
-            ElseIf flag2 = False Then
-                Me.Hide()
-                form2 = New Form43
-                form2.Show()
-                If form2.IsDisposed Or form2 Is Nothing Then
-                    Me.Show()
-                End If
-            End If
-            'Me.Close()
-        End Try
+            'ElseIf flag2 = False Then
+            '    Me.Hide()
+            '    form2 = New Form43
+            '    form2.Show()
+            '    If form2.IsDisposed Or form2 Is Nothing Then
+            '        Me.Show()
+            '    End If
+            'End If
+            Me.Close()
+        'End Try
     End Sub
     Private Function GetColorForItem(index As Integer) As Color
         ' This function maps an index to a color
         ' You can adjust or expand this as needed
         Dim colors As Color() = {Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Purple}
 
-        If index >= 0 And index < colors.Length Then
+        If index >= 0 And index <colors.Length Then
             Return colors(index)
         Else
             Return Color.White
@@ -570,9 +628,6 @@ Public Class Form33_ColorBasedDropDownList
 
     End Sub
 
-    Private Sub List_Box_IndexChanged(sender As Object, e As EventArgs) Handles List_Preview.SelectedIndexChanged
-
-    End Sub
 
     Private Sub RB_Row_CheckedChanged(sender As Object, e As EventArgs) Handles RB_Row.CheckedChanged
         If RB_Row.Checked = True Then
@@ -587,6 +642,11 @@ Public Class Form33_ColorBasedDropDownList
 
     Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
         Try
+
+            excelApp = Globals.ThisAddIn.Application
+            Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+            Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+
             TB_src_rng.Focus()
 
 
@@ -633,6 +693,8 @@ Public Class Form33_ColorBasedDropDownList
 
                 TB_src_rng.Focus()
                 ReDim mybtn(List_Preview.Items.Count)
+                workSheet3 = worksheet
+
             End If
 
         Catch ex As Exception
@@ -766,6 +828,10 @@ Public Class Form33_ColorBasedDropDownList
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
+        ' Regular expression pattern for a valid sheet name. This is a simplified version and might not cover all edge cases.
+        ' Excel sheet names cannot contain the characters \, /, *, [, ], :, ?, and cannot be 'History'.
+        Dim sheetNamePattern As String = "(?i)(?![\/*[\]:?])(?!History)[^\/\[\]*?:\\]+"
+
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -774,11 +840,11 @@ Public Class Form33_ColorBasedDropDownList
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
 
-        ' Regular expression pattern to allow multiple cell references separated by commas
-        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+        ' Regular expression pattern to allow the sheet name, followed by '!', before the cell reference
+        Dim fullPattern As String = "^(" + sheetNamePattern + "!)?(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+        Dim regex As New Regex(fullPattern)
 
         ' Test the input string against the regex pattern.
         Return regex.IsMatch(cellReference.ToUpper)
@@ -857,6 +923,10 @@ Public Class Form33_ColorBasedDropDownList
 
     Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
         Try
+            excelApp = Globals.ThisAddIn.Application
+            Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+            Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+            'workSheet3 = worksheet
 
             If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
                 focuschange = True
@@ -866,28 +936,20 @@ Public Class Form33_ColorBasedDropDownList
                 des_rng.Select()
                 Dim range As Excel.Range = des_rng
 
-                ' Clear the ListBox
-                'List_Preview.Items.Clear()
 
-                '' Iterate over each cell in the range
-                'For Each cell As Excel.Range In range
-                '    ' Add the cell's value to the ListBox
-                '    If cell.Value IsNot Nothing Then
-                '        List_Preview.Items.Add(cell.Value)
-                '    End If
-                'Next
-
-                'Label7.Visible = True
-                'Label7.Text = List_Preview.Items.Count
+                If worksheet.Name <> workSheet3.Name Then
+                    TB_des_rng.Text = worksheet.Name & "!" & des_rng.Address
+                    des_rng = excelApp.Range(TB_des_rng.Text)
+                End If
                 Me.Activate()
-                'TB_src_range.Focus()
-                TB_des_rng.SelectionStart = TB_des_rng.Text.Length
-                focuschange = False
-
+                    'TB_src_range.Focus()
+                    TB_des_rng.SelectionStart = TB_des_rng.Text.Length
+                    focuschange = False
+                ax = worksheet.Name
             End If
 
         Catch ex As Exception
-
+            ax = ""
         End Try
     End Sub
 
@@ -931,6 +993,8 @@ Public Class Form33_ColorBasedDropDownList
         Btn_color.BackColor = Color.White
         Me.Refresh()
     End Sub
+
+
 End Class
 
 Public Class ColoredItem
