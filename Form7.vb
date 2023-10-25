@@ -218,6 +218,72 @@ Public Class Form7
         GetLengths = Arr2
 
     End Function
+    Private Function MaxOfColumn(cRng As Excel.Range)
+
+        Dim max As Integer
+        Dim CharNumbers As Integer
+
+        If IsNumeric(cRng.Cells(1, 1).value) Then
+            max = Len(Str(cRng.Cells(1, 1).value))
+        Else
+            max = Len(cRng.Cells(1, 1).value)
+        End If
+
+        For i = 2 To cRng.Rows.Count
+            If IsNumeric(cRng.Cells(i, 1).value) Then
+                CharNumbers = Len(Str(cRng.Cells(i, 1).value))
+            Else
+                CharNumbers = Len(cRng.Cells(i, 1).value)
+            End If
+            If CharNumbers > max Then
+                max = CharNumbers
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfColumn = max
+
+    End Function
+    Private Function MaxOfArray(Arr)
+
+        Dim max As Integer
+        max = Len(Arr(LBound(Arr)))
+
+        For i = LBound(Arr) + 1 To UBound(Arr)
+            If Len(Arr(i)) > max Then
+                max = Len(Arr(i))
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfArray = max
+
+    End Function
+    Private Function AdjustWidth(Widths, CWidth)
+
+        Dim SumWidth As Double = 0
+
+        For i = LBound(Widths) To UBound(Widths)
+            SumWidth = SumWidth + Widths(i)
+        Next
+
+        If SumWidth < CWidth Then
+            Dim Extra As Double = CWidth - SumWidth
+            Extra = Extra / (UBound(Widths) + 1)
+            For i = LBound(Widths) To UBound(Widths)
+                Widths(i) = Widths(i) + Extra
+            Next
+        End If
+
+        AdjustWidth = Widths
+
+    End Function
 
     Private Sub Display()
 
@@ -246,8 +312,9 @@ Public Class Form7
             r = displayRng.Rows.Count
             c = displayRng.Columns.Count
 
-            Dim height As Integer
-            Dim width As Integer
+            Dim height As Double
+            Dim BaseWidth As Double
+            Dim width As Double
 
             If r > 1 And r <= 6 Then
                 height = CustomPanel1.Height / r
@@ -255,25 +322,25 @@ Public Class Form7
                 height = CustomPanel1.Height / 6
             End If
 
-            If c > 1 And c <= 4 Then
-                width = CustomPanel1.Width / c
-            Else
-                width = CustomPanel1.Width / 4
-            End If
+            BaseWidth = 260 / 3
 
-            For i = 1 To r
-                For j = 1 To c
+            Dim Ordinate As Double = 0
+            Dim Widths(c - 1) As Double
+
+            For j = 1 To c
+                Dim CRng As Excel.Range = worksheet.Range(displayRng.Cells(1, j), displayRng.Cells(r, j))
+                Widths(j - 1) = (MaxOfColumn(CRng) * BaseWidth) / 10
+            Next
+
+            Widths = AdjustWidth(Widths, CustomPanel2.Width)
+
+            For j = 1 To c
+                For i = 1 To r
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, j).Value
-                    If r <> 1 And c = 1 Then
-                        label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                    ElseIf r = 1 And c <> 1 Then
-                        label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                    Else
-                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                    End If
+                    label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                     label.Height = height
-                    label.Width = width
+                    label.Width = Widths(j - 1)
                     label.BorderStyle = BorderStyle.FixedSingle
                     label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -308,10 +375,9 @@ Public Class Form7
                             label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                         End If
                     End If
-
                     CustomPanel1.Controls.Add(label)
-
                 Next
+                Ordinate = Ordinate + Widths(j - 1)
             Next
 
             CustomPanel1.AutoScroll = True
@@ -349,7 +415,15 @@ Public Class Form7
                     height = CustomPanel2.Height / 6
                 End If
 
-                width = CustomPanel2.Width / 4
+                Dim values(displayRng.Cells.Count - 1) As Object
+                For k = 1 To displayRng.Cells.Count
+                    values(k - 1) = displayRng.Cells(k).value
+                Next
+
+                Dim Widths2(0) As Double
+                Widths2(0) = (MaxOfArray(values) * BaseWidth) / 10
+
+                Widths2 = AdjustWidth(Widths2, CustomPanel2.Width)
 
                 Dim count As Integer
                 count = 1
@@ -360,10 +434,10 @@ Public Class Form7
                         For j = 1 To c
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((2.5 - 1) * width, (count - 1) * height)
+                            label.Location = New System.Drawing.Point(0, (count - 1) * height)
                             count = count + 1
                             label.Height = height
-                            label.Width = width
+                            label.Width = Widths2(0)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -407,10 +481,10 @@ Public Class Form7
                         For i = 1 To r
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((2.5 - 1) * width, (count - 1) * height)
+                            label.Location = New System.Drawing.Point(0, (count - 1) * height)
                             count = count + 1
                             label.Height = height
-                            label.Width = width
+                            label.Width = Widths2(0)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -468,12 +542,18 @@ Public Class Form7
                 count = 1
 
                 If X5 Then
-
+                    Ordinate = 0
+                    Dim Length As Integer
                     For i = 1 To r
                         For j = 1 To c
+                            Length = Len(displayRng.Cells(i, j).Value)
+                            If Length < 7 Then
+                                Length = 7
+                            End If
+                            width = (Length * BaseWidth) / 10
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((count - 1) * width, (3.5 - 1) * height)
+                            label.Location = New System.Drawing.Point(Ordinate, (3.5 - 1) * height)
                             count = count + 1
                             label.Height = height
                             label.Width = width
@@ -511,16 +591,23 @@ Public Class Form7
                             End If
 
                             CustomPanel2.Controls.Add(label)
+                            Ordinate = Ordinate + width
                         Next
                     Next
 
                 ElseIf X6 Then
-
+                    Ordinate = 0
+                    Dim Length As Integer
                     For j = 1 To c
                         For i = 1 To r
+                            Length = Len(displayRng.Cells(i, j).Value)
+                            If Length < 7 Then
+                                Length = 7
+                            End If
+                            width = (Length * BaseWidth) / 10
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((count - 1) * width, (3.5 - 1) * height)
+                            label.Location = New System.Drawing.Point(Ordinate, (3.5 - 1) * height)
                             count = count + 1
                             label.Height = height
                             label.Width = width
@@ -556,8 +643,8 @@ Public Class Form7
                                     label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
                             End If
-
                             CustomPanel2.Controls.Add(label)
+                            Ordinate = Ordinate + width
                         Next
                     Next
                 End If
