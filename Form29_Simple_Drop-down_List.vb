@@ -520,13 +520,27 @@ GotoExpression:
             If TB_src_range.Text IsNot Nothing And IsValidExcelCellReference(TB_src_range.Text) = True Then
                 focuschange = True
 
+                'src_rng = excelApp.Range(cellAddress)
+                Try
+                    src_rng = excelApp.Range(TB_src_range.Text)
+                    src_rng.Select()
+                Catch
+                    ' Split the string into sheet name and cell address
+                    Dim parts As String() = TB_src_range.Text.Split("!"c)
+                    Dim sheetName As String = parts(0)
+                    Dim cellAddress As String = parts(1)
+
+                    src_rng = excelApp.Range(cellAddress)
+                    src_rng.Select()
+                End Try
                 ' Define the range of cells to read (for example, cells A1 to A10)
                 If workSheet2.Name <> workSheet.Name Then
                     TB_src_range.Text = workSheet.Name & "!" & src_rng.Address
-                    src_rng = excelApp.Range(TB_src_range.Text)
+                    'src_rng = excelApp.Range(TB_src_range.Text)
+
+
                 End If
-                src_rng = excelApp.Range(TB_src_range.Text)
-                src_rng.Select()
+
                 Dim range As Excel.Range = src_rng
 
                 ' Clear the ListBox
@@ -546,12 +560,13 @@ GotoExpression:
                 'TB_src_range.Focus()
                 TB_src_range.SelectionStart = TB_src_range.Text.Length
                 focuschange = False
+
                 ax = workSheet.Name
 
             End If
 
         Catch ex As Exception
-
+            ax = ""
         End Try
     End Sub
 
@@ -737,6 +752,10 @@ GotoExpression:
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
+        ' Regular expression pattern for a valid sheet name. This is a simplified version and might not cover all edge cases.
+        ' Excel sheet names cannot contain the characters \, /, *, [, ], :, ?, and cannot be 'History'.
+        Dim sheetNamePattern As String = "(?i)(?![\/*[\]:?])(?!History)[^\/\[\]*?:\\]+"
+
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -745,11 +764,11 @@ GotoExpression:
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
 
-        ' Regular expression pattern to allow multiple cell references separated by commas
-        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+        ' Regular expression pattern to allow the sheet name, followed by '!', before the cell reference
+        Dim fullPattern As String = "^(" + sheetNamePattern + "!)?(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+        Dim regex As New Regex(fullPattern)
 
         ' Test the input string against the regex pattern.
         Return regex.IsMatch(cellReference.ToUpper)
