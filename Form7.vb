@@ -677,11 +677,8 @@ Public Class Form7
                         height = CustomPanel2.Height / 6
                     End If
 
-                    If c > 1 And c <= 4 Then
-                        width = CustomPanel2.Width / c
-                    Else
-                        width = CustomPanel2.Width / 4
-                    End If
+                    Dim Values(r - 1, c - 1) As Object
+                    Dim References(r - 1, c - 1) As Integer
 
                     If X5 Then
                         Dim iRow As Integer
@@ -692,55 +689,12 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + j
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= BreakPoints(i - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = x
                             Next
                             iRow = BreakPoints(i - 1)
                         Next
@@ -754,59 +708,78 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + i
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= BreakPoints(j - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = x
                             Next
                             iRow = BreakPoints(j - 1)
                         Next
                     End If
+
+                    Dim ColumnValues(r - 1) As Object
+                    Dim widths2(c - 1) As Double
+
+                    For j = 0 To c - 1
+                        For i = 0 To r - 1
+                            ColumnValues(i) = Values(i, j)
+                        Next
+                        widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                    Next
+                    widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                    Ordinate = 0
+
+                    For j = 1 To c
+                        For i = 1 To r
+                            Dim label As New System.Windows.Forms.Label
+                            label.Text = Values(i - 1, j - 1)
+                            label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
+                            label.Height = height
+                            label.Width = widths2(j - 1)
+                            label.BorderStyle = BorderStyle.FixedSingle
+                            label.TextAlign = ContentAlignment.MiddleCenter
+
+                            If CheckBox1.Checked = True Then
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = References(i - 1, j - 1)
+                                y = 1
+                                Dim cell As Excel.Range = displayRng.Cells(x, y)
+                                Dim font As Excel.Font = cell.Font
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+                                If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                                If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                                label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                End If
+                            End If
+
+                            CustomPanel2.Controls.Add(label)
+                        Next
+                        Ordinate = Ordinate + widths2(j - 1)
+                    Next
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
@@ -824,11 +797,8 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
                         For i = 1 To r
                             For j = 1 To c
@@ -836,25 +806,43 @@ Public Class Form7
                                 Dim y As Integer
                                 x = (c * (i - 1)) + j
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = x
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = References(i - 1, j - 1)
+                                    y = 1
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -886,6 +874,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     ElseIf X6 Then
@@ -902,37 +891,52 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
-                        For j = 1 To c
-                            For i = 1 To r
+                        For i = 1 To r
+                            For j = 1 To c
                                 Dim x As Integer
                                 Dim y As Integer
                                 x = (r * (j - 1)) + i
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = x
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = References(i - 1, j - 1)
+                                    y = 1
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -964,6 +968,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     End If
@@ -997,11 +1002,8 @@ Public Class Form7
                         height = CustomPanel2.Height / 6
                     End If
 
-                    If c > 1 And c <= 4 Then
-                        width = CustomPanel2.Width / c
-                    Else
-                        width = CustomPanel2.Width / 4
-                    End If
+                    Dim Values(r - 1, c - 1) As Object
+                    Dim References(r - 1, c - 1) As Integer
 
                     If X5 Then
                         Dim iColumn As Integer
@@ -1012,55 +1014,12 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + j
-                                Dim label As New System.Windows.Forms.Label
-                                If y <= BreakPoints(i - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                If x <= BreakPoints(i - 1) Then
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = y
                             Next
                             iColumn = BreakPoints(i - 1)
                         Next
@@ -1074,59 +1033,79 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + i
-                                Dim label As New System.Windows.Forms.Label
-                                If y <= BreakPoints(j - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                If x <= BreakPoints(j - 1) Then
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = y
                             Next
                             iColumn = BreakPoints(j - 1)
                         Next
                     End If
+
+                    Dim ColumnValues(r - 1) As Object
+                    Dim widths2(c - 1) As Double
+
+                    For j = 0 To c - 1
+                        For i = 0 To r - 1
+                            ColumnValues(i) = Values(i, j)
+                        Next
+                        widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                    Next
+                    widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                    Ordinate = 0
+
+                    For j = 1 To c
+                        For i = 1 To r
+                            Dim label As New System.Windows.Forms.Label
+                            label.Text = Values(i - 1, j - 1)
+                            label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
+                            label.Height = height
+                            label.Width = widths2(j - 1)
+                            label.BorderStyle = BorderStyle.FixedSingle
+                            label.TextAlign = ContentAlignment.MiddleCenter
+
+                            If CheckBox1.Checked = True Then
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = References(i - 1, j - 1)
+                                Dim cell As Excel.Range = displayRng.Cells(x, y)
+                                Dim font As Excel.Font = cell.Font
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+                                If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                                If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                                label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                End If
+                            End If
+
+                            CustomPanel2.Controls.Add(label)
+                        Next
+                        Ordinate = Ordinate + widths2(j - 1)
+                    Next
+
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
@@ -1144,11 +1123,8 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
                         For i = 1 To r
                             For j = 1 To c
@@ -1156,25 +1132,43 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = (c * (i - 1)) + j
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = y
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = 1
+                                    y = References(i - 1, j - 1)
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -1206,6 +1200,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     ElseIf X6 Then
@@ -1222,37 +1217,52 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
-                        For j = 1 To c
-                            For i = 1 To r
+                        For i = 1 To r
+                            For j = 1 To c
                                 Dim x As Integer
                                 Dim y As Integer
                                 x = 1
                                 y = (r * (j - 1)) + i
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = y
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = 1
+                                    y = References(i - 1, j - 1)
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -1284,6 +1294,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     End If
@@ -3039,9 +3050,8 @@ Public Class Form7
             rng = worksheet.Range(rngAddress)
             TextBoxChanged = True
             rng.Select()
-
             Call Display()
-
+            Call Setup()
             TextBoxChanged = False
         Catch ex As Exception
 
