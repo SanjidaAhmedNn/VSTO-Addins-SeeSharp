@@ -633,6 +633,7 @@ GotoExpression:
         If RB_Row.Checked = True Then
             Selection_destination.Enabled = True
             TB_des_rng.Enabled = True
+            TB_des_rng.Focus()
         End If
     End Sub
 
@@ -930,14 +931,22 @@ GotoExpression:
 
             If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
                 focuschange = True
+                Try
+                    ' Define the range of cells to read (for example, cells A1 to A10)
+                    des_rng = excelApp.Range(TB_des_rng.Text)
+                    des_rng.Select()
+                    'Dim range As Excel.Range = des_rng
+                Catch
+                    ' Split the string into sheet name and cell address
+                    Dim parts As String() = TB_des_rng.Text.Split("!"c)
+                    Dim sheetName As String = parts(0)
+            Dim cellAddress As String = parts(1)
 
-                ' Define the range of cells to read (for example, cells A1 to A10)
-                des_rng = excelApp.Range(TB_des_rng.Text)
-                des_rng.Select()
-                Dim range As Excel.Range = des_rng
+                    des_rng = excelApp.Range(cellAddress)
+                    des_rng.Select()
+                End Try
 
-
-                If worksheet.Name <> workSheet3.Name Then
+        If worksheet.Name <> workSheet3.Name Then
                     TB_des_rng.Text = worksheet.Name & "!" & des_rng.Address
                     des_rng = excelApp.Range(TB_des_rng.Text)
                 End If
