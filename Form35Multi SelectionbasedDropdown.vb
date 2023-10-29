@@ -595,6 +595,7 @@ Public Class Form35Multi_SelectionbasedDropdown
 
     Private Sub Form35Multi_SelectionbasedDropdown_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Enter Then
+            Btn_OK.Focus()
             Btn_OK.PerformClick()
         End If
     End Sub

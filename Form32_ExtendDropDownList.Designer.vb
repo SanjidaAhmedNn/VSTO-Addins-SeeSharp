@@ -174,6 +174,7 @@ Partial Class Form32_ExtendDropDownList
         Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.TB_src_rng)
         Me.Controls.Add(Me.Label1)
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form32_ExtendDropDownList"

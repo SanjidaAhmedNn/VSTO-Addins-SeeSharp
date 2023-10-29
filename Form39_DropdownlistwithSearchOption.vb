@@ -525,6 +525,7 @@ Public Class Form39_DropdownlistwithSearchOption
 
     Private Sub Form39_DropdownlistwithSearchOption_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
+            Btn_OK.Focus()
             Btn_OK.PerformClick()
         End If
     End Sub

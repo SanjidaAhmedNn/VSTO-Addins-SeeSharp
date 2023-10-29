@@ -353,7 +353,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Dropdown_35_Labels.Name = "RB_Dropdown_35_Labels"
         Me.RB_Dropdown_35_Labels.Size = New System.Drawing.Size(258, 21)
         Me.RB_Dropdown_35_Labels.TabIndex = 1
-        Me.RB_Dropdown_35_Labels.Text = "Dynamic Drop-down List with 3-5 Levels"
+        Me.RB_Dropdown_35_Labels.Text = "Dynamic Drop-down List with 2-5 Levels"
         Me.RB_Dropdown_35_Labels.UseVisualStyleBackColor = True
         '
         'PictureBox5

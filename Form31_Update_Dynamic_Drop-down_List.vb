@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.ComponentModel.Design
+Imports System.Runtime.CompilerServices
 Imports System.Runtime.InteropServices
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
@@ -242,6 +243,12 @@ Public Class Form31_UpdateDynamicDropdownList
             MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
 
+        ElseIf ax <> workSheet2.Name Then
+
+            MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng2.Focus()
+            Exit Sub
+
         Else
             Try
                 Dim result As DialogResult = MessageBox.Show("The Original Source Range is :" & Variable1 & ". AND the Drop-down list is in :" & Variable2 & "Do you want to continue?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -317,54 +324,54 @@ Public Class Form31_UpdateDynamicDropdownList
 
 
             Dim rng As Excel.Range
-                If Header = True Then
-                    'Dim adjustRange As Excel.Range
-                    rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
+            If Header = True Then
+                'Dim adjustRange As Excel.Range
+                rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
 
-                Else
+            Else
 
-                    rng = src_rng 'Assuming you have a range from A1 to A100
+                rng = src_rng 'Assuming you have a range from A1 to A100
+            End If
+            'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
+            'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
+
+            Dim uniqueValues As New List(Of String)
+
+            'Extract unique values from the range
+            For Each cell As Excel.Range In rng.Columns(1).Cells
+                Dim value As String = cell.Value
+                If Not uniqueValues.Contains(value) Then
+                    uniqueValues.Add(value)
                 End If
-                'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
-                'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
+            Next
 
-                Dim uniqueValues As New List(Of String)
+            If Ascending = True Then
+                'Sort the list in ascending order
+                uniqueValues.Sort()
+            ElseIf Descending = True Then
+                'Sort the list in ascending order
+                uniqueValues.Sort()
+                uniqueValues.Reverse()
+            End If
 
-                'Extract unique values from the range
-                For Each cell As Excel.Range In rng.Columns(1).Cells
-                    Dim value As String = cell.Value
-                    If Not uniqueValues.Contains(value) Then
-                        uniqueValues.Add(value)
-                    End If
-                Next
+            'Create drop-down list at B1 with the unique values
+            Dim dropDownRange As Excel.Range = des_rng.Columns(1)
+            Dim validation As Excel.Validation = dropDownRange.Validation
+            validation.Delete() 'Remove any existing validation
+            validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
+            Dim range1 As Excel.Range = excelApp.Range(Variable2)
+            If RB_diff_rng.Checked = True And range1.Address(1, 1) <> des_rng.Address(1, 1) Then
 
-                If Ascending = True Then
-                    'Sort the list in ascending order
-                    uniqueValues.Sort()
-                ElseIf Descending = True Then
-                    'Sort the list in ascending order
-                    uniqueValues.Sort()
-                    uniqueValues.Reverse()
-                End If
+                range1.Cut(des_rng)
+            End If
 
-                'Create drop-down list at B1 with the unique values
-                Dim dropDownRange As Excel.Range = des_rng.Columns(1)
-                Dim validation As Excel.Validation = dropDownRange.Validation
-                validation.Delete() 'Remove any existing validation
-                validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
-                Dim range1 As Excel.Range = excelApp.Range(Variable2)
-                If RB_diff_rng.Checked = True And range1.Address(1, 1) <> des_rng.Address(1, 1) Then
+            Variable1 = TB_src_rng.Text
+            If RB_diff_rng.Checked = True Then
+                Variable2 = TB_des_rng2.Text
+            End If
+            des_rng.Select()
 
-                    range1.Cut(des_rng)
-                End If
-
-                Variable1 = TB_src_rng.Text
-                If RB_diff_rng.Checked = True Then
-                    Variable2 = TB_des_rng2.Text
-                End If
-                des_rng.Select()
-
-
+            des_rng.Value = Nothing
             Me.Close()
         Catch ex As Exception
             Me.Close()
@@ -374,6 +381,10 @@ Public Class Form31_UpdateDynamicDropdownList
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
+        ' Regular expression pattern for a valid sheet name. This is a simplified version and might not cover all edge cases.
+        ' Excel sheet names cannot contain the characters \, /, *, [, ], :, ?, and cannot be 'History'.
+        Dim sheetNamePattern As String = "(?i)(?![\/*[\]:?])(?!History)[^\/\[\]*?:\\]+"
+
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -382,11 +393,11 @@ Public Class Form31_UpdateDynamicDropdownList
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
 
-        ' Regular expression pattern to allow multiple cell references separated by commas
-        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+        ' Regular expression pattern to allow the sheet name, followed by '!', before the cell reference
+        Dim fullPattern As String = "^(" + sheetNamePattern + "!)?(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+        Dim regex As New Regex(fullPattern)
 
         ' Test the input string against the regex pattern.
         Return regex.IsMatch(cellReference.ToUpper)
@@ -505,41 +516,75 @@ Public Class Form31_UpdateDynamicDropdownList
     End Sub
 
     Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
-        If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text) = True Then
-            focuschange = True
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
 
-            ' Define the range of cells to read (for example, cells A1 to A10)
-            TB_src_rng.Text = TB_src_rng.Text.ToUpper
-            src_rng = excelApp.Range(TB_src_rng.Text)
-            src_rng.Select()
-            Dim range As Excel.Range = src_rng
+        Try
+            If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                TB_src_rng.Text = TB_src_rng.Text.ToUpper
+                src_rng = excelApp.Range(TB_src_rng.Text)
+                src_rng.Select()
+                Dim range As Excel.Range = src_rng
 
 
-            Me.Activate()
-            'TB_src_range.Focus()
-            TB_src_rng.SelectionStart = TB_src_rng.Text.Length
-            focuschange = False
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_src_rng.SelectionStart = TB_src_rng.Text.Length
+                focuschange = False
+                workSheet2 = workSheet
 
-        End If
+
+            End If
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub TB_des_rng2_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng2.TextChanged
-        If TB_des_rng2.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng2.Text) = True Then
-            focuschange = True
 
-            ' Define the range of cells to read (for example, cells A1 to A10)
-            TB_des_rng2.Text = TB_des_rng2.Text.ToUpper
-            des_rng = excelApp.Range(TB_des_rng2.Text)
-            des_rng.Select()
-            Dim range As Excel.Range = des_rng
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+        Try
+            If TB_des_rng2.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng2.Text) = True Then
+                focuschange = True
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                Try
+                    TB_des_rng2.Text = TB_des_rng2.Text
+                    des_rng = excelApp.Range(TB_des_rng2.Text)
+                    des_rng.Select()
+
+                Catch ex As Exception
+                    ' Split the string into sheet name and cell address
+                    Dim parts As String() = TB_des_rng2.Text.Split("!"c)
+                    Dim sheetName As String = parts(0)
+                    Dim cellAddress As String = parts(1)
+
+                    des_rng = excelApp.Range(cellAddress)
+                    des_rng.Select()
+
+                End Try
+
+                If workSheet2.Name <> workSheet.Name Then
+                    TB_des_rng2.Text = workSheet.Name & "!" & des_rng.Address
+                    'src_rng = excelApp.Range(TB_src_range.Text)
 
 
-            Me.Activate()
-            'TB_src_range.Focus()
-            TB_des_rng2.SelectionStart = TB_des_rng2.Text.Length
-            focuschange = False
+                End If
 
-        End If
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_des_rng2.SelectionStart = TB_des_rng2.Text.Length
+                focuschange = False
+                ax = workSheet.Name
+            End If
+        Catch ex As Exception
+            ax = ""
+        End Try
     End Sub
 
     Private Sub Form31_UpdateDynamicDropdownList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -559,6 +604,5 @@ Public Class Form31_UpdateDynamicDropdownList
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
     End Sub
-
 
 End Class

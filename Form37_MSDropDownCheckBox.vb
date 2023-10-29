@@ -566,6 +566,7 @@ Public Class Form37_MSDropDownCheckBox
 
     Private Sub Form37_MSDropDownCheckBox_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
+            Btn_OK.Focus()
             Btn_OK.PerformClick()
         End If
     End Sub

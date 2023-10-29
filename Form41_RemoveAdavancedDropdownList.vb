@@ -627,6 +627,7 @@ Public Class Form41_RemoveAdavancedDropdownList
 
     Private Sub Form41_RemoveAdavancedDropdownList_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Enter Then
+            Btn_OK.Focus()
             Btn_OK.PerformClick()
         End If
     End Sub

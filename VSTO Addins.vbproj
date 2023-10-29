@@ -488,6 +488,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form15CompareCells.resx">
       <DependentUpon>Form15CompareCells.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
       <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>

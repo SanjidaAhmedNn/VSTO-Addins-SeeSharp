@@ -72,6 +72,13 @@ Public Class Form32_ExtendDropDownList
         End Try
     End Sub
 
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Btn_OK.Focus()
+            Btn_OK.PerformClick()
+        End If
+    End Sub
+
     Private Sub Dest_selection_Click(sender As Object, e As EventArgs) Handles Dest_selection.Click
         If selectedRange Is Nothing Then
         Else
@@ -202,15 +209,29 @@ Public Class Form32_ExtendDropDownList
             'Me.Close()
             Exit Sub
 
+
+
+        ElseIf src_rng.Areas.Count > 1 Then
+            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_src_rng.Focus()
+            Exit Sub
+
+
+        ElseIf ax <> workSheet2.Name Then
+            MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            Exit Sub
+
+        ElseIf src_rng.Column <> des_rng.Column Then
+            MessageBox.Show("1st column of source range and destination range should be same.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_des_rng.Focus()
+            Exit Sub
+
         ElseIf excelApp.Intersect(src_rng, des_rng) Is Nothing Then
             MessageBox.Show(" These two ranges must intersect each other.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             'Me.Close()
             Exit Sub
-
-        ElseIf src_rng.Areas.Count > 1 Then
-            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_src_rng.Focus()
 
         Else
             Try
@@ -249,21 +270,44 @@ Public Class Form32_ExtendDropDownList
     End Sub
 
     Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
         Try
             If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
                 focuschange = True
 
                 ' Define the range of cells to read (for example, cells A1 to A10)
-                TB_des_rng.Text = TB_des_rng.Text.ToUpper
-                des_rng = excelApp.Range(TB_des_rng.Text)
-                des_rng.Select()
-                Dim range As Excel.Range = des_rng
+                TB_des_rng.Text = TB_des_rng.Text
+                Try
+                    des_rng = excelApp.Range(TB_des_rng.Text)
+                    des_rng.Select()
+
+                Catch ex As Exception
+                    ' Split the string into sheet name and cell address
+                    Dim parts As String() = TB_des_rng.Text.Split("!"c)
+                    Dim sheetName As String = parts(0)
+                    Dim cellAddress As String = parts(1)
+
+                    des_rng = excelApp.Range(cellAddress)
+                    des_rng.Select()
+
+                End Try
+
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                If workSheet2.Name <> workSheet.Name Then
+                    TB_des_rng.Text = workSheet.Name & "!" & des_rng.Address
+                    'src_rng = excelApp.Range(TB_src_range.Text)
+
+                End If
 
 
                 Me.Activate()
                 'TB_src_range.Focus()
                 TB_des_rng.SelectionStart = TB_des_rng.Text.Length
                 focuschange = False
+                ax = workSheet.Name
 
             End If
         Catch ex As Exception
@@ -271,6 +315,10 @@ Public Class Form32_ExtendDropDownList
     End Sub
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
+
+        ' Regular expression pattern for a valid sheet name. This is a simplified version and might not cover all edge cases.
+        ' Excel sheet names cannot contain the characters \, /, *, [, ], :, ?, and cannot be 'History'.
+        Dim sheetNamePattern As String = "(?i)(?![\/*[\]:?])(?!History)[^\/\[\]*?:\\]+"
 
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
@@ -280,11 +328,11 @@ Public Class Form32_ExtendDropDownList
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
 
-        ' Regular expression pattern to allow multiple cell references separated by commas
-        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+        ' Regular expression pattern to allow the sheet name, followed by '!', before the cell reference
+        Dim fullPattern As String = "^(" + sheetNamePattern + "!)?(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+        Dim regex As New Regex(fullPattern)
 
         ' Test the input string against the regex pattern.
         Return regex.IsMatch(cellReference.ToUpper)
@@ -292,20 +340,22 @@ Public Class Form32_ExtendDropDownList
     End Function
 
     Private Sub TB_src_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_src_rng.TextChanged
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+        workSheet = workBook.ActiveSheet
+
         If TB_src_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_src_rng.Text.ToUpper) = True Then
             focuschange = True
 
             ' Define the range of cells to read (for example, cells A1 to A10)
             src_rng = excelApp.Range(TB_src_rng.Text)
             src_rng.Select()
-            Dim range As Excel.Range = src_rng
-
 
             Me.Activate()
             'TB_src_range.Focus()
             TB_src_rng.SelectionStart = TB_src_rng.Text.Length
             focuschange = False
-
+            workSheet2 = workSheet
         End If
     End Sub
 End Class

@@ -170,7 +170,13 @@ Public Class Form30_Create_Dynamic_Drop_down_List
         ElseIf src_rng.Areas.Count > 1 Then
             MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_range.Focus()
+            Exit Sub
 
+        ElseIf ax <> workSheet2.Name Then
+
+            MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TB_dest_range.Focus()
+            Exit Sub
 
         Else
             Try
@@ -300,6 +306,8 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                 ' Hide the target worksheet
                 targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
 
+                des_rng.Value = Nothing
+                des_rng.Select()
                 Me.Dispose()
             Catch ex As Exception
                 Me.Dispose()
@@ -625,6 +633,10 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
+        ' Regular expression pattern for a valid sheet name. This is a simplified version and might not cover all edge cases.
+        ' Excel sheet names cannot contain the characters \, /, *, [, ], :, ?, and cannot be 'History'.
+        Dim sheetNamePattern As String = "(?i)(?![\/*[\]:?])(?!History)[^\/\[\]*?:\\]+"
+
         ' Regular expression pattern for a cell reference.
         ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
@@ -633,11 +645,11 @@ Public Class Form30_Create_Dynamic_Drop_down_List
         ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim singleReferencePattern As String = cellPattern + "(:" + cellPattern + ")?"
 
-        ' Regular expression pattern to allow multiple cell references separated by commas
-        Dim referencePattern As String = "^(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
+        ' Regular expression pattern to allow the sheet name, followed by '!', before the cell reference
+        Dim fullPattern As String = "^(" + sheetNamePattern + "!)?(" + singleReferencePattern + ")(," + singleReferencePattern + ")*$"
 
         ' Create a regex object with the pattern.
-        Dim regex As New Regex(referencePattern)
+        Dim regex As New Regex(fullPattern)
 
         ' Test the input string against the regex pattern.
         Return regex.IsMatch(cellReference.ToUpper)
@@ -820,50 +832,71 @@ Public Class Form30_Create_Dynamic_Drop_down_List
     End Sub
 
     Private Sub TB_dest_range_TextChanged(sender As Object, e As EventArgs) Handles TB_dest_range.TextChanged
-        If TB_dest_range.Text IsNot Nothing And IsValidExcelCellReference(TB_dest_range.Text) = True Then
-            focuschange = True
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        Try
+            If TB_dest_range.Text IsNot Nothing And IsValidExcelCellReference(TB_dest_range.Text) = True Then
+                focuschange = True
 
-            ' Define the range of cells to read (for example, cells A1 to A10)
-            des_rng = excelApp.Range(TB_dest_range.Text)
-            des_rng.Select()
-            Dim range As Excel.Range = des_rng
+                '' Define the range of cells to read (for example, cells A1 to A10)
+                'des_rng = excelApp.Range(TB_dest_range.Text)
+                'des_rng.Select()
 
-            ' Clear the ListBox
-            'List_Preview.Items.Clear()
+                Try
+                    des_rng = excelApp.Range(TB_dest_range.Text)
+                    des_rng.Select()
+                Catch
+                    ' Split the string into sheet name and cell address
+                    Dim parts As String() = TB_dest_range.Text.Split("!"c)
+                    Dim sheetName As String = parts(0)
+                    Dim cellAddress As String = parts(1)
 
-            '' Iterate over each cell in the range
-            'For Each cell As Excel.Range In range
-            '    ' Add the cell's value to the ListBox
-            '    If cell.Value IsNot Nothing Then
-            '        List_Preview.Items.Add(cell.Value)
-            '    End If
-            'Next
+                    des_rng = excelApp.Range(cellAddress)
+                    des_rng.Select()
+                End Try
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                If workSheet2.Name <> worksheet.Name Then
+                    TB_dest_range.Text = worksheet.Name & "!" & des_rng.Address
+                    'src_rng = excelApp.Range(TB_src_range.Text)
 
-            'Label7.Visible = True
-            'Label7.Text = List_Preview.Items.Count
-            Me.Activate()
-            'TB_src_range.Focus()
-            TB_dest_range.SelectionStart = TB_dest_range.Text.Length
-            focuschange = False
-        End If
+
+                End If
+
+
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_dest_range.SelectionStart = TB_dest_range.Text.Length
+                focuschange = False
+                ax = worksheet.Name
+            End If
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub TB_src_range_TextChanged(sender As Object, e As EventArgs) Handles TB_src_range.TextChanged
-        If TB_src_range.Text IsNot Nothing And IsValidExcelCellReference(TB_src_range.Text) = True Then
-            focuschange = True
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+        Try
+            If TB_src_range.Text IsNot Nothing And IsValidExcelCellReference(TB_src_range.Text) = True Then
+                focuschange = True
 
-            ' Define the range of cells to read (for example, cells A1 to A10)
-            src_rng = excelApp.Range(TB_src_range.Text)
-            src_rng.Select()
-            Dim range As Excel.Range = src_rng
+                ' Define the range of cells to read (for example, cells A1 to A10)
+                src_rng = excelApp.Range(TB_src_range.Text)
+                src_rng.Select()
+                Dim range As Excel.Range = src_rng
 
 
-            Me.Activate()
-            'TB_src_range.Focus()
-            TB_src_range.SelectionStart = TB_src_range.Text.Length
-            focuschange = False
+                Me.Activate()
+                'TB_src_range.Focus()
+                TB_src_range.SelectionStart = TB_src_range.Text.Length
+                focuschange = False
+                workSheet2 = worksheet
 
-        End If
+            End If
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub Form30_Create_Dynamic_Drop_down_List_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
