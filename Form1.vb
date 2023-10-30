@@ -657,8 +657,6 @@ Public Class Form1
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
-            TextBox1.SelectionStart = TextBox1.Text.Length
-            TextBox1.ScrollToCaret()
             Dim rngArray() As String = Split(TextBox1.Text, "!")
             Dim rngAddress As String = rngArray(UBound(rngArray))
             rng = workSheet.Range(rngAddress)
@@ -1167,9 +1165,6 @@ Public Class Form1
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
             workSheet2 = workBook.ActiveSheet
-
-            TextBox2.SelectionStart = TextBox2.Text.Length
-            TextBox2.ScrollToCaret()
 
             Dim rng2Array() As String = Split(TextBox2.Text, "!")
             Dim rng2Address As String = rng2Array(UBound(rng2Array))

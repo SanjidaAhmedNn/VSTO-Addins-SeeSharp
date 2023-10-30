@@ -1370,1669 +1370,1790 @@ Public Class Form7
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
-        Try
+        TextBoxChanged = True
+        If TextBox1.Text = "" Then
+            MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox1.Focus()
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            TextBoxChanged = True
-            If TextBox1.Text = "" Then
-                MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If IsValidExcelCellReference(TextBox1.Text) = False Then
+            MessageBox.Show("Select a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox1.Focus()
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If IsValidExcelCellReference(TextBox1.Text) = False Then
-                MessageBox.Show("Select a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TextBox1.Focus()
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If (RadioButton1.Checked = False And RadioButton2.Checked = False And RadioButton3.Checked = False And RadioButton4.Checked = False) Then
+            MessageBox.Show("Select a Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If (RadioButton1.Checked = False And RadioButton2.Checked = False And RadioButton3.Checked = False And RadioButton4.Checked = False) Then
-                MessageBox.Show("Select a Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If (RadioButton5.Checked = False And RadioButton6.Checked = False) Then
+            MessageBox.Show("Select a Transformation Option.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If (RadioButton5.Checked = False And RadioButton6.Checked = False) Then
-                MessageBox.Show("Select a Transformation Option.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If (RadioButton3.Checked = True Or RadioButton4.Checked = True) And (RadioButton7.Checked = False And RadioButton8.Checked = False) Then
+            MessageBox.Show("Select a Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If (RadioButton3.Checked = True Or RadioButton4.Checked = True) And (RadioButton7.Checked = False And RadioButton8.Checked = False) Then
-                MessageBox.Show("Select a Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If RadioButton8.Checked = True And (TextBox2.Text = "" Or CanConvertToInt(TextBox2.Text) = False) Then
+            Dim Texts() As String
+            Texts = Split(RadioButton8.Text, " ")
+            Dim iText As String = Texts(UBound(Texts))
+            MessageBox.Show("Enter a valid Number of " & iText & ".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            TextBox2.Focus()
+            Exit Sub
+        End If
 
-            If RadioButton8.Checked = True And (TextBox2.Text = "" Or CanConvertToInt(TextBox2.Text) = False) Then
-                Dim Texts() As String
-                Texts = Split(RadioButton8.Text, " ")
-                Dim iText As String = Texts(UBound(Texts))
-                MessageBox.Show("Enter a valid Number of " & iText & ".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                TextBox2.Focus()
-                Exit Sub
-            End If
+        If (RadioButton9.Checked = False And RadioButton10.Checked = False) Then
+            MessageBox.Show("Select a Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If (RadioButton9.Checked = False And RadioButton10.Checked = False) Then
-                MessageBox.Show("Select a Destination Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox3.Text) = False) Then
+            MessageBox.Show("Enter a valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            worksheet.Activate()
+            rng.Select()
+            Exit Sub
+        End If
 
-            If RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox3.Text) = False) Then
-                MessageBox.Show("Enter a valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                worksheet.Activate()
-                rng.Select()
-                Exit Sub
-            End If
+        If CheckBox2.Checked = True Then
+            worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
+        End If
 
-            If CheckBox2.Checked = True Then
-                worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
-            End If
+        workbook.Sheets(worksheet.Name).Activate
 
-            workbook.Sheets(worksheet.Name).Activate
+        Dim X1 As Boolean
+        X1 = RadioButton1.Checked
 
-            Dim X1 As Boolean
-            X1 = RadioButton1.Checked
+        Dim X2 As Boolean
+        X2 = RadioButton2.Checked
 
-            Dim X2 As Boolean
-            X2 = RadioButton2.Checked
+        Dim X3 As Boolean
+        X3 = RadioButton3.Checked
 
-            Dim X3 As Boolean
-            X3 = RadioButton3.Checked
+        Dim X4 As Boolean
+        X4 = RadioButton4.Checked
 
-            Dim X4 As Boolean
-            X4 = RadioButton4.Checked
+        Dim X5 As Boolean
+        X5 = RadioButton5.Checked
 
-            Dim X5 As Boolean
-            X5 = RadioButton5.Checked
+        Dim X6 As Boolean
+        X6 = RadioButton6.Checked
 
-            Dim X6 As Boolean
-            X6 = RadioButton6.Checked
+        Dim X7 As Boolean
+        X7 = RadioButton7.Checked
 
-            Dim X7 As Boolean
-            X7 = RadioButton7.Checked
+        Dim X8 As Boolean
+        X8 = RadioButton8.Checked
 
-            Dim X8 As Boolean
-            X8 = RadioButton8.Checked
+        Dim r As Integer
+        Dim c As Integer
 
-            Dim r As Integer
-            Dim c As Integer
+        r = rng.Rows.Count
+        c = rng.Columns.Count
 
-            r = rng.Rows.Count
-            c = rng.Columns.Count
+        Dim i As Integer
+        Dim j As Integer
 
-            Dim i As Integer
-            Dim j As Integer
+        If X1 Then
 
-            If X1 Then
+            rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells((r * c), 1))
+            Dim rng2Address As String = rng2.Address
+            worksheet2.Activate()
+            rng2.Select()
 
-                rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells((r * c), 1))
-                Dim rng2Address As String = rng2.Address
-                worksheet2.Activate()
-                rng2.Select()
+            If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                Dim count As Integer
+                count = 1
 
-                If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                    Dim count As Integer
-                    count = 1
-
-                    If X5 Then
-                        For i = 1 To r
-                            For j = 1 To c
-                                Dim x As Integer = count
-                                Dim y As Integer = 1
-
-                                If CheckBox1.Checked = False Then
-                                    rng2.Cells(x, y).Value = rng.Cells(i, j).Value
-                                    count = count + 1
-
-                                ElseIf CheckBox1.Checked = True Then
-                                    rng.Cells(i, j).Copy()
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    count = count + 1
-
-                                End If
-
-                            Next
-                        Next
-
-                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-
-                    ElseIf X6 Then
-
-                        For j = 1 To c
-                            For i = 1 To r
-
-                                Dim x As Integer = count
-                                Dim y As Integer = 1
-
-                                If CheckBox1.Checked = False Then
-                                    rng2.Cells(x, y).Value = rng.Cells(i, j).Value
-                                    count = count + 1
-
-                                ElseIf CheckBox1.Checked = True Then
-                                    rng.Cells(i, j).Copy()
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    count = count + 1
-
-                                End If
-
-                            Next
-                        Next
-                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                    Else
-                        MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        Exit Sub
-                    End If
-
-                Else
-
-                    Dim Arr(r - 1, c - 1) As Object
-                    Dim Bolds(r - 1, c - 1) As Boolean
-                    Dim Italics(r - 1, c - 1) As Boolean
-                    Dim fontNames(r - 1, c - 1) As String
-                    Dim fontSizes(r - 1, c - 1) As Single
-                    Dim reds1(r - 1, c - 1) As Integer
-                    Dim reds2(r - 1, c - 1) As Integer
-                    Dim greens1(r - 1, c - 1) As Integer
-                    Dim greens2(r - 1, c - 1) As Integer
-                    Dim blues1(r - 1, c - 1) As Integer
-                    Dim blues2(r - 1, c - 1) As Integer
-
+                If X5 Then
                     For i = 1 To r
                         For j = 1 To c
-                            Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+                            Dim x As Integer = count
+                            Dim y As Integer = 1
 
-                            If CheckBox1.Checked = True Then
+                            If CheckBox1.Checked = False Then
+                                rng2.Cells(x, y).Value = rng.Cells(i, j).Value
+                                count = count + 1
 
-                                Dim cell As Excel.Range = rng.Cells(i, j)
-                                Dim font As Excel.Font = cell.Font
+                            ElseIf CheckBox1.Checked = True Then
+                                rng.Cells(i, j).Copy()
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = worksheet2.Range(rng2Address)
+                                count = count + 1
 
-                                Bolds(i - 1, j - 1) = cell.Font.Bold
-                                Italics(i - 1, j - 1) = cell.Font.Italic
-
-                                If IsDBNull(font.Name) = False Then
-                                    fontNames(i - 1, j - 1) = font.Name
-                                Else
-                                    fontNames(i - 1, j - 1) = "Calibri"
-                                End If
-
-                                If IsDBNull(font.Size) = False Then
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                    fontSizes(i - 1, j - 1) = fontSize
-                                Else
-                                    fontSizes(i - 1, j - 1) = 11
-                                End If
-
-                                If IsDBNull(cell.Interior.Color) Then
-                                    reds1(i - 1, j - 1) = 255
-                                    greens1(i - 1, j - 1) = 255
-                                    blues1(i - 1, j - 1) = 255
-                                Else
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    Dim red1 As Integer = colorValue1 Mod 256
-                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                    reds1(i - 1, j - 1) = red1
-                                    greens1(i - 1, j - 1) = green1
-                                    blues1(i - 1, j - 1) = blue1
-                                End If
-
-                                If IsDBNull(cell.Font.Color) Then
-                                    reds2(i - 1, j - 1) = 0
-                                    greens2(i - 1, j - 1) = 0
-                                    blues2(i - 1, j - 1) = 0
-                                Else
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    Dim red2 As Integer = colorValue2 Mod 256
-                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                    reds2(i - 1, j - 1) = red2
-                                    greens2(i - 1, j - 1) = green2
-                                    blues2(i - 1, j - 1) = blue2
-                                End If
                             End If
 
                         Next
                     Next
 
-                    rng.ClearContents()
-                    rng.ClearFormats()
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
 
-                    Dim count As Integer
-                    count = 1
+                ElseIf X6 Then
 
-                    If X5 Then
+                    For j = 1 To c
                         For i = 1 To r
-                            For j = 1 To c
-                                Dim x As Integer = count
-                                Dim y As Integer = 1
 
-                                rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            Dim x As Integer = count
+                            Dim y As Integer = 1
+
+                            If CheckBox1.Checked = False Then
+                                rng2.Cells(x, y).Value = rng.Cells(i, j).Value
                                 count = count + 1
 
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell2 As Excel.Range = rng2.Cells(x, y)
-                                    Dim font2 As Excel.Font = cell2.Font
-
-                                    Dim fontSize As Single = fontSizes(i - 1, j - 1)
-
-                                    rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
-
-                                    If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
-                                    If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
-
-
-                                    Dim red1 As Integer = reds1(i - 1, j - 1)
-                                    Dim green1 As Integer = greens1(i - 1, j - 1)
-                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
-
-                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                    Dim red2 As Integer = reds2(i - 1, j - 1)
-                                    Dim green2 As Integer = greens2(i - 1, j - 1)
-                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                End If
-
-                            Next
-                        Next
-
-                    ElseIf X6 Then
-
-                        For j = 1 To c
-                            For i = 1 To r
-
-                                Dim x As Integer = count
-                                Dim y As Integer = 1
-
-                                rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            ElseIf CheckBox1.Checked = True Then
+                                rng.Cells(i, j).Copy()
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = worksheet2.Range(rng2Address)
                                 count = count + 1
 
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell2 As Excel.Range = rng2.Cells(x, y)
-                                    Dim font2 As Excel.Font = cell2.Font
-
-                                    Dim fontSize As Single = fontSizes(i - 1, j - 1)
-
-                                    rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
-
-                                    If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
-                                    If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
-
-                                    Dim red1 As Integer = reds1(i - 1, j - 1)
-                                    Dim green1 As Integer = greens1(i - 1, j - 1)
-                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                    Dim red2 As Integer = reds2(i - 1, j - 1)
-                                    Dim green2 As Integer = greens2(i - 1, j - 1)
-                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                End If
-
-                            Next
-                        Next
-
-                    Else
-                        MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        Exit Sub
-                    End If
-                End If
-
-            ElseIf X2 Then
-                rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(1, (r * c)))
-                Dim rng2Address As String = rng2.Address
-                worksheet2.Activate()
-                rng2.Select()
-
-                If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-
-                    Dim count As Integer
-                    count = 1
-
-                    If X5 Then
-                        For i = 1 To r
-                            For j = 1 To c
-
-                                Dim x As Integer = 1
-                                Dim y As Integer = count
-
-                                If CheckBox1.Checked = False Then
-                                    rng2.Cells(x, y).Value = rng(i, j)
-                                    count = count + 1
-
-                                ElseIf CheckBox1.Checked = True Then
-                                    rng.Cells(i, j).Copy()
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    count = count + 1
-                                End If
-
-                            Next
-                        Next
-                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                    ElseIf X6 Then
-
-                        For j = 1 To c
-                            For i = 1 To r
-
-                                Dim x As Integer = 1
-                                Dim y As Integer = count
-
-                                If CheckBox1.Checked = False Then
-                                    rng2.Cells(x, y).Value = rng.Cells(i, j).Value
-                                    count = count + 1
-
-                                ElseIf CheckBox1.Checked = True Then
-                                    rng.Cells(i, j).Copy()
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                    rng2 = worksheet2.Range(rng2Address)
-                                    count = count + 1
-                                End If
-
-                            Next
-                        Next
-                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                    Else
-                        MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        Exit Sub
-
-                    End If
-                Else
-
-                    Dim Arr(r - 1, c - 1) As Object
-                    Dim Bolds(r - 1, c - 1) As Boolean
-                    Dim Italics(r - 1, c - 1) As Boolean
-                    Dim fontNames(r - 1, c - 1) As String
-                    Dim fontSizes(r - 1, c - 1) As Single
-                    Dim reds1(r - 1, c - 1) As Integer
-                    Dim reds2(r - 1, c - 1) As Integer
-                    Dim greens1(r - 1, c - 1) As Integer
-                    Dim greens2(r - 1, c - 1) As Integer
-                    Dim blues1(r - 1, c - 1) As Integer
-                    Dim blues2(r - 1, c - 1) As Integer
-
-                    For i = 1 To r
-                        For j = 1 To c
-                            Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                            If CheckBox1.Checked = True Then
-
-                                Dim cell As Excel.Range = rng.Cells(i, j)
-                                Dim font As Excel.Font = cell.Font
-
-                                Bolds(i - 1, j - 1) = cell.Font.Bold
-                                Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                If IsDBNull(font.Name) = False Then
-                                    fontNames(i - 1, j - 1) = font.Name
-                                Else
-                                    fontNames(i - 1, j - 1) = "Calibri"
-                                End If
-
-                                If IsDBNull(font.Size) = False Then
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                    fontSizes(i - 1, j - 1) = fontSize
-                                Else
-                                    fontSizes(i - 1, j - 1) = 11
-                                End If
-
-                                If IsDBNull(cell.Interior.Color) Then
-                                    reds1(i - 1, j - 1) = 255
-                                    greens1(i - 1, j - 1) = 255
-                                    blues1(i - 1, j - 1) = 255
-                                Else
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    Dim red1 As Integer = colorValue1 Mod 256
-                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                    reds1(i - 1, j - 1) = red1
-                                    greens1(i - 1, j - 1) = green1
-                                    blues1(i - 1, j - 1) = blue1
-                                End If
-
-                                If IsDBNull(cell.Font.Color) Then
-                                    reds2(i - 1, j - 1) = 0
-                                    greens2(i - 1, j - 1) = 0
-                                    blues2(i - 1, j - 1) = 0
-                                Else
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    Dim red2 As Integer = colorValue2 Mod 256
-                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                    reds2(i - 1, j - 1) = red2
-                                    greens2(i - 1, j - 1) = green2
-                                    blues2(i - 1, j - 1) = blue2
-                                End If
                             End If
 
                         Next
                     Next
-
-                    rng.ClearContents()
-                    rng.ClearFormats()
-
-                    Dim count As Integer
-                    count = 1
-
-                    If X5 Then
-
-                        For i = 1 To r
-                            For j = 1 To c
-                                Dim x As Integer = 1
-                                Dim y As Integer = count
-
-                                rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
-                                count = count + 1
-
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell2 As Excel.Range = rng2.Cells(x, y)
-                                    Dim font2 As Excel.Font = cell2.Font
-
-                                    Dim fontSize As Single = fontSizes(i - 1, j - 1)
-
-                                    rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
-
-                                    If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
-                                    If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
-
-                                    Dim red1 As Integer = reds1(i - 1, j - 1)
-                                    Dim green1 As Integer = greens1(i - 1, j - 1)
-                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                    Dim red2 As Integer = reds2(i - 1, j - 1)
-                                    Dim green2 As Integer = greens2(i - 1, j - 1)
-                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                End If
-
-                            Next
-                        Next
-
-                    ElseIf X6 Then
-
-                        For j = 1 To c
-                            For i = 1 To r
-
-                                Dim x As Integer = 1
-                                Dim y As Integer = count
-
-                                rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
-                                count = count + 1
-
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell2 As Excel.Range = rng2.Cells(x, y)
-                                    Dim font2 As Excel.Font = cell2.Font
-
-                                    Dim fontSize As Single = fontSizes(i - 1, j - 1)
-
-                                    rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
-
-                                    If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
-                                    If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
-
-                                    Dim red1 As Integer = reds1(i - 1, j - 1)
-                                    Dim green1 As Integer = greens1(i - 1, j - 1)
-                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                    Dim red2 As Integer = reds2(i - 1, j - 1)
-                                    Dim green2 As Integer = greens2(i - 1, j - 1)
-                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                End If
-
-                            Next
-                        Next
-
-                    Else
-                        MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        Exit Sub
-
-                    End If
-                End If
-
-            ElseIf X3 Then
-
-                If X7 And (X5 Or X6) Then
-
-                    Dim BreakPoints() As Integer
-                    BreakPoints = GetBreakPoints(rng, 2)
-
-                    Dim lengths() As Integer
-                    lengths = GetLengths(BreakPoints)
-
-                    If X5 Then
-                        r = UBound(BreakPoints) + 1
-                        c = MaxValue(lengths)
-                    ElseIf X6 Then
-                        c = UBound(BreakPoints) + 1
-                        r = MaxValue(lengths)
-                    End If
-
-                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                    Dim rng2Address As String = rng2.Address
-                    worksheet2.Activate()
-                    rng2.Select()
-
-                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                        If X5 Then
-                            Dim iRow As Integer
-                            iRow = 0
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = iRow + j
-                                    y = 1
-                                    If x <= BreakPoints(i - 1) Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-
-                                        End If
-                                    End If
-                                Next
-                                iRow = BreakPoints(i - 1)
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        ElseIf X6 Then
-                            Dim iRow As Integer
-                            iRow = 0
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = iRow + i
-                                    y = 1
-
-                                    If x <= BreakPoints(j - 1) Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-
-                                        End If
-                                    End If
-                                Next
-                                iRow = BreakPoints(j - 1)
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        End If
-                    Else
-
-                        Dim Arr(r - 1, c - 1) As Object
-                        Dim Bolds(r - 1, c - 1) As Boolean
-                        Dim Italics(r - 1, c - 1) As Boolean
-                        Dim fontNames(r - 1, c - 1) As String
-                        Dim fontSizes(r - 1, c - 1) As Single
-                        Dim reds1(r - 1, c - 1) As Integer
-                        Dim reds2(r - 1, c - 1) As Integer
-                        Dim greens1(r - 1, c - 1) As Integer
-                        Dim greens2(r - 1, c - 1) As Integer
-                        Dim blues1(r - 1, c - 1) As Integer
-                        Dim blues2(r - 1, c - 1) As Integer
-
-                        For i = 1 To r
-                            For j = 1 To c
-                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell As Excel.Range = rng.Cells(i, j)
-                                    Dim font As Excel.Font = cell.Font
-
-                                    Bolds(i - 1, j - 1) = cell.Font.Bold
-                                    Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                    If IsDBNull(font.Name) = False Then
-                                        fontNames(i - 1, j - 1) = font.Name
-                                    Else
-                                        fontNames(i - 1, j - 1) = "Calibri"
-                                    End If
-
-                                    If IsDBNull(font.Size) = False Then
-                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                        fontSizes(i - 1, j - 1) = fontSize
-                                    Else
-                                        fontSizes(i - 1, j - 1) = 11
-                                    End If
-
-                                    If IsDBNull(cell.Interior.Color) Then
-                                        reds1(i - 1, j - 1) = 255
-                                        greens1(i - 1, j - 1) = 255
-                                        blues1(i - 1, j - 1) = 255
-                                    Else
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        reds1(i - 1, j - 1) = red1
-                                        greens1(i - 1, j - 1) = green1
-                                        blues1(i - 1, j - 1) = blue1
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        reds2(i - 1, j - 1) = 0
-                                        greens2(i - 1, j - 1) = 0
-                                        blues2(i - 1, j - 1) = 0
-                                    Else
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        reds2(i - 1, j - 1) = red2
-                                        greens2(i - 1, j - 1) = green2
-                                        blues2(i - 1, j - 1) = blue2
-                                    End If
-                                End If
-
-                            Next
-                        Next
-
-                        rng.ClearContents()
-                        rng.ClearFormats()
-
-                        If X5 Then
-                            Dim iRow As Integer
-                            iRow = 0
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = iRow + j
-                                    y = 1
-                                    If x <= BreakPoints(i - 1) Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                                iRow = BreakPoints(i - 1)
-                            Next
-
-                        ElseIf X6 Then
-                            Dim iRow As Integer
-                            iRow = 0
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = iRow + i
-                                    y = 1
-                                    If x <= BreakPoints(j - 1) Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                                iRow = BreakPoints(j - 1)
-                            Next
-                        End If
-                    End If
-
-                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
-
-                    If X5 Then
-                        If r Mod Int(TextBox2.Text) = 0 Then
-                            r = Int(r / Int(TextBox2.Text))
-                        Else
-                            r = Int(r / Int(TextBox2.Text)) + 1
-                        End If
-                        c = Int(TextBox2.Text)
-
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                        Dim rng2Address As String = rng2.Address
-                        worksheet2.Activate()
-                        rng2.Select()
-
-                        If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = (c * (i - 1)) + j
-                                    y = 1
-                                    If x <= rng.Rows.Count Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-
-                                        End If
-                                    End If
-                                Next
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        Else
-
-                            Dim Arr(r - 1, c - 1) As Object
-                            Dim Bolds(r - 1, c - 1) As Boolean
-                            Dim Italics(r - 1, c - 1) As Boolean
-                            Dim fontNames(r - 1, c - 1) As String
-                            Dim fontSizes(r - 1, c - 1) As Single
-                            Dim reds1(r - 1, c - 1) As Integer
-                            Dim reds2(r - 1, c - 1) As Integer
-                            Dim greens1(r - 1, c - 1) As Integer
-                            Dim greens2(r - 1, c - 1) As Integer
-                            Dim blues1(r - 1, c - 1) As Integer
-                            Dim blues2(r - 1, c - 1) As Integer
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                    If CheckBox1.Checked = True Then
-
-                                        Dim cell As Excel.Range = rng.Cells(i, j)
-                                        Dim font As Excel.Font = cell.Font
-
-                                        Bolds(i - 1, j - 1) = cell.Font.Bold
-                                        Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                        If IsDBNull(font.Name) = False Then
-                                            fontNames(i - 1, j - 1) = font.Name
-                                        Else
-                                            fontNames(i - 1, j - 1) = "Calibri"
-                                        End If
-
-                                        If IsDBNull(font.Size) = False Then
-                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                            fontSizes(i - 1, j - 1) = fontSize
-                                        Else
-                                            fontSizes(i - 1, j - 1) = 11
-                                        End If
-
-                                        If IsDBNull(cell.Interior.Color) Then
-                                            reds1(i - 1, j - 1) = 255
-                                            greens1(i - 1, j - 1) = 255
-                                            blues1(i - 1, j - 1) = 255
-                                        Else
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            Dim red1 As Integer = colorValue1 Mod 256
-                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                            reds1(i - 1, j - 1) = red1
-                                            greens1(i - 1, j - 1) = green1
-                                            blues1(i - 1, j - 1) = blue1
-                                        End If
-
-                                        If IsDBNull(cell.Font.Color) Then
-                                            reds2(i - 1, j - 1) = 0
-                                            greens2(i - 1, j - 1) = 0
-                                            blues2(i - 1, j - 1) = 0
-                                        Else
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            Dim red2 As Integer = colorValue2 Mod 256
-                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                            reds2(i - 1, j - 1) = red2
-                                            greens2(i - 1, j - 1) = green2
-                                            blues2(i - 1, j - 1) = blue2
-                                        End If
-                                    End If
-
-                                Next
-                            Next
-
-                            rng.ClearContents()
-                            rng.ClearFormats()
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = (c * (i - 1)) + j
-                                    y = 1
-                                    If x <= UBound(Arr, 1) + 1 Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                            Next
-                        End If
-
-                    ElseIf X6 Then
-                        If r Mod Int(TextBox2.Text) = 0 Then
-                            c = Int(r / Int(TextBox2.Text))
-                        Else
-                            c = Int(r / Int(TextBox2.Text)) + 1
-                        End If
-                        r = Int(TextBox2.Text)
-
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                        Dim rng2Address As String = rng2.Address
-                        worksheet2.Activate()
-                        rng2.Select()
-
-                        If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = (r * (j - 1)) + i
-                                    y = 1
-                                    If x <= rng.Rows.Count Then
-
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-
-                                        End If
-                                    End If
-                                Next
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-
-                        Else
-
-                            Dim Arr(r - 1, c - 1) As Object
-                            Dim Bolds(r - 1, c - 1) As Boolean
-                            Dim Italics(r - 1, c - 1) As Boolean
-                            Dim fontNames(r - 1, c - 1) As String
-                            Dim fontSizes(r - 1, c - 1) As Single
-                            Dim reds1(r - 1, c - 1) As Integer
-                            Dim reds2(r - 1, c - 1) As Integer
-                            Dim greens1(r - 1, c - 1) As Integer
-                            Dim greens2(r - 1, c - 1) As Integer
-                            Dim blues1(r - 1, c - 1) As Integer
-                            Dim blues2(r - 1, c - 1) As Integer
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                    If CheckBox1.Checked = True Then
-
-                                        Dim cell As Excel.Range = rng.Cells(i, j)
-                                        Dim font As Excel.Font = cell.Font
-
-                                        Bolds(i - 1, j - 1) = cell.Font.Bold
-                                        Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                        If IsDBNull(font.Name) = False Then
-                                            fontNames(i - 1, j - 1) = font.Name
-                                        Else
-                                            fontNames(i - 1, j - 1) = "Calibri"
-                                        End If
-
-                                        If IsDBNull(font.Size) = False Then
-                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                            fontSizes(i - 1, j - 1) = fontSize
-                                        Else
-                                            fontSizes(i - 1, j - 1) = 11
-                                        End If
-
-                                        If IsDBNull(cell.Interior.Color) Then
-                                            reds1(i - 1, j - 1) = 255
-                                            greens1(i - 1, j - 1) = 255
-                                            blues1(i - 1, j - 1) = 255
-                                        Else
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            Dim red1 As Integer = colorValue1 Mod 256
-                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                            reds1(i - 1, j - 1) = red1
-                                            greens1(i - 1, j - 1) = green1
-                                            blues1(i - 1, j - 1) = blue1
-                                        End If
-
-                                        If IsDBNull(cell.Font.Color) Then
-                                            reds2(i - 1, j - 1) = 0
-                                            greens2(i - 1, j - 1) = 0
-                                            blues2(i - 1, j - 1) = 0
-                                        Else
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            Dim red2 As Integer = colorValue2 Mod 256
-                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                            reds2(i - 1, j - 1) = red2
-                                            greens2(i - 1, j - 1) = green2
-                                            blues2(i - 1, j - 1) = blue2
-                                        End If
-                                    End If
-
-                                Next
-                            Next
-
-                            rng.ClearContents()
-                            rng.ClearFormats()
-
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = (r * (j - 1)) + i
-                                    y = 1
-                                    If x <= UBound(Arr, 1) + 1 Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                            Next
-                        End If
-
-                    End If
-
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                 Else
-                    MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Exit Sub
-
-                End If
-
-            ElseIf X4 Then
-
-                If X7 And (X5 Or X6) Then
-
-                    Dim BreakPoints() As Integer
-                    BreakPoints = GetBreakPoints(rng, 1)
-
-                    Dim lengths() As Integer
-                    lengths = GetLengths(BreakPoints)
-
-                    If X5 Then
-                        r = UBound(BreakPoints) + 1
-                        c = MaxValue(lengths)
-                    ElseIf X6 Then
-                        c = UBound(BreakPoints) + 1
-                        r = MaxValue(lengths)
-                    End If
-
-                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                    Dim rng2Address As String = rng2.Address
-                    worksheet2.Activate()
-                    rng2.Select()
-
-                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                        If X5 Then
-                            Dim iColumn As Integer
-                            iColumn = 0
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = iColumn + j
-                                    If y <= BreakPoints(i - 1) Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-
-                                        End If
-                                    End If
-                                Next
-                                iColumn = BreakPoints(i - 1)
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        ElseIf X6 Then
-                            Dim iColumn As Integer
-                            iColumn = 0
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = iColumn + i
-                                    If y <= BreakPoints(j - 1) Then
-
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                        End If
-
-                                    End If
-                                Next
-                                iColumn = BreakPoints(j - 1)
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        End If
-
-                    Else
-
-                        Dim Arr(r - 1, c - 1) As Object
-                        Dim Bolds(r - 1, c - 1) As Boolean
-                        Dim Italics(r - 1, c - 1) As Boolean
-                        Dim fontNames(r - 1, c - 1) As String
-                        Dim fontSizes(r - 1, c - 1) As Single
-                        Dim reds1(r - 1, c - 1) As Integer
-                        Dim reds2(r - 1, c - 1) As Integer
-                        Dim greens1(r - 1, c - 1) As Integer
-                        Dim greens2(r - 1, c - 1) As Integer
-                        Dim blues1(r - 1, c - 1) As Integer
-                        Dim blues2(r - 1, c - 1) As Integer
-
-                        For i = 1 To r
-                            For j = 1 To c
-                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                If CheckBox1.Checked = True Then
-
-                                    Dim cell As Excel.Range = rng.Cells(i, j)
-                                    Dim font As Excel.Font = cell.Font
-
-                                    Bolds(i - 1, j - 1) = cell.Font.Bold
-                                    Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                    If IsDBNull(font.Name) = False Then
-                                        fontNames(i - 1, j - 1) = font.Name
-                                    Else
-                                        fontNames(i - 1, j - 1) = "Calibri"
-                                    End If
-
-                                    If IsDBNull(font.Size) = False Then
-                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                        fontSizes(i - 1, j - 1) = fontSize
-                                    Else
-                                        fontSizes(i - 1, j - 1) = 11
-                                    End If
-
-                                    If IsDBNull(cell.Interior.Color) Then
-                                        reds1(i - 1, j - 1) = 255
-                                        greens1(i - 1, j - 1) = 255
-                                        blues1(i - 1, j - 1) = 255
-                                    Else
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        reds1(i - 1, j - 1) = red1
-                                        greens1(i - 1, j - 1) = green1
-                                        blues1(i - 1, j - 1) = blue1
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        reds2(i - 1, j - 1) = 0
-                                        greens2(i - 1, j - 1) = 0
-                                        blues2(i - 1, j - 1) = 0
-                                    Else
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        reds2(i - 1, j - 1) = red2
-                                        greens2(i - 1, j - 1) = green2
-                                        blues2(i - 1, j - 1) = blue2
-                                    End If
-                                End If
-
-                            Next
-                        Next
-
-                        rng.ClearContents()
-                        rng.ClearFormats()
-
-                        If X5 Then
-
-                            Dim iColumn As Integer
-                            iColumn = 0
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = iColumn + j
-                                    If y <= BreakPoints(i - 1) Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                                iColumn = BreakPoints(i - 1)
-                            Next
-
-                        ElseIf X6 Then
-                            Dim iColumn As Integer
-                            iColumn = 0
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = iColumn + i
-                                    If y <= BreakPoints(j - 1) Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                                iColumn = BreakPoints(j - 1)
-                            Next
-                        End If
-                    End If
-
-                ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
-
-                    If X5 Then
-                        If c Mod Int(TextBox2.Text) = 0 Then
-                            r = Int(c / Int(TextBox2.Text))
-                        Else
-                            r = Int(c / Int(TextBox2.Text)) + 1
-                        End If
-                        c = Int(TextBox2.Text)
-
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                        Dim rng2Address As String = rng2.Address
-                        worksheet2.Activate()
-                        rng2.Select()
-
-                        If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = (c * (i - 1)) + j
-
-                                    If y <= rng.Columns.Count Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                        End If
-
-                                    End If
-                                Next
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        Else
-
-                            Dim Arr(r - 1, c - 1) As Object
-                            Dim Bolds(r - 1, c - 1) As Boolean
-                            Dim Italics(r - 1, c - 1) As Boolean
-                            Dim fontNames(r - 1, c - 1) As String
-                            Dim fontSizes(r - 1, c - 1) As Single
-                            Dim reds1(r - 1, c - 1) As Integer
-                            Dim reds2(r - 1, c - 1) As Integer
-                            Dim greens1(r - 1, c - 1) As Integer
-                            Dim greens2(r - 1, c - 1) As Integer
-                            Dim blues1(r - 1, c - 1) As Integer
-                            Dim blues2(r - 1, c - 1) As Integer
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                    If CheckBox1.Checked = True Then
-
-                                        Dim cell As Excel.Range = rng.Cells(i, j)
-                                        Dim font As Excel.Font = cell.Font
-
-                                        Bolds(i - 1, j - 1) = cell.Font.Bold
-                                        Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                        If IsDBNull(font.Name) = False Then
-                                            fontNames(i - 1, j - 1) = font.Name
-                                        Else
-                                            fontNames(i - 1, j - 1) = "Calibri"
-                                        End If
-
-                                        If IsDBNull(font.Size) = False Then
-                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                            fontSizes(i - 1, j - 1) = fontSize
-                                        Else
-                                            fontSizes(i - 1, j - 1) = 11
-                                        End If
-
-                                        If IsDBNull(cell.Interior.Color) Then
-                                            reds1(i - 1, j - 1) = 255
-                                            greens1(i - 1, j - 1) = 255
-                                            blues1(i - 1, j - 1) = 255
-                                        Else
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            Dim red1 As Integer = colorValue1 Mod 256
-                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                            reds1(i - 1, j - 1) = red1
-                                            greens1(i - 1, j - 1) = green1
-                                            blues1(i - 1, j - 1) = blue1
-                                        End If
-
-                                        If IsDBNull(cell.Font.Color) Then
-                                            reds2(i - 1, j - 1) = 0
-                                            greens2(i - 1, j - 1) = 0
-                                            blues2(i - 1, j - 1) = 0
-                                        Else
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            Dim red2 As Integer = colorValue2 Mod 256
-                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                            reds2(i - 1, j - 1) = red2
-                                            greens2(i - 1, j - 1) = green2
-                                            blues2(i - 1, j - 1) = blue2
-                                        End If
-                                    End If
-
-                                Next
-                            Next
-
-                            rng.ClearContents()
-                            rng.ClearFormats()
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = (c * (i - 1)) + j
-                                    If y <= UBound(Arr, 2) + 1 Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                            Next
-                        End If
-
-                    ElseIf X6 Then
-                        If c Mod Int(TextBox2.Text) = 0 Then
-                            c = Int(c / Int(TextBox2.Text))
-                        Else
-                            c = Int(c / Int(TextBox2.Text)) + 1
-                        End If
-                        r = Int(TextBox2.Text)
-
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
-                        Dim rng2Address As String = rng2.Address
-                        worksheet2.Activate()
-                        rng2.Select()
-
-                        If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = (r * (j - 1)) + i
-                                    If y <= rng.Columns.Count Then
-                                        If CheckBox1.Checked = False Then
-                                            rng2.Cells(i, j).Value = rng.Cells(x, y).Value
-
-                                        ElseIf CheckBox1.Checked = True Then
-
-                                            rng.Cells(x, y).Copy()
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                            rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                                            rng2 = worksheet2.Range(rng2Address)
-                                        End If
-                                    End If
-                                Next
-                            Next
-                            excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
-                        Else
-
-                            Dim Arr(r - 1, c - 1) As Object
-                            Dim Bolds(r - 1, c - 1) As Boolean
-                            Dim Italics(r - 1, c - 1) As Boolean
-                            Dim fontNames(r - 1, c - 1) As String
-                            Dim fontSizes(r - 1, c - 1) As Single
-                            Dim reds1(r - 1, c - 1) As Integer
-                            Dim reds2(r - 1, c - 1) As Integer
-                            Dim greens1(r - 1, c - 1) As Integer
-                            Dim greens2(r - 1, c - 1) As Integer
-                            Dim blues1(r - 1, c - 1) As Integer
-                            Dim blues2(r - 1, c - 1) As Integer
-
-                            For i = 1 To r
-                                For j = 1 To c
-                                    Arr(i - 1, j - 1) = rng.Cells(i, j).Value
-
-                                    If CheckBox1.Checked = True Then
-
-                                        Dim cell As Excel.Range = rng.Cells(i, j)
-                                        Dim font As Excel.Font = cell.Font
-
-                                        Bolds(i - 1, j - 1) = cell.Font.Bold
-                                        Italics(i - 1, j - 1) = cell.Font.Italic
-
-
-                                        If IsDBNull(font.Name) = False Then
-                                            fontNames(i - 1, j - 1) = font.Name
-                                        Else
-                                            fontNames(i - 1, j - 1) = "Calibri"
-                                        End If
-
-                                        If IsDBNull(font.Size) = False Then
-                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
-                                            fontSizes(i - 1, j - 1) = fontSize
-                                        Else
-                                            fontSizes(i - 1, j - 1) = 11
-                                        End If
-
-                                        If IsDBNull(cell.Interior.Color) Then
-                                            reds1(i - 1, j - 1) = 255
-                                            greens1(i - 1, j - 1) = 255
-                                            blues1(i - 1, j - 1) = 255
-                                        Else
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            Dim red1 As Integer = colorValue1 Mod 256
-                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                            reds1(i - 1, j - 1) = red1
-                                            greens1(i - 1, j - 1) = green1
-                                            blues1(i - 1, j - 1) = blue1
-                                        End If
-
-                                        If IsDBNull(cell.Font.Color) Then
-                                            reds2(i - 1, j - 1) = 0
-                                            greens2(i - 1, j - 1) = 0
-                                            blues2(i - 1, j - 1) = 0
-                                        Else
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            Dim red2 As Integer = colorValue2 Mod 256
-                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                            reds2(i - 1, j - 1) = red2
-                                            greens2(i - 1, j - 1) = green2
-                                            blues2(i - 1, j - 1) = blue2
-                                        End If
-                                    End If
-
-                                Next
-                            Next
-
-                            rng.ClearContents()
-                            rng.ClearFormats()
-
-                            For j = 1 To c
-                                For i = 1 To r
-                                    Dim x As Integer
-                                    Dim y As Integer
-                                    x = 1
-                                    y = (r * (j - 1)) + i
-                                    If y <= UBound(Arr, 2) + 1 Then
-                                        rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
-
-                                        If CheckBox1.Checked = True Then
-
-                                            Dim cell2 As Excel.Range = rng2.Cells(i, j)
-                                            Dim font2 As Excel.Font = cell2.Font
-
-                                            Dim fontSize As Single = fontSizes(x - 1, y - 1)
-
-                                            rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
-                                            rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
-
-                                            If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
-                                            If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
-
-                                            Dim red1 As Integer = reds1(i - 1, j - 1)
-                                            Dim green1 As Integer = greens1(i - 1, j - 1)
-                                            Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                            rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-
-                                            Dim red2 As Integer = reds2(i - 1, j - 1)
-                                            Dim green2 As Integer = greens2(i - 1, j - 1)
-                                            Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                            rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                        End If
-                                    End If
-                                Next
-                            Next
-
-                        End If
-                    End If
-
-                Else
-                    MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Exit Sub
                 End If
 
             Else
-                MessageBox.Show("Select One Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                Dim Arr(r - 1, c - 1) As Object
+                Dim Bolds(r - 1, c - 1) As Boolean
+                Dim Italics(r - 1, c - 1) As Boolean
+                Dim fontNames(r - 1, c - 1) As String
+                Dim fontSizes(r - 1, c - 1) As Single
+                Dim reds1(r - 1, c - 1) As Integer
+                Dim reds2(r - 1, c - 1) As Integer
+                Dim greens1(r - 1, c - 1) As Integer
+                Dim greens2(r - 1, c - 1) As Integer
+                Dim blues1(r - 1, c - 1) As Integer
+                Dim blues2(r - 1, c - 1) As Integer
+
+                For i = 1 To r
+                    For j = 1 To c
+                        Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                        If CheckBox1.Checked = True Then
+
+                            Dim cell As Excel.Range = rng.Cells(i, j)
+                            Dim font As Excel.Font = cell.Font
+
+                            Bolds(i - 1, j - 1) = cell.Font.Bold
+                            Italics(i - 1, j - 1) = cell.Font.Italic
+
+                            If IsDBNull(font.Name) = False Then
+                                fontNames(i - 1, j - 1) = font.Name
+                            Else
+                                fontNames(i - 1, j - 1) = "Calibri"
+                            End If
+
+                            If IsDBNull(font.Size) = False Then
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                fontSizes(i - 1, j - 1) = fontSize
+                            Else
+                                fontSizes(i - 1, j - 1) = 11
+                            End If
+
+                            If IsDBNull(cell.Interior.Color) Then
+                                reds1(i - 1, j - 1) = 255
+                                greens1(i - 1, j - 1) = 255
+                                blues1(i - 1, j - 1) = 255
+                            Else
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                reds1(i - 1, j - 1) = red1
+                                greens1(i - 1, j - 1) = green1
+                                blues1(i - 1, j - 1) = blue1
+                            End If
+
+                            If IsDBNull(cell.Font.Color) Then
+                                reds2(i - 1, j - 1) = 0
+                                greens2(i - 1, j - 1) = 0
+                                blues2(i - 1, j - 1) = 0
+                            Else
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                reds2(i - 1, j - 1) = red2
+                                greens2(i - 1, j - 1) = green2
+                                blues2(i - 1, j - 1) = blue2
+                            End If
+                        End If
+
+                    Next
+                Next
+
+                rng.ClearContents()
+                rng.ClearFormats()
+
+                Dim count As Integer
+                count = 1
+
+                If X5 Then
+                    For i = 1 To r
+                        For j = 1 To c
+                            Dim x As Integer = count
+                            Dim y As Integer = 1
+
+                            rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            count = count + 1
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell2 As Excel.Range = rng2.Cells(x, y)
+                                Dim font2 As Excel.Font = cell2.Font
+
+                                Dim fontSize As Single = fontSizes(i - 1, j - 1)
+
+                                rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
+
+                                If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
+                                If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
+
+
+                                Dim red1 As Integer = reds1(i - 1, j - 1)
+                                Dim green1 As Integer = greens1(i - 1, j - 1)
+                                Dim blue1 As Integer = blues1(i - 1, j - 1)
+
+                                rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                Dim red2 As Integer = reds2(i - 1, j - 1)
+                                Dim green2 As Integer = greens2(i - 1, j - 1)
+                                Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+
+                        Next
+                    Next
+
+                ElseIf X6 Then
+
+                    For j = 1 To c
+                        For i = 1 To r
+
+                            Dim x As Integer = count
+                            Dim y As Integer = 1
+
+                            rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            count = count + 1
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell2 As Excel.Range = rng2.Cells(x, y)
+                                Dim font2 As Excel.Font = cell2.Font
+
+                                Dim fontSize As Single = fontSizes(i - 1, j - 1)
+
+                                rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
+
+                                If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
+                                If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
+
+                                Dim red1 As Integer = reds1(i - 1, j - 1)
+                                Dim green1 As Integer = greens1(i - 1, j - 1)
+                                Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                Dim red2 As Integer = reds2(i - 1, j - 1)
+                                Dim green2 As Integer = greens2(i - 1, j - 1)
+                                Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+
+                        Next
+                    Next
+
+                Else
+                    MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Exit Sub
+                End If
+            End If
+
+        ElseIf X2 Then
+            rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(1, (r * c)))
+            Dim rng2Address As String = rng2.Address
+            worksheet2.Activate()
+            rng2.Select()
+
+            If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                Dim count As Integer
+                count = 1
+
+                If X5 Then
+                    For i = 1 To r
+                        For j = 1 To c
+
+                            Dim x As Integer = 1
+                            Dim y As Integer = count
+
+                            If CheckBox1.Checked = False Then
+                                rng2.Cells(x, y).Value = rng(i, j)
+                                count = count + 1
+
+                            ElseIf CheckBox1.Checked = True Then
+                                rng.Cells(i, j).Copy()
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = worksheet2.Range(rng2Address)
+                                count = count + 1
+                            End If
+
+                        Next
+                    Next
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                ElseIf X6 Then
+
+                    For j = 1 To c
+                        For i = 1 To r
+
+                            Dim x As Integer = 1
+                            Dim y As Integer = count
+
+                            If CheckBox1.Checked = False Then
+                                rng2.Cells(x, y).Value = rng.Cells(i, j).Value
+                                count = count + 1
+
+                            ElseIf CheckBox1.Checked = True Then
+                                rng.Cells(i, j).Copy()
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                rng2 = worksheet2.Range(rng2Address)
+                                rng2.Cells(x, y).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                rng2 = worksheet2.Range(rng2Address)
+                                count = count + 1
+                            End If
+
+                        Next
+                    Next
+                    excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                Else
+                    MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Exit Sub
+
+                End If
+            Else
+
+                Dim Arr(r - 1, c - 1) As Object
+                Dim Bolds(r - 1, c - 1) As Boolean
+                Dim Italics(r - 1, c - 1) As Boolean
+                Dim fontNames(r - 1, c - 1) As String
+                Dim fontSizes(r - 1, c - 1) As Single
+                Dim reds1(r - 1, c - 1) As Integer
+                Dim reds2(r - 1, c - 1) As Integer
+                Dim greens1(r - 1, c - 1) As Integer
+                Dim greens2(r - 1, c - 1) As Integer
+                Dim blues1(r - 1, c - 1) As Integer
+                Dim blues2(r - 1, c - 1) As Integer
+
+                For i = 1 To r
+                    For j = 1 To c
+                        Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                        If CheckBox1.Checked = True Then
+
+                            Dim cell As Excel.Range = rng.Cells(i, j)
+                            Dim font As Excel.Font = cell.Font
+
+                            Bolds(i - 1, j - 1) = cell.Font.Bold
+                            Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                            If IsDBNull(font.Name) = False Then
+                                fontNames(i - 1, j - 1) = font.Name
+                            Else
+                                fontNames(i - 1, j - 1) = "Calibri"
+                            End If
+
+                            If IsDBNull(font.Size) = False Then
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                fontSizes(i - 1, j - 1) = fontSize
+                            Else
+                                fontSizes(i - 1, j - 1) = 11
+                            End If
+
+                            If IsDBNull(cell.Interior.Color) Then
+                                reds1(i - 1, j - 1) = 255
+                                greens1(i - 1, j - 1) = 255
+                                blues1(i - 1, j - 1) = 255
+                            Else
+                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                Dim red1 As Integer = colorValue1 Mod 256
+                                Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                reds1(i - 1, j - 1) = red1
+                                greens1(i - 1, j - 1) = green1
+                                blues1(i - 1, j - 1) = blue1
+                            End If
+
+                            If IsDBNull(cell.Font.Color) Then
+                                reds2(i - 1, j - 1) = 0
+                                greens2(i - 1, j - 1) = 0
+                                blues2(i - 1, j - 1) = 0
+                            Else
+                                Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                Dim red2 As Integer = colorValue2 Mod 256
+                                Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                reds2(i - 1, j - 1) = red2
+                                greens2(i - 1, j - 1) = green2
+                                blues2(i - 1, j - 1) = blue2
+                            End If
+                        End If
+
+                    Next
+                Next
+
+                rng.ClearContents()
+                rng.ClearFormats()
+
+                Dim count As Integer
+                count = 1
+
+                If X5 Then
+
+                    For i = 1 To r
+                        For j = 1 To c
+                            Dim x As Integer = 1
+                            Dim y As Integer = count
+
+                            rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            count = count + 1
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell2 As Excel.Range = rng2.Cells(x, y)
+                                Dim font2 As Excel.Font = cell2.Font
+
+                                Dim fontSize As Single = fontSizes(i - 1, j - 1)
+
+                                rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
+
+                                If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
+                                If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
+
+                                Dim red1 As Integer = reds1(i - 1, j - 1)
+                                Dim green1 As Integer = greens1(i - 1, j - 1)
+                                Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                Dim red2 As Integer = reds2(i - 1, j - 1)
+                                Dim green2 As Integer = greens2(i - 1, j - 1)
+                                Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+
+                        Next
+                    Next
+
+                ElseIf X6 Then
+
+                    For j = 1 To c
+                        For i = 1 To r
+
+                            Dim x As Integer = 1
+                            Dim y As Integer = count
+
+                            rng2.Cells(x, y).Value = Arr(i - 1, j - 1)
+                            count = count + 1
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell2 As Excel.Range = rng2.Cells(x, y)
+                                Dim font2 As Excel.Font = cell2.Font
+
+                                Dim fontSize As Single = fontSizes(i - 1, j - 1)
+
+                                rng2.Cells(x, y).Font.Name = fontNames(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Size = fontSizes(i - 1, j - 1)
+
+                                If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
+                                If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
+
+                                Dim red1 As Integer = reds1(i - 1, j - 1)
+                                Dim green1 As Integer = greens1(i - 1, j - 1)
+                                Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                Dim red2 As Integer = reds2(i - 1, j - 1)
+                                Dim green2 As Integer = greens2(i - 1, j - 1)
+                                Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                            End If
+
+                        Next
+                    Next
+
+                Else
+                    MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Exit Sub
+
+                End If
+            End If
+
+        ElseIf X3 Then
+
+            If X7 And (X5 Or X6) Then
+
+                Dim BreakPoints() As Integer
+                BreakPoints = GetBreakPoints(rng, 2)
+
+                Dim lengths() As Integer
+                lengths = GetLengths(BreakPoints)
+
+                Dim r2 As Integer
+                Dim c2 As Integer
+
+                If X5 Then
+                    r2 = UBound(BreakPoints) + 1
+                    c2 = MaxValue(lengths)
+                ElseIf X6 Then
+                    c2 = UBound(BreakPoints) + 1
+                    r2 = MaxValue(lengths)
+                End If
+
+                rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                Dim rng2Address As String = rng2.Address
+                worksheet2.Activate()
+                rng2.Select()
+
+                If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                    If X5 Then
+                        Dim iRow As Integer
+                        iRow = 0
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = iRow + j
+                                y = 1
+                                If x < BreakPoints(i - 1) Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                            iRow = BreakPoints(i - 1)
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    ElseIf X6 Then
+                        Dim iRow As Integer
+                        iRow = 0
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = iRow + i
+                                y = 1
+
+                                If x < BreakPoints(j - 1) Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                            iRow = BreakPoints(j - 1)
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    End If
+                Else
+
+                    Dim Arr(r - 1, c - 1) As Object
+                    Dim Bolds(r - 1, c - 1) As Boolean
+                    Dim Italics(r - 1, c - 1) As Boolean
+                    Dim fontNames(r - 1, c - 1) As String
+                    Dim fontSizes(r - 1, c - 1) As Single
+                    Dim reds1(r - 1, c - 1) As Integer
+                    Dim reds2(r - 1, c - 1) As Integer
+                    Dim greens1(r - 1, c - 1) As Integer
+                    Dim greens2(r - 1, c - 1) As Integer
+                    Dim blues1(r - 1, c - 1) As Integer
+                    Dim blues2(r - 1, c - 1) As Integer
+
+                    For i = 1 To r
+                        For j = 1 To c
+                            Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell As Excel.Range = rng.Cells(i, j)
+                                Dim font As Excel.Font = cell.Font
+
+                                Bolds(i - 1, j - 1) = cell.Font.Bold
+                                Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
+                                Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
+                                    reds1(i - 1, j - 1) = 255
+                                    greens1(i - 1, j - 1) = 255
+                                    blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
+                                Else
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
+                                End If
+                            End If
+
+                        Next
+                    Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
+                    If X5 Then
+                        Dim iRow As Integer
+                        iRow = 0
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = iRow + j
+                                y = 1
+                                If x < BreakPoints(i - 1) And x <= r Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                            iRow = BreakPoints(i - 1)
+                        Next
+
+                    ElseIf X6 Then
+                        Dim iRow As Integer
+                        iRow = 0
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = iRow + i
+                                y = 1
+                                If x < BreakPoints(j - 1) Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                            iRow = BreakPoints(j - 1)
+                        Next
+                    End If
+                End If
+
+            ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
+
+                If X5 Then
+
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+
+                    If r Mod Int(TextBox2.Text) = 0 Then
+                        r2 = Int(r / Int(TextBox2.Text))
+                    Else
+                        r2 = Int(r / Int(TextBox2.Text)) + 1
+                    End If
+                    c2 = Int(TextBox2.Text)
+
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = (c2 * (i - 1)) + j
+                                y = 1
+                                If x <= rng.Rows.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    Else
+
+                        Dim Arr(r - 1, c - 1) As Object
+                        Dim Bolds(r - 1, c - 1) As Boolean
+                        Dim Italics(r - 1, c - 1) As Boolean
+                        Dim fontNames(r - 1, c - 1) As String
+                        Dim fontSizes(r - 1, c - 1) As Single
+                        Dim reds1(r - 1, c - 1) As Integer
+                        Dim reds2(r - 1, c - 1) As Integer
+                        Dim greens1(r - 1, c - 1) As Integer
+                        Dim greens2(r - 1, c - 1) As Integer
+                        Dim blues1(r - 1, c - 1) As Integer
+                        Dim blues2(r - 1, c - 1) As Integer
+
+                        For i = 1 To r
+                            For j = 1 To c
+                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                                If CheckBox1.Checked = True Then
+
+                                    Dim cell As Excel.Range = rng.Cells(i, j)
+                                    Dim font As Excel.Font = cell.Font
+
+                                    Bolds(i - 1, j - 1) = cell.Font.Bold
+                                    Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
+                                    Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
+                                        reds1(i - 1, j - 1) = 255
+                                        greens1(i - 1, j - 1) = 255
+                                        blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
+                                    End If
+
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
+                                    Else
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
+                                    End If
+                                End If
+
+                            Next
+                        Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = (c2 * (i - 1)) + j
+                                y = 1
+                                If x <= UBound(Arr, 1) + 1 Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                        Next
+                    End If
+
+                ElseIf X6 Then
+
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+
+                    If r Mod Int(TextBox2.Text) = 0 Then
+                        c2 = Int(r / Int(TextBox2.Text))
+                    Else
+                        c2 = Int(r / Int(TextBox2.Text)) + 1
+                    End If
+                    r2 = Int(TextBox2.Text)
+
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = (r2 * (j - 1)) + i
+                                y = 1
+                                If x <= rng.Rows.Count Then
+
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                    Else
+
+                        Dim Arr(r - 1, c - 1) As Object
+                        Dim Bolds(r - 1, c - 1) As Boolean
+                        Dim Italics(r - 1, c - 1) As Boolean
+                        Dim fontNames(r - 1, c - 1) As String
+                        Dim fontSizes(r - 1, c - 1) As Single
+                        Dim reds1(r - 1, c - 1) As Integer
+                        Dim reds2(r - 1, c - 1) As Integer
+                        Dim greens1(r - 1, c - 1) As Integer
+                        Dim greens2(r - 1, c - 1) As Integer
+                        Dim blues1(r - 1, c - 1) As Integer
+                        Dim blues2(r - 1, c - 1) As Integer
+
+                        For i = 1 To r
+                            For j = 1 To c
+                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                                If CheckBox1.Checked = True Then
+
+                                    Dim cell As Excel.Range = rng.Cells(i, j)
+                                    Dim font As Excel.Font = cell.Font
+
+                                    Bolds(i - 1, j - 1) = cell.Font.Bold
+                                    Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
+                                    Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
+                                        reds1(i - 1, j - 1) = 255
+                                        greens1(i - 1, j - 1) = 255
+                                        blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
+                                    End If
+
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
+                                    Else
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
+                                    End If
+                                End If
+
+                            Next
+                        Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = (r2 * (j - 1)) + i
+                                y = 1
+                                If x <= UBound(Arr, 1) + 1 Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                        Next
+                    End If
+
+                End If
+
+            Else
+                MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+
+            End If
+
+        ElseIf X4 Then
+
+            If X7 And (X5 Or X6) Then
+
+                Dim r2 As Integer
+                Dim c2 As Integer
+
+                Dim BreakPoints() As Integer
+                BreakPoints = GetBreakPoints(rng, 1)
+
+                Dim lengths() As Integer
+                lengths = GetLengths(BreakPoints)
+
+                If X5 Then
+                    r2 = UBound(BreakPoints) + 1
+                    c2 = MaxValue(lengths)
+                ElseIf X6 Then
+                    c2 = UBound(BreakPoints) + 1
+                    r2 = MaxValue(lengths)
+                End If
+
+                rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                Dim rng2Address As String = rng2.Address
+                worksheet2.Activate()
+                rng2.Select()
+
+                If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                    If X5 Then
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + j
+                                If y < BreakPoints(i - 1) Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+
+                                    End If
+                                End If
+                            Next
+                            iColumn = BreakPoints(i - 1)
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    ElseIf X6 Then
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + i
+                                If y < BreakPoints(j - 1) Then
+
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+
+                                End If
+                            Next
+                            iColumn = BreakPoints(j - 1)
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    End If
+
+                Else
+
+                    Dim Arr(r - 1, c - 1) As Object
+                    Dim Bolds(r - 1, c - 1) As Boolean
+                    Dim Italics(r - 1, c - 1) As Boolean
+                    Dim fontNames(r - 1, c - 1) As String
+                    Dim fontSizes(r - 1, c - 1) As Single
+                    Dim reds1(r - 1, c - 1) As Integer
+                    Dim reds2(r - 1, c - 1) As Integer
+                    Dim greens1(r - 1, c - 1) As Integer
+                    Dim greens2(r - 1, c - 1) As Integer
+                    Dim blues1(r - 1, c - 1) As Integer
+                    Dim blues2(r - 1, c - 1) As Integer
+
+                    For i = 1 To r
+                        For j = 1 To c
+                            Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                            If CheckBox1.Checked = True Then
+
+                                Dim cell As Excel.Range = rng.Cells(i, j)
+                                Dim font As Excel.Font = cell.Font
+
+                                Bolds(i - 1, j - 1) = cell.Font.Bold
+                                Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
+                                Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
+                                    reds1(i - 1, j - 1) = 255
+                                    greens1(i - 1, j - 1) = 255
+                                    blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
+                                Else
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
+                                End If
+                            End If
+
+                        Next
+                    Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
+                    If X5 Then
+
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + j
+                                If y < BreakPoints(i - 1) Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                            iColumn = BreakPoints(i - 1)
+                        Next
+
+                    ElseIf X6 Then
+                        Dim iColumn As Integer
+                        iColumn = 0
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = iColumn + i
+                                If y < BreakPoints(j - 1) Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
+                                    End If
+                                End If
+                            Next
+                            iColumn = BreakPoints(j - 1)
+                        Next
+                    End If
+                End If
+
+            ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
+
+                If X5 Then
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+                    If c Mod Int(TextBox2.Text) = 0 Then
+                        r2 = Int(c / Int(TextBox2.Text))
+                    Else
+                        r2 = Int(c / Int(TextBox2.Text)) + 1
+                    End If
+                    c2 = Int(TextBox2.Text)
+
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (c2 * (i - 1)) + j
+
+                                If y <= rng.Columns.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+
+                                End If
+                            Next
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    Else
+
+                        Dim Arr(r - 1, c - 1) As Object
+                        Dim Bolds(r - 1, c - 1) As Boolean
+                        Dim Italics(r - 1, c - 1) As Boolean
+                        Dim fontNames(r - 1, c - 1) As String
+                        Dim fontSizes(r - 1, c - 1) As Single
+                        Dim reds1(r - 1, c - 1) As Integer
+                        Dim reds2(r - 1, c - 1) As Integer
+                        Dim greens1(r - 1, c - 1) As Integer
+                        Dim greens2(r - 1, c - 1) As Integer
+                        Dim blues1(r - 1, c - 1) As Integer
+                        Dim blues2(r - 1, c - 1) As Integer
+
+                        For i = 1 To r
+                            For j = 1 To c
+                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                                If CheckBox1.Checked = True Then
+
+                                    Dim cell As Excel.Range = rng.Cells(i, j)
+                                    Dim font As Excel.Font = cell.Font
+
+                                    Bolds(i - 1, j - 1) = cell.Font.Bold
+                                    Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
+                                    Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
+                                        reds1(i - 1, j - 1) = 255
+                                        greens1(i - 1, j - 1) = 255
+                                        blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
+                                    End If
+
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
+                                    Else
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
+                                    End If
+                                End If
+
+                            Next
+                        Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        For i = 1 To r2
+                            For j = 1 To c2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (c2 * (i - 1)) + j
+                                If y <= UBound(Arr, 2) + 1 Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                        Next
+                    End If
+
+                ElseIf X6 Then
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+                    If c Mod Int(TextBox2.Text) = 0 Then
+                        c2 = Int(c / Int(TextBox2.Text))
+                    Else
+                        c2 = Int(c / Int(TextBox2.Text)) + 1
+                    End If
+                    r2 = Int(TextBox2.Text)
+
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
+                    Dim rng2Address As String = rng2.Address
+                    worksheet2.Activate()
+                    rng2.Select()
+
+                    If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (r2 * (j - 1)) + i
+                                If y <= rng.Columns.Count Then
+                                    If CheckBox1.Checked = False Then
+                                        rng2.Cells(i, j).Value = rng.Cells(x, y).Value
+
+                                    ElseIf CheckBox1.Checked = True Then
+
+                                        rng.Cells(x, y).Copy()
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteValues)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                        rng2.Cells(i, j).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
+                                        rng2 = worksheet2.Range(rng2Address)
+                                    End If
+                                End If
+                            Next
+                        Next
+                        excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                    Else
+
+                        Dim Arr(r - 1, c - 1) As Object
+                        Dim Bolds(r - 1, c - 1) As Boolean
+                        Dim Italics(r - 1, c - 1) As Boolean
+                        Dim fontNames(r - 1, c - 1) As String
+                        Dim fontSizes(r - 1, c - 1) As Single
+                        Dim reds1(r - 1, c - 1) As Integer
+                        Dim reds2(r - 1, c - 1) As Integer
+                        Dim greens1(r - 1, c - 1) As Integer
+                        Dim greens2(r - 1, c - 1) As Integer
+                        Dim blues1(r - 1, c - 1) As Integer
+                        Dim blues2(r - 1, c - 1) As Integer
+
+                        For i = 1 To r
+                            For j = 1 To c
+                                Arr(i - 1, j - 1) = rng.Cells(i, j).Value
+
+                                If CheckBox1.Checked = True Then
+
+                                    Dim cell As Excel.Range = rng.Cells(i, j)
+                                    Dim font As Excel.Font = cell.Font
+
+                                    Bolds(i - 1, j - 1) = cell.Font.Bold
+                                    Italics(i - 1, j - 1) = cell.Font.Italic
+
+
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
+                                    Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
+                                        reds1(i - 1, j - 1) = 255
+                                        greens1(i - 1, j - 1) = 255
+                                        blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
+                                    End If
+
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
+                                    Else
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
+                                    End If
+                                End If
+
+                            Next
+                        Next
+
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        For j = 1 To c2
+                            For i = 1 To r2
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = (r2 * (j - 1)) + i
+                                If y <= UBound(Arr, 2) + 1 Then
+                                    rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
+
+                                    If CheckBox1.Checked = True Then
+
+                                        Dim cell2 As Excel.Range = rng2.Cells(i, j)
+                                        Dim font2 As Excel.Font = cell2.Font
+
+                                        Dim fontSize As Single = fontSizes(x - 1, y - 1)
+
+                                        rng2.Cells(i, j).Font.Name = fontNames(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Size = fontSizes(x - 1, y - 1)
+
+                                        If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
+                                        If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
+
+                                        Dim red1 As Integer = reds1(x - 1, y - 1)
+                                        Dim green1 As Integer = greens1(x - 1, y - 1)
+                                        Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                        rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                        Dim red2 As Integer = reds2(x - 1, y - 1)
+                                        Dim green2 As Integer = greens2(x - 1, y - 1)
+                                        Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                        rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                    End If
+                                End If
+                            Next
+                        Next
+
+                    End If
+                End If
+
+            Else
+                MessageBox.Show("Select One Separator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
             End If
 
+        Else
+            MessageBox.Show("Select One Transformation Type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
+
+        For k = 1 To rng2.Cells.Count
+            rng2.Cells(k).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            rng2.Cells(k).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            rng2.Cells(k).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            rng2.Cells(k).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+        Next
+
+        Dim LeftTopCell As Excel.Range = rng.Cells(1, 1)
+        Dim RightBottomCell As Excel.Range = rng.Cells(r, c)
+        Dim MiddleRow As Integer
+        Dim MiddleColumn As Integer
+
+        If r = 1 Then
+            MiddleRow = 1
+        Else
+            MiddleRow = 2
+        End If
+
+        If c = 1 Then
+            MiddleColumn = 1
+        Else
+            MiddleColumn = 2
+        End If
+
+        Dim MiddleCell As Excel.Range = rng.Cells(MiddleRow, MiddleColumn)
+
+        If LeftTopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
             For j = 1 To rng2.Columns.Count
-                rng2.Columns(j).Autofit
+                rng2.Cells(1, j).Borders(8).LineStyle = LeftTopCell.Borders(8).LineStyle
+                rng2.Cells(1, j).Borders(8).Color = LeftTopCell.Borders(8).Color
+                rng2.Cells(1, j).Borders(8).Weight = LeftTopCell.Borders(8).Weight
             Next
+        Else
+            For j = 1 To rng2.Columns.Count
+                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            Next
+        End If
 
-            Me.Close()
+        If LeftTopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+            For i = 1 To rng2.Rows.Count
+                rng2.Cells(i, 1).Borders(7).LineStyle = LeftTopCell.Borders(7).LineStyle
+                rng2.Cells(i, 1).Borders(7).Color = LeftTopCell.Borders(7).Color
+                rng2.Cells(i, 1).Borders(7).Weight = LeftTopCell.Borders(7).Weight
+            Next
+        Else
+            For i = 1 To rng2.Rows.Count
+                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            Next
+        End If
 
-            TextBoxChanged = False
+        If RightBottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+            For j = 1 To rng2.Columns.Count
+                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = RightBottomCell.Borders(9).LineStyle
+                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = RightBottomCell.Borders(9).Color
+                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = RightBottomCell.Borders(9).Weight
+            Next
+        Else
+            For j = 1 To rng2.Columns.Count
+                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            Next
+        End If
 
-        Catch ex As Exception
+        If RightBottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+            For i = 1 To rng2.Rows.Count
+                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = RightBottomCell.Borders(10).LineStyle
+                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = RightBottomCell.Borders(10).Color
+                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = RightBottomCell.Borders(10).Weight
+            Next
+        Else
+            For i = 1 To rng2.Rows.Count
+                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+            Next
+        End If
 
-        End Try
+        If MiddleCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+            For i = 1 To rng2.Rows.Count
+                For j = 2 To rng2.Columns.Count
+                    rng2.Cells(i, j).Borders(7).LineStyle = MiddleCell.Borders(7).LineStyle
+                    rng2.Cells(i, j).Borders(7).Color = MiddleCell.Borders(7).Color
+                    rng2.Cells(i, j).Borders(7).Weight = MiddleCell.Borders(7).Weight
+                Next
+            Next
+        Else
+            For i = 1 To rng2.Rows.Count
+                For j = 2 To rng2.Columns.Count
+                    rng2.Cells(i, j).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                Next
+            Next
+        End If
+
+        If MiddleCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+            For i = 2 To rng2.Rows.Count
+                For j = 1 To rng2.Columns.Count
+                    rng2.Cells(i, j).Borders(8).LineStyle = MiddleCell.Borders(8).LineStyle
+                    rng2.Cells(i, j).Borders(8).Color = MiddleCell.Borders(8).Color
+                    rng2.Cells(i, j).Borders(8).Weight = MiddleCell.Borders(8).Weight
+                Next
+            Next
+        Else
+            For i = 2 To rng2.Rows.Count
+                For j = 1 To rng2.Columns.Count
+                    rng2.Cells(i, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                Next
+            Next
+        End If
+
+
+        For j = 1 To rng2.Columns.Count
+            rng2.Columns(j).Autofit
+        Next
+
+        Me.Close()
+
+        TextBoxChanged = False
 
     End Sub
 
@@ -3043,8 +3164,6 @@ Public Class Form7
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            TextBox1.SelectionStart = TextBox1.Text.Length
-            TextBox1.ScrollToCaret()
             Dim rngArray() As String = Split(TextBox1.Text, "!")
             Dim rngAddress As String = rngArray(UBound(rngArray))
             rng = worksheet.Range(rngAddress)
@@ -3396,9 +3515,6 @@ Public Class Form7
             excelApp = Globals.ThisAddIn.Application
             workbook2 = excelApp.ActiveWorkbook
             worksheet2 = workbook2.ActiveSheet
-
-            TextBox3.SelectionStart = TextBox3.Text.Length
-            TextBox3.ScrollToCaret()
 
             Dim rng2Array() As String = Split(TextBox3.Text, "!")
             Dim rng2Address As String = rng2Array(UBound(rng2Array))

@@ -563,6 +563,7 @@ Public Class Form3
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
+
             TextBoxChanged = True
             If TextBox1.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False Then
                 MessageBox.Show("Enter a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -721,7 +722,6 @@ Public Class Form3
                         Next
                     Next
 
-
                     For i = 1 To rng.Rows.Count
                         For j = 1 To rng.Columns.Count
                             rng2.Cells(j, i) = Arr(i - 1, j - 1)
@@ -797,7 +797,6 @@ Public Class Form3
                             Next
                         Next
 
-                        rng.ClearContents()
                         rng.ClearFormats()
 
                         For i = 1 To rng.Rows.Count
@@ -829,6 +828,7 @@ Public Class Form3
                             Next
                         Next
                     End If
+
                 End If
 
                 rng2.Select()
@@ -901,8 +901,6 @@ Public Class Form3
         Try
             If TextBox1.Text <> "" And Form4Open = 0 Then
                 worksheet = workbook.ActiveSheet
-                TextBox1.SelectionStart = TextBox1.Text.Length
-                TextBox1.ScrollToCaret()
                 Dim rngArray() As String = Split(TextBox1.Text, "!")
                 Dim rngAddress As String = rngArray(UBound(rngArray))
                 rng = worksheet.Range(rngAddress)
@@ -922,8 +920,6 @@ Public Class Form3
         Try
             If TextBox2.Text <> "" Then
                 worksheet2 = workbook.ActiveSheet
-                TextBox2.SelectionStart = TextBox2.Text.Length
-                TextBox2.ScrollToCaret()
                 Dim rng2Array() As String = Split(TextBox2.Text, "!")
                 Dim rng2Address As String = rng2Array(UBound(rng2Array))
                 rng2 = worksheet2.Range(rng2Address)
