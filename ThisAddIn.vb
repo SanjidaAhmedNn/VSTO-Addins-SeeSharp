@@ -15,6 +15,9 @@ Public Class ThisAddIn
     Private Form2 As Form38 = Nothing
     Private Form3 As Form40 = Nothing
 
+    Public sheetName3 As String
+    Public sheetName4 As String
+
     Private WithEvents wsEvent1 As Excel.Worksheet
     Private WithEvents wsEvent2 As Excel.Worksheet
     Private WithEvents wsEvent3 As Excel.Worksheet
@@ -232,7 +235,7 @@ Public Class ThisAddIn
             ReDim sheetsArray(workBook.Worksheets.Count)
             For i = 1 To excelApp.ActiveWorkbook.Worksheets.Count
                 sheetsArray(i) = CType(workBook.Worksheets(i), Excel.Worksheet)
-                If sheetName = sheetsArray(i).Name Then
+                If sheetName4 = sheetsArray(i).Name Then
                     wsEvent4 = DirectCast(sheetsArray(i), Excel.Worksheet)
                     ' AddHandler sheetsArray(i).Change, AddressOf sheet_SelectionChange3
                     'src_rng = sheetsArray(i).Range("A1", workSheet.Cells(excelApp.Rows.Count, excelApp.Columns.Count))
@@ -351,14 +354,6 @@ Public Class ThisAddIn
         Dim worksheet As Excel.Worksheet = workBook.ActiveSheet
         'excelApp = Globals.ThisAddIn.Application
 
-        'workSheet2.Range("A2").Value = GB_CB_Source1   'For Source Range
-        'workSheet2.Range("A3").Value = SR1             '  Range Type
-        'workSheet2.Range("A4").Value = Horizontal1
-        'workSheet2.Range("A5").Value = Separator1
-        'workSheet2.Range("A6").Value = Search1
-        'workSheet2.Range("A7").Value = Flag1            'Activated
-        'workSheet2.Range("A8").Value = TargetVar1
-
         ' Loop through each worksheet in the active workbook
         For Each ws In excelApp.ActiveWorkbook.Worksheets
             If ws.Name = "Newwwwwwwwww" Then
@@ -420,15 +415,6 @@ Public Class ThisAddIn
             End If
 
             If ws.name = "MySpecialSheet" Then
-                ' Write something in cell A1 of the target worksheet
-                'targetWorksheet.Range("A1").Value = Variable1
-                'targetWorksheet.Range("A2").Value = Variable2
-                'targetWorksheet.Range("A3").Value = Header
-                'targetWorksheet.Range("A4").Value = Ascending
-                'targetWorksheet.Range("A5").Value = Descending
-                'targetWorksheet.Range("A6").Value = TextConvert
-                'targetWorksheet.Range("A7").Value = OptionType
-                'targetWorksheet.Range("A8").Value = Horizontal_CreateDP
                 Variable1 = ws.Range("A1").Value.ToString()
                 Variable2 = ws.Range("A2").Value.ToString()
                 Header = ws.Range("A3").Value.ToString()
@@ -438,7 +424,9 @@ Public Class ThisAddIn
                 OptionType = ws.Range("A7").Value.ToString()
                 Horizontal_CreateDP = ws.Range("A8").Value.ToString()
                 Flag_CreateDDDL = ws.Range("A9").value.ToString
-                sheetName = ws.Range("A10").value.ToString
+                sheetName3 = ws.Range("A10").value.ToString
+                sheetName4 = ws.Range("A11").value.ToString
+
             End If
 
             If ws.name = "SoftekoPictureBasedDropDown" Then
@@ -765,9 +753,6 @@ Public Class ThisAddIn
                     End If
 
 
-
-
-
                 Else
 
 
@@ -864,15 +849,18 @@ Public Class ThisAddIn
     End Function
 
 
-
-
-
     'Create Dynamic Drop-down list
     Public Sub worksheet5_Change(ByVal Target As Excel.Range)
+        excelApp = Globals.ThisAddIn.Application
+        workBook = excelApp.ActiveWorkbook
+
         Try
-            Dim des_rng As Excel.Range = excelApp.Range(Variable2)
-            Dim src_rng As Excel.Range = excelApp.Range(Variable1)
-            src_rng = excelApp.Range(Variable1)
+            Dim src_sheet As Excel.Worksheet = CType(workBook.Worksheets(sheetName3), Excel.Worksheet)
+            Dim des_sheet As Excel.Worksheet = CType(workBook.Worksheets(sheetName4), Excel.Worksheet)
+
+            Dim des_rng As Excel.Range = des_sheet.Range(Variable2)
+            Dim src_rng As Excel.Range = src_sheet.Range(Variable1)
+            'src_rng = excelApp.Range(Variable1)
             'MsgBox(src_rng.Address)
             Dim rng As Excel.Range
             'des_rng.ClearContents()
@@ -1043,7 +1031,8 @@ Public Class ThisAddIn
                         Dim dropDownRange As Excel.Range = des_rng(1, 2)
                         Dim Validation As Excel.Validation = dropDownRange.Validation
                         Validation.Delete() 'Remove any existing validation
-                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                        Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
+                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
                         'CreateValidationList(worksheet.Cells(2, 5), "=" & sourceRng.Address)
                     End If
 
@@ -1059,7 +1048,8 @@ Public Class ThisAddIn
                         Dim dropDownRange As Excel.Range = des_rng(2, 1)
                         Dim Validation As Excel.Validation = dropDownRange.Validation
                         Validation.Delete() 'Remove any existing validation
-                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                        Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
+                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
                     End If
                 End If
 

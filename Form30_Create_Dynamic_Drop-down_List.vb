@@ -14,6 +14,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
     Dim workBook As Excel.Workbook
     Public Shared workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Dim workSheet3 As Excel.Worksheet
     Dim src_rng As Excel.Range
     Public des_rng As Excel.Range
     Dim selectedRange As Excel.Range
@@ -146,12 +147,14 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             Exit Sub
             ' End If
 
+
         ElseIf RB_Dropdown_2_Labels.Checked = False And RB_Dropdown_35_Labels.Checked = False Then
             MessageBox.Show("Select a Drop-down List type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             worksheet.Activate()
             src_rng.Select()
             'Me.Close()
             '   Exit Sub
+            Exit Sub
 
         ElseIf RB_Dropdown_2_Labels.Checked = True And RB_Horizon.Checked = False And RB_Verti.Checked = False Then
             MessageBox.Show("Select a Flip Option.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -160,6 +163,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             'Me.Close()
             Exit Sub
             ' End If
+
         ElseIf RB_Dropdown_35_Labels.Checked = True And src_rng.Columns.Count > 5 Then
             MessageBox.Show("You can maximum select 5 columns.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             worksheet.Activate()
@@ -172,11 +176,19 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             TB_src_range.Focus()
             Exit Sub
 
-        ElseIf ax <> workSheet2.Name Then
+            ' ElseIf ax <> workSheet2.Name Then
+            'ElseIf ax <> workSheet2.Name Then
 
-            MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ' MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '    MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '    TB_dest_range.Focus()
+            '    Exit Sub
+
+        ElseIf RB_Dropdown_2_Labels.Checked = True And src_rng.Rows.Count < 2 Then
+            MessageBox.Show("Select a valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_dest_range.Focus()
             Exit Sub
+
 
         Else
             Try
@@ -189,6 +201,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     Else
 
                         rng = src_rng 'Assuming you have a range from A1 to A100
+
                     End If
                     'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
                     'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
@@ -218,6 +231,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     validation.Delete() 'Remove any existing validation
                     validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
 
+                    AddHandler workSheet3.Change, AddressOf worksheet1_Change
 
                     'MsgBox(i)
 
@@ -225,6 +239,10 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 ElseIf RB_Dropdown_2_Labels.Checked = True Then
                     ' Extract headers from A1:C1
+                    'MsgBox(src_rng.Address)
+                    src_rng = workSheet2.Range(src_rng.Address)
+
+                    'MsgBox(workSheet2.Name)
                     Dim headersRange As Excel.Range = src_rng.Rows(1)
                     Dim headers As List(Of String) = New List(Of String)
                     ' Dim workbook As excelapp.workbook
@@ -237,6 +255,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     ' Create the dropdown list with headers in cell E1
                     'CreateValidationList(excelApp.ActiveSheet.Range("$E$1"), String.Join(",", headers))
                     'Create drop-down list at B1 with the unique values
+
                     Dim dropDownRange As Excel.Range = des_rng(1, 1)
                     Dim validation As Excel.Validation = dropDownRange.Validation
                     validation.Delete() 'Remove any existing validation
@@ -245,6 +264,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     ' Add event handler to listen for changes in E1
 
                     AddHandler worksheet.Change, AddressOf worksheet1_Change
+                    AddHandler workSheet3.Change, AddressOf worksheet1_Change
                 End If
 
                 If CB_text.Checked = True Then
@@ -290,21 +310,87 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 Flag_CreateDDDL = True
                 sheetName = worksheet.Name
+                Dim sheetName1 As String = src_rng.Worksheet.Name
+                Dim sheetName2 As String = des_rng.Worksheet.Name
 
-                ' Write something in cell A1 of the target worksheet
-                targetWorksheet.Range("A1").Value = Variable1
-                targetWorksheet.Range("A2").Value = Variable2
-                targetWorksheet.Range("A3").Value = Header
-                targetWorksheet.Range("A4").Value = Ascending
-                targetWorksheet.Range("A5").Value = Descending
-                targetWorksheet.Range("A6").Value = TextConvert
-                targetWorksheet.Range("A7").Value = OptionType
-                targetWorksheet.Range("A8").Value = Horizontal_CreateDP
-                targetWorksheet.Range("A9").Value = Flag_CreateDDDL
-                targetWorksheet.Range("A10").Value = sheetName
+                If targetWorksheet.Range("A1").Value = "" Then
+                    ' Write something in cell A1 of the target worksheet
+                    targetWorksheet.Range("A1").Value = Variable1
+                    targetWorksheet.Range("A2").Value = Variable2
+                    targetWorksheet.Range("A3").Value = Header
+                    targetWorksheet.Range("A4").Value = Ascending
+                    targetWorksheet.Range("A5").Value = Descending
+                    targetWorksheet.Range("A6").Value = TextConvert
+                    targetWorksheet.Range("A7").Value = OptionType
+                    targetWorksheet.Range("A8").Value = Horizontal_CreateDP
+                    targetWorksheet.Range("A9").Value = Flag_CreateDDDL
+                    targetWorksheet.Range("A10").Value = sheetName1
+                    targetWorksheet.Range("A11").Value = sheetName2
 
+                ElseIf targetWorksheet.Range("B1").Value = "" Then
+
+                    targetWorksheet.Range("B1").Value = Variable1
+                    targetWorksheet.Range("B2").Value = Variable2
+                    targetWorksheet.Range("B3").Value = Header
+                    targetWorksheet.Range("B4").Value = Ascending
+                    targetWorksheet.Range("B5").Value = Descending
+                    targetWorksheet.Range("B6").Value = TextConvert
+                    targetWorksheet.Range("B7").Value = OptionType
+                    targetWorksheet.Range("B8").Value = Horizontal_CreateDP
+                    targetWorksheet.Range("B9").Value = Flag_CreateDDDL
+                    targetWorksheet.Range("B10").Value = sheetName1
+                    targetWorksheet.Range("B11").Value = sheetName2
+
+                ElseIf targetWorksheet.Range("C1").Value = "" Then
+
+                    targetWorksheet.Range("C1").Value = Variable1
+                    targetWorksheet.Range("C2").Value = Variable2
+                    targetWorksheet.Range("C3").Value = Header
+                    targetWorksheet.Range("C4").Value = Ascending
+                    targetWorksheet.Range("C5").Value = Descending
+                    targetWorksheet.Range("C6").Value = TextConvert
+                    targetWorksheet.Range("C7").Value = OptionType
+                    targetWorksheet.Range("C8").Value = Horizontal_CreateDP
+                    targetWorksheet.Range("C9").Value = Flag_CreateDDDL
+                    targetWorksheet.Range("C10").Value = sheetName1
+                    targetWorksheet.Range("C11").Value = sheetName2
+
+                ElseIf targetWorksheet.Range("D1").Value = "" Then
+
+                    targetWorksheet.Range("D1").Value = Variable1
+                    targetWorksheet.Range("D2").Value = Variable2
+                    targetWorksheet.Range("D3").Value = Header
+                    targetWorksheet.Range("D4").Value = Ascending
+                    targetWorksheet.Range("D5").Value = Descending
+                    targetWorksheet.Range("D6").Value = TextConvert
+                    targetWorksheet.Range("D7").Value = OptionType
+                    targetWorksheet.Range("D8").Value = Horizontal_CreateDP
+                    targetWorksheet.Range("D9").Value = Flag_CreateDDDL
+                    targetWorksheet.Range("D10").Value = sheetName1
+                    targetWorksheet.Range("D11").Value = sheetName2
+
+                ElseIf targetWorksheet.Range("E1").Value = "" Then
+
+                    targetWorksheet.Range("E1").Value = Variable1
+                    targetWorksheet.Range("E2").Value = Variable2
+                    targetWorksheet.Range("E3").Value = Header
+                    targetWorksheet.Range("E4").Value = Ascending
+                    targetWorksheet.Range("E5").Value = Descending
+                    targetWorksheet.Range("E6").Value = TextConvert
+                    targetWorksheet.Range("E7").Value = OptionType
+                    targetWorksheet.Range("E8").Value = Horizontal_CreateDP
+                    targetWorksheet.Range("E9").Value = Flag_CreateDDDL
+                    targetWorksheet.Range("E10").Value = sheetName1
+                    targetWorksheet.Range("E11").Value = sheetName2
+                Else
+                    ' Cut and Paste
+                    Dim R1 As Excel.Range = targetWorksheet.Range("A1:A11")
+                    R1.Cut()
+                    targetWorksheet.Range("B1:B11").PasteSpecial(Excel.XlPasteType.xlPasteAll)
+                End If
                 ' Hide the target worksheet
                 targetWorksheet.Visible = Excel.XlSheetVisibility.xlSheetHidden
+
 
                 des_rng.Value = Nothing
                 des_rng.Select()
@@ -425,6 +511,10 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             src_rng = excelApp.Range(Variable1)
             src_rng = excelApp.Range(Variable1)
             'MsgBox(src_rng.Address)
+            'src_rng = excelApp.Range(Variable1)
+            src_rng = workSheet2.Range(Variable1)
+
+            des_rng = workSheet3.Range(des_rng.Address)
             Dim rng As Excel.Range
             'des_rng.ClearContents()
 
@@ -589,12 +679,16 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                         'MsgBox(col)
                         'Dim ab As Integer = col - src_rng.Column
                         Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
+                        'sourceRng = workSheet2.Range(sourceRng.Address)
                         'MsgBox(sourceRng.Address)
                         'Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(worksheet.Cells(worksheet.Rows.Count, col), 1)
                         Dim dropDownRange As Excel.Range = des_rng(1, 2)
                         Dim Validation As Excel.Validation = dropDownRange.Validation
                         Validation.Delete() 'Remove any existing validation
                         Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                        ' Assuming sourceRng is set to a range on another sheet
+                        Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
+                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
                         'CreateValidationList(worksheet.Cells(2, 5), "=" & sourceRng.Address)
                     End If
 
@@ -604,6 +698,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                         Dim col As Integer = src_rng.Rows().Find(Target.Value).Column - src_rng.Column + 1
                         'MsgBox(col)
                         'Dim ab As Integer = col - src_rng.Column
+
                         Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
                         'MsgBox(sourceRng.Address)
                         'Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(worksheet.Cells(worksheet.Rows.Count, col), 1)
@@ -611,6 +706,8 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                         Dim Validation As Excel.Validation = dropDownRange.Validation
                         Validation.Delete() 'Remove any existing validation
                         Validation.Add(Excel.XlDVType.xlValidateList, Formula1:="=" & sourceRng.Address)
+                        Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
+                        Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
                     End If
                 End If
 
@@ -845,6 +942,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 Try
                     des_rng = excelApp.Range(TB_dest_range.Text)
+                    des_rng = worksheet.Range(TB_dest_range.Text)
                     des_rng.Select()
                 Catch
                     ' Split the string into sheet name and cell address
@@ -853,6 +951,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     Dim cellAddress As String = parts(1)
 
                     des_rng = excelApp.Range(cellAddress)
+                    des_rng = worksheet.Range(cellAddress)
                     des_rng.Select()
                 End Try
                 ' Define the range of cells to read (for example, cells A1 to A10)
@@ -869,6 +968,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                 TB_dest_range.SelectionStart = TB_dest_range.Text.Length
                 focuschange = False
                 ax = worksheet.Name
+                workSheet3 = worksheet
             End If
         Catch ex As Exception
         End Try
@@ -884,6 +984,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 ' Define the range of cells to read (for example, cells A1 to A10)
                 src_rng = excelApp.Range(TB_src_range.Text)
+                src_rng = worksheet.Range(TB_src_range.Text)
                 src_rng.Select()
                 Dim range As Excel.Range = src_rng
 
