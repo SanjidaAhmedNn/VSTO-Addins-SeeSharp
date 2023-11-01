@@ -609,6 +609,8 @@ Public Class Form3
 
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
 
+                    rng2.ClearFormats()
+
                     If RadioButton3.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
@@ -715,36 +717,49 @@ Public Class Form3
                     For i = LBound(Arr, 1) To UBound(Arr, 1)
                         For j = LBound(Arr, 2) To UBound(Arr, 2)
                             If RadioButton3.Checked = True Then
-                                Arr(i, j) = rng.Cells(i + 1, j + 1)
+                                Arr(i, j) = rng.Cells(i + 1, j + 1).value
                             ElseIf RadioButton2.Checked = True Then
                                 Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
                             End If
                         Next
                     Next
 
-                    For i = 1 To rng.Rows.Count
-                        For j = 1 To rng.Columns.Count
-                            rng2.Cells(j, i) = Arr(i - 1, j - 1)
-                        Next
-                    Next
+                    Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                    Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
+
+                    Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                    Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Borders7(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders8(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders9(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders10(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                    Dim Borders7L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    Dim Borders7W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    Dim Borders7C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
 
                     If CheckBox2.Checked = True Then
-
-                        Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-                        Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
-
-                        Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-                        Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-
-                        Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                        Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                        Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
 
                         For i = LBound(Arr, 1) To UBound(Arr, 1)
                             For j = LBound(Arr, 2) To UBound(Arr, 2)
@@ -794,11 +809,60 @@ Public Class Form3
                                     Greens2(i, j) = green2
                                     Blues2(i, j) = blue2
                                 End If
+
+                                If cell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders7(i, j) = True
+                                    Borders7L(i, j) = cell.Borders(7).LineStyle
+                                    Borders7C(i, j) = cell.Borders(7).Color
+                                    Borders7W(i, j) = cell.Borders(7).Weight
+                                Else
+                                    Borders7(i, j) = False
+                                End If
+
+                                If cell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders8(i, j) = True
+                                    Borders8L(i, j) = cell.Borders(8).LineStyle
+                                    Borders8C(i, j) = cell.Borders(8).Color
+                                    Borders8W(i, j) = cell.Borders(8).Weight
+                                Else
+                                    Borders8(i, j) = False
+                                End If
+
+                                If cell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders9(i, j) = True
+                                    Borders9L(i, j) = cell.Borders(9).LineStyle
+                                    Borders9C(i, j) = cell.Borders(9).Color
+                                    Borders9W(i, j) = cell.Borders(9).Weight
+                                Else
+                                    Borders9(i, j) = False
+                                End If
+
+                                If cell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders10(i, j) = True
+                                    Borders10L(i, j) = cell.Borders(10).LineStyle
+                                    Borders10C(i, j) = cell.Borders(10).Color
+                                    Borders10W(i, j) = cell.Borders(10).Weight
+                                Else
+                                    Borders10(i, j) = False
+                                End If
+
                             Next
                         Next
 
-                        rng.ClearFormats()
+                    End If
 
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
+                    rng2.ClearFormats()
+
+                    For i = 1 To rng.Rows.Count
+                        For j = 1 To rng.Columns.Count
+                            rng2.Cells(j, i) = Arr(i - 1, j - 1)
+                        Next
+                    Next
+
+                    If CheckBox2.Checked = True Then
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
                                 With rng2.Cells(j, i).Font
@@ -819,14 +883,44 @@ Public Class Form3
                                 rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
 
                                 Dim targetCell As Excel.Range = rng2.Cells(j, i)
+                                Dim x As Integer = i - 1
+                                Dim y As Integer = j - 1
 
-                                For k As Integer = 7 To 11
-                                    targetCell.Borders(k).LineStyle = Excel.XlLineStyle.xlContinuous
-                                    targetCell.Borders(k).Color = System.Drawing.Color.Black.ToArgb()
-                                Next
+                                If Borders7(x, y) = True Then
+                                    targetCell.Borders(8).LineStyle = Borders7L(x, y)
+                                    targetCell.Borders(8).Color = Borders7C(x, y)
+                                    targetCell.Borders(8).Weight = Borders7W(x, y)
+                                Else
+                                    targetCell.Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders8(x, y) = True Then
+                                    targetCell.Borders(7).LineStyle = Borders8L(x, y)
+                                    targetCell.Borders(7).Color = Borders8C(x, y)
+                                    targetCell.Borders(7).Weight = Borders8W(x, y)
+                                Else
+                                    targetCell.Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders9(x, y) = True Then
+                                    targetCell.Borders(10).LineStyle = Borders9L(x, y)
+                                    targetCell.Borders(10).Color = Borders9C(x, y)
+                                    targetCell.Borders(10).Weight = Borders9W(x, y)
+                                Else
+                                    targetCell.Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders10(x, y) = True Then
+                                    targetCell.Borders(9).LineStyle = Borders10L(x, y)
+                                    targetCell.Borders(9).Color = Borders10C(x, y)
+                                    targetCell.Borders(9).Weight = Borders10W(x, y)
+                                Else
+                                    targetCell.Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
 
                             Next
                         Next
+
                     End If
 
                 End If
