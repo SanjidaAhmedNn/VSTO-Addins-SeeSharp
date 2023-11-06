@@ -1545,72 +1545,109 @@ Public Class Form7
                     Dim TopCell As Excel.Range = rng.Cells(1, 1)
 
                     If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(1, 1).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
-                        rng2.Cells(1, 1).Borders(8).Color = TopCell.Borders(8).Color
-                        rng2.Cells(1, 1).Borders(8).Weight = TopCell.Borders(8).Weight
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                            rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                            rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                        Next
                     Else
-                        rng2.Cells(1, 1).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        Next
                     End If
 
-                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(1, 1).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
-                        rng2.Cells(1, 1).Borders(9).Color = TopCell.Borders(9).Color
-                        rng2.Cells(1, 1).Borders(9).Weight = TopCell.Borders(9).Weight
-                    Else
-                        rng2.Cells(1, 1).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                    If rng2.Rows.Count > 1 Then
+                        If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
                     End If
 
                     If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        For i = 1 To rng2.Rows.Count
-                            rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
-                            rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
-                            rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
-                        Next
-                    Else
-                        For i = 1 To rng2.Rows.Count
-                            rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
-                        Next
-                    End If
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
 
-                    Dim BottomCell As Excel.Range = rng.Cells(r, c)
+                        Dim BottomCell As Excel.Range = rng.Cells(r, c)
 
                     If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).Color = BottomCell.Borders(9).Color
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).Weight = BottomCell.Borders(9).Weight
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                        Next
                     Else
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        Next
                     End If
 
-                    If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        For i = 1 To rng2.Rows.Count
-                            rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
-                            rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
-                            rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
-                        Next
-                    Else
-                        For i = 1 To rng2.Rows.Count
-                            rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
-                        Next
-                    End If
+                        If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
 
                     If rng.Rows.Count > 1 Then
                         Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
                         If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
                             For i = 2 To rng2.Rows.Count - 1
-                                rng2.Cells(i, 1).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
-                                rng2.Cells(i, 1).Borders(9).Color = MiddleCell.Borders(9).Color
-                                rng2.Cells(i, 1).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                    rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                    rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                Next
                             Next
                         Else
                             For i = 2 To rng2.Rows.Count - 1
-                                rng2.Cells(i, 1).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            Next
+                        End If
+                    End If
+
+                    If rng.Columns.Count > 1 Then
+                        Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                        If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count - 1
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                    rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                    rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                Next
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count - 1
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
                             Next
                         End If
                     End If
                 End If
 
-            Else
+                Else
 
                 Dim Arr(r - 1, c - 1) As Object
                 Dim Bolds(r - 1, c - 1) As Boolean
@@ -2008,19 +2045,29 @@ Public Class Form7
                     Dim TopCell As Excel.Range = rng.Cells(1, 1)
 
                     If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(1, 1).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
-                        rng2.Cells(1, 1).Borders(8).Color = TopCell.Borders(8).Color
-                        rng2.Cells(1, 1).Borders(8).Weight = TopCell.Borders(8).Weight
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                            rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                            rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                        Next
                     Else
-                        rng2.Cells(1, 1).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        Next
                     End If
 
-                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(1, 1).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
-                        rng2.Cells(1, 1).Borders(9).Color = TopCell.Borders(9).Color
-                        rng2.Cells(1, 1).Borders(9).Weight = TopCell.Borders(9).Weight
-                    Else
-                        rng2.Cells(1, 1).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                    If rng2.Rows.Count > 1 Then
+                        If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
                     End If
 
                     If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
@@ -2038,11 +2085,15 @@ Public Class Form7
                     Dim BottomCell As Excel.Range = rng.Cells(r, c)
 
                     If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).Color = BottomCell.Borders(9).Color
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).Weight = BottomCell.Borders(9).Weight
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                            rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                        Next
                     Else
-                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        For j = 1 To rng2.Columns.Count
+                            rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                        Next
                     End If
 
                     If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
@@ -2061,13 +2112,36 @@ Public Class Form7
                         Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
                         If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
                             For i = 2 To rng2.Rows.Count - 1
-                                rng2.Cells(i, 1).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
-                                rng2.Cells(i, 1).Borders(9).Color = MiddleCell.Borders(9).Color
-                                rng2.Cells(i, 1).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                    rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                    rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                Next
                             Next
                         Else
                             For i = 2 To rng2.Rows.Count - 1
-                                rng2.Cells(i, 1).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            Next
+                        End If
+                    End If
+
+                    If rng.Columns.Count > 1 Then
+                        Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                        If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count - 1
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                    rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                    rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                Next
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count - 1
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
                             Next
                         End If
                     End If
@@ -2487,6 +2561,113 @@ Public Class Form7
                         Next
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                     End If
+
+                    If CheckBox1.Checked = True Then
+                        Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                        If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng2.Rows.Count > 1 Then
+                            If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                    rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                    rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+                        End If
+
+                        If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                        If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng.Rows.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                            If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                        rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                        rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                    Next
+                                Next
+                            Else
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
+
+                        If rng.Columns.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                            If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                        rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                        rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                    Next
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
+                    End If
+
                 Else
 
                     Dim Arr(r - 1, c - 1) As Object
@@ -2687,6 +2868,113 @@ Public Class Form7
                             Next
                         Next
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+                        End If
+
                     Else
 
                         Dim Arr(r - 1, c - 1) As Object
@@ -2842,6 +3130,112 @@ Public Class Form7
                             Next
                         Next
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+                        End If
 
                     Else
 
@@ -3047,6 +3441,112 @@ Public Class Form7
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                     End If
 
+                    If CheckBox1.Checked = True Then
+                        Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                        If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng2.Rows.Count > 1 Then
+                            If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                    rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                    rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+                        End If
+
+                        If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                        If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng.Rows.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                            If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                        rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                        rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                    Next
+                                Next
+                            Else
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
+
+                        If rng.Columns.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                            If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                        rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                        rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                    Next
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
+                    End If
+
                 Else
 
                     Dim Arr(r - 1, c - 1) As Object
@@ -3248,6 +3748,113 @@ Public Class Form7
                             Next
                         Next
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+                        End If
+
                     Else
 
                         Dim Arr(r - 1, c - 1) As Object
@@ -3399,6 +4006,112 @@ Public Class Form7
                             Next
                         Next
                         excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+                        End If
                     Else
 
                         Dim Arr(r - 1, c - 1) As Object
