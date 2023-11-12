@@ -2,6 +2,7 @@
 Imports System.ComponentModel.Design
 Imports System.Runtime.CompilerServices
 Imports System.Runtime.InteropServices
+Imports System.Runtime.Remoting.Contexts
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
@@ -12,11 +13,14 @@ Public Class Form31_UpdateDynamicDropdownList
     Dim workBook As Excel.Workbook
     Public Shared workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Dim workSheet3 As Excel.Worksheet
     Dim src_rng As Excel.Range
     Public des_rng As Excel.Range
     Dim selectedRange As Excel.Range
     Public ax As String
     Public focuschange As Boolean
+    Dim form As Form30_Create_Dynamic_Drop_down_List
+
 
     Dim opened As Integer
 
@@ -200,7 +204,15 @@ Public Class Form31_UpdateDynamicDropdownList
         Me.Close()
     End Sub
 
+
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+
+        Dim r1 As Excel.Range
+        r1 = workSheet2.Range(TB_src_rng.Text)
+
 
         If TB_src_rng.Text = "" And TB_des_rng2.Text = "" And TB_des_rng2.Enabled = True Then
             MessageBox.Show("Please, Select updated source range and destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -209,7 +221,8 @@ Public Class Form31_UpdateDynamicDropdownList
             Exit Sub
 
         ElseIf TB_src_rng.Text = "" Then
-            MessageBox.Show("Please, Select updated source range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            'MsgBox(100)
+            MessageBox.Show("Check your Updated Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             'Me.Close()
             Exit Sub
@@ -243,12 +256,9 @@ Public Class Form31_UpdateDynamicDropdownList
             MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
 
-        ElseIf ax <> workSheet2.Name Then
-
-            MessageBox.Show("Please select the range of the same worksheet", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        ElseIf r1.Columns.Count <> des_rng.Columns.Count Then
+            MessageBox.Show("Check your Updated Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_des_rng2.Focus()
-            Exit Sub
-
         Else
             Try
                 Dim result As DialogResult = MessageBox.Show("The Original Source Range is :" & Variable1 & ". AND the Drop-down list is in :" & Variable2 & "Do you want to continue?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -257,12 +267,68 @@ Public Class Form31_UpdateDynamicDropdownList
                 If result = DialogResult.Yes Then
 
                     Variable1 = TB_src_rng.Text
+                    If des_rng.Worksheet.Name <> src_rng.Worksheet.Name Then
+                        Variable1 = src_rng.Worksheet.Name & "!" & TB_src_rng.Text
+                        Variable2 = des_rng.Worksheet.Name & "!" & des_rng.Address
 
+                    Else
+                        Variable1 = src_rng.Worksheet.Name & "!" & TB_src_rng.Text
+                        Variable2 = des_rng.Worksheet.Name & "!" & des_rng.Address
+                    End If
+                    ' MsgBox(1)
                     OutPut()
+                    Dim targetWorksheet As Excel.Worksheet
+
+                    For Each ws In excelApp.ActiveWorkbook.Worksheets
+                        If ws.name = "MySpecialSheet" Then
+                            targetWorksheet = ws
+                            Exit For
+                        End If
+                    Next
+                    If TextBox1.Text = 1 Then
+
+                        targetWorksheet.Range("A1").Value = Variable1
+                        targetWorksheet.Range("A2").Value = Variable2
+                        targetWorksheet.Range("A10").Value = sheetName10
+                        targetWorksheet.Range("A11").Value = sheetName11
+
+                    ElseIf TextBox1.Text = 2 Then
+                        targetWorksheet.Range("B1").Value = Variable1
+                        targetWorksheet.Range("B2").Value = Variable2
+                        targetWorksheet.Range("B10").Value = sheetName10
+                        targetWorksheet.Range("B11").Value = sheetName11
+
+                    ElseIf TextBox1.Text = 3 Then
+                        targetWorksheet.Range("C1").Value = Variable1
+                        targetWorksheet.Range("C2").Value = Variable2
+                        targetWorksheet.Range("C10").Value = sheetName10
+                        targetWorksheet.Range("C11").Value = sheetName11
+
+                    ElseIf TextBox1.Text = 4 Then
+                        targetWorksheet.Range("D1").Value = Variable1
+                        targetWorksheet.Range("D2").Value = Variable2
+                        targetWorksheet.Range("D10").Value = sheetName10
+                        targetWorksheet.Range("D11").Value = sheetName11
+
+                    ElseIf TextBox1.Text = 5 Then
+                        targetWorksheet.Range("E1").Value = Variable1
+                        targetWorksheet.Range("E2").Value = Variable2
+                        targetWorksheet.Range("E10").Value = sheetName10
+                        targetWorksheet.Range("E11").Value = sheetName11
+                    End If
+
+                    'Me.Close()
+                    'If RB_diff_rng.Checked = True Then
+                    '    RB_same_source.Checked = True
+                    '    'MsgBox(TB_des_rng1.Text)
+                    '    OutPut()
+                    'End If
 
                 End If
+                Me.Close()
             Catch ex As Exception
                 des_rng.Select()
+                Me.Close()
             End Try
         End If
 
@@ -319,6 +385,7 @@ Public Class Form31_UpdateDynamicDropdownList
     Private Sub OutPut()
 
         Try
+            excelApp = Globals.ThisAddIn.Application
             Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
             Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
 
@@ -332,8 +399,6 @@ Public Class Form31_UpdateDynamicDropdownList
 
                 rng = src_rng 'Assuming you have a range from A1 to A100
             End If
-            'Dim rng2 As Excel.Range = excelApp.Range("B1:B16")
-            'Dim rng3 As Excel.Range = excelApp.Range("C1:C16")
 
             Dim uniqueValues As New List(Of String)
 
@@ -359,11 +424,57 @@ Public Class Form31_UpdateDynamicDropdownList
             Dim validation As Excel.Validation = dropDownRange.Validation
             validation.Delete() 'Remove any existing validation
             validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", uniqueValues))
-            Dim range1 As Excel.Range = excelApp.Range(Variable2)
+            Dim range1 As Excel.Range = excelApp.Range(TB_des_rng1.Text)
+            'Dim range2 As Excel.Range = range1.Rows(1)
+            'MsgBox(range1.Address)
+            'MsgBox(des_rng.Address)
             If RB_diff_rng.Checked = True And range1.Address(1, 1) <> des_rng.Address(1, 1) Then
 
-                range1.Cut(des_rng)
+                'MsgBox(range1.Address)
+                'If des_rng.Rows.Count < range1.Rows.Count Then
+                '    Dim difference As Integer = range1.Rows.Count - des_rng.Rows.Count
+                '    Dim startRowToDelete As Integer = range1.Rows.Count - difference + 1
+                '    Dim endRowToDelete As Integer = range1.Rows.Count
+                '    range1.Rows(String.Format("{0}:{1}", startRowToDelete, endRowToDelete)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                '    range1 = range1.Resize(des_rng.Rows.Count, range1.Columns.Count)
+                'End If
+
+                'range1.Rows(1).Cut(des_rng)
+
+                'For i As Integer = 1 To des_rng.Rows.Count
+
+                '    range1.Rows(1).Copy(des_rng.Rows(i))
+                'Next
+
+                'des_rng.Rows(1).cut(range1.Rows(1))
+
+
+                form = New Form30_Create_Dynamic_Drop_down_List
+                form.TB_src_range.Text = TB_src_rng.Text
+                form.TB_dest_range.Text = TB_des_rng2.Text
+                If OptionType = True Then
+                    form.RB_Dropdown_35_Labels.Checked = True
+                End If
+                If Header = True Then
+                    form.CB_header.Checked = True
+                End If
+                If Ascending = True Then
+                    form.CB_ascending.Checked = True
+                End If
+                If Descending = True Then
+                    form.CB_descending.Checked = True
+                End If
+                If TextConvert = True Then
+                    form.CB_text.Checked = True
+                End If
+                If Horizontal_CreateDP = True Then
+                    form.RB_Horizon.Checked = True
+                End If
+
+                form.Btn_OK_Click(form.Btn_OK, New EventArgs())
+
             End If
+
 
             Variable1 = TB_src_rng.Text
             If RB_diff_rng.Checked = True Then
@@ -372,9 +483,13 @@ Public Class Form31_UpdateDynamicDropdownList
             des_rng.Select()
 
             des_rng.Value = Nothing
-            Me.Close()
+            sheetName10 = workSheet2.Name
+            If RB_diff_rng.Checked = True Then
+                sheetName11 = workSheet3.Name
+            End If
+
         Catch ex As Exception
-            Me.Close()
+
         End Try
     End Sub
 
@@ -431,6 +546,7 @@ Public Class Form31_UpdateDynamicDropdownList
             PictureBox3.Enabled = True
             PictureBox2.Enabled = True
             L_select.Enabled = True
+            TB_des_rng2.Focus()
 
         End If
 
@@ -546,8 +662,8 @@ Public Class Form31_UpdateDynamicDropdownList
     Private Sub TB_des_rng2_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng2.TextChanged
 
         excelApp = Globals.ThisAddIn.Application
-        workBook = excelApp.ActiveWorkbook
-        workSheet = workBook.ActiveSheet
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
         Try
             If TB_des_rng2.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng2.Text) = True Then
                 focuschange = True
@@ -569,21 +685,22 @@ Public Class Form31_UpdateDynamicDropdownList
 
                 End Try
 
-                If workSheet2.Name <> workSheet.Name Then
-                    TB_des_rng2.Text = workSheet.Name & "!" & des_rng.Address
+                If workSheet2.Name <> worksheet.Name Then
+                    TB_des_rng2.Text = worksheet.Name & "!" & des_rng.Address
                     'src_rng = excelApp.Range(TB_src_range.Text)
 
 
                 End If
-
                 Me.Activate()
-                'TB_src_range.Focus()
                 TB_des_rng2.SelectionStart = TB_des_rng2.Text.Length
                 focuschange = False
-                ax = workSheet.Name
+                ax = worksheet.Name
+                workSheet3 = worksheet
+                'MsgBox(workSheet3.Name)
             End If
         Catch ex As Exception
             ax = ""
+            workSheet3 = worksheet
         End Try
     End Sub
 

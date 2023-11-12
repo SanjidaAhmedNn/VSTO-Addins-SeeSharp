@@ -8,7 +8,8 @@
     Public OptionType As Boolean
     Public Horizontal_CreateDP As Boolean
     Public Flag_CreateDDDL As Boolean
-    Public sheetName As String
+    Public sheetName10 As String
+    Public sheetName11 As String
     Public form_flag As Boolean
     Public sessionflag1 As Boolean
     Public sessionflag2 As Boolean

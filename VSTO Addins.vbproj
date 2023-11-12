@@ -348,6 +348,12 @@
     <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form31_2_updated_selection.Designer.vb">
+      <DependentUpon>Form31_2_updated_selection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form31_2_updated_selection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
       <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
     </Compile>
@@ -531,6 +537,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
       <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form31_2_updated_selection.resx">
+      <DependentUpon>Form31_2_updated_selection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
       <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>

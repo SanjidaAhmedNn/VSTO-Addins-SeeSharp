@@ -59,6 +59,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Horizon = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
+        Me.Label_ext = New System.Windows.Forms.Label()
         CType(Me.Selection_source, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection_destination, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -485,12 +486,21 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.CustomGroupBox7.TabIndex = 0
         Me.CustomGroupBox7.TabStop = False
         '
+        'Label_ext
+        '
+        Me.Label_ext.AutoSize = True
+        Me.Label_ext.Location = New System.Drawing.Point(812, 132)
+        Me.Label_ext.Name = "Label_ext"
+        Me.Label_ext.Size = New System.Drawing.Size(0, 13)
+        Me.Label_ext.TabIndex = 376
+        '
         'Form30_Create_Dynamic_Drop_down_List
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(685, 486)
+        Me.ClientSize = New System.Drawing.Size(684, 486)
+        Me.Controls.Add(Me.Label_ext)
         Me.Controls.Add(Me.CB_text)
         Me.Controls.Add(Me.CB_descending)
         Me.Controls.Add(Me.CB_ascending)
@@ -507,6 +517,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.Controls.Add(Me.Selection_source)
         Me.Controls.Add(Me.TB_src_range)
         Me.Controls.Add(Me.GB_list_option)
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form30_Create_Dynamic_Drop_down_List"
@@ -567,4 +578,5 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
     Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox5 As Windows.Forms.PictureBox
+    Friend WithEvents Label_ext As Windows.Forms.Label
 End Class

@@ -39,6 +39,7 @@ Partial Class Form31_UpdateDynamicDropdownList
         Me.L_select = New System.Windows.Forms.Label()
         Me.RB_diff_rng = New System.Windows.Forms.RadioButton()
         Me.RB_same_source = New System.Windows.Forms.RadioButton()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         CType(Me.Selection_source, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox2.SuspendLayout()
@@ -225,12 +226,21 @@ Partial Class Form31_UpdateDynamicDropdownList
         Me.RB_same_source.Text = "Same as the source range"
         Me.RB_same_source.UseVisualStyleBackColor = True
         '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(373, 83)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox1.TabIndex = 383
+        Me.TextBox1.Visible = False
+        '
         'Form31_UpdateDynamicDropdownList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(349, 322)
+        Me.ClientSize = New System.Drawing.Size(345, 322)
+        Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.Selection_source)
         Me.Controls.Add(Me.Btn_OK)
@@ -271,4 +281,5 @@ Partial Class Form31_UpdateDynamicDropdownList
     Friend WithEvents ComboBox2 As Windows.Forms.ComboBox
     Friend WithEvents Selection_source As Windows.Forms.PictureBox
     Friend WithEvents Info As Windows.Forms.PictureBox
+    Friend WithEvents TextBox1 As Windows.Forms.TextBox
 End Class

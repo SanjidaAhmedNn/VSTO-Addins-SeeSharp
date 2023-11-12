@@ -106,6 +106,7 @@
         Me.Button25 = Me.Factory.CreateRibbonButton
         Me.Button26 = Me.Factory.CreateRibbonButton
         Me.Button27 = Me.Factory.CreateRibbonButton
+        Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -490,6 +491,7 @@
         Me.Menu3.Items.Add(Me.Button28)
         Me.Menu3.Items.Add(Me.Button29)
         Me.Menu3.Items.Add(Me.Button30)
+        Me.Menu3.Items.Add(Me.Button4)
         Me.Menu3.Label = "Dynamic Drop-down List"
         Me.Menu3.Name = "Menu3"
         '
@@ -544,6 +546,12 @@
         Me.Button27.Label = "Remove Advanced Drop-down List"
         Me.Button27.Name = "Button27"
         Me.Button27.ShowImage = True
+        '
+        'Button4
+        '
+        Me.Button4.Label = "Button4"
+        Me.Button4.Name = "Button4"
+        Me.Button4.ShowImage = True
         '
         'Ribbon1
         '
@@ -631,6 +639,7 @@
     Friend WithEvents Button25 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button26 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button27 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection
