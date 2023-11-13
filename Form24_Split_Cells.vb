@@ -1187,7 +1187,6 @@ Public Class Form24_Split_Cells
                 rng2.Select()
                 For j = 1 To rng2.Columns.Count
                     rng2.Columns(j).Autofit
-                    MsgBox(j)
                 Next
 
                 Me.Close()

@@ -1372,7 +1372,6 @@ Public Class Form7
 
         Try
 
-
             TextBoxChanged = True
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -2102,7 +2101,7 @@ Public Class Form7
 
                     End If
 
- 
+
 
                 Else
 
