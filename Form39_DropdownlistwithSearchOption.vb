@@ -103,7 +103,7 @@ Public Class Form39_DropdownlistwithSearchOption
                 TB_src_rng.SelectionStart = TB_src_rng.Text.Length
                 'MsgBox(TB_src_rng.Text.Length)
             End If
-
+            CB_Source.SelectedIndex = 0
 
         Catch ex As Exception
             TB_src_rng.Focus()

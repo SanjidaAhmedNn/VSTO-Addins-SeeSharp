@@ -98,7 +98,7 @@ Partial Class Form31_UpdateDynamicDropdownList
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(96, 25)
         Me.ComboBox2.TabIndex = 377
-        Me.ComboBox2.Text = "SOFTEKO"
+        Me.ComboBox2.Text = "Softeko"
         '
         'Selection_source
         '
@@ -220,10 +220,10 @@ Partial Class Form31_UpdateDynamicDropdownList
         Me.RB_same_source.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_same_source.Location = New System.Drawing.Point(8, 6)
         Me.RB_same_source.Name = "RB_same_source"
-        Me.RB_same_source.Size = New System.Drawing.Size(178, 21)
+        Me.RB_same_source.Size = New System.Drawing.Size(225, 21)
         Me.RB_same_source.TabIndex = 0
         Me.RB_same_source.TabStop = True
-        Me.RB_same_source.Text = "Same as the source range"
+        Me.RB_same_source.Text = "Same as the original output range"
         Me.RB_same_source.UseVisualStyleBackColor = True
         '
         'TextBox1

@@ -22,6 +22,7 @@ Partial Class Form32_ExtendDropDownList
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form32_ExtendDropDownList))
         Me.Info = New System.Windows.Forms.PictureBox()
         Me.Source_selection = New System.Windows.Forms.PictureBox()
@@ -33,6 +34,7 @@ Partial Class Form32_ExtendDropDownList
         Me.Dest_selection = New System.Windows.Forms.PictureBox()
         Me.TB_des_rng = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.L_warning = New VSTO_Addins.CustomLabel()
         CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Source_selection, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -42,7 +44,7 @@ Partial Class Form32_ExtendDropDownList
         'Info
         '
         Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
-        Me.Info.Location = New System.Drawing.Point(220, 14)
+        Me.Info.Location = New System.Drawing.Point(249, 16)
         Me.Info.Name = "Info"
         Me.Info.Size = New System.Drawing.Size(20, 20)
         Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -94,7 +96,7 @@ Partial Class Form32_ExtendDropDownList
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(96, 25)
         Me.ComboBox2.TabIndex = 386
-        Me.ComboBox2.Text = "SOFTEKO"
+        Me.ComboBox2.Text = "Softeko"
         '
         'TB_src_rng
         '
@@ -110,9 +112,9 @@ Partial Class Form32_ExtendDropDownList
         Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(15, 15)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(203, 17)
+        Me.Label1.Size = New System.Drawing.Size(237, 17)
         Me.Label1.TabIndex = 383
-        Me.Label1.Text = "Select Dynamic Drop-down List :"
+        Me.Label1.Text = "Select dynamic drop-down list range :"
         '
         'Dest_selection
         '
@@ -141,9 +143,9 @@ Partial Class Form32_ExtendDropDownList
         Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(15, 78)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(326, 17)
+        Me.Label2.Size = New System.Drawing.Size(325, 17)
         Me.Label2.TabIndex = 391
-        Me.Label2.Text = "Select the expanded Dynamic drop-down list range :"
+        Me.Label2.Text = "Select the expanded dynamic drop-down list range :"
         '
         'L_warning
         '
@@ -178,7 +180,7 @@ Partial Class Form32_ExtendDropDownList
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form32_ExtendDropDownList"
-        Me.Text = "Extend Drop-down List"
+        Me.Text = "Extend Dynamic Drop-down List"
         CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Source_selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Dest_selection, System.ComponentModel.ISupportInitialize).EndInit()
@@ -198,4 +200,5 @@ Partial Class Form32_ExtendDropDownList
     Friend WithEvents TB_des_rng As Windows.Forms.TextBox
     Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents L_warning As CustomLabel
+    Friend WithEvents ToolTip1 As Windows.Forms.ToolTip
 End Class

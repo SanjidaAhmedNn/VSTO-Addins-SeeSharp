@@ -621,11 +621,11 @@ Public Class Form28_Split_text_bypattern
     End Sub
 
     Private Sub CB_consecutive_separators_CheckedChanged(sender As Object, e As EventArgs) Handles CB_consecutive_separators.CheckedChanged
-        Try
-            Call Display()
-        Catch ex As Exception
+        'Try
+        '    Call Display()
+        'Catch ex As Exception
 
-        End Try
+        'End Try
     End Sub
 
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click

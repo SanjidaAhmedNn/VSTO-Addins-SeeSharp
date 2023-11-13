@@ -76,7 +76,7 @@ Partial Class Form31_2_updated_selection
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(111, 25)
         Me.ComboBox2.TabIndex = 369
-        Me.ComboBox2.Text = "SOFTEKO"
+        Me.ComboBox2.Text = "Softeko"
         '
         'Form31_2_updated_selection
         '

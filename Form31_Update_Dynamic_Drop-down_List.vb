@@ -253,7 +253,7 @@ Public Class Form31_UpdateDynamicDropdownList
             Exit Sub
 
         ElseIf src_rng.Areas.Count > 1 Then
-            MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Please Select dynamic drop-down list range from same worksheet.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
 
         ElseIf r1.Columns.Count <> des_rng.Columns.Count Then
@@ -275,8 +275,9 @@ Public Class Form31_UpdateDynamicDropdownList
                         Variable1 = src_rng.Worksheet.Name & "!" & TB_src_rng.Text
                         Variable2 = des_rng.Worksheet.Name & "!" & des_rng.Address
                     End If
-                    ' MsgBox(1)
-                    OutPut()
+
+                    OutPut()                                                                        'Main Function
+
                     Dim targetWorksheet As Excel.Worksheet
 
                     For Each ws In excelApp.ActiveWorkbook.Worksheets
@@ -316,13 +317,6 @@ Public Class Form31_UpdateDynamicDropdownList
                         targetWorksheet.Range("E10").Value = sheetName10
                         targetWorksheet.Range("E11").Value = sheetName11
                     End If
-
-                    'Me.Close()
-                    'If RB_diff_rng.Checked = True Then
-                    '    RB_same_source.Checked = True
-                    '    'MsgBox(TB_des_rng1.Text)
-                    '    OutPut()
-                    'End If
 
                 End If
                 Me.Close()

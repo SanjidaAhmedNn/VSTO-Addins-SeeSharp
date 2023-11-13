@@ -11,6 +11,7 @@ Public Class Form32_ExtendDropDownList
     Dim workBook As Excel.Workbook
     Public Shared workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Dim worksheet3 As Excel.Worksheet
     Dim src_rng As Excel.Range
     Public des_rng As Excel.Range
     Dim selectedRange As Excel.Range
@@ -178,8 +179,13 @@ Public Class Form32_ExtendDropDownList
     End Sub
 
     Private Sub Btn_OK_Click(sender As Object, e As EventArgs) Handles Btn_OK.Click
+
+        excelApp = Globals.ThisAddIn.Application
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
+
         If TB_src_rng.Text = "" And TB_des_rng.Text = "" Then
-            MessageBox.Show("Please, Select updated source range and destination range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Please select all necessary options.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             'Me.Close()
             Exit Sub
@@ -210,8 +216,7 @@ Public Class Form32_ExtendDropDownList
             Exit Sub
 
 
-
-        ElseIf src_rng.Areas.Count > 1 Then
+        ElseIf src_rng.Areas.Count > 1 Or des_rng.Areas.Count > 1 Then
             MessageBox.Show("Multiple selection is not possible in the Source Range field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             Exit Sub
@@ -222,27 +227,188 @@ Public Class Form32_ExtendDropDownList
             TB_des_rng.Focus()
             Exit Sub
 
-        ElseIf src_rng.Column <> des_rng.Column Then
-            MessageBox.Show("1st column of source range and destination range should be same.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            TB_des_rng.Focus()
-            Exit Sub
+            'ElseIf src_rng.Column <> des_rng.Column Then
+            '    MessageBox.Show("1st column of source range and destination range should be same.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '    TB_des_rng.Focus()
+            '    Exit Sub
 
         ElseIf excelApp.Intersect(src_rng, des_rng) Is Nothing Then
-            MessageBox.Show(" These two ranges must intersect each other.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(" Please select a valid expanded dynamic drop-down list range that intersects each other.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             TB_src_rng.Focus()
             'Me.Close()
             Exit Sub
 
         Else
             Try
-                For i As Integer = 1 To des_rng.Rows.Count
-
-                    src_rng.Rows(1).Copy(des_rng.Rows(i))
+                Dim targetWorksheet As Excel.Worksheet
+                ' Dim i As Integer = 1
+                For Each ws In excelApp.ActiveWorkbook.Worksheets
+                    If ws.name = "MySpecialSheet" Then
+                        targetWorksheet = ws
+                        Exit For
+                    End If
                 Next
 
+                Dim k As Integer = 0
+                'For i = 1 To targetWorksheet.Columns.Count
+                If worksheet.Name = targetWorksheet.Range("A11").Value And excelApp.Intersect(src_rng, excelApp.Range(targetWorksheet.Range("A2").Value)) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("A1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("A2").Value.ToString()
+                    Header = targetWorksheet.Range("A3").Value.ToString()
+                    Ascending = targetWorksheet.Range("A4").Value.ToString()
+                    Descending = targetWorksheet.Range("A5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("A6").Value.ToString()
+                    OptionType = targetWorksheet.Range("A7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("A8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("A9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("A10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("A11").Value.ToString
+                    k = 1
+
+                ElseIf worksheet.Name = targetWorksheet.Range("B11").Value And excelApp.Intersect(src_rng, excelApp.Range(targetWorksheet.Range("B2").Value)) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("B1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("B2").Value.ToString()
+                    Header = targetWorksheet.Range("B3").Value.ToString()
+                    Ascending = targetWorksheet.Range("B4").Value.ToString()
+                    Descending = targetWorksheet.Range("B5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("B6").Value.ToString()
+                    OptionType = targetWorksheet.Range("B7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("B8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("B9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("B10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("B11").Value.ToString
+                    k = 2
+
+                ElseIf worksheet.Name = targetWorksheet.Range("C11").Value And excelApp.Intersect(src_rng, excelApp.Range(targetWorksheet.Range("C2").Value)) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("C1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("C2").Value.ToString()
+                    Header = targetWorksheet.Range("C3").Value.ToString()
+                    Ascending = targetWorksheet.Range("C4").Value.ToString()
+                    Descending = targetWorksheet.Range("C5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("C6").Value.ToString()
+                    OptionType = targetWorksheet.Range("C7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("C8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("C9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("C10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("C11").Value.ToString
+                    k = 3
+
+                ElseIf worksheet.Name = targetWorksheet.Range("D11").Value And excelApp.Intersect(src_rng, excelApp.Range(targetWorksheet.Range("D2").Value)) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("D1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("D2").Value.ToString()
+                    Header = targetWorksheet.Range("D3").Value.ToString()
+                    Ascending = targetWorksheet.Range("D4").Value.ToString()
+                    Descending = targetWorksheet.Range("D5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("D6").Value.ToString()
+                    OptionType = targetWorksheet.Range("D7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("D8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("D9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("D10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("D11").Value.ToString
+                    k = 4
+
+                ElseIf worksheet.Name = targetWorksheet.Range("E11").Value And excelApp.Intersect(src_rng, excelApp.Range(targetWorksheet.Range("E2").Value)) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("E1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("E2").Value.ToString()
+                    Header = targetWorksheet.Range("E3").Value.ToString()
+                    Ascending = targetWorksheet.Range("E4").Value.ToString()
+                    Descending = targetWorksheet.Range("E5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("E6").Value.ToString()
+                    OptionType = targetWorksheet.Range("E7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("E8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("E9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("E10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("E11").Value.ToString
+                    k = 5
+
+                End If
+
+
+                ' Get the validation formula from the source cell
+                Dim validationFormula As String = des_rng(1, 1).Validation.Formula1
+
+                ' Apply the validation to the target range
+                With des_rng.Columns(1).Validation
+                    .Delete() ' Clear any existing validation
+                    .Add(Type:=Excel.XlDVType.xlValidateList,
+                     AlertStyle:=Excel.XlDVAlertStyle.xlValidAlertStop,
+                     Operator:=Excel.XlFormatConditionOperator.xlBetween,
+                     Formula1:=validationFormula)
+                    .IgnoreBlank = True
+                    .InCellDropdown = True
+                    .ShowInput = True
+                    .ShowError = True
+                End With
+
+                If k = 1 Then
+
+                    targetWorksheet.Range("A2").Value = excelApp.Union(worksheet.Range(targetWorksheet.Range("A2").Value), des_rng).Address
+                    ' Header = targetWorksheet.Range("A3").Value.ToString()
+                    'Ascending = targetWorksheet.Range("A4").Value.ToString()
+                    'Descending = targetWorksheet.Range("A5").Value.ToString()
+                    'TextConvert = targetWorksheet.Range("A6").Value.ToString()
+                    'OptionType = targetWorksheet.Range("A7").Value.ToString()
+                    'Horizontal_CreateDP = targetWorksheet.Range("A8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("A9").Value.ToString
+                    'sheetName10 = targetWorksheet.Range("A10").Value.ToString
+                    'sheetName11 = targetWorksheet.Range("A11").Value.ToString
+
+                ElseIf k = 2 Then
+                    targetWorksheet.Range("B2").Value = excelApp.Union(worksheet.Range(targetWorksheet.Range("B2").Value), des_rng).Address
+                    'Header = targetWorksheet.Range("B3").Value.ToString()
+                    'Ascending = targetWorksheet.Range("B4").Value.ToString()
+                    'Descending = targetWorksheet.Range("B5").Value.ToString()
+                    'TextConvert = targetWorksheet.Range("B6").Value.ToString()
+                    'OptionType = targetWorksheet.Range("B7").Value.ToString()
+                    'Horizontal_CreateDP = targetWorksheet.Range("B8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("B9").Value.ToString
+                    'sheetName10 = targetWorksheet.Range("B10").Value.ToString
+                    'sheetName11 = targetWorksheet.Range("B11").Value.ToString
+
+                ElseIf k = 3 Then
+                    targetWorksheet.Range("C2").Value = excelApp.Union(worksheet.Range(targetWorksheet.Range("C2").Value), des_rng).Address
+                    'Header = targetWorksheet.Range("C3").Value.ToString()
+                    'Ascending = targetWorksheet.Range("C4").Value.ToString()
+                    'Descending = targetWorksheet.Range("C5").Value.ToString()
+                    'TextConvert = targetWorksheet.Range("C6").Value.ToString()
+                    'OptionType = targetWorksheet.Range("C7").Value.ToString()
+                    'Horizontal_CreateDP = targetWorksheet.Range("C8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("C9").Value.ToString
+                    'sheetName10 = targetWorksheet.Range("C10").Value.ToString
+                    'sheetName11 = targetWorksheet.Range("C11").Value.ToString
+
+                ElseIf k = 4 Then
+                    targetWorksheet.Range("D2").Value = excelApp.Union(worksheet.Range(targetWorksheet.Range("D2").Value), des_rng).Address
+                    'Header = targetWorksheet.Range("D3").Value.ToString()
+                    'Ascending = targetWorksheet.Range("D4").Value.ToString()
+                    'Descending = targetWorksheet.Range("D5").Value.ToString()
+                    'TextConvert = targetWorksheet.Range("D6").Value.ToString()
+                    'OptionType = targetWorksheet.Range("D7").Value.ToString()
+                    'Horizontal_CreateDP = targetWorksheet.Range("D8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("D9").Value.ToString
+                    'sheetName10 = targetWorksheet.Range("D10").Value.ToString
+                    'sheetName11 = targetWorksheet.Range("D11").Value.ToString
+
+                ElseIf k = 5 Then
+                    targetWorksheet.Range("E2").Value = excelApp.Union(worksheet.Range(targetWorksheet.Range("E2").Value), des_rng).Address
+                    'Header = targetWorksheet.Range("E3").Value.ToString()
+                    'Ascending = targetWorksheet.Range("E4").Value.ToString()
+                    'Descending = targetWorksheet.Range("E5").Value.ToString()
+                    'TextConvert = targetWorksheet.Range("E6").Value.ToString()
+                    'OptionType = targetWorksheet.Range("E7").Value.ToString()
+                    'Horizontal_CreateDP = targetWorksheet.Range("E8").Value.ToString()
+                    'Flag_CreateDDDL = targetWorksheet.Range("E9").Value.ToString
+                    'sheetName10 = targetWorksheet.Range("E10").Value.ToString
+                    'sheetName11 = targetWorksheet.Range("E11").Value.ToString
+                End If
+                src_rng.Select()
                 Me.Refresh()
+                Me.Hide()
+                MessageBox.Show("Your Dynamic Drop-down List is extended successfully.", "Softeko", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
                 Me.Close()
             Catch ex As Exception
+                Me.Close()
             End Try
         End If
     End Sub
@@ -271,46 +437,45 @@ Public Class Form32_ExtendDropDownList
 
     Private Sub TB_des_rng_TextChanged(sender As Object, e As EventArgs) Handles TB_des_rng.TextChanged
         excelApp = Globals.ThisAddIn.Application
-        workBook = excelApp.ActiveWorkbook
-        workSheet = workBook.ActiveSheet
-
+        Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
+        Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
         Try
             If TB_des_rng.Text IsNot Nothing And IsValidExcelCellReference(TB_des_rng.Text) = True Then
                 focuschange = True
+                Dim sheetname As String = ""
 
-                ' Define the range of cells to read (for example, cells A1 to A10)
-                TB_des_rng.Text = TB_des_rng.Text
                 Try
-                    des_rng = excelApp.Range(TB_des_rng.Text)
+
+                    des_rng = worksheet.Range(TB_des_rng.Text)
                     des_rng.Select()
 
-                Catch ex As Exception
+                Catch
                     ' Split the string into sheet name and cell address
                     Dim parts As String() = TB_des_rng.Text.Split("!"c)
-                    Dim sheetName As String = parts(0)
+                    sheetname = parts(0)
                     Dim cellAddress As String = parts(1)
-
-                    des_rng = excelApp.Range(cellAddress)
+                    worksheet = CType(workbook.Worksheets(sheetname), Worksheet)
+                    worksheet.Activate()
+                    des_rng = worksheet.Range(cellAddress)
                     des_rng.Select()
-
                 End Try
 
-                ' Define the range of cells to read (for example, cells A1 to A10)
-                If workSheet2.Name <> workSheet.Name Then
-                    TB_des_rng.Text = workSheet.Name & "!" & des_rng.Address
-                    'src_rng = excelApp.Range(TB_src_range.Text)
+                If workSheet2.Name <> worksheet.Name And TB_des_rng.Text.Contains("!") = False Then
+
+                    TB_des_rng.Text = worksheet.Name & "!" & TB_des_rng.Text
 
                 End If
 
-
                 Me.Activate()
-                'TB_src_range.Focus()
+                TB_des_rng.Focus()
                 TB_des_rng.SelectionStart = TB_des_rng.Text.Length
-                focuschange = False
-                ax = workSheet.Name
 
+                focuschange = False
+                ax = worksheet.Name
+                workSheet3 = worksheet
             End If
         Catch ex As Exception
+            focuschange = False
         End Try
     End Sub
 

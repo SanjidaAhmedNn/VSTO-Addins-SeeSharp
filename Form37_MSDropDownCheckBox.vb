@@ -110,7 +110,7 @@ Public Class Form37_MSDropDownCheckBox
                 'MsgBox(TB_src_rng.Text.Length)
             End If
 
-
+            CB_Source.SelectedIndex = 0
         Catch ex As Exception
             TB_src_rng.Focus()
         End Try

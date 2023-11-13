@@ -108,7 +108,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(154, 25)
         Me.ComboBox2.TabIndex = 362
-        Me.ComboBox2.Text = "SOFTEKO"
+        Me.ComboBox2.Text = "Softeko"
         '
         'Label1
         '
@@ -352,9 +352,9 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Dropdown_35_Labels.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Dropdown_35_Labels.Location = New System.Drawing.Point(8, 33)
         Me.RB_Dropdown_35_Labels.Name = "RB_Dropdown_35_Labels"
-        Me.RB_Dropdown_35_Labels.Size = New System.Drawing.Size(258, 21)
+        Me.RB_Dropdown_35_Labels.Size = New System.Drawing.Size(266, 21)
         Me.RB_Dropdown_35_Labels.TabIndex = 1
-        Me.RB_Dropdown_35_Labels.Text = "Dynamic Drop-down List with 2-5 Levels"
+        Me.RB_Dropdown_35_Labels.Text = "Dynamic drop-down list with 2 to 5 levels"
         Me.RB_Dropdown_35_Labels.UseVisualStyleBackColor = True
         '
         'PictureBox5
@@ -375,10 +375,10 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Dropdown_2_Labels.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Dropdown_2_Labels.Location = New System.Drawing.Point(8, 7)
         Me.RB_Dropdown_2_Labels.Name = "RB_Dropdown_2_Labels"
-        Me.RB_Dropdown_2_Labels.Size = New System.Drawing.Size(246, 21)
+        Me.RB_Dropdown_2_Labels.Size = New System.Drawing.Size(239, 21)
         Me.RB_Dropdown_2_Labels.TabIndex = 0
         Me.RB_Dropdown_2_Labels.TabStop = True
-        Me.RB_Dropdown_2_Labels.Text = "Dynamic Drop-down List with 2 Levels"
+        Me.RB_Dropdown_2_Labels.Text = "Dynamic drop-down list with 2 levels"
         Me.RB_Dropdown_2_Labels.UseVisualStyleBackColor = True
         '
         'CustomGroupBox2
@@ -403,7 +403,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.GB_list_option.Size = New System.Drawing.Size(307, 84)
         Me.GB_list_option.TabIndex = 369
         Me.GB_list_option.TabStop = False
-        Me.GB_list_option.Text = "List Option"
+        Me.GB_list_option.Text = "List Options"
         '
         'CustomGroupBox5
         '
@@ -436,9 +436,9 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Verti.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Verti.Location = New System.Drawing.Point(8, 33)
         Me.RB_Verti.Name = "RB_Verti"
-        Me.RB_Verti.Size = New System.Drawing.Size(162, 21)
+        Me.RB_Verti.Size = New System.Drawing.Size(158, 21)
         Me.RB_Verti.TabIndex = 1
-        Me.RB_Verti.Text = "Vertical Drop-down List"
+        Me.RB_Verti.Text = "Vertical drop-down list"
         Me.RB_Verti.UseVisualStyleBackColor = True
         '
         'PictureBox7
@@ -459,10 +459,10 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Horizon.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Horizon.Location = New System.Drawing.Point(8, 7)
         Me.RB_Horizon.Name = "RB_Horizon"
-        Me.RB_Horizon.Size = New System.Drawing.Size(180, 21)
+        Me.RB_Horizon.Size = New System.Drawing.Size(176, 21)
         Me.RB_Horizon.TabIndex = 0
         Me.RB_Horizon.TabStop = True
-        Me.RB_Horizon.Text = "Horizontal Drop-down List"
+        Me.RB_Horizon.Text = "Horizontal drop-down list"
         Me.RB_Horizon.UseVisualStyleBackColor = True
         '
         'CustomGroupBox4

@@ -546,6 +546,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form32_ExtendDropDownList.resx">
       <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form33_ColorBasedDropDownList.resx">
       <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
@@ -672,7 +673,7 @@
     <ManifestKeyFile>VSTO Addins_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A775DA71C3756D004E05E1FE3802D3736ED6FA0C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BC90C5E8A1FD6D898D18D834E2CD023B50B01E7D</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

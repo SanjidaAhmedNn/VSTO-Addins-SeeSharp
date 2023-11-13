@@ -254,11 +254,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     For Each cell As Excel.Range In headersRange.Cells
                         headers.Add(cell.Value.ToString())
                     Next
-                    'Dim workbook As Excel.Workbook = excelApp.ActiveWorkbook
-                    'Dim worksheet As Excel.Worksheet = workbook.ActiveSheet
-                    ' Create the dropdown list with headers in cell E1
-                    'CreateValidationList(excelApp.ActiveSheet.Range("$E$1"), String.Join(",", headers))
-                    'Create drop-down list at B1 with the unique values
 
                     Dim dropDownRange As Excel.Range = des_rng(1, 1)
                     Dim validation As Excel.Validation = dropDownRange.Validation
@@ -543,7 +538,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             workSheet = workBook.ActiveSheet
 
 
-
             Dim targetWorksheet As Excel.Worksheet
             Dim i As Integer = 1
             For Each ws In excelApp.ActiveWorkbook.Worksheets
@@ -623,7 +617,8 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                 End If
             ' Next
 
-
+            'MsgBox(Variable1)
+            'MsgBox(Variable2)
 
 
             src_rng = excelApp.Range(Variable1)
@@ -636,8 +631,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
                 Dim rng As Excel.Range
 
-                'MsgBox(src_rng.Address)
-                'MsgBox(des_rng.Address)
 
                 If RB_Dropdown_35_Labels.Checked = True Then
                     If CB_header.Checked = True Then
@@ -646,12 +639,12 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                     Else
 
-                        rng = src_rng 'Assuming you have a range from A1 to A100
+                        rng = src_rng
+
                     End If
 
                     Dim col_dif As Integer
                     col_dif = Target.Column - des_rng.Column + 1
-                    'MsgBox(col_dif)
 
                     'For k = 1 To des_rng.Rows.Count
                     Dim matchedValues As New List(Of String)
@@ -668,7 +661,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                                     If Not matchedValues.Contains(rng(i, 2).Value) Then
                                         matchedValues.Add(rng(i, 2).Value)
                                     End If
-                                    'matchedValues.Add(rng(i, 2).Value)
                                 End If
                             Next
 
@@ -873,6 +865,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
         Try
             If e.KeyCode = Keys.Enter Then
+                Btn_OK.Focus()
 
                 Call Btn_OK_Click(sender, e)
 
@@ -1051,13 +1044,12 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             If TB_dest_range.Text IsNot Nothing And IsValidExcelCellReference(TB_dest_range.Text) = True Then
                 focuschange = True
                 Dim sheetname As String = ""
-                'MsgBox(1)
 
                 Try
-                    'des_rng = excelApp.Range(TB_dest_range.Text)
+
                     des_rng = worksheet.Range(TB_dest_range.Text)
                     des_rng.Select()
-                    'sheetname = ""
+
                 Catch
                     ' Split the string into sheet name and cell address
                     Dim parts As String() = TB_dest_range.Text.Split("!"c)
@@ -1068,11 +1060,10 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     des_rng = worksheet.Range(cellAddress)
                     des_rng.Select()
                 End Try
-                'MsgBox(sheetname)
-                ' Define the range of cells to read (for example, cells A1 to A10)
+
                 If workSheet2.Name <> worksheet.Name And TB_dest_range.Text.Contains("!") = False Then
+
                     TB_dest_range.Text = worksheet.Name & "!" & TB_dest_range.Text
-                    'src_rng = excelApp.Range(TB_src_range.Text)
 
                 End If
 

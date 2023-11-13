@@ -114,7 +114,7 @@ Public Class Form35Multi_SelectionbasedDropdown
                 'TB_src_rng.SelectionStart = TB_src_rng.Text.Length
             End If
 
-
+            CB_Source.SelectedIndex = 0
         Catch ex As Exception
             TB_src_rng.Focus()
         End Try

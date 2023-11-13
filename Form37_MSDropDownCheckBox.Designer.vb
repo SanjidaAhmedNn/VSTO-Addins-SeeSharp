@@ -261,12 +261,12 @@ Partial Class Form37_MSDropDownCheckBox
         '
         'CB_Source
         '
+        Me.CB_Source.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CB_Source.FormattingEnabled = True
         Me.CB_Source.Location = New System.Drawing.Point(12, 13)
         Me.CB_Source.Name = "CB_Source"
         Me.CB_Source.Size = New System.Drawing.Size(245, 25)
         Me.CB_Source.TabIndex = 378
-        Me.CB_Source.Text = "Select Range"
         '
         'Form37_MSDropDownCheckBox
         '

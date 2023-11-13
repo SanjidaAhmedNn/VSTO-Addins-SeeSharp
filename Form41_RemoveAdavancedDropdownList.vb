@@ -563,7 +563,7 @@ Public Class Form41_RemoveAdavancedDropdownList
             TB_src_rng.SelectionStart = TB_src_rng.Text.Length
             'MsgBox(TB_src_rng.Text.Length)
         End If
-
+        CB_Source.SelectedIndex = 0
 
         TB_src_rng.Focus()
     End Sub

@@ -454,9 +454,10 @@ Public Class ThisAddIn
 
             src_rng = src_rng1
             des_rng = des_rng1
-            If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-                worksheet5_2_Change(Target)
-            End If
+            'If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+            'MsgBox(1)
+            worksheet5_2_Change(Target)
+            'End If
         Catch ex As Exception
         End Try
 
@@ -489,9 +490,9 @@ Public Class ThisAddIn
         'MsgBox(src_rng.Worksheet.Name)
         'MsgBox(des_rng.Worksheet.Name)
 
-        If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-            worksheet5_2_Change(Target)
-        End If
+        'If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+        worksheet5_2_Change(Target)
+        'End If
     End Sub
 
     Private Sub wsEvent4_3_SelectionChange(ByVal Target As Excel.Range) Handles wsEvent4_3.Change
@@ -522,9 +523,9 @@ Public Class ThisAddIn
         'MsgBox(src_rng.Worksheet.Name)
         'MsgBox(des_rng.Worksheet.Name)
 
-        If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-            worksheet5_2_Change(Target)
-        End If
+        ' If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+        worksheet5_2_Change(Target)
+        ' End If
     End Sub
 
     Private Sub wsEvent4_4_SelectionChange(ByVal Target As Excel.Range) Handles wsEvent4_4.Change
@@ -554,9 +555,9 @@ Public Class ThisAddIn
         'MsgBox(src_rng.Worksheet.Name)
         'MsgBox(des_rng.Worksheet.Name)
 
-        If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-            worksheet5_2_Change(Target)
-        End If
+        ' If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+        worksheet5_2_Change(Target)
+        '  End If
 
     End Sub
 
@@ -587,9 +588,9 @@ Public Class ThisAddIn
         'MsgBox(src_rng.Worksheet.Name)
         'MsgBox(des_rng.Worksheet.Name)
 
-        If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-            worksheet5_2_Change(Target)
-        End If
+        '  If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+        worksheet5_2_Change(Target)
+        '  End If
 
     End Sub
 
@@ -881,7 +882,6 @@ Public Class ThisAddIn
         workBook = excelApp.ActiveWorkbook
         worksheet = workBook.ActiveSheet
         Try
-
 
 
 
@@ -1350,16 +1350,98 @@ Public Class ThisAddIn
         workBook = excelApp.ActiveWorkbook
         worksheet = workBook.ActiveSheet
 
+        Dim targetWorksheet As Excel.Worksheet
+        Dim i As Integer = 1
+        For Each ws In excelApp.ActiveWorkbook.Worksheets
+            If ws.name = "MySpecialSheet" Then
+                targetWorksheet = ws
+                Exit For
+            End If
+        Next
+
+
+        'For i = 1 To targetWorksheet.Columns.Count
+        If Target.Worksheet.Name = targetWorksheet.Range("A11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("A2").Value)) IsNot Nothing Then
+            Variable1 = targetWorksheet.Range("A1").Value.ToString()
+            Variable2 = targetWorksheet.Range("A2").Value.ToString()
+            Header = targetWorksheet.Range("A3").Value.ToString()
+            Ascending = targetWorksheet.Range("A4").Value.ToString()
+            Descending = targetWorksheet.Range("A5").Value.ToString()
+            TextConvert = targetWorksheet.Range("A6").Value.ToString()
+            OptionType = targetWorksheet.Range("A7").Value.ToString()
+            Horizontal_CreateDP = targetWorksheet.Range("A8").Value.ToString()
+            Flag_CreateDDDL = targetWorksheet.Range("A9").Value.ToString
+            sheetName10 = targetWorksheet.Range("A10").Value.ToString
+            sheetName11 = targetWorksheet.Range("A11").Value.ToString
+
+        ElseIf Target.Worksheet.Name = targetWorksheet.Range("B11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("B2").Value)) IsNot Nothing Then
+            Variable1 = targetWorksheet.Range("B1").Value.ToString()
+            Variable2 = targetWorksheet.Range("B2").Value.ToString()
+            Header = targetWorksheet.Range("B3").Value.ToString()
+            Ascending = targetWorksheet.Range("B4").Value.ToString()
+            Descending = targetWorksheet.Range("B5").Value.ToString()
+            TextConvert = targetWorksheet.Range("B6").Value.ToString()
+            OptionType = targetWorksheet.Range("B7").Value.ToString()
+            Horizontal_CreateDP = targetWorksheet.Range("B8").Value.ToString()
+            Flag_CreateDDDL = targetWorksheet.Range("B9").Value.ToString
+            sheetName10 = targetWorksheet.Range("B10").Value.ToString
+            sheetName11 = targetWorksheet.Range("B11").Value.ToString
+
+
+        ElseIf Target.Worksheet.Name = targetWorksheet.Range("C11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("C2").Value)) IsNot Nothing Then
+            Variable1 = targetWorksheet.Range("C1").Value.ToString()
+            Variable2 = targetWorksheet.Range("C2").Value.ToString()
+            Header = targetWorksheet.Range("C3").Value.ToString()
+            Ascending = targetWorksheet.Range("C4").Value.ToString()
+            Descending = targetWorksheet.Range("C5").Value.ToString()
+            TextConvert = targetWorksheet.Range("C6").Value.ToString()
+            OptionType = targetWorksheet.Range("C7").Value.ToString()
+            Horizontal_CreateDP = targetWorksheet.Range("C8").Value.ToString()
+            Flag_CreateDDDL = targetWorksheet.Range("C9").Value.ToString
+            sheetName10 = targetWorksheet.Range("C10").Value.ToString
+            sheetName11 = targetWorksheet.Range("C11").Value.ToString
+
+        ElseIf Target.Worksheet.Name = targetWorksheet.Range("D11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("D2").Value)) IsNot Nothing Then
+            Variable1 = targetWorksheet.Range("D1").Value.ToString()
+            Variable2 = targetWorksheet.Range("D2").Value.ToString()
+            Header = targetWorksheet.Range("D3").Value.ToString()
+            Ascending = targetWorksheet.Range("D4").Value.ToString()
+            Descending = targetWorksheet.Range("D5").Value.ToString()
+            TextConvert = targetWorksheet.Range("D6").Value.ToString()
+            OptionType = targetWorksheet.Range("D7").Value.ToString()
+            Horizontal_CreateDP = targetWorksheet.Range("D8").Value.ToString()
+            Flag_CreateDDDL = targetWorksheet.Range("D9").Value.ToString
+            sheetName10 = targetWorksheet.Range("D10").Value.ToString
+            sheetName11 = targetWorksheet.Range("D11").Value.ToString
+
+        ElseIf Target.Worksheet.Name = targetWorksheet.Range("E11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("E2").Value)) IsNot Nothing Then
+            Variable1 = targetWorksheet.Range("E1").Value.ToString()
+            Variable2 = targetWorksheet.Range("E2").Value.ToString()
+            Header = targetWorksheet.Range("E3").Value.ToString()
+            Ascending = targetWorksheet.Range("E4").Value.ToString()
+            Descending = targetWorksheet.Range("E5").Value.ToString()
+            TextConvert = targetWorksheet.Range("E6").Value.ToString()
+            OptionType = targetWorksheet.Range("E7").Value.ToString()
+            Horizontal_CreateDP = targetWorksheet.Range("E8").Value.ToString()
+            Flag_CreateDDDL = targetWorksheet.Range("E9").Value.ToString
+            sheetName10 = targetWorksheet.Range("E10").Value.ToString
+            sheetName11 = targetWorksheet.Range("E11").Value.ToString
+        End If
+
+        src_rng = excelApp.Range(Variable1)
+        Dim src_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName10), Excel.Worksheet)
+        Dim des_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName11), Excel.Worksheet)
+        src_rng = src_ws.Range(Variable1)
+
+
+        'des_rng = des_ws.Range(des_rng.Address)
+        des_rng = des_ws.Range(Variable2)
+        'MsgBox(src_rng.Address)
+        'MsgBox(des_rng.Address)
+
         If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
 
-            src_rng = excelApp.Range(Variable1)
-            Dim src_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName10), Excel.Worksheet)
-            Dim des_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName11), Excel.Worksheet)
-            src_rng = src_ws.Range(Variable1)
-            'MsgBox(Variable1)
 
-            'des_rng = des_ws.Range(des_rng.Address)
-            des_rng = des_ws.Range(des_rng.Address)
             Dim rng As Excel.Range
 
             ' Dim rng As Excel.Range
