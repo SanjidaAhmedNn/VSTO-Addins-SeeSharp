@@ -10,8 +10,9 @@ Imports System.Linq.Expressions
 Imports System.Data.Common
 Imports System.Runtime.InteropServices
 Imports Application = System.Windows.Forms.Application
-
-
+Imports System.Text.RegularExpressions
+Imports System.Data
+Imports Microsoft.VisualBasic.FileIO
 
 Public Class Ribbon1
 
@@ -108,10 +109,10 @@ Public Class Ribbon1
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm3.TextBox1.Text = selection.Address
-                MyForm3.ComboBox1.SelectedIndex = -1
-                MyForm3.ComboBox1.Text = "SOFTEKO"
+            MyForm3.ComboBox1.SelectedIndex = -1
+            MyForm3.ComboBox1.Text = "SOFTEKO"
 
-                MyForm3.Show()
+            MyForm3.Show()
             form_flag = True
         End If
 
@@ -130,9 +131,9 @@ Public Class Ribbon1
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm8.TextBox1.Text = selection.Address
-                MyForm8.ComboBox1.SelectedIndex = -1
-                MyForm8.ComboBox1.Text = "SOFTEKO"
-                MyForm8.Show()
+            MyForm8.ComboBox1.SelectedIndex = -1
+            MyForm8.ComboBox1.Text = "SOFTEKO"
+            MyForm8.Show()
             form_flag = True
         End If
 
@@ -173,7 +174,7 @@ Public Class Ribbon1
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm7.TextBox1.Text = selection.Address
-                MyForm7.Show()
+            MyForm7.Show()
             form_flag = True
 
         End If
@@ -849,6 +850,7 @@ nextloop:
     ''' <summary>
     ''' removes blank rows from selected range of the active worksheet
     ''' </summary>
+    Public Shared blank_Cell_Address As New List(Of String)
 
     Private Sub Button37_Click(sender As Object, e As RibbonControlEventArgs) Handles Button37.Click
 
@@ -862,7 +864,11 @@ nextloop:
             Dim blankRowCount As Integer = 0
             Dim flag As String = "Empty"
             Dim ValueFlag As String = "Empty"
-
+            Dim answer As MsgBoxResult
+            Dim blankCells As Range
+            Dim columnPattern As String = "^(\$?[A-Z]+)(:)(\$?[A-Z]+)$"
+            Dim rowPattern As String = "^(\$?[0-9]+)(:)(\$?[0-9]+)$"
+            Dim isMatchRow, isMatchColumn As Boolean
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
@@ -882,156 +888,552 @@ nextloop:
 
             Next
 
+
+
             'if user select a single continuous range "rngCount" will be 0
             If rngCount = 0 Then
 
-                'if user select only a single cell the following warning will pop up and exit from the code 
-                If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
-                    MsgBox("This Add-in doesn't work for single cell. Please Select a Range and try again!", MsgBoxStyle.Exclamation, "Warning")
-                    Exit Sub
-                End If
+                isMatchRow = Regex.IsMatch(UCase(selectedRng.Address), rowPattern)
 
 
-                'loops through the entire selection and if the entire selection is empty or not
-                'if the entire selection is blank then valueFlag will become "NotEmpty"
-                For i = 1 To selectedRng.Rows.Count
-                    For j = 1 To selectedRng.Columns.Count
-                        If Not selectedRng.Cells(i, j).value Is Nothing Then
-                            ValueFlag = "NotEmpty"
-                        End If
-                    Next
-                Next
+                'columnPattern = "^(\$?[A-Z]+)(:)(\$?[A-Z]+)$"
+                isMatchColumn = Regex.IsMatch(UCase(selectedRng.Address), columnPattern)
 
+                'checks if the user selected an entire column or not, if yes then following block will excecute
+                If isMatchColumn = True And isMatchRow = False Then
 
+                    'if there is no blank cell in the entire column then an exception will be thrown and 0 cells will be deleted
+                    Try
+                        blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+                        blankRowCount = blankCells.Cells.Count
 
-                'loop through each cells of a row of the selection and check if the row is empty or not.
-                'if all the cells of the row of that seleted range are blank then the "flag" variable remains Empty. If any of the cell of that row is non-empty then "flag" will be "NotEmpty"
-                'if flag is "Empty" the blank row is deleted and increase the value of "blankRowCount" by 1
-                'after checking a row, the "flag" variable resets to "Empty"
-                For i = selectedRng.Rows.Count To 1 Step -1
-                    flag = "Empty"
-                    For j = selectedRng.Columns.Count To 1 Step -1
-                        If Not selectedRng.Cells(i, j).value Is Nothing Then
+                        answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                        If answer = MsgBoxResult.No Then
+                            Exit Sub
+                        Else
+                            blankCells.Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
 
-                            flag = "NotEmpty"
+                            'displays a msgbox that shows how many rows are deleted
+                            MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
 
                         End If
 
+                    Catch ex As Exception
+
+                        MsgBox(0 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                        Exit Sub
+
+                    End Try
+
+                    'if user selects an entire row as selection then following block will execute
+                ElseIf isMatchColumn = False And isMatchRow = True Then
+
+                    blankRowCount = 0
+
+                    For i = selectedRng.Rows.Count To 1 Step -1
+                        If excelApp.WorksheetFunction.CountA(selectedRng.Rows(i)) = 0 Then
+                            blankRowCount += 1
+                        End If
                     Next
+                    If blankRowCount = 0 Then
+                        MsgBox(0 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                        Exit Sub
+                    End If
 
+                    answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                    If answer = MsgBoxResult.No Then
+                        Exit Sub
+                    Else
 
-                    If flag = "Empty" Then
+                        blankRowCount = 0
 
-                        worksheet.Range(selectedRng.Cells(i, 1), selectedRng.Cells(i, selectedRng.Columns.Count)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
-                        blankRowCount = blankRowCount + 1
+                        For i = selectedRng.Rows.Count To 1 Step -1
+
+                            'checks if the entire row is empty or not
+                            If excelApp.WorksheetFunction.CountA(selectedRng.Rows(i)) = 0 Then
+                                blankRowCount += 1
+                                selectedRng.Rows(i).delete
+                            End If
+                        Next
+
+                        selectedRng.Cells(1, 1).end(XlDirection.xlToRight).select
+                        'displays a msgbox that shows how many rows are deleted
+                        MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
 
                     End If
 
-                Next
+                    'if user didnt select an entire column or an entire row then following block will excecute
+                Else
 
-                'if no blank rows are found in a sheet then go to the "break1" section and skip the lines in between
-                If blankRowCount = 0 Then
-                    GoTo break1
+                    'if user select only a single cell the following warning will pop up and exit from the code 
+                    If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
+                        If selectedRng.Cells(1, 1).value Is Nothing Then
+                            answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                            If answer = MsgBoxResult.No Then
+                                Exit Sub
+                            Else
+                                selectedRng.Cells(1, 1).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                                MsgBox(1 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                                Exit Sub
+                            End If
+                        Else
+                            MsgBox(0 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                            Exit Sub
+                        End If
+                    End If
+
+
+
+                    'if there is no blank cell in the selection then an exception will be thrown and 0 cells will be deleted
+                    Try
+                        blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+
+                        Dim arr_Blank_Cell_Address() As String = Split(blankCells.Address, ",")
+
+                        answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                        If answer = MsgBoxResult.No Then
+                            Exit Sub
+                        Else
+
+                            For i = 0 To UBound(arr_Blank_Cell_Address)
+
+                                If worksheet.Range(arr_Blank_Cell_Address(i)).Columns.Count = selectedRng.Columns.Count Then
+                                    worksheet.Range(arr_Blank_Cell_Address(i)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                                    blankRowCount += worksheet.Range(arr_Blank_Cell_Address(i)).Rows.Count
+                                Else
+                                    Continue For
+                                End If
+                            Next
+
+                            selectedRng.Cells(1, 1).select
+
+                            'displays a msgbox that shows how many rows are deleted
+                            MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+
+                        End If
+
+                    Catch ex As Exception
+
+                        MsgBox(0 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                        Exit Sub
+
+                    End Try
+
+
                 End If
 
 
-                'valueFlag is "Empty" means the entire selection is blank
-                'so the msgbox will be shown  and then exit sub   
-                If ValueFlag = "Empty" Then
-                    MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
-                    Exit Sub
-                End If
 
-                selectedRng.Cells(1, 1).select
-break1:
-                'displays a msgbox that shows how many rows are deleted
-                MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
 
+                '                Dim pattern As String = "^(\$?[A-Z]+)(:)(\$?[A-Z]+)$"
+                '                Dim isMatch As Boolean = Regex.IsMatch(UCase(selectedRng.Address), pattern)
+                '                Dim outStr As String = ""
+                '                If isMatch = True Then
+
+                '                    answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                '                    If answer = MsgBoxResult.No Then
+                '                        Exit Sub
+                '                    Else
+
+                '                        Dim blankCells As Range = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+                '                        blankRowCount = blankCells.Cells.Count
+                '                        blankCells.Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+
+                '                        'displays a msgbox that shows how many rows are deleted
+                '                        MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                '                    End If
+
+
+                '                Else
+
+                '                    'store the first row number and column number of the selected range in 2 variables
+                '                    Dim firstRowNum = selectedRng.Row
+                '                    Dim firstColNum = selectedRng.Column
+
+                '                    'if user select only a single cell the following warning will pop up and exit from the code 
+                '                    If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
+                '                        If selectedRng.Cells(1, 1).value Is Nothing Then
+                '                            answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                '                            If answer = MsgBoxResult.No Then
+                '                                Exit Sub
+                '                            Else
+                '                                selectedRng.Cells(1, 1).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                '                                MsgBox(1 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                '                                Exit Sub
+                '                            End If
+                '                            'MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.Exclamation, "Warning")
+                '                        End If
+                '                    End If
+
+
+                '                    'loops through the entire selection and if the entire selection is empty or not
+                '                    'if the entire selection is blank then valueFlag will become "Empty"
+                '                    For i = 1 To selectedRng.Rows.Count
+                '                        For j = 1 To selectedRng.Columns.Count
+                '                            If Not selectedRng.Cells(i, j).value Is Nothing Then
+                '                                ValueFlag = "NotEmpty"
+                '                            End If
+                '                        Next
+                '                    Next
+
+
+                '                    'check if the selection has any deletable row
+                '                    'if there is any then a msgbox will pop up to warn the user that the data will move up after deleting row
+                '                    'if user selects yes then the rows will be deleted as usual
+                '                    'if user selects no then it will exit the sub and nothing will happen
+                '                    For i = selectedRng.Rows.Count To 1 Step -1
+                '                        flag = "Empty"
+                '                        For j = selectedRng.Columns.Count To 1 Step -1
+                '                            If Not selectedRng.Cells(i, j).value Is Nothing Then
+
+                '                                flag = "NotEmpty"
+
+                '                            End If
+
+                '                        Next
+
+
+                '                        If flag = "Empty" Then
+
+                '                            answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                '                            If answer = MsgBoxResult.No Then
+                '                                Exit Sub
+                '                            End If
+                '                            Exit For
+
+                '                        End If
+
+                '                    Next
+
+
+
+                '                    'loop through each cells of a row of the selection and check if the row is empty or not.
+                '                    'if all the cells of the row of that seleted range are blank then the "flag" variable remains Empty. If any of the cell of that row is non-empty then "flag" will be "NotEmpty"
+                '                    'if flag is "Empty" the blank row is deleted and increase the value of "blankRowCount" by 1
+                '                    'after checking a row, the "flag" variable resets to "Empty"
+                '                    For i = selectedRng.Rows.Count To 1 Step -1
+                '                        flag = "Empty"
+                '                        For j = selectedRng.Columns.Count To 1 Step -1
+                '                            If Not selectedRng.Cells(i, j).value Is Nothing Then
+
+                '                                flag = "NotEmpty"
+
+                '                            End If
+
+                '                        Next
+
+
+                '                        If flag = "Empty" Then
+
+                '                            worksheet.Range(selectedRng.Cells(i, 1), selectedRng.Cells(i, selectedRng.Columns.Count)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                '                            blankRowCount = blankRowCount + 1
+
+                '                        End If
+
+                '                    Next
+
+
+
+                '                    'if no blank rows are found in a sheet then go to the "break1" section and skip the lines in between
+                '                    If blankRowCount = 0 Then
+                '                        GoTo break1
+                '                    End If
+
+
+                '                    'valueFlag is "Empty" means the entire selection is blank
+                '                    'so the msgbox will be shown  and then exit sub   
+                '                    If ValueFlag = "Empty" Then
+                '                        worksheet.Cells(firstRowNum, firstColNum).select
+                '                        MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                '                        Exit Sub
+                '                    End If
+
+                '                    selectedRng.Cells(1, 1).select
+
+                'break1:
+                '                    'displays a msgbox that shows how many rows are deleted
+                '                    MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+
+                '                End If
 
 
                 'user selected multiple disjoint ranges
+
             Else
-                'an array named "arrRng" is used to separately store all  the addresses of the selection 
+
                 Dim arrRng As String() = Split(selectedRng.Address, ",")
 
-                'loop through each address from the selection and check if any range is a single cell or not. If so, then the following warning will pop up.
-                'Then exit sub.
-                For i = 0 To UBound(arrRng)
-                    selectedRng = worksheet.Range(arrRng(i))
-                    If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
-                        MsgBox("This Add-in doesn't work for single cell. Please select a Range and try again!", MsgBoxStyle.Exclamation, "Warning")
-                        Exit Sub
-                    End If
-                Next
+                Dim totalBlankRowCount As Integer = 0
 
-                'loops through the entire selection and if the entire selection is empty or not
-                'if the entire selection is blank then valueFlag will become "NotEmpty"
-                For i = 0 To UBound(arrRng)
-                    selectedRng = worksheet.Range(arrRng(i))
-                    For j = 1 To selectedRng.Rows.Count
-                        For k = 1 To selectedRng.Columns.Count
-                            If Not selectedRng.Cells(j, k).value Is Nothing Then
-                                ValueFlag = "NotEmpty"
+                answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+                If answer = MsgBoxResult.No Then
+                    Exit Sub
+                Else
+
+                    For i = 0 To UBound(arrRng)
+                        selectedRng = worksheet.Range(arrRng(i))
+
+
+                        isMatchRow = Regex.IsMatch(UCase(selectedRng.Address), rowPattern)
+
+
+                        'columnPattern = "^(\$?[A-Z]+)(:)(\$?[A-Z]+)$"
+                        isMatchColumn = Regex.IsMatch(UCase(selectedRng.Address), columnPattern)
+
+                        'checks if the user selected an entire column or not, if yes then following block will excecute
+                        If isMatchColumn = True And isMatchRow = False Then
+
+                            'if there is no blank cell in the entire column then an exception will be thrown 
+                            Try
+                                blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+                                blankRowCount = blankCells.Cells.Count
+
+                                blankCells.Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+
+                            Catch ex As Exception
+
+                                GoTo nextRange
+
+                            End Try
+
+
+                            'if user selects an entire row as selection then following block will execute
+                        ElseIf isMatchColumn = False And isMatchRow = True Then
+
+
+                            blankRowCount = 0
+
+                            For k = selectedRng.Rows.Count To 1 Step -1
+
+                                'checks if the entire row is empty or not
+                                If excelApp.WorksheetFunction.CountA(selectedRng.Rows(k)) = 0 Then
+                                    blankRowCount += 1
+                                    selectedRng.Rows(k).delete
+                                End If
+                            Next
+
+
+
+                            'if user didnt select an entire column or an entire row then following block will excecute
+                        Else
+                            blankRowCount = 0
+                            'if user select only a single cell the following warning will pop up and exit from the code 
+                            If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
+                                If selectedRng.Cells(1, 1).value Is Nothing Then
+                                    selectedRng.Cells(1, 1).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                                    blankRowCount += 1
+                                    GoTo nextRange
+                                Else
+                                    GoTo nextRange
+                                End If
                             End If
-                        Next
-                    Next
-                Next
 
-                'loop through each range of the selection and remove blank rows
-                For i = 0 To UBound(arrRng)
 
-                    selectedRng = worksheet.Range(arrRng(i))
 
-                    'loop through each cells of a row of the selection and check if the row is empty or not.
-                    'if all the cells of the row of that seleted range are blank then the "flag" variable remains Empty. If any of the cell of that row is non-empty then "flag" will be "NotEmpty"
-                    'if flag is "Empty" the blank row is deleted and increase the value of "blankRowCount" by 1
-                    'after checking a row, the "flag" variable resets to "Empty"
-                    For j = selectedRng.Rows.Count To 1 Step -1
-                        flag = "Empty"
-                        For k = selectedRng.Columns.Count To 1 Step -1
-                            If Not selectedRng.Cells(j, k).value Is Nothing Then
+                            'if there is no blank cell in the selection then an exception will be thrown and 0 cells will be deleted
+                            Try
+                                blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
 
-                                flag = "NotEmpty"
+                                Dim arr_Blank_Cell_Address() As String = Split(blankCells.Address, ",")
 
-                            End If
+                                For k = 0 To UBound(arr_Blank_Cell_Address)
 
-                        Next
+                                    If worksheet.Range(arr_Blank_Cell_Address(k)).Columns.Count = selectedRng.Columns.Count Then
+                                        worksheet.Range(arr_Blank_Cell_Address(k)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+                                        blankRowCount += worksheet.Range(arr_Blank_Cell_Address(k)).Rows.Count
+                                    Else
+                                        GoTo nextRange
+                                    End If
+                                Next
 
-                        If flag = "Empty" Then
+                            Catch ex As Exception
 
-                            worksheet.Range(selectedRng.Cells(j, 1), selectedRng.Cells(j, selectedRng.Columns.Count)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
-                            blankRowCount = blankRowCount + 1
+                            End Try
 
                         End If
-
+nextRange:
+                        totalBlankRowCount += blankRowCount
                     Next
 
-                Next
-
-                'if no blank rows are found in a sheet then go to the "break2" section and skip the lines in between
-                If blankRowCount = 0 Then
-                    GoTo break2
                 End If
 
-                'valueFlag is "Empty" means the entire selection is blank
-                'so the msgbox will be shown  and then exit sub  
-                If ValueFlag = "Empty" Then
-                    MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
-                    Exit Sub
-                End If
-
-                selectedRng.Cells(1, 1).select
-
-break2:
-                'displays a msgbox that shows how many rows are deleted
-                MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+                MsgBox(totalBlankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
 
             End If
-
 
         Catch ex As Exception
 
         End Try
+
+
+        'Else
+        '    'an array named "arrRng" is used to separately store all  the addresses of the selection 
+        '    'Dim arrRng As String() = Split(selectedRng.Address, ",")
+
+        '    'Dim totalBlankRowCount As Integer = 0
+        '    Try
+        '        For i = 0 To UBound(arrRng)
+        '            blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+        '            If worksheet.Range(arrRng(i)).Columns.Count = selectedRng.Columns.Count Then
+        '                blankRowCount = worksheet.Range(arrRng(i)).Rows.Count
+        '                totalBlankRowCount += blankRowCount
+        '            End If
+
+        '        Next
+        '        'MsgBox(totalBlankRowCount)
+
+
+        '    Catch ex As Exception
+        '        MsgBox(0 & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+        '        Exit Sub
+        '    End Try
+
+        '    answer = MsgBox("Confirm: Data will move up. Do you still want to proceed?", MsgBoxStyle.YesNo, "Warning!")
+        '    If answer = MsgBoxResult.No Then
+
+        '        Exit Sub
+
+        '    Else
+
+        '        totalBlankRowCount = 0
+
+        '        'loop through each address from the selection and check if any range is a single cell or not. If so, then the following warning will pop up.
+        '        'Then exit sub.
+        '        For i = 0 To UBound(arrRng)
+
+        '            selectedRng = worksheet.Range(arrRng(i))
+
+        '            columnPattern = "^(\$?[A-Z]+)(:)(\$?[A-Z]+)$"
+        '            isMatchColumn = Regex.IsMatch(UCase(selectedRng.Address), columnPattern)
+
+        '            'checks if the user selected an entire column or not, if yes then following block will excecute
+        '            If isMatchColumn = True Then
+
+
+        '                blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+        '                blankRowCount = blankCells.Cells.Count
+
+        '                blankCells.Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+
+        '                'if user didnt select an entire column then following block will excecute
+        '            Else
+
+        '                'if user select only a single cell the following warning will pop up and exit from the code 
+        '                If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
+        '                    If selectedRng.Cells(1, 1).value Is Nothing Then
+        '                        selectedRng.Cells(1, 1).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+        '                        blankRowCount = 1
+        '                    End If
+        '                Else
+
+
+
+        '                    'if there is no blank cell in the selection then an exception will be thrown and 0 cells will be deleted
+        '                    Try
+        '                        blankCells = selectedRng.SpecialCells(XlCellType.xlCellTypeBlanks)
+
+        '                        Dim arr_Blank_Cell_Address() As String = Split(blankCells.Address, ",")
+        '                        For j = 0 To UBound(arr_Blank_Cell_Address)
+        '                            If worksheet.Range(arr_Blank_Cell_Address(j)).Columns.Count = selectedRng.Columns.Count Then
+        '                                worksheet.Range(arr_Blank_Cell_Address(j)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+        '                                blankRowCount += worksheet.Range(arr_Blank_Cell_Address(j)).Rows.Count
+        '                            Else
+        '                                Continue For
+        '                            End If
+        '                        Next
+
+        '                    Catch ex As Exception
+        '                        blankRowCount = 0
+        '                    End Try
+        '                End If
+
+
+        '            End If
+
+        '            totalBlankRowCount += blankRowCount
+
+
+        '        Next
+        '        MsgBox(totalBlankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+
+        '    End If
+
+
+        'Exit Sub
+
+
+
+
+
+        'If selectedRng.Rows.Count = 1 And selectedRng.Columns.Count = 1 Then
+        '    MsgBox("This Add-in doesn't work for single cell. Please select a Range and try again!", MsgBoxStyle.Exclamation, "Warning")
+        '    Exit Sub
+        'End If
+
+        'loops through the entire selection and if the entire selection is empty or not
+        'if the entire selection is blank then valueFlag will become "NotEmpty"
+        '                For i = 0 To UBound(arrRng)
+        '                    selectedRng = worksheet.Range(arrRng(i))
+        '                    For j = 1 To selectedRng.Rows.Count
+        '                        For k = 1 To selectedRng.Columns.Count
+        '                            If Not selectedRng.Cells(j, k).value Is Nothing Then
+        '                                ValueFlag = "NotEmpty"
+        '                            End If
+        '                        Next
+        '                    Next
+        '                Next
+
+        '                'loop through each range of the selection and remove blank rows
+        '                For i = 0 To UBound(arrRng)
+
+        '                    selectedRng = worksheet.Range(arrRng(i))
+
+        '                    'loop through each cells of a row of the selection and check if the row is empty or not.
+        '                    'if all the cells of the row of that seleted range are blank then the "flag" variable remains Empty. If any of the cell of that row is non-empty then "flag" will be "NotEmpty"
+        '                    'if flag is "Empty" the blank row is deleted and increase the value of "blankRowCount" by 1
+        '                    'after checking a row, the "flag" variable resets to "Empty"
+        '                    For j = selectedRng.Rows.Count To 1 Step -1
+        '                        flag = "Empty"
+        '                        For k = selectedRng.Columns.Count To 1 Step -1
+        '                            If Not selectedRng.Cells(j, k).value Is Nothing Then
+
+        '                                flag = "NotEmpty"
+
+        '                            End If
+
+        '                        Next
+
+        '                        If flag = "Empty" Then
+
+        '                            worksheet.Range(selectedRng.Cells(j, 1), selectedRng.Cells(j, selectedRng.Columns.Count)).Delete(Excel.XlDeleteShiftDirection.xlShiftUp)
+        '                            blankRowCount = blankRowCount + 1
+
+        '                        End If
+
+        '                    Next
+
+        '                Next
+
+        '                'if no blank rows are found in a sheet then go to the "break2" section and skip the lines in between
+        '                If blankRowCount = 0 Then
+        '                    GoTo break2
+        '                End If
+
+        '                'valueFlag is "Empty" means the entire selection is blank
+        '                'so the msgbox will be shown  and then exit sub  
+        '                If ValueFlag = "Empty" Then
+        '                    MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+
+        '                    Exit Sub
+        '                End If
+
+        '                selectedRng.Cells(1, 1).select
+
+        'break2:
+        '                'displays a msgbox that shows how many rows are deleted
+        '                MsgBox(blankRowCount & " Row(s) are deleted.", MsgBoxStyle.Information, "SOFTEKO")
+
+
 
 
     End Sub
@@ -1585,10 +1987,10 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm18.TextBox1.Text = selection.Address
-                MyForm18.ComboBox1.SelectedIndex = -1
-                MyForm18.ComboBox1.Text = "SOFTEKO"
-                MyForm18.Show()
-                MyForm18.RadioButton1.Checked = True
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton1.Checked = True
             form_flag = True
         End If
     End Sub
@@ -1604,9 +2006,9 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm22.TextBox1.Text = selection.Address
-                MyForm22.ComboBox1.SelectedIndex = -1
-                MyForm22.ComboBox1.Text = "SOFTEKO"
-                MyForm22.Show()
+            MyForm22.ComboBox1.SelectedIndex = -1
+            MyForm22.ComboBox1.Text = "SOFTEKO"
+            MyForm22.Show()
             form_flag = True
         End If
     End Sub
@@ -1622,9 +2024,9 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm23.TextBox1.Text = selection.Address
-                MyForm23.ComboBox1.SelectedIndex = -1
-                MyForm23.ComboBox1.Text = "SOFTEKO"
-                MyForm23.Show()
+            MyForm23.ComboBox1.SelectedIndex = -1
+            MyForm23.ComboBox1.Text = "SOFTEKO"
+            MyForm23.Show()
             form_flag = True
         End If
     End Sub
@@ -1640,9 +2042,9 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm25.TextBox1.Text = selection.Address
-                MyForm25.ComboBox1.SelectedIndex = -1
-                MyForm25.ComboBox1.Text = "SOFTEKO"
-                MyForm25.Show()
+            MyForm25.ComboBox1.SelectedIndex = -1
+            MyForm25.ComboBox1.Text = "SOFTEKO"
+            MyForm25.Show()
             form_flag = True
         End If
     End Sub
@@ -1653,8 +2055,7 @@ nextloop:
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-
-            MyForm24.OpenSheet = workbook.ActiveSheet
+            worksheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
@@ -1664,53 +2065,49 @@ nextloop:
             MyForm24.Show()
             form_flag = True
         End If
-
     End Sub
 
     Private Sub Button45_Click(sender As Object, e As RibbonControlEventArgs) Handles Button45.Click
         If form_flag = False Then
             Dim MyForm26 As New Form26_split_text_bycharacters
 
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
-        Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
-
+            Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
             MyForm26.TB_source_range.Text = selection.Address
-                MyForm26.ComboBox1.SelectedIndex = -1
-                MyForm26.ComboBox1.Text = "SOFTEKO"
-                MyForm26.Show()
+            MyForm26.ComboBox1.SelectedIndex = -1
+            MyForm26.ComboBox1.Text = "SOFTEKO"
+            MyForm26.Show()
             form_flag = True
         End If
     End Sub
 
     Private Sub Button46_Click(sender As Object, e As RibbonControlEventArgs) Handles Button46.Click
         If form_flag = False Then
-            '    Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
-            'Dim pattern As String = "***,*,"
-            'Dim KeepSeparator As Boolean = True
-            'Dim Consecutive As Boolean = True
-            'Dim Before As Boolean = True
+            Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
+            Dim pattern As String = "***,*,"
+            Dim KeepSeparator As Boolean = True
+            Dim Consecutive As Boolean = True
+            Dim Before As Boolean = True
 
-            'Dim Values() As String
-            'Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
-
-            'For i = LBound(Values) To UBound(Values)
-            '    MsgBox(Values(i))
-            'Next
+            Dim Values() As String
+            Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
+            For i = LBound(Values) To UBound(Values)
+                MsgBox(Values(i))
+            Next
 
             Dim MyForm27 As New Form27_Split_text_bystrings
-
-        excelApp = Globals.ThisAddIn.Application
-        workbook = excelApp.ActiveWorkbook
-        worksheet = workbook.ActiveSheet
+            excelApp = Globals.ThisAddIn.Application
+            workbook = excelApp.ActiveWorkbook
+            worksheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
             MyForm27.TB_source_range.Text = selection.Address
-                MyForm27.ComboBox1.SelectedIndex = -1
-                MyForm27.ComboBox1.Text = "SOFTEKO"
-                MyForm27.Show()
+            MyForm27.ComboBox1.SelectedIndex = -1
+            MyForm27.ComboBox1.Text = "SOFTEKO"
+            MyForm27.Show()
             form_flag = True
         End If
 
@@ -1835,18 +2232,16 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm18.TextBox1.Text = selection.Address
-                MyForm18.ComboBox1.SelectedIndex = -1
-                MyForm18.ComboBox1.Text = "SOFTEKO"
-                MyForm18.Show()
-                MyForm18.RadioButton2.Checked = True
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton2.Checked = True
             form_flag = True
         End If
     End Sub
 
     Private Sub Button18_Click(sender As Object, e As RibbonControlEventArgs) Handles Button18.Click
-
         If form_flag = False Then
-
             Dim MyForm18 As New Form18_CombineRanges
 
             excelApp = Globals.ThisAddIn.Application
@@ -1856,10 +2251,10 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm18.TextBox1.Text = selection.Address
-                MyForm18.ComboBox1.SelectedIndex = -1
-                MyForm18.ComboBox1.Text = "SOFTEKO"
-                MyForm18.Show()
-                MyForm18.RadioButton3.Checked = True
+            MyForm18.ComboBox1.SelectedIndex = -1
+            MyForm18.ComboBox1.Text = "SOFTEKO"
+            MyForm18.Show()
+            MyForm18.RadioButton3.Checked = True
             form_flag = True
         End If
     End Sub
@@ -1867,7 +2262,6 @@ nextloop:
     Private Sub Button47_Click(sender As Object, e As RibbonControlEventArgs) Handles Button47.Click
         If form_flag = False Then
             Dim MyForm28 As New Form28_Split_text_bypattern
-
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
@@ -1875,9 +2269,9 @@ nextloop:
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm28.TB_source_range.Text = selection.Address
-                MyForm28.ComboBox1.SelectedIndex = -1
-                MyForm28.ComboBox1.Text = "SOFTEKO"
-                MyForm28.Show()
+            MyForm28.ComboBox1.SelectedIndex = -1
+            MyForm28.ComboBox1.Text = "SOFTEKO"
+            MyForm28.Show()
             form_flag = True
         End If
 
@@ -1920,11 +2314,6 @@ nextloop:
 
 
 
-    End Sub
-
-    Private Sub Button4_Click_1(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
-        Dim MyForm As New Form31_2_updated_selection
-        MyForm.Show()
     End Sub
 End Class
 
