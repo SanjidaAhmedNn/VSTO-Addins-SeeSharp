@@ -3451,6 +3451,7 @@ Public Class Form7
                                             Dim blue2 As Integer = blues2(x - 1, y - 1)
                                             rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
+
                                     End If
                                 Next
                             Next
@@ -6520,8 +6521,17 @@ Public Class Form7
             Me.Focus()
             Me.BringToFront()
             Me.Activate()
+
+            Dim TextBoxText As String
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBoxText = worksheet.Name & "!" & rng.Address
+            Else
+                TextBoxText = rng.Address
+            End If
+
             Me.BeginInvoke(New System.Action(Sub()
-                                                 TextBox1.Text = rng.Address
+                                                 TextBox1.Text = TextBoxText
                                                  SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                              End Sub))
 

@@ -17,6 +17,7 @@ Public Class Form24_Split_Cells
     Dim workBook As Excel.Workbook
     Dim workSheet As Excel.Worksheet
     Dim workSheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
     Dim rng As Excel.Range
     Dim rng2 As Excel.Range
     Dim selectedRange As Excel.Range
@@ -160,6 +161,7 @@ Public Class Form24_Split_Cells
     Private Sub Display()
 
         Try
+            TextBoxChanged = True
 
             CustomPanel1.Controls.Clear()
             CustomPanel2.Controls.Clear()
@@ -266,7 +268,7 @@ Public Class Form24_Split_Cells
                         Separator = ComboBox2.Text
                     End If
 
-                    If X1 Then
+                    If X2 Then
 
                         Dim Lengths(r - 1) As Integer
 
@@ -357,7 +359,7 @@ Public Class Form24_Split_Cells
                             Ordinate = Ordinate + Width
                         Next
 
-                    ElseIf X2 Then
+                    ElseIf X1 Then
 
                         Dim Lengths(r - 1) As Integer
 
@@ -454,7 +456,7 @@ Public Class Form24_Split_Cells
 
                 ElseIf X3 Then
 
-                    If X1 Then
+                    If X2 Then
 
                         Dim Numbers(r - 1) As String
                         Dim Texts(r - 1) As String
@@ -564,7 +566,7 @@ Public Class Form24_Split_Cells
                             CustomPanel2.Controls.Add(label)
                         Next
 
-                    ElseIf X2 Then
+                    ElseIf X1 Then
 
                         Dim TotalColumn As Integer = 2
                         Dim SplitValues(r - 1, TotalColumn - 1) As String
@@ -646,7 +648,7 @@ Public Class Form24_Split_Cells
                         W = Int(TextBox3.Text)
                     End If
 
-                    If X1 Then
+                    If X2 Then
 
                         Dim Lengths(r - 1) As Integer
 
@@ -735,7 +737,7 @@ Public Class Form24_Split_Cells
                         Next
 
 
-                    ElseIf X2 Then
+                    ElseIf X1 Then
 
                         Dim Lengths(r - 1) As Integer
 
@@ -834,13 +836,18 @@ Public Class Form24_Split_Cells
 
             End If
 
+            TextBoxChanged = False
+
         Catch ex As Exception
 
         End Try
+
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
         Try
+            TextBoxChanged = True
+
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
@@ -870,7 +877,6 @@ Public Class Form24_Split_Cells
                 rng.Select()
                 Exit Sub
             End If
-
 
             Dim X1 As Boolean = RadioButton1.Checked
             Dim X2 As Boolean = RadioButton2.Checked
@@ -921,16 +927,16 @@ Public Class Form24_Split_Cells
                     Columns(i - 1) = CountSeparator(rng.Cells(i, 1).value, Separator)
                 Next
                 TotalColumns = FindMax(Columns)
-                If X1 Then
+                If X2 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, TotalColumns))
-                ElseIf X2 Then
+                ElseIf X1 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(TotalColumns, r))
                 End If
             ElseIf X3 Then
                 TotalColumns = 2
-                If X1 Then
+                If X2 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, TotalColumns))
-                ElseIf X2 Then
+                ElseIf X1 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(TotalColumns, r))
                 End If
             ElseIf X11 Then
@@ -949,9 +955,9 @@ Public Class Form24_Split_Cells
                     End If
                 Next
                 TotalColumns = FindMax(Columns)
-                If X1 Then
+                If X2 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, TotalColumns))
-                ElseIf X2 Then
+                ElseIf X1 Then
                     rng2 = workSheet2.Range(rng2.Cells(1, 1), rng2.Cells(TotalColumns, r))
                 End If
             End If
@@ -977,7 +983,7 @@ Public Class Form24_Split_Cells
                             Separator = ComboBox2.Text
                         End If
 
-                        If X1 Then
+                        If X2 Then
 
                             Dim Index As Integer
                             Dim position As Integer
@@ -1016,7 +1022,7 @@ Public Class Form24_Split_Cells
                             Next
                             excelApp.CutCopyMode = False
 
-                        ElseIf X2 Then
+                        ElseIf X1 Then
 
                             Dim Index As Integer
                             Dim position As Integer
@@ -1056,7 +1062,7 @@ Public Class Form24_Split_Cells
 
                     ElseIf X3 Then
 
-                        If X1 Then
+                        If X2 Then
 
                             For i = 1 To r
                                 Dim source As String = rng.Cells(i, SplitColumn).value
@@ -1078,7 +1084,8 @@ Public Class Form24_Split_Cells
                                 End If
                             Next
                             excelApp.CutCopyMode = False
-                        ElseIf X2 Then
+
+                        ElseIf X1 Then
 
                             For i = 1 To r
                                 Dim source As String = rng.Cells(i, SplitColumn).value
@@ -1112,7 +1119,7 @@ Public Class Form24_Split_Cells
                             W = Int(TextBox3.Text)
                         End If
 
-                        If X1 Then
+                        If X2 Then
 
                             Dim Index As Integer
 
@@ -1142,7 +1149,7 @@ Public Class Form24_Split_Cells
                             Next
                             excelApp.CutCopyMode = False
 
-                        ElseIf X2 Then
+                        ElseIf X1 Then
 
                             Dim Index As Integer
 
@@ -1177,12 +1184,14 @@ Public Class Form24_Split_Cells
 
                 End If
 
-                Me.Close()
-                workSheet2.Activate()
                 rng2.Select()
                 For j = 1 To rng2.Columns.Count
                     rng2.Columns(j).Autofit
+                    MsgBox(j)
                 Next
+
+                Me.Close()
+
             Else
                 If (X1 Or X2) And (X3 Or X7 Or X8 Or X9 Or X10 Or X11) Then
 
@@ -1252,7 +1261,7 @@ Public Class Form24_Split_Cells
                             Separator = ComboBox2.Text
                         End If
 
-                        If X1 Then
+                        If X2 Then
 
                             Dim Index As Integer
                             Dim position As Integer
@@ -1296,7 +1305,7 @@ Public Class Form24_Split_Cells
                                 End If
                             Next
 
-                        ElseIf X2 Then
+                        ElseIf X1 Then
 
                             Dim Index As Integer
                             Dim position As Integer
@@ -1342,7 +1351,7 @@ Public Class Form24_Split_Cells
 
                     ElseIf X3 Then
 
-                        If X1 Then
+                        If X2 Then
 
                             For i = 1 To r
                                 Dim source As String = rng.Cells(i, SplitColumn).value
@@ -1369,7 +1378,8 @@ Public Class Form24_Split_Cells
 
                                 End If
                             Next
-                        ElseIf X2 Then
+
+                        ElseIf X1 Then
 
                             For i = 1 To r
                                 Dim source As String = rng.Cells(i, SplitColumn).value
@@ -1407,7 +1417,7 @@ Public Class Form24_Split_Cells
                             W = Int(TextBox3.Text)
                         End If
 
-                        If X1 Then
+                        If X2 Then
 
                             Dim Index As Integer
 
@@ -1441,7 +1451,7 @@ Public Class Form24_Split_Cells
                                 End If
                             Next
 
-                        ElseIf X2 Then
+                        ElseIf X1 Then
 
                             Dim Index As Integer
 
@@ -1479,13 +1489,18 @@ Public Class Form24_Split_Cells
                     End If
 
                 End If
-                Me.Close()
-                workSheet2.Activate()
+
                 rng2.Select()
+
                 For j = 1 To rng2.Columns.Count
                     rng2.Columns(j).Autofit
                 Next
+
+                Me.Close()
+
             End If
+
+            TextBoxChanged = False
 
         Catch ex As Exception
 
@@ -1518,63 +1533,81 @@ Public Class Form24_Split_Cells
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+
         Try
+
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
-            TextBox1.SelectionStart = TextBox1.Text.Length
-            TextBox1.ScrollToCaret()
-
-            rng = workSheet.Range(TextBox1.Text)
+            Dim rngArray() As String = Split(TextBox1.Text, "!")
+            Dim rngAddress As String = rngArray(UBound(rngArray))
+            rng = workSheet.Range(rngAddress)
             TextBoxChanged = True
             rng.Select()
-
             Call Display()
-
             TextBoxChanged = False
 
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub AutoSelection_Click(sender As Object, e As EventArgs) Handles AutoSelection.Click
-        Try
 
+        Try
             FocusedTextBox = 1
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng = userInput
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
 
-                If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
-                End If
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(workSheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
 
-                workSheet = workBook.Worksheets(sheetName)
-                workSheet.Activate()
+            'Find the lower boundary
+            Do While Not IsNothing(workSheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
 
-            Catch ex As Exception
-
-            End Try
-
-            rng.Select()
-
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
+            'Select the determined range
+            rng = workSheet.Range(workSheet.Cells(startRow, startColumn), workSheet.Cells(endRow, endColumn))
 
             rng.Select()
-            Me.TextBox1.Text = rng.Address
+
+            Dim sheetName As String
+
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            workSheet = workBook.Worksheets(sheetName)
+            workSheet.Activate()
+
+            If workSheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = workSheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
+
             Me.TextBox1.Focus()
 
         Catch ex As Exception
 
+            Me.Show()
+            TextBox1.Focus()
+
         End Try
+
     End Sub
 
     Private Sub Selection_Click(sender As Object, e As EventArgs) Handles Selection.Click
@@ -1610,34 +1643,36 @@ Public Class Form24_Split_Cells
     End Sub
 
     Private Sub TextBox4_TextChanged(sender As Object, e As EventArgs) Handles TextBox4.TextChanged
+
         Try
+            excelApp = Globals.ThisAddIn.Application
+            workBook = excelApp.ActiveWorkbook
             workSheet2 = workBook.ActiveSheet
 
-            TextBox4.SelectionStart = TextBox4.Text.Length
-            TextBox4.ScrollToCaret()
-
-            rng2 = workSheet2.Range(TextBox3.Text)
+            Dim rng2Array() As String = Split(TextBox4.Text, "!")
+            Dim rng2Address As String = rng2Array(UBound(rng2Array))
+            rng2 = workSheet2.Range(rng2Address)
 
             TextBoxChanged = True
+
             rng2.Select()
+
             TextBoxChanged = False
 
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub PictureBox3_Click(sender As Object, e As EventArgs) Handles PictureBox3.Click
+
         Try
             FocusedTextBox = 4
             Me.Hide()
 
-            excelApp = Globals.ThisAddIn.Application
-            workBook = excelApp.ActiveWorkbook
-
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
+            Dim userInput As Excel.Range = excelApp.InputBox("Select a Cell.", Type:=8)
             rng2 = userInput
-
 
             Dim sheetName As String
             sheetName = Split(rng2.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
@@ -1652,7 +1687,11 @@ Public Class Form24_Split_Cells
 
             rng2.Select()
 
-            TextBox4.Text = rng2.Address
+            If workSheet2.Name <> OpenSheet.Name Then
+                TextBox4.Text = workSheet2.Name & "!" & rng2.Address
+            Else
+                TextBox4.Text = rng2.Address
+            End If
 
             Me.Show()
             TextBox4.Focus()
@@ -1663,6 +1702,7 @@ Public Class Form24_Split_Cells
             TextBox4.Focus()
 
         End Try
+
     End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
@@ -1859,20 +1899,27 @@ Public Class Form24_Split_Cells
 
         Try
 
-            excelApp = Globals.ThisAddIn.Application
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
 
             If TextBoxChanged = False Then
                 If FocusedTextBox = 1 Then
-                    TextBox1.Text = selectedRange.Address
                     workSheet = workBook.ActiveSheet
+                    If workSheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = workSheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
                     rng = selectedRange
                     TextBox1.Focus()
 
                 ElseIf FocusedTextBox = 4 Then
-                    TextBox4.Text = selectedRange.Address
                     workSheet2 = workBook.ActiveSheet
+                    If workSheet2.Name <> OpenSheet.Name Then
+                        TextBox4.Text = workSheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox4.Text = selectedRange.Address
+                    End If
                     rng2 = selectedRange
                     TextBox4.Focus()
                 End If
@@ -1962,12 +2009,30 @@ Public Class Form24_Split_Cells
     End Sub
 
     Private Sub Form24_Split_Cells_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Focus()
+
+        Try
+
+            Me.Focus()
         Me.BringToFront()
         Me.Activate()
+
+        Dim TextBoxText As String
+
+        If workSheet.Name <> OpenSheet.Name Then
+            TextBoxText = workSheet.Name & "!" & rng.Address
+        Else
+            TextBoxText = rng.Address
+        End If
+
         Me.BeginInvoke(New System.Action(Sub()
-                                             TextBox1.Text = rng.Address
+                                             TextBox1.Text = TextBoxText
                                              SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
                                          End Sub))
+
+        Catch ex As Exception
+
+        End Try
+
     End Sub
+
 End Class

@@ -1653,16 +1653,18 @@ nextloop:
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
+
+            MyForm24.OpenSheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
             MyForm24.TextBox1.Text = selection.Address
-                MyForm24.ComboBox1.SelectedIndex = -1
-                MyForm24.ComboBox1.Text = "SOFTEKO"
-                MyForm24.Show()
+            MyForm24.ComboBox1.SelectedIndex = -1
+            MyForm24.ComboBox1.Text = "SOFTEKO"
+            MyForm24.Show()
             form_flag = True
         End If
+
     End Sub
 
     Private Sub Button45_Click(sender As Object, e As RibbonControlEventArgs) Handles Button45.Click
