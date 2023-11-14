@@ -243,10 +243,9 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 ElseIf RB_Dropdown_2_Labels.Checked = True Then
                     ' Extract headers from A1:C1
-                    'MsgBox(src_rng.Address)
+
                     src_rng = workSheet2.Range(src_rng.Address)
 
-                    'MsgBox(workSheet2.Name)
                     Dim headersRange As Excel.Range = src_rng.Rows(1)
                     Dim headers As List(Of String) = New List(Of String)
                     ' Dim workbook As excelapp.workbook
@@ -282,9 +281,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                 Ascending = CB_ascending.Checked
                 Descending = CB_descending.Checked
                 TextConvert = CB_text.Checked
-                ' MsgBox(CB_header.Checked)
-
-
 
                 Dim targetWorksheet As Excel.Worksheet = Nothing
                 For Each ws As Excel.Worksheet In excelApp.Worksheets
@@ -409,7 +405,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
                     targetWorksheet.Range("E9").Value = Flag_CreateDDDL
                     targetWorksheet.Range("E10").Value = sheetName1
                     targetWorksheet.Range("E11").Value = sheetName2
-                    'MsgBox(105)
 
                 End If
                 ' Hide the target worksheet
@@ -418,7 +413,7 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
                 des_rng.Value = Nothing
                 des_rng.Select()
-                MsgBox(100)
+
                 Me.Dispose()
             Catch ex As Exception
                 Me.Dispose()
@@ -456,7 +451,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
             workSheet.Activate()
 
             des_rng.Select()
-            'MsgBox(src_rng.Address)
 
             TB_dest_range.Text = des_rng.Address
 
@@ -532,290 +526,340 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
 
     Public Sub worksheet1_Change(ByVal Target As Excel.Range)
+
         Try
             excelApp = Globals.ThisAddIn.Application
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
 
-            Dim targetWorksheet As Excel.Worksheet
+            Dim targetWorksheet As Excel.Worksheet = Nothing
             Dim i As Integer = 1
+            Dim j As Boolean = False
             For Each ws In excelApp.ActiveWorkbook.Worksheets
                 If ws.name = "MySpecialSheet" Then
                     targetWorksheet = ws
+                    j = True
                     Exit For
+
                 End If
             Next
 
-            MsgBox(excelApp.Range(targetWorksheet.Range("A2").Value).Address)
-            'For i = 1 To targetWorksheet.Columns.Count
-            If Target.Worksheet.Name = targetWorksheet.Range("A11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("A2").Value)) IsNot Nothing Then
-                Variable1 = targetWorksheet.Range("A1").Value.ToString()
-                Variable2 = targetWorksheet.Range("A2").Value.ToString()
-                Header = targetWorksheet.Range("A3").Value.ToString()
-                Ascending = targetWorksheet.Range("A4").Value.ToString()
-                Descending = targetWorksheet.Range("A5").Value.ToString()
-                TextConvert = targetWorksheet.Range("A6").Value.ToString()
-                OptionType = targetWorksheet.Range("A7").Value.ToString()
-                Horizontal_CreateDP = targetWorksheet.Range("A8").Value.ToString()
-                Flag_CreateDDDL = targetWorksheet.Range("A9").Value.ToString
-                sheetName10 = targetWorksheet.Range("A10").Value.ToString
-                sheetName11 = targetWorksheet.Range("A11").Value.ToString
+            If j = True Then
+                Dim r11 As Excel.Range = Nothing
+                Dim r12 As Excel.Range = Nothing
+                Dim r13 As Excel.Range = Nothing
+                Dim r14 As Excel.Range = Nothing
+                Dim r15 As Excel.Range = Nothing
+                ' MsgBox(1)
+                If targetWorksheet.Range("A1").Value <> "" Then
+                    r11 = excelApp.Range(targetWorksheet.Range("A2").Value)
+                    r11 = workSheet.Range(r11.Address)
+                    ' MsgBox(r11.Worksheet.Name)
+                End If
 
-            ElseIf Target.Worksheet.Name = targetWorksheet.Range("B11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("B2").Value)) IsNot Nothing Then
-                Variable1 = targetWorksheet.Range("B1").Value.ToString()
-                Variable2 = targetWorksheet.Range("B2").Value.ToString()
-                Header = targetWorksheet.Range("B3").Value.ToString()
-                Ascending = targetWorksheet.Range("B4").Value.ToString()
-                Descending = targetWorksheet.Range("B5").Value.ToString()
-                TextConvert = targetWorksheet.Range("B6").Value.ToString()
-                OptionType = targetWorksheet.Range("B7").Value.ToString()
-                Horizontal_CreateDP = targetWorksheet.Range("B8").Value.ToString()
-                Flag_CreateDDDL = targetWorksheet.Range("B9").Value.ToString
-                sheetName10 = targetWorksheet.Range("B10").Value.ToString
-                sheetName11 = targetWorksheet.Range("B11").Value.ToString
+                If targetWorksheet.Range("B1").Value <> "" Then
+                    r12 = excelApp.Range(targetWorksheet.Range("B2").Value)
+                    r12 = workSheet.Range(r12.Address)
+                End If
 
+                If targetWorksheet.Range("C1").Value <> "" Then
+                    r13 = excelApp.Range(targetWorksheet.Range("C2").Value)
+                    r13 = workSheet.Range(r13.Address)
+                End If
 
-            ElseIf Target.Worksheet.Name = targetWorksheet.Range("C11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("C2").Value)) IsNot Nothing Then
-                Variable1 = targetWorksheet.Range("C1").Value.ToString()
-                Variable2 = targetWorksheet.Range("C2").Value.ToString()
-                Header = targetWorksheet.Range("C3").Value.ToString()
-                Ascending = targetWorksheet.Range("C4").Value.ToString()
-                Descending = targetWorksheet.Range("C5").Value.ToString()
-                TextConvert = targetWorksheet.Range("C6").Value.ToString()
-                OptionType = targetWorksheet.Range("C7").Value.ToString()
-                Horizontal_CreateDP = targetWorksheet.Range("C8").Value.ToString()
-                Flag_CreateDDDL = targetWorksheet.Range("C9").Value.ToString
-                sheetName10 = targetWorksheet.Range("C10").Value.ToString
-                sheetName11 = targetWorksheet.Range("C11").Value.ToString
+                If targetWorksheet.Range("D1").Value <> "" Then
+                    r14 = excelApp.Range(targetWorksheet.Range("D2").Value)
+                    r14 = workSheet.Range(r14.Address)
+                End If
 
-            ElseIf Target.Worksheet.Name = targetWorksheet.Range("D11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.range("D2").Value)) IsNot Nothing Then
-                Variable1 = targetWorksheet.Range("D1").Value.ToString()
-                Variable2 = targetWorksheet.Range("D2").Value.ToString()
-                Header = targetWorksheet.Range("D3").Value.ToString()
-                Ascending = targetWorksheet.Range("D4").Value.ToString()
-                Descending = targetWorksheet.Range("D5").Value.ToString()
-                TextConvert = targetWorksheet.Range("D6").Value.ToString()
-                OptionType = targetWorksheet.Range("D7").Value.ToString()
-                Horizontal_CreateDP = targetWorksheet.Range("D8").Value.ToString()
-                Flag_CreateDDDL = targetWorksheet.Range("D9").Value.ToString
-                sheetName10 = targetWorksheet.Range("D10").Value.ToString
-                sheetName11 = targetWorksheet.Range("D11").Value.ToString
+                If targetWorksheet.Range("E1").Value <> "" Then
+                    r15 = excelApp.Range(targetWorksheet.Range("E2").Value)
+                    r15 = workSheet.Range(r15.Address)
+                    'MsgBox(r15.Address)
+                    'MsgBox(excelApp.Intersect(Target, r15).Address)
+                    'MsgBox(Target.Worksheet.Name)
+                    'MsgBox(targetWorksheet.Range("E11").Value)
+                End If
 
-            ElseIf Target.Worksheet.Name = targetWorksheet.Range("E11").Value And excelApp.Intersect(Target, excelApp.Range(targetWorksheet.Range("E2").Value)) IsNot Nothing Then
+                'MsgBox(2)
+                If (Target.Worksheet.Name = targetWorksheet.Range("A11").Value) And (excelApp.Intersect(Target, r11) IsNot Nothing) Then
+                    'And (excelApp.Intersect(Target, r11) IsNot Nothing)) Then
 
-                MsgBox(2)
-                Variable1 = targetWorksheet.Range("E1").Value.ToString()
-                Variable2 = targetWorksheet.Range("E2").Value.ToString()
-                Header = targetWorksheet.Range("E3").Value.ToString()
-                Ascending = targetWorksheet.Range("E4").Value.ToString()
-                Descending = targetWorksheet.Range("E5").Value.ToString()
-                TextConvert = targetWorksheet.Range("E6").Value.ToString()
-                OptionType = targetWorksheet.Range("E7").Value.ToString()
-                Horizontal_CreateDP = targetWorksheet.Range("E8").Value.ToString()
-                Flag_CreateDDDL = targetWorksheet.Range("E9").Value.ToString
-                sheetName10 = targetWorksheet.Range("E10").Value.ToString
-                sheetName11 = targetWorksheet.Range("E11").Value.ToString
-            End If
-            ' Next
+                    'If excelApp.Intersect(Target, r11) IsNot Nothing Then
 
-            MsgBox(Variable1)
-            MsgBox(Variable2)
+                    Variable1 = targetWorksheet.Range("A1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("A2").Value.ToString()
+                    Header = targetWorksheet.Range("A3").Value.ToString()
+                    Ascending = targetWorksheet.Range("A4").Value.ToString()
+                    Descending = targetWorksheet.Range("A5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("A6").Value.ToString()
+                    OptionType = targetWorksheet.Range("A7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("A8").Value.ToString()
+                    Flag_CreateDDDL = targetWorksheet.Range("A9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("A10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("A11").Value.ToString
+                    'End If
+                ElseIf (Target.Worksheet.Name = targetWorksheet.Range("B11").Value) And (excelApp.Intersect(Target, r12) IsNot Nothing) Then
+                    'AndAlso (excelApp.Intersect(Target, r12) IsNot Nothing) Then
 
+                    'If excelApp.Intersect(Target, r12) IsNot Nothing Then
+                    Variable1 = targetWorksheet.Range("B1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("B2").Value.ToString()
+                    Header = targetWorksheet.Range("B3").Value.ToString()
+                    Ascending = targetWorksheet.Range("B4").Value.ToString()
+                    Descending = targetWorksheet.Range("B5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("B6").Value.ToString()
+                    OptionType = targetWorksheet.Range("B7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("B8").Value.ToString()
+                    Flag_CreateDDDL = targetWorksheet.Range("B9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("B10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("B11").Value.ToString
+                    'End If
 
-            src_rng = excelApp.Range(Variable1)
-            Dim src_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName10), Excel.Worksheet)
-            Dim des_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName11), Excel.Worksheet)
-            src_rng = src_ws.Range(Variable1)
+                ElseIf Target.Worksheet.Name = targetWorksheet.Range("C11").Value And r13 IsNot Nothing And excelApp.Intersect(Target, r13) IsNot Nothing Then
+                    'If excelApp.Intersect(Target, r13) IsNot Nothing Then
+
+                    Variable1 = targetWorksheet.Range("C1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("C2").Value.ToString()
+                    Header = targetWorksheet.Range("C3").Value.ToString()
+                    Ascending = targetWorksheet.Range("C4").Value.ToString()
+                    Descending = targetWorksheet.Range("C5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("C6").Value.ToString()
+                    OptionType = targetWorksheet.Range("C7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("C8").Value.ToString()
+                    Flag_CreateDDDL = targetWorksheet.Range("C9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("C10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("C11").Value.ToString
+                    'End If
+                ElseIf Target.Worksheet.Name = targetWorksheet.Range("D11").Value And r14 IsNot Nothing And excelApp.Intersect(Target, r14) IsNot Nothing Then
+                    'If excelApp.Intersect(Target, r14) IsNot Nothing Then
+
+                    Variable1 = targetWorksheet.Range("D1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("D2").Value.ToString()
+                    Header = targetWorksheet.Range("D3").Value.ToString()
+                    Ascending = targetWorksheet.Range("D4").Value.ToString()
+                    Descending = targetWorksheet.Range("D5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("D6").Value.ToString()
+                    OptionType = targetWorksheet.Range("D7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("D8").Value.ToString()
+                    Flag_CreateDDDL = targetWorksheet.Range("D9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("D10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("D11").Value.ToString
+                    'End If
+                ElseIf Target.Worksheet.Name = targetWorksheet.Range("E11").Value And r15 IsNot Nothing And excelApp.Intersect(Target, r15) IsNot Nothing Then
+                    'If excelApp.Intersect(Target, r15) IsNot Nothing Then
+
+                    Variable1 = targetWorksheet.Range("E1").Value.ToString()
+                    Variable2 = targetWorksheet.Range("E2").Value.ToString()
+                    Header = targetWorksheet.Range("E3").Value.ToString()
+                    Ascending = targetWorksheet.Range("E4").Value.ToString()
+                    Descending = targetWorksheet.Range("E5").Value.ToString()
+                    TextConvert = targetWorksheet.Range("E6").Value.ToString()
+                    OptionType = targetWorksheet.Range("E7").Value.ToString()
+                    Horizontal_CreateDP = targetWorksheet.Range("E8").Value.ToString()
+                    Flag_CreateDDDL = targetWorksheet.Range("E9").Value.ToString
+                    sheetName10 = targetWorksheet.Range("E10").Value.ToString
+                    sheetName11 = targetWorksheet.Range("E11").Value.ToString
+                    'End If
+                End If
+                'MsgBox(Variable1)
+                ' MsgBox(Variable2)
+                src_rng = excelApp.Range(Variable1)
+                Dim src_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName10), Excel.Worksheet)
+                Dim des_ws As Excel.Worksheet = CType(workBook.Worksheets(sheetName11), Excel.Worksheet)
+                src_rng = src_ws.Range(Variable1)
 
                 des_rng = des_ws.Range(des_rng.Address)
 
-            If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
-                Dim rng As Excel.Range
+                If excelApp.Intersect(Target, des_rng) IsNot Nothing Then
+                    Dim rng As Excel.Range
 
 
-                If RB_Dropdown_35_Labels.Checked = True Then
-                    If CB_header.Checked = True Then
-                        'Dim adjustRange As Excel.Range
-                        rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
+                    If RB_Dropdown_35_Labels.Checked = True Then
+                        If CB_header.Checked = True Then
+                            'Dim adjustRange As Excel.Range
+                            rng = src_rng.Offset(1, 0).Resize(src_rng.Rows.Count - 1, src_rng.Columns.Count)
 
-                    Else
+                        Else
 
-                        rng = src_rng
+                            rng = src_rng
 
-                    End If
-
-                    Dim col_dif As Integer
-                    col_dif = Target.Column - des_rng.Column + 1
-
-                    'For k = 1 To des_rng.Rows.Count
-                    Dim matchedValues As New List(Of String)
-                    Dim sec_matchedValues As New List(Of String)
-                    Dim thrd_matchedValues As New List(Of String)
-                    Dim four_matchedValues As New List(Of String)
-                    Dim k As Integer = Target.Row - des_rng.Row + 1
-
-                    If col_dif = 1 Then
-
-                        If des_rng(k, 1).Value IsNot Nothing Then
-                            For i = 1 To rng.Rows.Count
-                                If rng(i, 1).Value = des_rng(k, 1).Value Then
-                                    If Not matchedValues.Contains(rng(i, 2).Value) Then
-                                        matchedValues.Add(rng(i, 2).Value)
-                                    End If
-                                End If
-                            Next
-
-
-                            If CB_ascending.Checked = True Then
-                                'Sort the list in ascending order
-                                matchedValues.Sort()
-                            ElseIf CB_descending.Checked = True Then
-                                'Sort the list in ascending order
-                                matchedValues.Sort()
-                                matchedValues.Reverse()
-                            End If
-
-                            'Dim dropDownRange As Excel.Range = des_rng(k, 2)
-                            Dim dropDownRange As Excel.Range = Target(1, 2)
-                            '  MsgBox(Target.Address)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", matchedValues))
-                            matchedValues.Clear()
-                            'MsgBox(k)
                         End If
 
-                        '  Dim sec_matchedValues As New List(Of String)
-                    ElseIf col_dif = 2 Then
-                        If des_rng(k, 2).Value IsNot Nothing Then
-                            For i = 1 To rng.Rows.Count
-                                If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value Then
-                                    If Not sec_matchedValues.Contains(rng(i, 3).Value) Then
-                                        sec_matchedValues.Add(rng(i, 3).Value)
+                        Dim col_dif As Integer
+                        col_dif = Target.Column - des_rng.Column + 1
+
+                        'For k = 1 To des_rng.Rows.Count
+                        Dim matchedValues As New List(Of String)
+                        Dim sec_matchedValues As New List(Of String)
+                        Dim thrd_matchedValues As New List(Of String)
+                        Dim four_matchedValues As New List(Of String)
+                        Dim k As Integer = Target.Row - des_rng.Row + 1
+
+                        If col_dif = 1 Then
+
+                            If des_rng(k, 1).Value IsNot Nothing Then
+                                For i = 1 To rng.Rows.Count
+                                    If rng(i, 1).Value = des_rng(k, 1).Value Then
+                                        If Not matchedValues.Contains(rng(i, 2).Value) Then
+                                            matchedValues.Add(rng(i, 2).Value)
+                                        End If
                                     End If
+                                Next
 
+
+                                If CB_ascending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    matchedValues.Sort()
+                                ElseIf CB_descending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    matchedValues.Sort()
+                                    matchedValues.Reverse()
                                 End If
-                            Next
 
+                                'Dim dropDownRange As Excel.Range = des_rng(k, 2)
+                                Dim dropDownRange As Excel.Range = Target(1, 2)
 
-                            If CB_ascending.Checked = True Then
-                                'Sort the list in ascending order
-                                sec_matchedValues.Sort()
-                            ElseIf CB_descending.Checked = True Then
-                                'Sort the list in ascending order
-                                sec_matchedValues.Sort()
-                                sec_matchedValues.Reverse()
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", matchedValues))
+                                matchedValues.Clear()
+
                             End If
 
+                            '  Dim sec_matchedValues As New List(Of String)
+                        ElseIf col_dif = 2 Then
+                            If des_rng(k, 2).Value IsNot Nothing Then
+                                For i = 1 To rng.Rows.Count
+                                    If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value Then
+                                        If Not sec_matchedValues.Contains(rng(i, 3).Value) Then
+                                            sec_matchedValues.Add(rng(i, 3).Value)
+                                        End If
 
-                            ' Dim dropDownRange As Excel.Range = des_rng(k, 3)
-                            Dim dropDownRange As Excel.Range = Target(, 2)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", sec_matchedValues))
-                            sec_matchedValues.Clear()
-                        End If
-                    ElseIf col_dif = 3 Then
-                        '       Dim thrd_matchedValues As New List(Of String)
-
-                        If des_rng(k, 3).Value IsNot Nothing Then
-                            For i = 1 To rng.Rows.Count
-                                If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value And rng(i, 3).Value = des_rng(k, 3).Value Then
-                                    If Not thrd_matchedValues.Contains(rng(i, 4).Value) Then
-                                        thrd_matchedValues.Add(rng(i, 4).Value)
                                     End If
+                                Next
 
+
+                                If CB_ascending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    sec_matchedValues.Sort()
+                                ElseIf CB_descending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    sec_matchedValues.Sort()
+                                    sec_matchedValues.Reverse()
                                 End If
-                            Next
 
 
-                            If CB_ascending.Checked = True Then
-                                'Sort the list in ascending order
-                                thrd_matchedValues.Sort()
-                            ElseIf CB_descending.Checked = True Then
-                                'Sort the list in ascending order
-                                thrd_matchedValues.Sort()
-                                thrd_matchedValues.Reverse()
+                                ' Dim dropDownRange As Excel.Range = des_rng(k, 3)
+                                Dim dropDownRange As Excel.Range = Target(, 2)
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", sec_matchedValues))
+                                sec_matchedValues.Clear()
                             End If
+                        ElseIf col_dif = 3 Then
+                            '       Dim thrd_matchedValues As New List(Of String)
 
+                            If des_rng(k, 3).Value IsNot Nothing Then
+                                For i = 1 To rng.Rows.Count
+                                    If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value And rng(i, 3).Value = des_rng(k, 3).Value Then
+                                        If Not thrd_matchedValues.Contains(rng(i, 4).Value) Then
+                                            thrd_matchedValues.Add(rng(i, 4).Value)
+                                        End If
 
-                            'Dim dropDownRange As Excel.Range = des_rng(k, 4)
-                            Dim dropDownRange As Excel.Range = Target(, 2)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", thrd_matchedValues))
-                            thrd_matchedValues.Clear()
-                        End If
-
-
-                        '  Dim four_matchedValues As New List(Of String)
-                    ElseIf col_dif = 4 Then
-                        If des_rng(k, 4).Value IsNot Nothing Then
-                            For i = 1 To rng.Rows.Count
-                                If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value And rng(i, 3).Value = des_rng(k, 3).Value And rng(i, 4).Value = des_rng(k, 4).Value Then
-
-                                    If Not four_matchedValues.Contains(rng(i, 5).Value) Then
-                                        four_matchedValues.Add(rng(i, 5).Value)
                                     End If
+                                Next
 
 
+                                If CB_ascending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    thrd_matchedValues.Sort()
+                                ElseIf CB_descending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    thrd_matchedValues.Sort()
+                                    thrd_matchedValues.Reverse()
                                 End If
-                            Next
 
 
-                            If CB_ascending.Checked = True Then
-                                'Sort the list in ascending order
-                                four_matchedValues.Sort()
-                            ElseIf CB_descending.Checked = True Then
-                                'Sort the list in ascending order
-                                four_matchedValues.Sort()
-                                four_matchedValues.Reverse()
+                                'Dim dropDownRange As Excel.Range = des_rng(k, 4)
+                                Dim dropDownRange As Excel.Range = Target(, 2)
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", thrd_matchedValues))
+                                thrd_matchedValues.Clear()
                             End If
 
 
-                            Dim dropDownRange As Excel.Range = des_rng(k, 5)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", four_matchedValues))
-                            four_matchedValues.Clear()
+                            '  Dim four_matchedValues As New List(Of String)
+                        ElseIf col_dif = 4 Then
+                            If des_rng(k, 4).Value IsNot Nothing Then
+                                For i = 1 To rng.Rows.Count
+                                    If rng(i, 1).Value = des_rng(k, 1).Value And rng(i, 2).Value = des_rng(k, 2).Value And rng(i, 3).Value = des_rng(k, 3).Value And rng(i, 4).Value = des_rng(k, 4).Value Then
+
+                                        If Not four_matchedValues.Contains(rng(i, 5).Value) Then
+                                            four_matchedValues.Add(rng(i, 5).Value)
+                                        End If
+
+
+                                    End If
+                                Next
+
+
+                                If CB_ascending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    four_matchedValues.Sort()
+                                ElseIf CB_descending.Checked = True Then
+                                    'Sort the list in ascending order
+                                    four_matchedValues.Sort()
+                                    four_matchedValues.Reverse()
+                                End If
+
+
+                                Dim dropDownRange As Excel.Range = des_rng(k, 5)
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=String.Join(",", four_matchedValues))
+                                four_matchedValues.Clear()
+                            End If
                         End If
-                    End If
 
-                    'Next
+                        'Next
 
-                ElseIf RB_Dropdown_2_Labels.Checked = True Then
-                    If RB_Horizon.Checked = True Then
-                        If Target.Address = des_rng(1, 1).Address Then
+                    ElseIf RB_Dropdown_2_Labels.Checked = True Then
+                        If RB_Horizon.Checked = True Then
+                            If Target.Address = des_rng(1, 1).Address Then
 
-                            'Dim worksheet As Excel.Worksheet = CType(Target.Worksheet, Excel.Worksheet)
-                            Dim col As Integer = src_rng.Rows().Find(Target.Value).Column - src_rng.Column + 1
+                                'Dim worksheet As Excel.Worksheet = CType(Target.Worksheet, Excel.Worksheet)
+                                Dim col As Integer = src_rng.Rows().Find(Target.Value).Column - src_rng.Column + 1
 
-                            Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
+                                Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
 
-                            Dim dropDownRange As Excel.Range = des_rng(1, 2)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-                            Dim formula As String = "='" & sheetName10 & "'!" & sourceRng.Address(External:=False)
-                            'MsgBox(formula)
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
+                                Dim dropDownRange As Excel.Range = des_rng(1, 2)
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+                                Dim formula As String = "='" & sheetName10 & "'!" & sourceRng.Address(External:=False)
 
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
+
+                            End If
+
+                        ElseIf RB_Verti.Checked = True Then
+                            If Target.Address = des_rng(1, 1).Address Then
+
+                                Dim col As Integer = src_rng.Rows().Find(Target.Value).Column - src_rng.Column + 1
+
+                                Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
+
+                                Dim dropDownRange As Excel.Range = des_rng(2, 1)
+                                Dim Validation As Excel.Validation = dropDownRange.Validation
+                                Validation.Delete() 'Remove any existing validation
+
+                                Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
+                                Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
+                            End If
                         End If
 
-                    ElseIf RB_Verti.Checked = True Then
-                        If Target.Address = des_rng(1, 1).Address Then
-
-                            Dim col As Integer = src_rng.Rows().Find(Target.Value).Column - src_rng.Column + 1
-
-                            Dim sourceRng As Excel.Range = src_rng.Cells(2, col).Resize(src_rng(src_rng.Rows.Count, col).row - 2, 1)
-
-                            Dim dropDownRange As Excel.Range = des_rng(2, 1)
-                            Dim Validation As Excel.Validation = dropDownRange.Validation
-                            Validation.Delete() 'Remove any existing validation
-
-                            Dim formula As String = "='" & sourceRng.Worksheet.Name & "'!" & sourceRng.Address(External:=False)
-                            Validation.Add(Excel.XlDVType.xlValidateList, Formula1:=formula)
-                        End If
                     End If
 
                 End If
@@ -825,8 +869,6 @@ Public Class Form30_Create_Dynamic_Drop_down_List
 
         End Try
 
-        'MsgBox(src_rng.Address)
-        'MsgBox(des_rng.Address)
     End Sub
     Sub CreateValidationList(cell As Excel.Range, listValues As String)
         With cell.Validation
