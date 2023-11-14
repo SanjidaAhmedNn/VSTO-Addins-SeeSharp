@@ -2055,7 +2055,8 @@ nextloop:
 
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
-            worksheet = workbook.ActiveSheet
+            'worksheet = workbook.ActiveSheet
+            MyForm24.OpenSheet = workbook.ActiveSheet
 
             Dim selection As Excel.Range = CType(excelApp.Selection, Excel.Range)
 
@@ -2086,17 +2087,17 @@ nextloop:
 
     Private Sub Button46_Click(sender As Object, e As RibbonControlEventArgs) Handles Button46.Click
         If form_flag = False Then
-            Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
-            Dim pattern As String = "***,*,"
-            Dim KeepSeparator As Boolean = True
-            Dim Consecutive As Boolean = True
-            Dim Before As Boolean = True
+            'Dim Source As String = "Absbsjdwd,hdwdiqd,djd"
+            'Dim pattern As String = "***,*,"
+            'Dim KeepSeparator As Boolean = True
+            'Dim Consecutive As Boolean = True
+            'Dim Before As Boolean = True
 
-            Dim Values() As String
-            Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
-            For i = LBound(Values) To UBound(Values)
-                MsgBox(Values(i))
-            Next
+            'Dim Values() As String
+            'Values = SplitText(Source, pattern, Consecutive, KeepSeparator, Before)
+            'For i = LBound(Values) To UBound(Values)
+            '    MsgBox(Values(i))
+            'Next
 
             Dim MyForm27 As New Form27_Split_text_bystrings
             excelApp = Globals.ThisAddIn.Application
