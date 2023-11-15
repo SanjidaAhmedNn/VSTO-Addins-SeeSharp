@@ -459,7 +459,9 @@
     <Compile Include="Pro.Designer.vb">
       <DependentUpon>Pro.vb</DependentUpon>
     </Compile>
-    <Compile Include="Pro.vb" />
+    <Compile Include="Pro.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Ribbon.vb">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
