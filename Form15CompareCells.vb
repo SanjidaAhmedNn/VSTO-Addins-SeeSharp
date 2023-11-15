@@ -287,8 +287,6 @@ Public Class Form15CompareCells
             'txtSourceRange1.Text = selectedRange.Worksheet.Name & "!" & selectedRange.Address
 
 
-
-
             excelApp = Globals.ThisAddIn.Application
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
@@ -491,8 +489,6 @@ Public Class Form15CompareCells
         End Try
     End Sub
 
-
-
     Private Sub Form1_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         Try
 
@@ -528,10 +524,7 @@ Public Class Form15CompareCells
 
             End If
 
-
-
         Catch ex As Exception
-
 
         End Try
 
