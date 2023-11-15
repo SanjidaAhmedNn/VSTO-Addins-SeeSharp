@@ -551,8 +551,6 @@ Public Class Form15CompareCells
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
 
 
-
-
         If txtSourceRange1.Text = "" And txtSourceRange2.Text = "" Then
 
             MsgBox("Please select the first and the second range.", MsgBoxStyle.Exclamation, "Error!")
