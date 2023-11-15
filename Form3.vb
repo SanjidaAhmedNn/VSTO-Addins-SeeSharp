@@ -9,6 +9,7 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Button
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Windows.Forms.Application
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
 
 Public Class Form3
 
@@ -19,6 +20,7 @@ Public Class Form3
 
     Public worksheet As Excel.Worksheet
     Public worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
 
     Public rng As Excel.Range
     Public rng2 As Excel.Range
@@ -28,27 +30,32 @@ Public Class Form3
     Public Form4Open As Integer
     Public Workbook2Opened As Boolean
 
+    Public TextBoxChanged As Boolean
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+
 
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
-
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
+        Dim refArr() As String = Split(cellReference, "!")
+
+        Dim reference As String = refArr(UBound(refArr))
+
+        If regex.IsMatch(reference) Then
             Return True
         Else
             Return False
         End If
-
 
     End Function
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
@@ -70,6 +77,53 @@ Public Class Form3
                 Return True
             End If
         End If
+
+    End Function
+    Private Function MaxOfColumn(cRng As Excel.Range)
+
+        Dim max As Integer
+        Dim CharNumbers As Integer
+
+        If IsNumeric(cRng.Cells(1, 1).value) Then
+            max = Len(Str(cRng.Cells(1, 1).value))
+        Else
+            max = Len(cRng.Cells(1, 1).value)
+        End If
+
+        For i = 2 To cRng.Rows.Count
+            If IsNumeric(cRng.Cells(i, 1).value) Then
+                CharNumbers = Len(Str(cRng.Cells(i, 1).value))
+            Else
+                CharNumbers = Len(cRng.Cells(i, 1).value)
+            End If
+            If CharNumbers > max Then
+                max = CharNumbers
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfColumn = max
+
+    End Function
+    Private Function MaxOfArray(Arr)
+
+        Dim max As Integer
+        max = Len(Arr(LBound(Arr)))
+
+        For i = LBound(Arr) + 1 To UBound(Arr)
+            If Len(Arr(i)) > max Then
+                max = Len(Arr(i))
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfArray = max
 
     End Function
 
@@ -95,25 +149,28 @@ Public Class Form3
             c = displayRng.Columns.Count
 
             Dim height As Single
-            Dim width As Single
+            Dim Basewidth As Double
+            Dim width As Double
+            Basewidth = 260 / 3
 
-            If r <= 6 Then
-                height = panel1.Height / r
+            If displayRng.Rows.Count <= 4 Then
+                height = panel1.Height / displayRng.Rows.Count
             Else
-                height = panel1.Height / 6
+                height = (119 / 4)
             End If
 
-            If c <= 4 Then
-                width = panel1.Width / c
-            Else
-                width = panel1.Width / 4
-            End If
+            Dim CRng As Excel.Range
+            Dim Ordinate As Double = 0
 
-            For i = 1 To displayRng.Rows.Count
-                For j = 1 To displayRng.Columns.Count
+            For j = 1 To c
+
+                CRng = worksheet.Range(displayRng.Cells(1, j), displayRng.Cells(r, j))
+                width = (MaxOfColumn(CRng) * Basewidth) / 10
+
+                For i = 1 To r
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, j).Value
-                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
+                    label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                     label.Height = height
                     label.Width = width
                     label.BorderStyle = BorderStyle.FixedSingle
@@ -151,31 +208,38 @@ Public Class Form3
                     End If
                     panel1.Controls.Add(label)
                 Next
+                Ordinate = Ordinate + width
             Next
 
             panel1.AutoScroll = True
 
             If (RadioButton2.Checked = True Or RadioButton3.Checked = True) Then
 
-                If c <= 6 Then
+                Dim Values(c - 1) As Object
+                Dim Widths(r - 1) As Object
+
+                If c <= 4 Then
                     height = panel2.Height / c
                 Else
-                    height = panel2.Height / 6
+                    height = panel2.Height / 4
                 End If
 
-                If r <= 4 Then
-                    width = panel2.Width / r
-                Else
-                    width = panel2.Width / 4
-                End If
+                For i = 1 To r
+                    For j = 1 To c
+                        Values(j - 1) = displayRng.Cells(i, j).value
+                    Next
+                    Widths(i - 1) = (MaxOfArray(Values) * Basewidth) / 10
+                Next
+
+                Ordinate = 0
 
                 For i = 1 To displayRng.Rows.Count
                     For j = 1 To displayRng.Columns.Count
                         Dim label As New System.Windows.Forms.Label
                         label.Text = displayRng.Cells(i, j).Value
-                        label.Location = New System.Drawing.Point((i - 1) * width, (j - 1) * height)
+                        label.Location = New System.Drawing.Point(Ordinate, (j - 1) * height)
                         label.Height = height
-                        label.Width = width
+                        label.Width = Widths(i - 1)
                         label.BorderStyle = BorderStyle.FixedSingle
                         label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -208,9 +272,9 @@ Public Class Form3
                                 label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                             End If
                         End If
-
                         panel2.Controls.Add(label)
                     Next
+                    Ordinate = Ordinate + Widths(i - 1)
                 Next
 
                 panel2.AutoScroll = True
@@ -272,9 +336,11 @@ Public Class Form3
                 MyForm4.excelApp = Me.excelApp
                 MyForm4.workbook = Me.workbook
                 MyForm4.worksheet = Me.worksheet
+                MyForm4.OpenSheet = Me.OpenSheet
                 MyForm4.rng = Me.rng
                 MyForm4.Opened = Me.Opened
                 MyForm4.FocusedTextBox = Me.FocusedTextBox
+                MyForm4.TextBoxChanged = Me.TextBoxChanged
                 MyForm4.Form4Open = Me.Form4Open
                 MyForm4.Workbook2Opened = False
                 If Me.RadioButton3.Checked = True Then
@@ -356,7 +422,11 @@ Public Class Form3
 
             rng.Select()
 
-            TextBox1.Text = rng.Address
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
             Me.Show()
             TextBox1.Focus()
@@ -374,11 +444,38 @@ Public Class Form3
 
         Try
             FocusedTextBox = 1
-            Me.Hide()
 
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng = userInput
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
+
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
+
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
+
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
+
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            rng = worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn))
+
+            rng.Select()
 
             Dim sheetName As String
 
@@ -392,16 +489,12 @@ Public Class Form3
             worksheet = workbook.Worksheets(sheetName)
             worksheet.Activate()
 
-            rng.Select()
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
 
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
-
-            rng.Select()
-
-            Me.TextBox1.Text = rng.Address
-
-            Me.Show()
             Me.TextBox1.Focus()
 
         Catch ex As Exception
@@ -449,7 +542,11 @@ Public Class Form3
 
             rng2.Select()
 
-            TextBox2.Text = rng2.Address
+            If worksheet2.Name <> OpenSheet.Name Then
+                TextBox2.Text = worksheet2.Name & "!" & rng2.Address
+            Else
+                TextBox2.Text = rng2.Address
+            End If
 
             Me.Show()
             TextBox2.Focus()
@@ -466,6 +563,8 @@ Public Class Form3
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
 
         Try
+
+            TextBoxChanged = True
             If TextBox1.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False Then
                 MessageBox.Show("Enter a Valid Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 worksheet.Activate()
@@ -507,9 +606,10 @@ Public Class Form3
                 End If
 
                 worksheet2.Activate()
-                rng2.Select()
 
                 If (Overlap(excelApp, worksheet, worksheet2, rng, rng2)) = False Then
+
+                    rng2.ClearFormats()
 
                     If RadioButton3.Checked = True Then
                         For i = 1 To rng.Rows.Count
@@ -520,6 +620,41 @@ Public Class Form3
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                     rng2 = worksheet2.Range(rng2Address)
+                                    Dim sourceCell As Excel.Range = rng.Cells(i, j)
+                                    Dim targetCell As Excel.Range = rng2.Cells(j, i)
+
+                                    If sourceCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(8).LineStyle = sourceCell.Borders(7).LineStyle
+                                        targetCell.Borders(8).Color = sourceCell.Borders(7).Color
+                                        targetCell.Borders(8).Weight = sourceCell.Borders(7).Weight
+                                    Else
+                                        targetCell.Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(7).LineStyle = sourceCell.Borders(8).LineStyle
+                                        targetCell.Borders(7).Color = sourceCell.Borders(8).Color
+                                        targetCell.Borders(7).Weight = sourceCell.Borders(8).Weight
+                                    Else
+                                        targetCell.Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(10).LineStyle = sourceCell.Borders(9).LineStyle
+                                        targetCell.Borders(10).Color = sourceCell.Borders(9).Color
+                                        targetCell.Borders(10).Weight = sourceCell.Borders(9).Weight
+                                    Else
+                                        targetCell.Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(9).LineStyle = sourceCell.Borders(10).LineStyle
+                                        targetCell.Borders(9).Color = sourceCell.Borders(10).Color
+                                        targetCell.Borders(9).Weight = sourceCell.Borders(10).Weight
+                                    Else
+                                        targetCell.Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
                                 End If
                             Next
                         Next
@@ -532,6 +667,42 @@ Public Class Form3
                                     rng.Cells(i, j).Copy
                                     rng2.Cells(j, i).PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                                     rng2 = worksheet2.Range(rng2Address)
+
+                                    Dim sourceCell As Excel.Range = rng.Cells(i, j)
+                                    Dim targetCell As Excel.Range = rng2.Cells(j, i)
+
+                                    If sourceCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(8).LineStyle = sourceCell.Borders(7).LineStyle
+                                        targetCell.Borders(8).Color = sourceCell.Borders(7).Color
+                                        targetCell.Borders(8).Weight = sourceCell.Borders(7).Weight
+                                    Else
+                                        targetCell.Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(7).LineStyle = sourceCell.Borders(8).LineStyle
+                                        targetCell.Borders(7).Color = sourceCell.Borders(8).Color
+                                        targetCell.Borders(7).Weight = sourceCell.Borders(8).Weight
+                                    Else
+                                        targetCell.Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(10).LineStyle = sourceCell.Borders(9).LineStyle
+                                        targetCell.Borders(10).Color = sourceCell.Borders(9).Color
+                                        targetCell.Borders(10).Weight = sourceCell.Borders(9).Weight
+                                    Else
+                                        targetCell.Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
+                                    If sourceCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        targetCell.Borders(9).LineStyle = sourceCell.Borders(10).LineStyle
+                                        targetCell.Borders(9).Color = sourceCell.Borders(10).Color
+                                        targetCell.Borders(9).Weight = sourceCell.Borders(10).Weight
+                                    Else
+                                        targetCell.Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    End If
+
                                 End If
                             Next
                         Next
@@ -546,13 +717,144 @@ Public Class Form3
                     For i = LBound(Arr, 1) To UBound(Arr, 1)
                         For j = LBound(Arr, 2) To UBound(Arr, 2)
                             If RadioButton3.Checked = True Then
-                                Arr(i, j) = rng.Cells(i + 1, j + 1)
+                                Arr(i, j) = rng.Cells(i + 1, j + 1).value
                             ElseIf RadioButton2.Checked = True Then
                                 Arr(i, j) = "=" & rng.Cells(i + 1, j + 1).Address(True, True, Excel.XlReferenceStyle.xlA1, True)
                             End If
                         Next
                     Next
 
+                    Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
+                    Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
+
+                    Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                    Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+                    Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
+
+                    Dim Borders7(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders8(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders9(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+                    Dim Borders10(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
+
+                    Dim Borders7L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10L(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    Dim Borders7W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10W(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    Dim Borders7C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders8C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders9C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+                    Dim Borders10C(rng.Rows.Count - 1, rng.Columns.Count - 1) As Object
+
+                    If CheckBox2.Checked = True Then
+
+                        For i = LBound(Arr, 1) To UBound(Arr, 1)
+                            For j = LBound(Arr, 2) To UBound(Arr, 2)
+                                Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
+                                Dim font As Excel.Font = cell.Font
+
+                                If IsDBNull(font.Name) = False Then
+                                    FontNames(i, j) = font.Name
+                                Else
+                                    FontNames(i, j) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    FontSizes(i, j) = fontSize
+                                Else
+                                    FontSizes(i, j) = 11
+                                End If
+
+                                Bolds(i, j) = cell.Font.Bold
+                                Italics(i, j) = cell.Font.Italic
+
+                                If IsDBNull(cell.Interior.Color) Then
+                                    Reds1(i, j) = 255
+                                    Greens1(i, j) = 255
+                                    Blues1(i, j) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    Reds1(i, j) = red1
+                                    Greens1(i, j) = green1
+                                    Blues1(i, j) = blue1
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    Reds2(i, j) = 0
+                                    Greens2(i, j) = 0
+                                    Blues2(i, j) = 0
+                                Else
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    Reds2(i, j) = red2
+                                    Greens2(i, j) = green2
+                                    Blues2(i, j) = blue2
+                                End If
+
+                                If cell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders7(i, j) = True
+                                    Borders7L(i, j) = cell.Borders(7).LineStyle
+                                    Borders7C(i, j) = cell.Borders(7).Color
+                                    Borders7W(i, j) = cell.Borders(7).Weight
+                                Else
+                                    Borders7(i, j) = False
+                                End If
+
+                                If cell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders8(i, j) = True
+                                    Borders8L(i, j) = cell.Borders(8).LineStyle
+                                    Borders8C(i, j) = cell.Borders(8).Color
+                                    Borders8W(i, j) = cell.Borders(8).Weight
+                                Else
+                                    Borders8(i, j) = False
+                                End If
+
+                                If cell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders9(i, j) = True
+                                    Borders9L(i, j) = cell.Borders(9).LineStyle
+                                    Borders9C(i, j) = cell.Borders(9).Color
+                                    Borders9W(i, j) = cell.Borders(9).Weight
+                                Else
+                                    Borders9(i, j) = False
+                                End If
+
+                                If cell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    Borders10(i, j) = True
+                                    Borders10L(i, j) = cell.Borders(10).LineStyle
+                                    Borders10C(i, j) = cell.Borders(10).Color
+                                    Borders10W(i, j) = cell.Borders(10).Weight
+                                Else
+                                    Borders10(i, j) = False
+                                End If
+
+                            Next
+                        Next
+
+                    End If
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
+                    rng2.ClearFormats()
 
                     For i = 1 To rng.Rows.Count
                         For j = 1 To rng.Columns.Count
@@ -561,42 +863,6 @@ Public Class Form3
                     Next
 
                     If CheckBox2.Checked = True Then
-
-                        Dim FontNames(rng.Rows.Count - 1, rng.Columns.Count - 1) As String
-                        Dim FontSizes(rng.Rows.Count - 1, rng.Columns.Count - 1) As Single
-
-                        Dim Bolds(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-                        Dim Italics(rng.Rows.Count - 1, rng.Columns.Count - 1) As Boolean
-
-                        Dim Reds1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Reds2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                        Dim Greens1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Greens2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-                        Dim Blues1(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-                        Dim Blues2(rng.Rows.Count - 1, rng.Columns.Count - 1) As Integer
-
-
-                        For i = LBound(Arr, 1) To UBound(Arr, 1)
-                            For j = LBound(Arr, 2) To UBound(Arr, 2)
-                                Dim cell As Excel.Range = rng.Cells(i + 1, j + 1)
-                                Dim font As Excel.Font = cell.Font
-                                FontNames(i, j) = CStr(cell.Font.Name)
-                                FontSizes(i, j) = Convert.ToSingle(font.Size)
-                                Bolds(i, j) = cell.Font.Bold
-                                Italics(i, j) = cell.Font.Italic
-                                Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                Reds1(i, j) = colorValue1 Mod 256
-                                Greens1(i, j) = (colorValue1 \ 256) Mod 256
-                                Blues1(i, j) = (colorValue1 \ 256 \ 256) Mod 256
-                                Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                Reds2(i, j) = colorValue2 Mod 256
-                                Greens2(i, j) = (colorValue2 \ 256) Mod 256
-                                Blues2(i, j) = (colorValue2 \ 256 \ 256) Mod 256
-                            Next
-                        Next
-
                         For i = 1 To rng.Rows.Count
                             For j = 1 To rng.Columns.Count
                                 With rng2.Cells(j, i).Font
@@ -615,12 +881,57 @@ Public Class Form3
                                 Dim green2 As Integer = Greens2(i - 1, j - 1)
                                 Dim blue2 As Integer = Blues2(i - 1, j - 1)
                                 rng2.Cells(j, i).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
+                                Dim targetCell As Excel.Range = rng2.Cells(j, i)
+                                Dim x As Integer = i - 1
+                                Dim y As Integer = j - 1
+
+                                If Borders7(x, y) = True Then
+                                    targetCell.Borders(8).LineStyle = Borders7L(x, y)
+                                    targetCell.Borders(8).Color = Borders7C(x, y)
+                                    targetCell.Borders(8).Weight = Borders7W(x, y)
+                                Else
+                                    targetCell.Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders8(x, y) = True Then
+                                    targetCell.Borders(7).LineStyle = Borders8L(x, y)
+                                    targetCell.Borders(7).Color = Borders8C(x, y)
+                                    targetCell.Borders(7).Weight = Borders8W(x, y)
+                                Else
+                                    targetCell.Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders9(x, y) = True Then
+                                    targetCell.Borders(10).LineStyle = Borders9L(x, y)
+                                    targetCell.Borders(10).Color = Borders9C(x, y)
+                                    targetCell.Borders(10).Weight = Borders9W(x, y)
+                                Else
+                                    targetCell.Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
+                                If Borders10(x, y) = True Then
+                                    targetCell.Borders(9).LineStyle = Borders10L(x, y)
+                                    targetCell.Borders(9).Color = Borders10C(x, y)
+                                    targetCell.Borders(9).Weight = Borders10W(x, y)
+                                Else
+                                    targetCell.Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                End If
+
                             Next
                         Next
+
                     End If
+
                 End If
 
                 rng2.Select()
+
+                For j = 1 To rng2.Columns.Count
+                    rng2.Columns(j).Autofit
+                Next
+
+                TextBoxChanged = False
 
                 Me.Close()
 
@@ -684,11 +995,14 @@ Public Class Form3
         Try
             If TextBox1.Text <> "" And Form4Open = 0 Then
                 worksheet = workbook.ActiveSheet
-                rng = worksheet.Range(TextBox1.Text)
+                Dim rngArray() As String = Split(TextBox1.Text, "!")
+                Dim rngAddress As String = rngArray(UBound(rngArray))
+                rng = worksheet.Range(rngAddress)
+                TextBoxChanged = True
                 rng.Select()
                 Call Display()
+                TextBoxChanged = False
             End If
-
         Catch ex As Exception
 
         End Try
@@ -700,7 +1014,12 @@ Public Class Form3
         Try
             If TextBox2.Text <> "" Then
                 worksheet2 = workbook.ActiveSheet
-                worksheet2.Range(TextBox2.Text).Select()
+                Dim rng2Array() As String = Split(TextBox2.Text, "!")
+                Dim rng2Address As String = rng2Array(UBound(rng2Array))
+                rng2 = worksheet2.Range(rng2Address)
+                TextBoxChanged = True
+                rng2.Select()
+                TextBoxChanged = False
             End If
 
         Catch ex As Exception
@@ -709,38 +1028,14 @@ Public Class Form3
 
     End Sub
 
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-
-                MessageBox.Show("You pressed the Enter key.")
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Form3_Loaded(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Try
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
             Opened = Opened + 1
+            Me.KeyPreview = True
 
         Catch ex As Exception
 
@@ -755,17 +1050,27 @@ Public Class Form3
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
 
-            If FocusedTextBox = 1 Then
-                TextBox1.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                rng = selectedRange
-                TextBox1.Focus()
+            If TextBoxChanged = False Then
+                If FocusedTextBox = 1 Then
+                    worksheet = workbook.ActiveSheet
+                    If worksheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = worksheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
+                    rng = selectedRange
+                    TextBox1.Focus()
 
-            ElseIf FocusedTextBox = 2 Then
-                TextBox2.Text = selectedRange.Address
-                worksheet2 = workbook.ActiveSheet
-                rng2 = selectedRange
-                TextBox2.Focus()
+                ElseIf FocusedTextBox = 2 Then
+                    worksheet2 = workbook.ActiveSheet
+                    If worksheet2.Name <> OpenSheet.Name Then
+                        TextBox2.Text = worksheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox2.Text = selectedRange.Address
+                    End If
+                    rng2 = selectedRange
+                    TextBox2.Focus()
+                End If
             End If
 
         Catch ex As Exception
@@ -852,7 +1157,6 @@ Public Class Form3
 
     Private Sub PictureBox4_GotFocus(sender As Object, e As EventArgs) Handles PictureBox4.GotFocus
 
-
         Try
             FocusedTextBox = 1
         Catch ex As Exception
@@ -921,6 +1225,7 @@ Public Class Form3
     End Sub
 
     Private Sub CustomGroupBox3_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox3.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
@@ -931,19 +1236,23 @@ Public Class Form3
 
 
     Private Sub CustomGroupBox6_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox6.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CustomGroupBox5_GotFocus(sender As Object, e As EventArgs) Handles CustomGroupBox5.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton1_GotFocus(sender As Object, e As EventArgs) Handles RadioButton1.GotFocus
@@ -975,11 +1284,13 @@ Public Class Form3
     End Sub
 
     Private Sub CheckBox2_GotFocus(sender As Object, e As EventArgs) Handles CheckBox2.GotFocus
+
         Try
             FocusedTextBox = 0
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CheckBox1_GotFocus(sender As Object, e As EventArgs) Handles CheckBox1.GotFocus
@@ -1041,10 +1352,6 @@ Public Class Form3
         End Try
     End Sub
 
-    Private Sub PictureBox7_Click(sender As Object, e As EventArgs) Handles PictureBox7.Click
-
-    End Sub
-
     Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
         Try
             FocusedTextBox = 0
@@ -1093,13 +1400,10 @@ Public Class Form3
 
     End Sub
 
-    Private Sub btn_cancel_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_cancel.KeyDown
+    Private Sub Form3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
 
         Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
+            form_flag = False
 
         Catch ex As Exception
 
@@ -1107,347 +1411,46 @@ Public Class Form3
 
     End Sub
 
-    Private Sub btn_OK_KeyDown(sender As Object, e As KeyEventArgs) Handles btn_OK.KeyDown
+    Private Sub Form3_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 
         Try
+            Me.Focus()
+            Me.BringToFront()
+            Me.Activate()
 
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
+            Dim TextBoxText As String
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBoxText = worksheet.Name & "!" & rng.Address
+            Else
+                TextBoxText = rng.Address
             End If
 
+            Me.BeginInvoke(New System.Action(Sub()
+                                                 TextBox1.Text = TextBoxText
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
         Catch ex As Exception
 
         End Try
 
     End Sub
 
-    Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
-
+    Private Sub Form3_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
         Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
+            form_flag = False
         Catch ex As Exception
 
         End Try
-
     End Sub
 
-    Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
+    Private Sub Form3_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+
 
         Try
 
             If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox6.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label1_KeyDown(sender As Object, e As KeyEventArgs) Handles Label1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel1_KeyDown(sender As Object, e As KeyEventArgs) Handles panel1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub panel2_KeyDown(sender As Object, e As KeyEventArgs) Handles panel2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton5_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton5.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
-                Call btn_OK_Click(sender, e)
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-
-            If e.KeyCode = Keys.Enter Then
+                btn_OK.Focus()
                 Call btn_OK_Click(sender, e)
             End If
 

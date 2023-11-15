@@ -8,6 +8,8 @@ Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Diagnostics
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
+
 Public Class Form10
 
     Dim WithEvents excelApp As Excel.Application
@@ -23,6 +25,15 @@ Public Class Form10
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+
+
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then
@@ -96,10 +107,10 @@ Public Class Form10
 
             Dim displayRng As Excel.Range
 
-            If Rng.Rows.Count > 50 Then
-                displayRng = workSheet.Range(Rng.Cells(1, 1), Rng.Cells(50, Rng.Columns.Count))
+            If rng.Rows.Count > 50 Then
+                displayRng = workSheet.Range(rng.Cells(1, 1), rng.Cells(50, rng.Columns.Count))
             Else
-                displayRng = workSheet.Range(Rng.Cells(1, 1), Rng.Cells(Rng.Rows.Count, Rng.Columns.Count))
+                displayRng = workSheet.Range(rng.Cells(1, 1), rng.Cells(rng.Rows.Count, rng.Columns.Count))
             End If
 
             Dim r As Integer
@@ -128,7 +139,7 @@ Public Class Form10
             Dim Count As Integer = 0
 
             For i = 1 To r
-                For j = 1 To C
+                For j = 1 To c
                     If Available(i, j, Arr) = False Then
                         If displayRng.Cells(i, j).MergeCells = True Then
                             For k = 2 To displayRng.Cells(i, j).MergeArea.Columns.Count
@@ -153,7 +164,7 @@ Public Class Form10
             Next i
 
             For i = 1 To r
-                For j = 1 To C
+                For j = 1 To c
                     If Available(i, j, Arr) = False Then
                         Dim height2 As Single = height * displayRng.Cells(i, j).MergeArea.Rows.Count
                         Dim width2 As Single = width * displayRng.Cells(i, j).MergeArea.Columns.Count
@@ -208,7 +219,7 @@ Public Class Form10
             Count = 0
 
             For i = 1 To r
-                For j = 1 To C
+                For j = 1 To c
                     If rng.Cells(i, j).MergeCells = True And Available(i, j, Arr2) = False Then
                         For m = 0 To rng.Cells(i, j).MergeArea.Rows.Count - 1
                             For n = 0 To rng.Cells(i, j).MergeArea.Columns.Count - 1
@@ -225,7 +236,7 @@ Public Class Form10
             For i = 1 To r
                 For j = 1 To c
                     Dim label As New System.Windows.Forms.Label
-                    If Rng.Cells(i, j).MergeCells = True Then
+                    If rng.Cells(i, j).MergeCells = True Then
                         label.Text = SearchInArray(i, j, Arr2)
                     Else
                         label.Text = displayRng.Cells(i, j).Value
@@ -323,15 +334,10 @@ Public Class Form10
 
             If Overlap(excelApp, workSheet, workSheet2, rng, rng2) = True Then
                 rng2 = rng
-                If CheckBox1.Checked = False Then
-                    rng2.ClearFormats()
-                End If
             Else
                 rng.Copy()
                 rng2.PasteSpecial(Excel.XlPasteType.xlPasteValues)
-                If CheckBox1.Checked = True Then
-                    rng2.PasteSpecial(Excel.XlPasteType.xlPasteFormats)
-                End If
+                rng2.PasteSpecial(Excel.XlPasteType.xlPasteFormats)
                 excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
             End If
 
@@ -348,12 +354,16 @@ Public Class Form10
                         rng2.Cells(i, j).UnMerge
                         For m = 0 To Merged_Rows - 1
                             For n = 0 To Merged_Columns - 1
-                                rng2.Cells(i + m, j + n) = rng2.Cells(i, j)
+                                rng2.Cells(i + m, j + n).value = rng2.Cells(i, j).value
                             Next n
                         Next m
                     End If
                 Next j
             Next i
+
+            If CheckBox1.Checked = False Then
+                rng2.ClearFormats()
+            End If
 
             Me.Close()
 
@@ -503,6 +513,9 @@ Public Class Form10
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
+            TextBox1.SelectionStart = TextBox1.Text.Length
+            TextBox1.ScrollToCaret()
+
             rng = workSheet.Range(TextBox1.Text)
             rng.Select()
 
@@ -562,6 +575,10 @@ Public Class Form10
 
         Try
             workSheet2 = workbook2.ActiveSheet
+
+            TextBox3.SelectionStart = TextBox3.Text.Length
+            TextBox3.ScrollToCaret()
+
             rng2 = workSheet2.Range(TextBox3.Text)
             rng2.Select()
 
@@ -1085,5 +1102,23 @@ Public Class Form10
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub Form10_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form10_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form10_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TextBox1.Text = rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
     End Sub
 End Class

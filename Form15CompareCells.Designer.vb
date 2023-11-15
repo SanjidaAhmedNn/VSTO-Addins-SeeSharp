@@ -268,8 +268,11 @@ Partial Class Form15CompareCells
         'CbFillFont
         '
         Me.CbFillFont.BackColor = System.Drawing.Color.MidnightBlue
+        Me.CbFillFont.DropDownHeight = 1
+        Me.CbFillFont.DropDownWidth = 1
         Me.CbFillFont.ForeColor = System.Drawing.Color.Navy
         Me.CbFillFont.FormattingEnabled = True
+        Me.CbFillFont.IntegralHeight = False
         Me.CbFillFont.Location = New System.Drawing.Point(162, 35)
         Me.CbFillFont.Name = "CbFillFont"
         Me.CbFillFont.Size = New System.Drawing.Size(110, 25)
@@ -278,7 +281,10 @@ Partial Class Form15CompareCells
         'CBFillBackground
         '
         Me.CBFillBackground.BackColor = System.Drawing.Color.LightSteelBlue
+        Me.CBFillBackground.DropDownHeight = 1
+        Me.CBFillBackground.DropDownWidth = 1
         Me.CBFillBackground.FormattingEnabled = True
+        Me.CBFillBackground.IntegralHeight = False
         Me.CBFillBackground.Location = New System.Drawing.Point(8, 35)
         Me.CBFillBackground.Name = "CBFillBackground"
         Me.CBFillBackground.Size = New System.Drawing.Size(110, 25)
@@ -470,7 +476,7 @@ Partial Class Form15CompareCells
         'lblSourceRng2
         '
         Me.lblSourceRng2.AutoSize = True
-        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng2.Location = New System.Drawing.Point(8, 68)
         Me.lblSourceRng2.Name = "lblSourceRng2"
         Me.lblSourceRng2.Size = New System.Drawing.Size(256, 17)
@@ -480,7 +486,7 @@ Partial Class Form15CompareCells
         'lblSourceRng1
         '
         Me.lblSourceRng1.AutoSize = True
-        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSourceRng1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSourceRng1.Location = New System.Drawing.Point(8, 8)
         Me.lblSourceRng1.Name = "lblSourceRng1"
         Me.lblSourceRng1.Size = New System.Drawing.Size(249, 17)
@@ -491,6 +497,7 @@ Partial Class Form15CompareCells
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(775, 465)
         Me.Controls.Add(Me.CustomPanel1)
         Me.Controls.Add(Me.checkBoxCase)
@@ -502,6 +509,8 @@ Partial Class Form15CompareCells
         Me.Controls.Add(Me.checkBoxCopyWs)
         Me.Controls.Add(Me.CustomGroupBox1)
         Me.Controls.Add(Me.CustomGroupBox2)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form15CompareCells"
         Me.Text = "Compare Cells"
         Me.CustomPanel1.ResumeLayout(False)
@@ -545,7 +554,6 @@ Partial Class Form15CompareCells
     Friend WithEvents GB_Display_Result As CustomGroupBox
     Friend WithEvents CustomGroupBox4 As CustomGroupBox
     Friend WithEvents checkBoxCase As Windows.Forms.CheckBox
-    Friend WithEvents CbFillFont As Windows.Forms.ComboBox
     Friend WithEvents CBFillBackground As Windows.Forms.ComboBox
     Friend WithEvents checkBoxFillFont As Windows.Forms.CheckBox
     Friend WithEvents checkBoxFillBack As Windows.Forms.CheckBox
@@ -564,4 +572,5 @@ Partial Class Form15CompareCells
     Friend WithEvents txtSourceRange1 As Windows.Forms.TextBox
     Friend WithEvents CD_Fill_Background As Windows.Forms.ColorDialog
     Friend WithEvents CD_Fill_Font As Windows.Forms.ColorDialog
+    Friend WithEvents CbFillFont As Windows.Forms.ComboBox
 End Class

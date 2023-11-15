@@ -26,6 +26,23 @@ Partial Class Form26_split_text_bycharacters
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form26_split_text_bycharacters))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
+        Me.Info = New System.Windows.Forms.PictureBox()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.TB_source_range = New System.Windows.Forms.TextBox()
+        Me.Selection = New System.Windows.Forms.PictureBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.Btn_OK = New System.Windows.Forms.Button()
+        Me.Btn_Cancel = New System.Windows.Forms.Button()
+        Me.CB_formatting = New System.Windows.Forms.CheckBox()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.CB_consecute_separators = New System.Windows.Forms.CheckBox()
+        Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.RB_ending_point = New System.Windows.Forms.RadioButton()
+        Me.RB_starting_point = New System.Windows.Forms.RadioButton()
+        Me.CB_separators_finaloutput = New System.Windows.Forms.CheckBox()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox8 = New VSTO_Addins.CustomGroupBox()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
@@ -42,34 +59,23 @@ Partial Class Form26_split_text_bycharacters
         Me.RB_space = New System.Windows.Forms.RadioButton()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.RB_width = New System.Windows.Forms.RadioButton()
-        Me.Info = New System.Windows.Forms.PictureBox()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.TB_source_range = New System.Windows.Forms.TextBox()
-        Me.Selection = New System.Windows.Forms.PictureBox()
         Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
         Me.Panel_InputRange = New VSTO_Addins.CustomPanel()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox8 = New System.Windows.Forms.PictureBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.RB_columns = New System.Windows.Forms.RadioButton()
         Me.RB_rows = New System.Windows.Forms.RadioButton()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Btn_OK = New System.Windows.Forms.Button()
-        Me.Btn_Cancel = New System.Windows.Forms.Button()
-        Me.CB_formatting = New System.Windows.Forms.CheckBox()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.Panel_ExpectedOutput = New VSTO_Addins.CustomPanel()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
-        Me.CB_consecute_separators = New System.Windows.Forms.CheckBox()
-        Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.RB_ending_point = New System.Windows.Forms.RadioButton()
-        Me.RB_starting_point = New System.Windows.Forms.RadioButton()
-        Me.CB_separators_finaloutput = New System.Windows.Forms.CheckBox()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CustomGroupBox2.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox4.SuspendLayout()
         Me.CustomGroupBox8.SuspendLayout()
         CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -77,18 +83,12 @@ Partial Class Form26_split_text_bycharacters
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox5.SuspendLayout()
         Me.CustomGroupBox1.SuspendLayout()
         Me.CustomGroupBox7.SuspendLayout()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox6.SuspendLayout()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.CustomGroupBox2.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -112,6 +112,197 @@ Partial Class Form26_split_text_bycharacters
         Me.AutoSelection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.AutoSelection.TabIndex = 301
         Me.AutoSelection.TabStop = False
+        '
+        'Info
+        '
+        Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
+        Me.Info.Location = New System.Drawing.Point(118, 15)
+        Me.Info.Name = "Info"
+        Me.Info.Size = New System.Drawing.Size(20, 20)
+        Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Info.TabIndex = 305
+        Me.Info.TabStop = False
+        Me.ToolTip1.SetToolTip(Me.Info, "Please, select single column")
+        '
+        'TB_source_range
+        '
+        Me.TB_source_range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TB_source_range.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TB_source_range.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TB_source_range.Location = New System.Drawing.Point(15, 42)
+        Me.TB_source_range.Name = "TB_source_range"
+        Me.TB_source_range.Size = New System.Drawing.Size(262, 25)
+        Me.TB_source_range.TabIndex = 300
+        '
+        'Selection
+        '
+        Me.Selection.BackColor = System.Drawing.Color.White
+        Me.Selection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Selection.Image = CType(resources.GetObject("Selection.Image"), System.Drawing.Image)
+        Me.Selection.Location = New System.Drawing.Point(253, 42)
+        Me.Selection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Selection.Name = "Selection"
+        Me.Selection.Size = New System.Drawing.Size(24, 25)
+        Me.Selection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Selection.TabIndex = 302
+        Me.Selection.TabStop = False
+        '
+        'CheckBox2
+        '
+        Me.CheckBox2.AutoSize = True
+        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox2.Location = New System.Drawing.Point(15, 528)
+        Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
+        Me.CheckBox2.TabIndex = 293
+        Me.CheckBox2.Text = "Create a copy of the original worksheet"
+        Me.CheckBox2.UseVisualStyleBackColor = True
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"SOFTEKO", "About Us", "Help", "Feedback"})
+        Me.ComboBox1.Location = New System.Drawing.Point(15, 560)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
+        Me.ComboBox1.TabIndex = 294
+        Me.ComboBox1.Text = "SOFTEKO"
+        '
+        'Btn_OK
+        '
+        Me.Btn_OK.BackColor = System.Drawing.Color.White
+        Me.Btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.Btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Btn_OK.Location = New System.Drawing.Point(481, 558)
+        Me.Btn_OK.Name = "Btn_OK"
+        Me.Btn_OK.Size = New System.Drawing.Size(62, 26)
+        Me.Btn_OK.TabIndex = 298
+        Me.Btn_OK.Text = "OK"
+        Me.Btn_OK.UseVisualStyleBackColor = False
+        '
+        'Btn_Cancel
+        '
+        Me.Btn_Cancel.BackColor = System.Drawing.Color.White
+        Me.Btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.Btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Btn_Cancel.Location = New System.Drawing.Point(559, 558)
+        Me.Btn_Cancel.Name = "Btn_Cancel"
+        Me.Btn_Cancel.Size = New System.Drawing.Size(62, 26)
+        Me.Btn_Cancel.TabIndex = 297
+        Me.Btn_Cancel.Text = "Cancel"
+        Me.Btn_Cancel.UseVisualStyleBackColor = False
+        '
+        'CB_formatting
+        '
+        Me.CB_formatting.AutoSize = True
+        Me.CB_formatting.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_formatting.Location = New System.Drawing.Point(15, 168)
+        Me.CB_formatting.Name = "CB_formatting"
+        Me.CB_formatting.Size = New System.Drawing.Size(122, 21)
+        Me.CB_formatting.TabIndex = 292
+        Me.CB_formatting.Text = "Keep formatting"
+        Me.CB_formatting.UseVisualStyleBackColor = True
+        '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
+        Me.PictureBox7.Location = New System.Drawing.Point(435, 240)
+        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(65, 65)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox7.TabIndex = 299
+        Me.PictureBox7.TabStop = False
+        '
+        'CB_consecute_separators
+        '
+        Me.CB_consecute_separators.AutoSize = True
+        Me.CB_consecute_separators.Enabled = False
+        Me.CB_consecute_separators.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_consecute_separators.Location = New System.Drawing.Point(15, 396)
+        Me.CB_consecute_separators.Name = "CB_consecute_separators"
+        Me.CB_consecute_separators.Size = New System.Drawing.Size(237, 21)
+        Me.CB_consecute_separators.TabIndex = 306
+        Me.CB_consecute_separators.Text = "Treat consecutive separators as one"
+        Me.CB_consecute_separators.UseVisualStyleBackColor = True
+        '
+        'CustomGroupBox2
+        '
+        Me.CustomGroupBox2.BackColor = System.Drawing.Color.White
+        Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox2.Controls.Add(Me.PictureBox2)
+        Me.CustomGroupBox2.Controls.Add(Me.PictureBox3)
+        Me.CustomGroupBox2.Controls.Add(Me.RB_ending_point)
+        Me.CustomGroupBox2.Controls.Add(Me.RB_starting_point)
+        Me.CustomGroupBox2.Controls.Add(Me.CB_separators_finaloutput)
+        Me.CustomGroupBox2.Enabled = False
+        Me.CustomGroupBox2.Location = New System.Drawing.Point(15, 425)
+        Me.CustomGroupBox2.Name = "CustomGroupBox2"
+        Me.CustomGroupBox2.Size = New System.Drawing.Size(257, 92)
+        Me.CustomGroupBox2.TabIndex = 307
+        Me.CustomGroupBox2.TabStop = False
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Enabled = False
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(226, 34)
+        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 308
+        Me.PictureBox2.TabStop = False
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Enabled = False
+        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
+        Me.PictureBox3.Location = New System.Drawing.Point(226, 60)
+        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox3.TabIndex = 309
+        Me.PictureBox3.TabStop = False
+        '
+        'RB_ending_point
+        '
+        Me.RB_ending_point.AutoSize = True
+        Me.RB_ending_point.Enabled = False
+        Me.RB_ending_point.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RB_ending_point.Location = New System.Drawing.Point(25, 60)
+        Me.RB_ending_point.Name = "RB_ending_point"
+        Me.RB_ending_point.Size = New System.Drawing.Size(138, 21)
+        Me.RB_ending_point.TabIndex = 310
+        Me.RB_ending_point.TabStop = True
+        Me.RB_ending_point.Text = "At the ending point"
+        Me.RB_ending_point.UseVisualStyleBackColor = True
+        '
+        'RB_starting_point
+        '
+        Me.RB_starting_point.AutoSize = True
+        Me.RB_starting_point.Enabled = False
+        Me.RB_starting_point.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RB_starting_point.Location = New System.Drawing.Point(25, 34)
+        Me.RB_starting_point.Name = "RB_starting_point"
+        Me.RB_starting_point.Size = New System.Drawing.Size(142, 21)
+        Me.RB_starting_point.TabIndex = 309
+        Me.RB_starting_point.TabStop = True
+        Me.RB_starting_point.Text = "At the starting point"
+        Me.RB_starting_point.UseVisualStyleBackColor = True
+        '
+        'CB_separators_finaloutput
+        '
+        Me.CB_separators_finaloutput.AutoSize = True
+        Me.CB_separators_finaloutput.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CB_separators_finaloutput.Location = New System.Drawing.Point(8, 9)
+        Me.CB_separators_finaloutput.Name = "CB_separators_finaloutput"
+        Me.CB_separators_finaloutput.Size = New System.Drawing.Size(230, 21)
+        Me.CB_separators_finaloutput.TabIndex = 308
+        Me.CB_separators_finaloutput.Text = "Keep separators in the final output"
+        Me.CB_separators_finaloutput.UseVisualStyleBackColor = True
         '
         'CustomGroupBox4
         '
@@ -152,6 +343,7 @@ Partial Class Form26_split_text_bycharacters
         'ComboBox2
         '
         Me.ComboBox2.FormattingEnabled = True
+        Me.ComboBox2.Items.AddRange(New Object() {",", "/", "."})
         Me.ComboBox2.Location = New System.Drawing.Point(112, 104)
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(133, 25)
@@ -299,40 +491,6 @@ Partial Class Form26_split_text_bycharacters
         Me.RB_width.Text = "Define width :"
         Me.RB_width.UseVisualStyleBackColor = True
         '
-        'Info
-        '
-        Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
-        Me.Info.Location = New System.Drawing.Point(118, 15)
-        Me.Info.Name = "Info"
-        Me.Info.Size = New System.Drawing.Size(20, 20)
-        Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Info.TabIndex = 305
-        Me.Info.TabStop = False
-        Me.ToolTip1.SetToolTip(Me.Info, "Please, select single column")
-        '
-        'TB_source_range
-        '
-        Me.TB_source_range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TB_source_range.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TB_source_range.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TB_source_range.Location = New System.Drawing.Point(15, 42)
-        Me.TB_source_range.Name = "TB_source_range"
-        Me.TB_source_range.Size = New System.Drawing.Size(262, 25)
-        Me.TB_source_range.TabIndex = 300
-        '
-        'Selection
-        '
-        Me.Selection.BackColor = System.Drawing.Color.White
-        Me.Selection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Selection.Image = CType(resources.GetObject("Selection.Image"), System.Drawing.Image)
-        Me.Selection.Location = New System.Drawing.Point(253, 42)
-        Me.Selection.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Selection.Name = "Selection"
-        Me.Selection.Size = New System.Drawing.Size(24, 25)
-        Me.Selection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Selection.TabIndex = 302
-        Me.Selection.TabStop = False
-        '
         'CustomGroupBox5
         '
         Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
@@ -355,17 +513,6 @@ Partial Class Form26_split_text_bycharacters
         Me.Panel_InputRange.Name = "Panel_InputRange"
         Me.Panel_InputRange.Size = New System.Drawing.Size(300, 170)
         Me.Panel_InputRange.TabIndex = 0
-        '
-        'CheckBox2
-        '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox2.Location = New System.Drawing.Point(15, 528)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(257, 21)
-        Me.CheckBox2.TabIndex = 293
-        Me.CheckBox2.Text = "Create a copy of the original worksheet"
-        Me.CheckBox2.UseVisualStyleBackColor = True
         '
         'CustomGroupBox1
         '
@@ -437,51 +584,6 @@ Partial Class Form26_split_text_bycharacters
         Me.RB_rows.Text = "Split range into rows"
         Me.RB_rows.UseVisualStyleBackColor = True
         '
-        'ComboBox1
-        '
-        Me.ComboBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(15, 560)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(154, 25)
-        Me.ComboBox1.TabIndex = 294
-        Me.ComboBox1.Text = "SOFTEKO"
-        '
-        'Btn_OK
-        '
-        Me.Btn_OK.BackColor = System.Drawing.Color.White
-        Me.Btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_OK.Location = New System.Drawing.Point(481, 558)
-        Me.Btn_OK.Name = "Btn_OK"
-        Me.Btn_OK.Size = New System.Drawing.Size(62, 26)
-        Me.Btn_OK.TabIndex = 298
-        Me.Btn_OK.Text = "OK"
-        Me.Btn_OK.UseVisualStyleBackColor = False
-        '
-        'Btn_Cancel
-        '
-        Me.Btn_Cancel.BackColor = System.Drawing.Color.White
-        Me.Btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.Btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Btn_Cancel.Location = New System.Drawing.Point(559, 558)
-        Me.Btn_Cancel.Name = "Btn_Cancel"
-        Me.Btn_Cancel.Size = New System.Drawing.Size(62, 26)
-        Me.Btn_Cancel.TabIndex = 297
-        Me.Btn_Cancel.Text = "Cancel"
-        Me.Btn_Cancel.UseVisualStyleBackColor = False
-        '
-        'CB_formatting
-        '
-        Me.CB_formatting.AutoSize = True
-        Me.CB_formatting.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CB_formatting.Location = New System.Drawing.Point(15, 168)
-        Me.CB_formatting.Name = "CB_formatting"
-        Me.CB_formatting.Size = New System.Drawing.Size(122, 21)
-        Me.CB_formatting.TabIndex = 292
-        Me.CB_formatting.Text = "Keep formatting"
-        Me.CB_formatting.UseVisualStyleBackColor = True
-        '
         'CustomGroupBox6
         '
         Me.CustomGroupBox6.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
@@ -505,106 +607,11 @@ Partial Class Form26_split_text_bycharacters
         Me.Panel_ExpectedOutput.Size = New System.Drawing.Size(300, 170)
         Me.Panel_ExpectedOutput.TabIndex = 11
         '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(435, 240)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(65, 65)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 299
-        Me.PictureBox7.TabStop = False
-        '
-        'CB_consecute_separators
-        '
-        Me.CB_consecute_separators.AutoSize = True
-        Me.CB_consecute_separators.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CB_consecute_separators.Location = New System.Drawing.Point(15, 396)
-        Me.CB_consecute_separators.Name = "CB_consecute_separators"
-        Me.CB_consecute_separators.Size = New System.Drawing.Size(237, 21)
-        Me.CB_consecute_separators.TabIndex = 306
-        Me.CB_consecute_separators.Text = "Treat consecutive separators as one"
-        Me.CB_consecute_separators.UseVisualStyleBackColor = True
-        '
-        'CustomGroupBox2
-        '
-        Me.CustomGroupBox2.BackColor = System.Drawing.Color.White
-        Me.CustomGroupBox2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox2)
-        Me.CustomGroupBox2.Controls.Add(Me.PictureBox3)
-        Me.CustomGroupBox2.Controls.Add(Me.RB_ending_point)
-        Me.CustomGroupBox2.Controls.Add(Me.RB_starting_point)
-        Me.CustomGroupBox2.Controls.Add(Me.CB_separators_finaloutput)
-        Me.CustomGroupBox2.Location = New System.Drawing.Point(15, 425)
-        Me.CustomGroupBox2.Name = "CustomGroupBox2"
-        Me.CustomGroupBox2.Size = New System.Drawing.Size(257, 92)
-        Me.CustomGroupBox2.TabIndex = 307
-        Me.CustomGroupBox2.TabStop = False
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(226, 34)
-        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 308
-        Me.PictureBox2.TabStop = False
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(226, 60)
-        Me.PictureBox3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 309
-        Me.PictureBox3.TabStop = False
-        '
-        'RB_ending_point
-        '
-        Me.RB_ending_point.AutoSize = True
-        Me.RB_ending_point.Enabled = False
-        Me.RB_ending_point.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RB_ending_point.Location = New System.Drawing.Point(25, 60)
-        Me.RB_ending_point.Name = "RB_ending_point"
-        Me.RB_ending_point.Size = New System.Drawing.Size(138, 21)
-        Me.RB_ending_point.TabIndex = 310
-        Me.RB_ending_point.TabStop = True
-        Me.RB_ending_point.Text = "At the ending point"
-        Me.RB_ending_point.UseVisualStyleBackColor = True
-        '
-        'RB_starting_point
-        '
-        Me.RB_starting_point.AutoSize = True
-        Me.RB_starting_point.Enabled = False
-        Me.RB_starting_point.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RB_starting_point.Location = New System.Drawing.Point(25, 34)
-        Me.RB_starting_point.Name = "RB_starting_point"
-        Me.RB_starting_point.Size = New System.Drawing.Size(142, 21)
-        Me.RB_starting_point.TabIndex = 309
-        Me.RB_starting_point.TabStop = True
-        Me.RB_starting_point.Text = "At the starting point"
-        Me.RB_starting_point.UseVisualStyleBackColor = True
-        '
-        'CB_separators_finaloutput
-        '
-        Me.CB_separators_finaloutput.AutoSize = True
-        Me.CB_separators_finaloutput.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CB_separators_finaloutput.Location = New System.Drawing.Point(8, 9)
-        Me.CB_separators_finaloutput.Name = "CB_separators_finaloutput"
-        Me.CB_separators_finaloutput.Size = New System.Drawing.Size(230, 21)
-        Me.CB_separators_finaloutput.TabIndex = 308
-        Me.CB_separators_finaloutput.Text = "Keep separators in the final output"
-        Me.CB_separators_finaloutput.UseVisualStyleBackColor = True
-        '
         'Form26_split_text_bycharacters
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(643, 607)
         Me.Controls.Add(Me.CustomGroupBox2)
@@ -629,6 +636,13 @@ Partial Class Form26_split_text_bycharacters
         Me.Name = "Form26_split_text_bycharacters"
         Me.Text = "Split Text by Characters"
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CustomGroupBox2.ResumeLayout(False)
+        Me.CustomGroupBox2.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox4.ResumeLayout(False)
         Me.CustomGroupBox8.ResumeLayout(False)
         Me.CustomGroupBox8.PerformLayout()
@@ -637,8 +651,6 @@ Partial Class Form26_split_text_bycharacters
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.Info, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox5.ResumeLayout(False)
         Me.CustomGroupBox1.ResumeLayout(False)
         Me.CustomGroupBox7.ResumeLayout(False)
@@ -646,11 +658,6 @@ Partial Class Form26_split_text_bycharacters
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox6.ResumeLayout(False)
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.CustomGroupBox2.ResumeLayout(False)
-        Me.CustomGroupBox2.PerformLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

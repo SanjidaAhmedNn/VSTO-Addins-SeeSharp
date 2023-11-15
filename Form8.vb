@@ -8,6 +8,7 @@ Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Diagnostics
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
 
 Public Class Form8
     Dim WithEvents excelApp As Excel.Application
@@ -23,6 +24,12 @@ Public Class Form8
 
     Dim opened As Integer
     Dim FocusedTextBox As Integer
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         'This function takes two ranges as the inputs and checks whether they intersect or not.
@@ -643,6 +650,9 @@ Public Class Form8
             workBook = excelApp.ActiveWorkbook
             workSheet = workBook.ActiveSheet
 
+            TextBox1.SelectionStart = TextBox1.Text.Length
+            TextBox1.ScrollToCaret()
+
             rng = workSheet.Range(TextBox1.Text)
             rng.Select()
 
@@ -730,6 +740,8 @@ Public Class Form8
 
                 excelApp.DisplayAlerts = False
 
+                Dim mergeCount As Integer = 0
+
                 If RadioButton1.Checked = True Then
                     For i = 1 To r
                         For j = 1 To c
@@ -737,6 +749,7 @@ Public Class Form8
                             If rowEqual > 1 Then
                                 workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i, j + rowEqual - 1)).Merge()
                                 rng2.Cells(i, j).HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter
+                                mergeCount = mergeCount + 1
                             End If
                             j = j + rowEqual - 1
                         Next
@@ -750,6 +763,7 @@ Public Class Form8
                             If columnEqual > 1 Then
                                 workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + columnEqual - 1, j)).Merge()
                                 rng2.Cells(i, j).VerticalAlignment = Excel.XlVAlign.xlVAlignCenter
+                                mergeCount = mergeCount + 1
                             End If
                             i = i + columnEqual - 1
                         Next
@@ -805,6 +819,7 @@ Public Class Form8
 
                             If MRng.Rows.Count > 1 Or MRng.Columns.Count > 1 Then
                                 workSheet2.Range(rng2.Cells(i, j), rng2.Cells(i + MRng.Rows.Count - 1, j + MRng.Columns.Count - 1)).Merge()
+                                mergeCount = mergeCount + 1
                             End If
 
                             If MRng.Columns.Count > 1 Then
@@ -821,6 +836,13 @@ Public Class Form8
                 End If
                 excelApp.DisplayAlerts = False
 
+                Dim msg As String
+                If mergeCount > 1 Then
+                    msg = " cells have been merged."
+                Else
+                    msg = " cell has been merged."
+                End If
+                MsgBox(Str(mergeCount) & msg, Title:="Merge Cells")
             End If
 
         Catch ex As Exception
@@ -957,6 +979,9 @@ Public Class Form8
             excelApp = Globals.ThisAddIn.Application
             workbook2 = excelApp.ActiveWorkbook
             workSheet2 = workbook2.ActiveSheet
+
+            TextBox3.SelectionStart = TextBox3.Text.Length
+            TextBox3.ScrollToCaret()
 
             rng2 = workSheet2.Range(TextBox3.Text)
             rng2.Select()
@@ -1281,7 +1306,7 @@ Public Class Form8
         End Try
     End Sub
 
-    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs)
         Try
             FocusedTextBox = 0
 
@@ -1682,7 +1707,7 @@ Public Class Form8
 
     End Sub
 
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
+    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs)
 
         Try
             If e.KeyCode = Keys.Enter Then
@@ -1817,4 +1842,21 @@ Public Class Form8
 
     End Sub
 
+    Private Sub Form8_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        form_flag = False
+    End Sub
+
+    Private Sub Form8_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        form_flag = False
+    End Sub
+
+    Private Sub Form8_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Focus()
+        Me.BringToFront()
+        Me.Activate()
+        Me.BeginInvoke(New System.Action(Sub()
+                                             TextBox1.Text = rng.Address
+                                             SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                         End Sub))
+    End Sub
 End Class

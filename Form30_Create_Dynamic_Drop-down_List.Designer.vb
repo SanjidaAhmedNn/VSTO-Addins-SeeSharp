@@ -44,12 +44,6 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.RB_2_5_levels = New System.Windows.Forms.RadioButton()
         Me.RB_2_levels = New System.Windows.Forms.RadioButton()
-        Me.GB_list_option = New VSTO_Addins.CustomGroupBox()
-        Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
-        Me.RB_Verti = New System.Windows.Forms.RadioButton()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
-        Me.RB_Horizon = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
         Me.PictureBox4 = New System.Windows.Forms.PictureBox()
@@ -57,22 +51,29 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.PictureBox5 = New System.Windows.Forms.PictureBox()
         Me.RB_Dropdown_2_Labels = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
+        Me.GB_list_option = New VSTO_Addins.CustomGroupBox()
+        Me.CustomGroupBox5 = New VSTO_Addins.CustomGroupBox()
+        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
+        Me.RB_Verti = New System.Windows.Forms.RadioButton()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.RB_Horizon = New System.Windows.Forms.RadioButton()
         Me.CustomGroupBox4 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox7 = New VSTO_Addins.CustomGroupBox()
+        Me.Label_ext = New System.Windows.Forms.Label()
         CType(Me.Selection_source, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Selection_destination, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GB_list_option.SuspendLayout()
-        Me.CustomGroupBox5.SuspendLayout()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomGroupBox1.SuspendLayout()
         Me.CustomGroupBox3.SuspendLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GB_list_option.SuspendLayout()
+        Me.CustomGroupBox5.SuspendLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Btn_OK
@@ -107,7 +108,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(154, 25)
         Me.ComboBox2.TabIndex = 362
-        Me.ComboBox2.Text = "SOFTEKO"
+        Me.ComboBox2.Text = "Softeko"
         '
         'Label1
         '
@@ -308,78 +309,6 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_2_levels.Text = "Dynamic drop-down list with 2 levels"
         Me.RB_2_levels.UseVisualStyleBackColor = True
         '
-        'GB_list_option
-        '
-        Me.GB_list_option.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_list_option.Controls.Add(Me.CustomGroupBox5)
-        Me.GB_list_option.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_list_option.Location = New System.Drawing.Point(15, 195)
-        Me.GB_list_option.Name = "GB_list_option"
-        Me.GB_list_option.Size = New System.Drawing.Size(307, 84)
-        Me.GB_list_option.TabIndex = 369
-        Me.GB_list_option.TabStop = False
-        Me.GB_list_option.Text = "List Option"
-        '
-        'CustomGroupBox5
-        '
-        Me.CustomGroupBox5.BackColor = System.Drawing.Color.White
-        Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CustomGroupBox5.Controls.Add(Me.PictureBox6)
-        Me.CustomGroupBox5.Controls.Add(Me.RB_Verti)
-        Me.CustomGroupBox5.Controls.Add(Me.PictureBox7)
-        Me.CustomGroupBox5.Controls.Add(Me.RB_Horizon)
-        Me.CustomGroupBox5.Location = New System.Drawing.Point(1, 22)
-        Me.CustomGroupBox5.Name = "CustomGroupBox5"
-        Me.CustomGroupBox5.Size = New System.Drawing.Size(305, 62)
-        Me.CustomGroupBox5.TabIndex = 1
-        Me.CustomGroupBox5.TabStop = False
-        '
-        'PictureBox6
-        '
-        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
-        Me.PictureBox6.Location = New System.Drawing.Point(277, 34)
-        Me.PictureBox6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox6.Name = "PictureBox6"
-        Me.PictureBox6.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox6.TabIndex = 377
-        Me.PictureBox6.TabStop = False
-        '
-        'RB_Verti
-        '
-        Me.RB_Verti.AutoSize = True
-        Me.RB_Verti.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RB_Verti.Location = New System.Drawing.Point(8, 33)
-        Me.RB_Verti.Name = "RB_Verti"
-        Me.RB_Verti.Size = New System.Drawing.Size(162, 21)
-        Me.RB_Verti.TabIndex = 1
-        Me.RB_Verti.TabStop = True
-        Me.RB_Verti.Text = "Vertical Drop-down List"
-        Me.RB_Verti.UseVisualStyleBackColor = True
-        '
-        'PictureBox7
-        '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(277, 8)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(20, 20)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 376
-        Me.PictureBox7.TabStop = False
-        '
-        'RB_Horizon
-        '
-        Me.RB_Horizon.AutoSize = True
-        Me.RB_Horizon.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RB_Horizon.Location = New System.Drawing.Point(8, 7)
-        Me.RB_Horizon.Name = "RB_Horizon"
-        Me.RB_Horizon.Size = New System.Drawing.Size(180, 21)
-        Me.RB_Horizon.TabIndex = 0
-        Me.RB_Horizon.TabStop = True
-        Me.RB_Horizon.Text = "Horizontal Drop-down List"
-        Me.RB_Horizon.UseVisualStyleBackColor = True
-        '
         'CustomGroupBox1
         '
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
@@ -423,10 +352,9 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.RB_Dropdown_35_Labels.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Dropdown_35_Labels.Location = New System.Drawing.Point(8, 33)
         Me.RB_Dropdown_35_Labels.Name = "RB_Dropdown_35_Labels"
-        Me.RB_Dropdown_35_Labels.Size = New System.Drawing.Size(258, 21)
+        Me.RB_Dropdown_35_Labels.Size = New System.Drawing.Size(266, 21)
         Me.RB_Dropdown_35_Labels.TabIndex = 1
-        Me.RB_Dropdown_35_Labels.TabStop = True
-        Me.RB_Dropdown_35_Labels.Text = "Dynamic Drop-down List with 3-5 Levels"
+        Me.RB_Dropdown_35_Labels.Text = "Dynamic drop-down list with 2 to 5 levels"
         Me.RB_Dropdown_35_Labels.UseVisualStyleBackColor = True
         '
         'PictureBox5
@@ -443,13 +371,14 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         'RB_Dropdown_2_Labels
         '
         Me.RB_Dropdown_2_Labels.AutoSize = True
+        Me.RB_Dropdown_2_Labels.Checked = True
         Me.RB_Dropdown_2_Labels.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RB_Dropdown_2_Labels.Location = New System.Drawing.Point(8, 7)
         Me.RB_Dropdown_2_Labels.Name = "RB_Dropdown_2_Labels"
-        Me.RB_Dropdown_2_Labels.Size = New System.Drawing.Size(246, 21)
+        Me.RB_Dropdown_2_Labels.Size = New System.Drawing.Size(239, 21)
         Me.RB_Dropdown_2_Labels.TabIndex = 0
         Me.RB_Dropdown_2_Labels.TabStop = True
-        Me.RB_Dropdown_2_Labels.Text = "Dynamic Drop-down List with 2 Levels"
+        Me.RB_Dropdown_2_Labels.Text = "Dynamic drop-down list with 2 levels"
         Me.RB_Dropdown_2_Labels.UseVisualStyleBackColor = True
         '
         'CustomGroupBox2
@@ -463,6 +392,78 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.CustomGroupBox2.TabIndex = 363
         Me.CustomGroupBox2.TabStop = False
         Me.CustomGroupBox2.Text = "Sample Image"
+        '
+        'GB_list_option
+        '
+        Me.GB_list_option.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.GB_list_option.Controls.Add(Me.CustomGroupBox5)
+        Me.GB_list_option.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GB_list_option.Location = New System.Drawing.Point(15, 195)
+        Me.GB_list_option.Name = "GB_list_option"
+        Me.GB_list_option.Size = New System.Drawing.Size(307, 84)
+        Me.GB_list_option.TabIndex = 369
+        Me.GB_list_option.TabStop = False
+        Me.GB_list_option.Text = "List Options"
+        '
+        'CustomGroupBox5
+        '
+        Me.CustomGroupBox5.BackColor = System.Drawing.Color.White
+        Me.CustomGroupBox5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.CustomGroupBox5.Controls.Add(Me.PictureBox6)
+        Me.CustomGroupBox5.Controls.Add(Me.RB_Verti)
+        Me.CustomGroupBox5.Controls.Add(Me.PictureBox7)
+        Me.CustomGroupBox5.Controls.Add(Me.RB_Horizon)
+        Me.CustomGroupBox5.Location = New System.Drawing.Point(1, 22)
+        Me.CustomGroupBox5.Name = "CustomGroupBox5"
+        Me.CustomGroupBox5.Size = New System.Drawing.Size(305, 62)
+        Me.CustomGroupBox5.TabIndex = 1
+        Me.CustomGroupBox5.TabStop = False
+        '
+        'PictureBox6
+        '
+        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
+        Me.PictureBox6.Location = New System.Drawing.Point(277, 34)
+        Me.PictureBox6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox6.Name = "PictureBox6"
+        Me.PictureBox6.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox6.TabIndex = 377
+        Me.PictureBox6.TabStop = False
+        '
+        'RB_Verti
+        '
+        Me.RB_Verti.AutoSize = True
+        Me.RB_Verti.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RB_Verti.Location = New System.Drawing.Point(8, 33)
+        Me.RB_Verti.Name = "RB_Verti"
+        Me.RB_Verti.Size = New System.Drawing.Size(158, 21)
+        Me.RB_Verti.TabIndex = 1
+        Me.RB_Verti.Text = "Vertical drop-down list"
+        Me.RB_Verti.UseVisualStyleBackColor = True
+        '
+        'PictureBox7
+        '
+        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
+        Me.PictureBox7.Location = New System.Drawing.Point(277, 8)
+        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.PictureBox7.Name = "PictureBox7"
+        Me.PictureBox7.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox7.TabIndex = 376
+        Me.PictureBox7.TabStop = False
+        '
+        'RB_Horizon
+        '
+        Me.RB_Horizon.AutoSize = True
+        Me.RB_Horizon.Checked = True
+        Me.RB_Horizon.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RB_Horizon.Location = New System.Drawing.Point(8, 7)
+        Me.RB_Horizon.Name = "RB_Horizon"
+        Me.RB_Horizon.Size = New System.Drawing.Size(176, 21)
+        Me.RB_Horizon.TabIndex = 0
+        Me.RB_Horizon.TabStop = True
+        Me.RB_Horizon.Text = "Horizontal drop-down list"
+        Me.RB_Horizon.UseVisualStyleBackColor = True
         '
         'CustomGroupBox4
         '
@@ -485,11 +486,21 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.CustomGroupBox7.TabIndex = 0
         Me.CustomGroupBox7.TabStop = False
         '
+        'Label_ext
+        '
+        Me.Label_ext.AutoSize = True
+        Me.Label_ext.Location = New System.Drawing.Point(812, 132)
+        Me.Label_ext.Name = "Label_ext"
+        Me.Label_ext.Size = New System.Drawing.Size(0, 13)
+        Me.Label_ext.TabIndex = 376
+        '
         'Form30_Create_Dynamic_Drop_down_List
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(685, 486)
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ClientSize = New System.Drawing.Size(684, 486)
+        Me.Controls.Add(Me.Label_ext)
         Me.Controls.Add(Me.CB_text)
         Me.Controls.Add(Me.CB_descending)
         Me.Controls.Add(Me.CB_ascending)
@@ -506,6 +517,7 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         Me.Controls.Add(Me.Selection_source)
         Me.Controls.Add(Me.TB_src_range)
         Me.Controls.Add(Me.GB_list_option)
+        Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form30_Create_Dynamic_Drop_down_List"
@@ -516,16 +528,16 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GB_list_option.ResumeLayout(False)
-        Me.CustomGroupBox5.ResumeLayout(False)
-        Me.CustomGroupBox5.PerformLayout()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomGroupBox1.ResumeLayout(False)
         Me.CustomGroupBox3.ResumeLayout(False)
         Me.CustomGroupBox3.PerformLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GB_list_option.ResumeLayout(False)
+        Me.CustomGroupBox5.ResumeLayout(False)
+        Me.CustomGroupBox5.PerformLayout()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -566,4 +578,5 @@ Partial Class Form30_Create_Dynamic_Drop_down_List
     Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox4 As Windows.Forms.PictureBox
     Friend WithEvents PictureBox5 As Windows.Forms.PictureBox
+    Friend WithEvents Label_ext As Windows.Forms.Label
 End Class

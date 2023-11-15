@@ -11,6 +11,7 @@ Imports System.CodeDom
 Imports Microsoft.Office.Core
 Imports System.Data
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
 
 Public Class Form7
 
@@ -19,10 +20,20 @@ Public Class Form7
     Dim workbook2 As Excel.Workbook
     Dim worksheet As Excel.Worksheet
     Dim worksheet2 As Excel.Worksheet
+    Public OpenSheet As Excel.Worksheet
     Dim rng As Excel.Range
     Dim rng2 As Excel.Range
     Dim FocusedTextBox As Integer
     Dim opened As Integer
+    Dim TextBoxChanged As Boolean
+
+
+    Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_NOACTIVATE As UInteger = &H10
+    Private Const HWND_TOPMOST As Integer = -1
+
     Private Function Overlap(excelApp As Excel.Application, sheet1 As Excel.Worksheet, sheet2 As Excel.Worksheet, rng1 As Excel.Range, rng2 As Excel.Range) As Boolean
 
         If sheet1.Name <> sheet2.Name Then
@@ -58,24 +69,20 @@ Public Class Form7
     End Function
     Private Function IsValidExcelCellReference(cellReference As String) As Boolean
 
-        ' Regular expression pattern for a cell reference.
-        ' This pattern will match references like A1, $A$1, etc.
         Dim cellPattern As String = "(\$?[A-Z]+\$?[0-9]+)"
-
-        ' Regular expression pattern for an Excel reference.
-        ' This pattern will match references like A1:B13, $A$1:$B$13, A1, $B$1, etc.
         Dim referencePattern As String = "^" + cellPattern + "(:" + cellPattern + ")?$"
 
-        ' Create a regex object with the pattern.
         Dim regex As New Regex(referencePattern)
 
-        ' Test the input string against the regex pattern.
-        If regex.IsMatch(cellReference) Then
+        Dim refArr() As String = Split(cellReference, "!")
+
+        Dim reference As String = refArr(UBound(refArr))
+
+        If regex.IsMatch(reference) Then
             Return True
         Else
             Return False
         End If
-
 
     End Function
 
@@ -192,7 +199,8 @@ Public Class Form7
 
     End Function
     Private Function GetLengths(Arr)
-        Dim Arr2() As Integer
+
+        Dim Arr2(0) As Integer
         Dim Index As Integer
         Index = -1
         Dim position As Integer
@@ -210,10 +218,78 @@ Public Class Form7
         GetLengths = Arr2
 
     End Function
+    Private Function MaxOfColumn(cRng As Excel.Range)
+
+        Dim max As Integer
+        Dim CharNumbers As Integer
+
+        If IsNumeric(cRng.Cells(1, 1).value) Then
+            max = Len(Str(cRng.Cells(1, 1).value))
+        Else
+            max = Len(cRng.Cells(1, 1).value)
+        End If
+
+        For i = 2 To cRng.Rows.Count
+            If IsNumeric(cRng.Cells(i, 1).value) Then
+                CharNumbers = Len(Str(cRng.Cells(i, 1).value))
+            Else
+                CharNumbers = Len(cRng.Cells(i, 1).value)
+            End If
+            If CharNumbers > max Then
+                max = CharNumbers
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfColumn = max
+
+    End Function
+    Private Function MaxOfArray(Arr)
+
+        Dim max As Integer
+        max = Len(Arr(LBound(Arr)))
+
+        For i = LBound(Arr) + 1 To UBound(Arr)
+            If Len(Arr(i)) > max Then
+                max = Len(Arr(i))
+            End If
+        Next
+
+        If max < 7 Then
+            max = 7
+        End If
+
+        MaxOfArray = max
+
+    End Function
+    Private Function AdjustWidth(Widths, CWidth)
+
+        Dim SumWidth As Double = 0
+
+        For i = LBound(Widths) To UBound(Widths)
+            SumWidth = SumWidth + Widths(i)
+        Next
+
+        If SumWidth < CWidth Then
+            Dim Extra As Double = CWidth - SumWidth
+            Extra = Extra / (UBound(Widths) + 1)
+            For i = LBound(Widths) To UBound(Widths)
+                Widths(i) = Widths(i) + Extra
+            Next
+        End If
+
+        AdjustWidth = Widths
+
+    End Function
 
     Private Sub Display()
 
         Try
+
+            TextBoxChanged = True
 
             CustomPanel1.Controls.Clear()
             CustomPanel2.Controls.Clear()
@@ -236,8 +312,9 @@ Public Class Form7
             r = displayRng.Rows.Count
             c = displayRng.Columns.Count
 
-            Dim height As Integer
-            Dim width As Integer
+            Dim height As Double
+            Dim BaseWidth As Double
+            Dim width As Double
 
             If r > 1 And r <= 6 Then
                 height = CustomPanel1.Height / r
@@ -245,25 +322,25 @@ Public Class Form7
                 height = CustomPanel1.Height / 6
             End If
 
-            If c > 1 And c <= 4 Then
-                width = CustomPanel1.Width / c
-            Else
-                width = CustomPanel1.Width / 4
-            End If
+            BaseWidth = 260 / 3
 
-            For i = 1 To r
-                For j = 1 To c
+            Dim Ordinate As Double = 0
+            Dim Widths(c - 1) As Double
+
+            For j = 1 To c
+                Dim CRng As Excel.Range = worksheet.Range(displayRng.Cells(1, j), displayRng.Cells(r, j))
+                Widths(j - 1) = (MaxOfColumn(CRng) * BaseWidth) / 10
+            Next
+
+            Widths = AdjustWidth(Widths, CustomPanel2.Width)
+
+            For j = 1 To c
+                For i = 1 To r
                     Dim label As New System.Windows.Forms.Label
                     label.Text = displayRng.Cells(i, j).Value
-                    If r <> 1 And c = 1 Then
-                        label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                    ElseIf r = 1 And c <> 1 Then
-                        label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                    Else
-                        label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                    End If
+                    label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                     label.Height = height
-                    label.Width = width
+                    label.Width = Widths(j - 1)
                     label.BorderStyle = BorderStyle.FixedSingle
                     label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -298,10 +375,9 @@ Public Class Form7
                             label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                         End If
                     End If
-
                     CustomPanel1.Controls.Add(label)
-
                 Next
+                Ordinate = Ordinate + Widths(j - 1)
             Next
 
             CustomPanel1.AutoScroll = True
@@ -339,7 +415,15 @@ Public Class Form7
                     height = CustomPanel2.Height / 6
                 End If
 
-                width = CustomPanel2.Width / 4
+                Dim values(displayRng.Cells.Count - 1) As Object
+                For k = 1 To displayRng.Cells.Count
+                    values(k - 1) = displayRng.Cells(k).value
+                Next
+
+                Dim Widths2(0) As Double
+                Widths2(0) = (MaxOfArray(values) * BaseWidth) / 10
+
+                Widths2 = AdjustWidth(Widths2, CustomPanel2.Width)
 
                 Dim count As Integer
                 count = 1
@@ -350,10 +434,10 @@ Public Class Form7
                         For j = 1 To c
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((2.5 - 1) * width, (count - 1) * height)
+                            label.Location = New System.Drawing.Point(0, (count - 1) * height)
                             count = count + 1
                             label.Height = height
-                            label.Width = width
+                            label.Width = Widths2(0)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -397,10 +481,10 @@ Public Class Form7
                         For i = 1 To r
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((2.5 - 1) * width, (count - 1) * height)
+                            label.Location = New System.Drawing.Point(0, (count - 1) * height)
                             count = count + 1
                             label.Height = height
-                            label.Width = width
+                            label.Width = Widths2(0)
                             label.BorderStyle = BorderStyle.FixedSingle
                             label.TextAlign = ContentAlignment.MiddleCenter
 
@@ -458,12 +542,18 @@ Public Class Form7
                 count = 1
 
                 If X5 Then
-
+                    Ordinate = 0
+                    Dim Length As Integer
                     For i = 1 To r
                         For j = 1 To c
+                            Length = Len(displayRng.Cells(i, j).Value)
+                            If Length < 7 Then
+                                Length = 7
+                            End If
+                            width = (Length * BaseWidth) / 10
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((count - 1) * width, (3.5 - 1) * height)
+                            label.Location = New System.Drawing.Point(Ordinate, (3.5 - 1) * height)
                             count = count + 1
                             label.Height = height
                             label.Width = width
@@ -501,16 +591,23 @@ Public Class Form7
                             End If
 
                             CustomPanel2.Controls.Add(label)
+                            Ordinate = Ordinate + width
                         Next
                     Next
 
                 ElseIf X6 Then
-
+                    Ordinate = 0
+                    Dim Length As Integer
                     For j = 1 To c
                         For i = 1 To r
+                            Length = Len(displayRng.Cells(i, j).Value)
+                            If Length < 7 Then
+                                Length = 7
+                            End If
+                            width = (Length * BaseWidth) / 10
                             Dim label As New System.Windows.Forms.Label
                             label.Text = displayRng.Cells(i, j).Value
-                            label.Location = New System.Drawing.Point((count - 1) * width, (3.5 - 1) * height)
+                            label.Location = New System.Drawing.Point(Ordinate, (3.5 - 1) * height)
                             count = count + 1
                             label.Height = height
                             label.Width = width
@@ -546,8 +643,8 @@ Public Class Form7
                                     label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
                             End If
-
                             CustomPanel2.Controls.Add(label)
+                            Ordinate = Ordinate + width
                         Next
                     Next
                 End If
@@ -580,11 +677,8 @@ Public Class Form7
                         height = CustomPanel2.Height / 6
                     End If
 
-                    If c > 1 And c <= 4 Then
-                        width = CustomPanel2.Width / c
-                    Else
-                        width = CustomPanel2.Width / 4
-                    End If
+                    Dim Values(r - 1, c - 1) As Object
+                    Dim References(r - 1, c - 1) As Integer
 
                     If X5 Then
                         Dim iRow As Integer
@@ -595,55 +689,12 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + j
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= BreakPoints(i - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = x
                             Next
                             iRow = BreakPoints(i - 1)
                         Next
@@ -657,59 +708,78 @@ Public Class Form7
                                 Dim y As Integer
                                 x = iRow + i
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= BreakPoints(j - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = x
                             Next
                             iRow = BreakPoints(j - 1)
                         Next
                     End If
+
+                    Dim ColumnValues(r - 1) As Object
+                    Dim widths2(c - 1) As Double
+
+                    For j = 0 To c - 1
+                        For i = 0 To r - 1
+                            ColumnValues(i) = Values(i, j)
+                        Next
+                        widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                    Next
+                    widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                    Ordinate = 0
+
+                    For j = 1 To c
+                        For i = 1 To r
+                            Dim label As New System.Windows.Forms.Label
+                            label.Text = Values(i - 1, j - 1)
+                            label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
+                            label.Height = height
+                            label.Width = widths2(j - 1)
+                            label.BorderStyle = BorderStyle.FixedSingle
+                            label.TextAlign = ContentAlignment.MiddleCenter
+
+                            If CheckBox1.Checked = True Then
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = References(i - 1, j - 1)
+                                y = 1
+                                Dim cell As Excel.Range = displayRng.Cells(x, y)
+                                Dim font As Excel.Font = cell.Font
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+                                If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                                If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                                label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                End If
+                            End If
+
+                            CustomPanel2.Controls.Add(label)
+                        Next
+                        Ordinate = Ordinate + widths2(j - 1)
+                    Next
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
@@ -727,11 +797,8 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
                         For i = 1 To r
                             For j = 1 To c
@@ -739,25 +806,43 @@ Public Class Form7
                                 Dim y As Integer
                                 x = (c * (i - 1)) + j
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = x
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = References(i - 1, j - 1)
+                                    y = 1
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -789,6 +874,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     ElseIf X6 Then
@@ -805,37 +891,52 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
-                        For j = 1 To c
-                            For i = 1 To r
+                        For i = 1 To r
+                            For j = 1 To c
                                 Dim x As Integer
                                 Dim y As Integer
                                 x = (r * (j - 1)) + i
                                 y = 1
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = x
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = References(i - 1, j - 1)
+                                    y = 1
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -867,6 +968,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     End If
@@ -900,11 +1002,8 @@ Public Class Form7
                         height = CustomPanel2.Height / 6
                     End If
 
-                    If c > 1 And c <= 4 Then
-                        width = CustomPanel2.Width / c
-                    Else
-                        width = CustomPanel2.Width / 4
-                    End If
+                    Dim Values(r - 1, c - 1) As Object
+                    Dim References(r - 1, c - 1) As Integer
 
                     If X5 Then
                         Dim iColumn As Integer
@@ -915,55 +1014,12 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + j
-                                Dim label As New System.Windows.Forms.Label
-                                If y <= BreakPoints(i - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                If x <= BreakPoints(i - 1) Then
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = y
                             Next
                             iColumn = BreakPoints(i - 1)
                         Next
@@ -977,59 +1033,79 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = iColumn + i
-                                Dim label As New System.Windows.Forms.Label
-                                If y <= BreakPoints(j - 1) Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                If x <= BreakPoints(j - 1) Then
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
-                                label.Height = height
-                                label.Width = width
-                                label.BorderStyle = BorderStyle.FixedSingle
-                                label.TextAlign = ContentAlignment.MiddleCenter
-
-                                If CheckBox1.Checked = True Then
-                                    Dim cell As Excel.Range = displayRng.Cells(x, y)
-                                    Dim font As Excel.Font = cell.Font
-                                    Dim fontStyle As FontStyle = FontStyle.Regular
-                                    If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
-                                    If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
-
-                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
-
-                                    label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        Dim red1 As Integer = colorValue1 Mod 256
-                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
-                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
-                                        label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
-
-                                    If IsDBNull(cell.Font.Color) Then
-                                        label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
-
-                                    ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        Dim red2 As Integer = colorValue2 Mod 256
-                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
-                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
-                                        label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
-                                End If
-
-                                CustomPanel2.Controls.Add(label)
+                                References(i - 1, j - 1) = y
                             Next
                             iColumn = BreakPoints(j - 1)
                         Next
                     End If
+
+                    Dim ColumnValues(r - 1) As Object
+                    Dim widths2(c - 1) As Double
+
+                    For j = 0 To c - 1
+                        For i = 0 To r - 1
+                            ColumnValues(i) = Values(i, j)
+                        Next
+                        widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                    Next
+                    widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                    Ordinate = 0
+
+                    For j = 1 To c
+                        For i = 1 To r
+                            Dim label As New System.Windows.Forms.Label
+                            label.Text = Values(i - 1, j - 1)
+                            label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
+                            label.Height = height
+                            label.Width = widths2(j - 1)
+                            label.BorderStyle = BorderStyle.FixedSingle
+                            label.TextAlign = ContentAlignment.MiddleCenter
+
+                            If CheckBox1.Checked = True Then
+                                Dim x As Integer
+                                Dim y As Integer
+                                x = 1
+                                y = References(i - 1, j - 1)
+                                Dim cell As Excel.Range = displayRng.Cells(x, y)
+                                Dim font As Excel.Font = cell.Font
+                                Dim fontStyle As FontStyle = FontStyle.Regular
+                                If cell.Font.Bold Then fontStyle = fontStyle Or FontStyle.Bold
+                                If cell.Font.Italic Then fontStyle = fontStyle Or FontStyle.Italic
+
+                                Dim fontSize As Single = Convert.ToSingle(font.Size)
+
+                                label.Font = New System.Drawing.Font(font.ToString, fontSize, fontStyle)
+                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    label.BackColor = System.Drawing.Color.FromArgb(red1, green1, blue1)
+                                End If
+
+                                If IsDBNull(cell.Font.Color) Then
+                                    label.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0)
+
+                                ElseIf Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    label.ForeColor = System.Drawing.Color.FromArgb(red2, green2, blue2)
+                                End If
+                            End If
+
+                            CustomPanel2.Controls.Add(label)
+                        Next
+                        Ordinate = Ordinate + widths2(j - 1)
+                    Next
+
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
@@ -1047,11 +1123,8 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
                         For i = 1 To r
                             For j = 1 To c
@@ -1059,25 +1132,43 @@ Public Class Form7
                                 Dim y As Integer
                                 x = 1
                                 y = (c * (i - 1)) + j
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = y
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = 1
+                                    y = References(i - 1, j - 1)
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -1109,6 +1200,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     ElseIf X6 Then
@@ -1125,37 +1217,52 @@ Public Class Form7
                             height = CustomPanel2.Height / 6
                         End If
 
-                        If c > 1 And c <= 4 Then
-                            width = CustomPanel2.Width / c
-                        Else
-                            width = CustomPanel2.Width / 4
-                        End If
+                        Dim Values(r - 1, c - 1) As Object
+                        Dim References(r - 1, c - 1) As Integer
 
-                        For j = 1 To c
-                            For i = 1 To r
+                        For i = 1 To r
+                            For j = 1 To c
                                 Dim x As Integer
                                 Dim y As Integer
                                 x = 1
                                 y = (r * (j - 1)) + i
-                                Dim label As New System.Windows.Forms.Label
                                 If x <= displayRng.Rows.Count Then
-                                    label.Text = displayRng.Cells(x, y).Value
+                                    Values(i - 1, j - 1) = displayRng.Cells(x, y).Value
                                 Else
-                                    label.Text = ""
+                                    Values(i - 1, j - 1) = ""
                                 End If
-                                If r <> 1 And c = 1 Then
-                                    label.Location = New System.Drawing.Point((2.5 - 1) * width, (i - 1) * height)
-                                ElseIf r = 1 And c <> 1 Then
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (3.5 - 1) * height)
-                                Else
-                                    label.Location = New System.Drawing.Point((j - 1) * width, (i - 1) * height)
-                                End If
+                                References(i - 1, j - 1) = y
+                            Next
+                        Next
+
+                        Dim ColumnValues(r - 1) As Object
+                        Dim widths2(c - 1) As Double
+
+                        For j = 0 To c - 1
+                            For i = 0 To r - 1
+                                ColumnValues(i) = Values(i, j)
+                            Next
+                            widths2(j) = (MaxOfArray(ColumnValues) * BaseWidth) / 10
+                        Next
+                        widths2 = AdjustWidth(widths2, CustomPanel2.Width)
+
+                        Ordinate = 0
+
+                        For j = 1 To c
+                            For i = 1 To r
+                                Dim label As New System.Windows.Forms.Label
+                                label.Text = Values(i - 1, j - 1)
+                                label.Location = New System.Drawing.Point(Ordinate, (i - 1) * height)
                                 label.Height = height
-                                label.Width = width
+                                label.Width = widths2(j - 1)
                                 label.BorderStyle = BorderStyle.FixedSingle
                                 label.TextAlign = ContentAlignment.MiddleCenter
 
                                 If CheckBox1.Checked = True Then
+                                    Dim x As Integer
+                                    Dim y As Integer
+                                    x = 1
+                                    y = References(i - 1, j - 1)
                                     Dim cell As Excel.Range = displayRng.Cells(x, y)
                                     Dim font As Excel.Font = cell.Font
                                     Dim fontStyle As FontStyle = FontStyle.Regular
@@ -1187,6 +1294,7 @@ Public Class Form7
 
                                 CustomPanel2.Controls.Add(label)
                             Next
+                            Ordinate = Ordinate + widths2(j - 1)
                         Next
 
                     End If
@@ -1195,6 +1303,8 @@ Public Class Form7
                 CustomPanel2.AutoScroll = True
 
             End If
+
+            TextBoxChanged = False
 
         Catch ex As Exception
 
@@ -1210,6 +1320,7 @@ Public Class Form7
             workbook2 = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
             worksheet2 = workbook2.ActiveSheet
+            Me.KeyPreview = True
 
             AddHandler excelApp.SheetSelectionChange, AddressOf excelApp_SheetSelectionChange
 
@@ -1229,17 +1340,27 @@ Public Class Form7
             Dim selectedRange As Excel.Range
             selectedRange = excelApp.Selection
 
-            If FocusedTextBox = 1 Then
-                TextBox1.Text = selectedRange.Address
-                worksheet = workbook.ActiveSheet
-                rng = selectedRange
-                TextBox1.Focus()
+            If TextBoxChanged = False Then
+                If FocusedTextBox = 1 Then
+                    worksheet = workbook.ActiveSheet
+                    If worksheet.Name <> OpenSheet.Name Then
+                        TextBox1.Text = worksheet.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox1.Text = selectedRange.Address
+                    End If
+                    rng = selectedRange
+                    TextBox1.Focus()
 
-            ElseIf FocusedTextBox = 3 Then
-                TextBox3.Text = selectedRange.Address
-                worksheet2 = workbook2.ActiveSheet
-                rng2 = selectedRange
-                TextBox3.Focus()
+                ElseIf FocusedTextBox = 3 Then
+                    worksheet2 = workbook2.ActiveSheet
+                    If worksheet2.Name <> OpenSheet.Name Then
+                        TextBox3.Text = worksheet2.Name & "!" & selectedRange.Address
+                    Else
+                        TextBox3.Text = selectedRange.Address
+                    End If
+                    rng2 = selectedRange
+                    TextBox3.Focus()
+                End If
             End If
 
         Catch ex As Exception
@@ -1251,6 +1372,7 @@ Public Class Form7
 
         Try
 
+            TextBoxChanged = True
             If TextBox1.Text = "" Then
                 MessageBox.Show("Select a Source Range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 TextBox1.Focus()
@@ -1306,14 +1428,14 @@ Public Class Form7
                 Exit Sub
             End If
 
-            If RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox1.Text) = False) Then
+            If RadioButton10.Checked = True And (TextBox3.Text = "" Or IsValidExcelCellReference(TextBox3.Text) = False) Then
                 MessageBox.Show("Enter a valid Destination Cell.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 worksheet.Activate()
                 rng.Select()
                 Exit Sub
             End If
 
-            If CheckBox1.Checked = True Then
+            If CheckBox2.Checked = True Then
                 worksheet.Copy(After:=workbook.Sheets(worksheet.Name))
             End If
 
@@ -1360,6 +1482,9 @@ Public Class Form7
                 rng2.Select()
 
                 If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                    rng2.ClearFormats()
+
                     Dim count As Integer
                     count = 1
 
@@ -1416,6 +1541,112 @@ Public Class Form7
                     Else
                         MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit Sub
+                    End If
+
+                    If CheckBox1.Checked = True Then
+                        Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                        If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng2.Rows.Count > 1 Then
+                            If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                    rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                    rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+                        End If
+
+                        If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                        If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng.Rows.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                            If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                        rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                        rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                    Next
+                                Next
+                            Else
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
+
+                        If rng.Columns.Count > 1 Then
+                            Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                            If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                        rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                        rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                    Next
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+                        End If
                     End If
 
                 Else
@@ -1432,6 +1663,125 @@ Public Class Form7
                     Dim blues1(r - 1, c - 1) As Integer
                     Dim blues2(r - 1, c - 1) As Integer
 
+                    Dim TopBorder7 As Boolean
+                    Dim TopBorder7L As Object
+                    Dim TopBorder7C As Object
+                    Dim TopBorder7W As Object
+
+                    Dim TopBorder8 As Boolean
+                    Dim TopBorder8L As Object
+                    Dim TopBorder8C As Object
+                    Dim TopBorder8W As Object
+
+                    Dim TopBorder9 As Boolean
+                    Dim TopBorder9L As Object
+                    Dim TopBorder9C As Object
+                    Dim TopBorder9W As Object
+
+                    Dim BottomBorder9 As Boolean
+                    Dim BottomBorder9L As Object
+                    Dim BottomBorder9C As Object
+                    Dim BottomBorder9W As Object
+
+                    Dim BottomBorder10 As Boolean
+                    Dim BottomBorder10L As Object
+                    Dim BottomBorder10C As Object
+                    Dim BottomBorder10W As Object
+
+                    Dim MiddleBorder9 As Boolean
+                    Dim MiddleBorder9L As Object
+                    Dim MiddleBorder9C As Object
+                    Dim MiddleBorder9W As Object
+
+                    Dim MiddleBorder10 As Boolean
+                    Dim MiddleBorder10L As Object
+                    Dim MiddleBorder10C As Object
+                    Dim MiddleBorder10W As Object
+
+                    If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder7 = True
+                        TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                        TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                        TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                    Else
+                        TopBorder7 = False
+                        TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                        TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                        TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                    End If
+
+                    If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder8 = True
+                        TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                        TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                        TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                    Else
+                        TopBorder8 = False
+                        TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                        TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                        TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                    End If
+
+                    If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder9 = True
+                        TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                        TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                        TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                    Else
+                        TopBorder9 = False
+                        TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                        TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                        TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        BottomBorder9 = True
+                        BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                        BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                        BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                    Else
+                        BottomBorder9 = False
+                        BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                        BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                        BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        BottomBorder10 = True
+                        BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                        BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                        BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                    Else
+                        BottomBorder10 = False
+                        BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                        BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                        BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                    End If
+
+                    If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        MiddleBorder9 = True
+                        MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                        MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                        MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                    Else
+                        MiddleBorder9 = False
+                        MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                        MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                        MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        MiddleBorder10 = True
+                        MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                        MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                        MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                    Else
+                        MiddleBorder10 = False
+                        MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                        MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                        MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                    End If
+
                     For i = 1 To r
                         For j = 1 To c
                             Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -1444,34 +1794,54 @@ Public Class Form7
                                 Bolds(i - 1, j - 1) = cell.Font.Bold
                                 Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                fontNames(i - 1, j - 1) = font.Name
-
-                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                    greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                    blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
                                 Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
                                     reds1(i - 1, j - 1) = 255
                                     greens1(i - 1, j - 1) = 255
                                     blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
                                 End If
 
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                    greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                    blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
                                 Else
-                                    reds2(i - 1, j - 1) = 255
-                                    greens2(i - 1, j - 1) = 255
-                                    blues2(i - 1, j - 1) = 255
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
                                 End If
                             End If
 
                         Next
                     Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+                    rng2.ClearFormats()
 
                     Dim count As Integer
                     count = 1
@@ -1498,19 +1868,17 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
+
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1540,19 +1908,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1562,9 +1926,117 @@ Public Class Form7
                         MessageBox.Show("Choose One Transformation Option. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit Sub
                     End If
+
+                    If CheckBox1.Checked = True Then
+
+                        If TopBorder8 = True Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng2.Rows.Count > 1 Then
+                            If TopBorder9 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                    rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                    rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+                        End If
+
+                        If TopBorder7 = True Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomBorder9 = True Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomBorder10 = True Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng.Rows.Count > 1 Then
+
+                            If MiddleBorder9 = True Then
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                        rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                        rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                    Next
+                                Next
+                            Else
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+
+                        End If
+
+                        If rng.Columns.Count > 1 Then
+
+                            If MiddleBorder10 = True Then
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                        rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                        rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                    Next
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+
+                        End If
+
+                    End If
+
                 End If
 
             ElseIf X2 Then
+
                 rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(1, (r * c)))
                 Dim rng2Address As String = rng2.Address
                 worksheet2.Activate()
@@ -1572,6 +2044,7 @@ Public Class Form7
 
                 If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
 
+                    rng2.ClearFormats()
                     Dim count As Integer
                     count = 1
 
@@ -1627,6 +2100,9 @@ Public Class Form7
                         Exit Sub
 
                     End If
+
+
+
                 Else
 
                     Dim Arr(r - 1, c - 1) As Object
@@ -1641,6 +2117,125 @@ Public Class Form7
                     Dim blues1(r - 1, c - 1) As Integer
                     Dim blues2(r - 1, c - 1) As Integer
 
+                    Dim TopBorder7 As Boolean
+                    Dim TopBorder7L As Object
+                    Dim TopBorder7C As Object
+                    Dim TopBorder7W As Object
+
+                    Dim TopBorder8 As Boolean
+                    Dim TopBorder8L As Object
+                    Dim TopBorder8C As Object
+                    Dim TopBorder8W As Object
+
+                    Dim TopBorder9 As Boolean
+                    Dim TopBorder9L As Object
+                    Dim TopBorder9C As Object
+                    Dim TopBorder9W As Object
+
+                    Dim BottomBorder9 As Boolean
+                    Dim BottomBorder9L As Object
+                    Dim BottomBorder9C As Object
+                    Dim BottomBorder9W As Object
+
+                    Dim BottomBorder10 As Boolean
+                    Dim BottomBorder10L As Object
+                    Dim BottomBorder10C As Object
+                    Dim BottomBorder10W As Object
+
+                    Dim MiddleBorder9 As Boolean
+                    Dim MiddleBorder9L As Object
+                    Dim MiddleBorder9C As Object
+                    Dim MiddleBorder9W As Object
+
+                    Dim MiddleBorder10 As Boolean
+                    Dim MiddleBorder10L As Object
+                    Dim MiddleBorder10C As Object
+                    Dim MiddleBorder10W As Object
+
+                    If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder7 = True
+                        TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                        TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                        TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                    Else
+                        TopBorder7 = False
+                        TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                        TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                        TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                    End If
+
+                    If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder8 = True
+                        TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                        TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                        TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                    Else
+                        TopBorder8 = False
+                        TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                        TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                        TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                    End If
+
+                    If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        TopBorder9 = True
+                        TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                        TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                        TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                    Else
+                        TopBorder9 = False
+                        TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                        TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                        TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        BottomBorder9 = True
+                        BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                        BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                        BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                    Else
+                        BottomBorder9 = False
+                        BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                        BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                        BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        BottomBorder10 = True
+                        BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                        BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                        BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                    Else
+                        BottomBorder10 = False
+                        BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                        BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                        BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                    End If
+
+                    If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        MiddleBorder9 = True
+                        MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                        MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                        MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                    Else
+                        MiddleBorder9 = False
+                        MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                        MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                        MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                    End If
+
+                    If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                        MiddleBorder10 = True
+                        MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                        MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                        MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                    Else
+                        MiddleBorder10 = False
+                        MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                        MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                        MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                    End If
+
                     For i = 1 To r
                         For j = 1 To c
                             Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -1653,34 +2248,56 @@ Public Class Form7
                                 Bolds(i - 1, j - 1) = cell.Font.Bold
                                 Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                fontNames(i - 1, j - 1) = font.Name
 
-                                If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                    reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                    greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                    blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                If IsDBNull(font.Name) = False Then
+                                    fontNames(i - 1, j - 1) = font.Name
                                 Else
+                                    fontNames(i - 1, j - 1) = "Calibri"
+                                End If
+
+                                If IsDBNull(font.Size) = False Then
+                                    Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                    fontSizes(i - 1, j - 1) = fontSize
+                                Else
+                                    fontSizes(i - 1, j - 1) = 11
+                                End If
+
+                                If IsDBNull(cell.Interior.Color) Then
                                     reds1(i - 1, j - 1) = 255
                                     greens1(i - 1, j - 1) = 255
                                     blues1(i - 1, j - 1) = 255
+                                Else
+                                    Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                    Dim red1 As Integer = colorValue1 Mod 256
+                                    Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                    Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                    reds1(i - 1, j - 1) = red1
+                                    greens1(i - 1, j - 1) = green1
+                                    blues1(i - 1, j - 1) = blue1
                                 End If
 
-                                If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                    reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                    greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                    blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                If IsDBNull(cell.Font.Color) Then
+                                    reds2(i - 1, j - 1) = 0
+                                    greens2(i - 1, j - 1) = 0
+                                    blues2(i - 1, j - 1) = 0
                                 Else
-                                    reds2(i - 1, j - 1) = 255
-                                    greens2(i - 1, j - 1) = 255
-                                    blues2(i - 1, j - 1) = 255
+                                    Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                    Dim red2 As Integer = colorValue2 Mod 256
+                                    Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                    Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                    reds2(i - 1, j - 1) = red2
+                                    greens2(i - 1, j - 1) = green2
+                                    blues2(i - 1, j - 1) = blue2
                                 End If
                             End If
 
                         Next
                     Next
+
+                    rng.ClearContents()
+                    rng.ClearFormats()
+
+                    rng2.ClearFormats()
 
                     Dim count As Integer
                     count = 1
@@ -1708,19 +2325,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1750,19 +2363,15 @@ Public Class Form7
                                     If Bolds(i - 1, j - 1) Then rng2.Cells(x, y).Font.Bold = True
                                     If Italics(i - 1, j - 1) Then rng2.Cells(x, y).Font.Italic = True
 
-                                    If reds1(i - 1, j - 1) = 255 Then
-                                        Dim red1 As Integer = reds1(i - 1, j - 1)
-                                        Dim green1 As Integer = greens1(i - 1, j - 1)
-                                        Dim blue1 As Integer = blues1(i - 1, j - 1)
-                                        rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                    End If
+                                    Dim red1 As Integer = reds1(i - 1, j - 1)
+                                    Dim green1 As Integer = greens1(i - 1, j - 1)
+                                    Dim blue1 As Integer = blues1(i - 1, j - 1)
+                                    rng2.Cells(x, y).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                    If reds2(i - 1, j - 1) = 255 Then
-                                        Dim red2 As Integer = reds2(i - 1, j - 1)
-                                        Dim green2 As Integer = greens2(i - 1, j - 1)
-                                        Dim blue2 As Integer = blues2(i - 1, j - 1)
-                                        rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                    End If
+                                    Dim red2 As Integer = reds2(i - 1, j - 1)
+                                    Dim green2 As Integer = greens2(i - 1, j - 1)
+                                    Dim blue2 As Integer = blues2(i - 1, j - 1)
+                                    rng2.Cells(x, y).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                 End If
 
                             Next
@@ -1773,6 +2382,113 @@ Public Class Form7
                         Exit Sub
 
                     End If
+
+                    If CheckBox1.Checked = True Then
+
+                        If TopBorder8 = True Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng2.Rows.Count > 1 Then
+                            If TopBorder9 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                    rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                    rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+                        End If
+
+                        If TopBorder7 = True Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomBorder9 = True Then
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                            Next
+                        Else
+                            For j = 1 To rng2.Columns.Count
+                                rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If BottomBorder10 = True Then
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                            Next
+                        Else
+                            For i = 1 To rng2.Rows.Count
+                                rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                            Next
+                        End If
+
+                        If rng.Rows.Count > 1 Then
+
+                            If MiddleBorder9 = True Then
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                        rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                        rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                    Next
+                                Next
+                            Else
+                                For i = 2 To rng2.Rows.Count - 1
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+
+                        End If
+
+                        If rng.Columns.Count > 1 Then
+
+                            If MiddleBorder10 = True Then
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                        rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                        rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                    Next
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count - 1
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                Next
+                            End If
+
+                        End If
+
+                    End If
+
                 End If
 
             ElseIf X3 Then
@@ -1785,30 +2501,36 @@ Public Class Form7
                     Dim lengths() As Integer
                     lengths = GetLengths(BreakPoints)
 
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+
                     If X5 Then
-                        r = UBound(BreakPoints) + 1
-                        c = MaxValue(lengths)
+                        r2 = UBound(BreakPoints) + 1
+                        c2 = MaxValue(lengths)
                     ElseIf X6 Then
-                        c = UBound(BreakPoints) + 1
-                        r = MaxValue(lengths)
+                        c2 = UBound(BreakPoints) + 1
+                        r2 = MaxValue(lengths)
                     End If
 
-                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                     Dim rng2Address As String = rng2.Address
                     worksheet2.Activate()
                     rng2.Select()
 
                     If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                        rng2.ClearFormats()
+
                         If X5 Then
                             Dim iRow As Integer
                             iRow = 0
-                            For i = 1 To r
-                                For j = 1 To c
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = iRow + j
                                     y = 1
-                                    If x <= BreakPoints(i - 1) Then
+                                    If x < BreakPoints(i - 1) Then
                                         If CheckBox1.Checked = False Then
                                             rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
@@ -1829,14 +2551,14 @@ Public Class Form7
                         ElseIf X6 Then
                             Dim iRow As Integer
                             iRow = 0
-                            For j = 1 To c
-                                For i = 1 To r
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = iRow + i
                                     y = 1
 
-                                    If x <= BreakPoints(j - 1) Then
+                                    If x < BreakPoints(j - 1) Then
                                         If CheckBox1.Checked = False Then
                                             rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
@@ -1855,6 +2577,113 @@ Public Class Form7
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
                         End If
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+                        End If
+
                     Else
 
                         Dim Arr(r - 1, c - 1) As Object
@@ -1869,6 +2698,125 @@ Public Class Form7
                         Dim blues1(r - 1, c - 1) As Integer
                         Dim blues2(r - 1, c - 1) As Integer
 
+                        Dim TopBorder7 As Boolean
+                        Dim TopBorder7L As Object
+                        Dim TopBorder7C As Object
+                        Dim TopBorder7W As Object
+
+                        Dim TopBorder8 As Boolean
+                        Dim TopBorder8L As Object
+                        Dim TopBorder8C As Object
+                        Dim TopBorder8W As Object
+
+                        Dim TopBorder9 As Boolean
+                        Dim TopBorder9L As Object
+                        Dim TopBorder9C As Object
+                        Dim TopBorder9W As Object
+
+                        Dim BottomBorder9 As Boolean
+                        Dim BottomBorder9L As Object
+                        Dim BottomBorder9C As Object
+                        Dim BottomBorder9W As Object
+
+                        Dim BottomBorder10 As Boolean
+                        Dim BottomBorder10L As Object
+                        Dim BottomBorder10C As Object
+                        Dim BottomBorder10W As Object
+
+                        Dim MiddleBorder9 As Boolean
+                        Dim MiddleBorder9L As Object
+                        Dim MiddleBorder9C As Object
+                        Dim MiddleBorder9W As Object
+
+                        Dim MiddleBorder10 As Boolean
+                        Dim MiddleBorder10L As Object
+                        Dim MiddleBorder10C As Object
+                        Dim MiddleBorder10W As Object
+
+                        If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder7 = True
+                            TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                            TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                            TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                        Else
+                            TopBorder7 = False
+                            TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                            TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                            TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                        End If
+
+                        If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder8 = True
+                            TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                            TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                            TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                        Else
+                            TopBorder8 = False
+                            TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                            TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                            TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                        End If
+
+                        If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder9 = True
+                            TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                            TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                            TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                        Else
+                            TopBorder9 = False
+                            TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                            TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                            TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            BottomBorder9 = True
+                            BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                            BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                            BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                        Else
+                            BottomBorder9 = False
+                            BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                            BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                            BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            BottomBorder10 = True
+                            BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                            BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                            BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                        Else
+                            BottomBorder10 = False
+                            BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                            BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                            BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                        End If
+
+                        If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            MiddleBorder9 = True
+                            MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                            MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                            MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                        Else
+                            MiddleBorder9 = False
+                            MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                            MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                            MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            MiddleBorder10 = True
+                            MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                            MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                            MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                        Else
+                            MiddleBorder10 = False
+                            MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                            MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                            MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                        End If
+
                         For i = 1 To r
                             For j = 1 To c
                                 Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -1881,45 +2829,67 @@ Public Class Form7
                                     Bolds(i - 1, j - 1) = cell.Font.Bold
                                     Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                    fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                    fontNames(i - 1, j - 1) = font.Name
 
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                        greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                        blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
                                     Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
                                         reds1(i - 1, j - 1) = 255
                                         greens1(i - 1, j - 1) = 255
                                         blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
                                     End If
 
-                                    If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                        greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                        blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
                                     Else
-                                        reds2(i - 1, j - 1) = 255
-                                        greens2(i - 1, j - 1) = 255
-                                        blues2(i - 1, j - 1) = 255
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
                                     End If
                                 End If
 
                             Next
                         Next
 
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        rng2.ClearFormats()
+
                         If X5 Then
                             Dim iRow As Integer
                             iRow = 0
-                            For i = 1 To r
-                                For j = 1 To c
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = iRow + j
                                     y = 1
-                                    If x <= BreakPoints(i - 1) Then
+                                    If x < BreakPoints(i - 1) And x <= r Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                         If CheckBox1.Checked = True Then
@@ -1935,19 +2905,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -1957,13 +2923,13 @@ Public Class Form7
                         ElseIf X6 Then
                             Dim iRow As Integer
                             iRow = 0
-                            For j = 1 To c
-                                For i = 1 To r
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = iRow + i
                                     y = 1
-                                    If x <= BreakPoints(j - 1) Then
+                                    If x < BreakPoints(j - 1) Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                         If CheckBox1.Checked = True Then
@@ -1979,48 +2945,158 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
                                 iRow = BreakPoints(j - 1)
                             Next
                         End If
+
+                        If CheckBox1.Checked = True Then
+
+                            If TopBorder8 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                    rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                    rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                        rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                        rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopBorder7 = True Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                    rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomBorder9 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomBorder10 = True Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+
+                                If MiddleBorder9 = True Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+
+                                If MiddleBorder10 = True Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+
+                            End If
+
+                        End If
+
                     End If
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
-                        If r Mod Int(TextBox2.Text) = 0 Then
-                            r = Int(r / Int(TextBox2.Text))
-                        Else
-                            r = Int(r / Int(TextBox2.Text)) + 1
-                        End If
-                        c = Int(TextBox2.Text)
 
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                        Dim r2 As Integer
+                        Dim c2 As Integer
+
+                        If r Mod Int(TextBox2.Text) = 0 Then
+                            r2 = Int(r / Int(TextBox2.Text))
+                        Else
+                            r2 = Int(r / Int(TextBox2.Text)) + 1
+                        End If
+                        c2 = Int(TextBox2.Text)
+
+                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                         Dim rng2Address As String = rng2.Address
                         worksheet2.Activate()
                         rng2.Select()
 
                         If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                            For i = 1 To r
-                                For j = 1 To c
+
+                            rng2.ClearFormats()
+
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
-                                    x = (c * (i - 1)) + j
+                                    x = (c2 * (i - 1)) + j
                                     y = 1
                                     If x <= rng.Rows.Count Then
                                         If CheckBox1.Checked = False Then
@@ -2039,6 +3115,113 @@ Public Class Form7
                                 Next
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                            If CheckBox1.Checked = True Then
+                                Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                                If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                        rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                        rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                            rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                            rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                        rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                                If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                    If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                    If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+                            End If
+
                         Else
 
                             Dim Arr(r - 1, c - 1) As Object
@@ -2053,6 +3236,125 @@ Public Class Form7
                             Dim blues1(r - 1, c - 1) As Integer
                             Dim blues2(r - 1, c - 1) As Integer
 
+                            Dim TopBorder7 As Boolean
+                            Dim TopBorder7L As Object
+                            Dim TopBorder7C As Object
+                            Dim TopBorder7W As Object
+
+                            Dim TopBorder8 As Boolean
+                            Dim TopBorder8L As Object
+                            Dim TopBorder8C As Object
+                            Dim TopBorder8W As Object
+
+                            Dim TopBorder9 As Boolean
+                            Dim TopBorder9L As Object
+                            Dim TopBorder9C As Object
+                            Dim TopBorder9W As Object
+
+                            Dim BottomBorder9 As Boolean
+                            Dim BottomBorder9L As Object
+                            Dim BottomBorder9C As Object
+                            Dim BottomBorder9W As Object
+
+                            Dim BottomBorder10 As Boolean
+                            Dim BottomBorder10L As Object
+                            Dim BottomBorder10C As Object
+                            Dim BottomBorder10W As Object
+
+                            Dim MiddleBorder9 As Boolean
+                            Dim MiddleBorder9L As Object
+                            Dim MiddleBorder9C As Object
+                            Dim MiddleBorder9W As Object
+
+                            Dim MiddleBorder10 As Boolean
+                            Dim MiddleBorder10L As Object
+                            Dim MiddleBorder10C As Object
+                            Dim MiddleBorder10W As Object
+
+                            If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder7 = True
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            Else
+                                TopBorder7 = False
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder8 = True
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            Else
+                                TopBorder8 = False
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder9 = True
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            Else
+                                TopBorder9 = False
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder9 = True
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            Else
+                                BottomBorder9 = False
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder10 = True
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            Else
+                                BottomBorder10 = False
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            End If
+
+                            If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder9 = True
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            Else
+                                MiddleBorder9 = False
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder10 = True
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            Else
+                                MiddleBorder10 = False
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            End If
+
                             For i = 1 To r
                                 For j = 1 To c
                                     Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -2065,40 +3367,62 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
 
-                            For i = 1 To r
-                                For j = 1 To c
+                            rng.ClearContents()
+                            rng.ClearFormats()
+
+                            rng2.ClearFormats()
+
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
-                                    x = (c * (i - 1)) + j
+                                    x = (c2 * (i - 1)) + j
                                     y = 1
                                     If x <= UBound(Arr, 1) + 1 Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
@@ -2116,45 +3440,155 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
+
                                     End If
                                 Next
                             Next
+
+                            If CheckBox1.Checked = True Then
+
+                                If TopBorder8 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                        rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                        rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopBorder9 = True Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                            rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                            rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopBorder7 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                        rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder10 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+
+                                    If MiddleBorder9 = True Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+
+                                    If MiddleBorder10 = True Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                            End If
+
                         End If
 
                     ElseIf X6 Then
-                        If r Mod Int(TextBox2.Text) = 0 Then
-                            c = Int(r / Int(TextBox2.Text))
-                        Else
-                            c = Int(r / Int(TextBox2.Text)) + 1
-                        End If
-                        r = Int(TextBox2.Text)
 
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                        Dim r2 As Integer
+                        Dim c2 As Integer
+
+                        If r Mod Int(TextBox2.Text) = 0 Then
+                            c2 = Int(r / Int(TextBox2.Text))
+                        Else
+                            c2 = Int(r / Int(TextBox2.Text)) + 1
+                        End If
+                        r2 = Int(TextBox2.Text)
+
+                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                         Dim rng2Address As String = rng2.Address
                         worksheet2.Activate()
                         rng2.Select()
 
                         If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
 
-                            For j = 1 To c
-                                For i = 1 To r
+                            rng2.ClearFormats()
+
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
-                                    x = (r * (j - 1)) + i
+                                    x = (r2 * (j - 1)) + i
                                     y = 1
                                     If x <= rng.Rows.Count Then
 
@@ -2175,6 +3609,112 @@ Public Class Form7
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
 
+                            If CheckBox1.Checked = True Then
+                                Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                                If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                        rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                        rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                            rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                            rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                        rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                                If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                    If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                    If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+                            End If
+
                         Else
 
                             Dim Arr(r - 1, c - 1) As Object
@@ -2189,6 +3729,125 @@ Public Class Form7
                             Dim blues1(r - 1, c - 1) As Integer
                             Dim blues2(r - 1, c - 1) As Integer
 
+                            Dim TopBorder7 As Boolean
+                            Dim TopBorder7L As Object
+                            Dim TopBorder7C As Object
+                            Dim TopBorder7W As Object
+
+                            Dim TopBorder8 As Boolean
+                            Dim TopBorder8L As Object
+                            Dim TopBorder8C As Object
+                            Dim TopBorder8W As Object
+
+                            Dim TopBorder9 As Boolean
+                            Dim TopBorder9L As Object
+                            Dim TopBorder9C As Object
+                            Dim TopBorder9W As Object
+
+                            Dim BottomBorder9 As Boolean
+                            Dim BottomBorder9L As Object
+                            Dim BottomBorder9C As Object
+                            Dim BottomBorder9W As Object
+
+                            Dim BottomBorder10 As Boolean
+                            Dim BottomBorder10L As Object
+                            Dim BottomBorder10C As Object
+                            Dim BottomBorder10W As Object
+
+                            Dim MiddleBorder9 As Boolean
+                            Dim MiddleBorder9L As Object
+                            Dim MiddleBorder9C As Object
+                            Dim MiddleBorder9W As Object
+
+                            Dim MiddleBorder10 As Boolean
+                            Dim MiddleBorder10L As Object
+                            Dim MiddleBorder10C As Object
+                            Dim MiddleBorder10W As Object
+
+                            If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder7 = True
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            Else
+                                TopBorder7 = False
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder8 = True
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            Else
+                                TopBorder8 = False
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder9 = True
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            Else
+                                TopBorder9 = False
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder9 = True
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            Else
+                                BottomBorder9 = False
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder10 = True
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            Else
+                                BottomBorder10 = False
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            End If
+
+                            If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder9 = True
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            Else
+                                MiddleBorder9 = False
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder10 = True
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            Else
+                                MiddleBorder10 = False
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            End If
+
                             For i = 1 To r
                                 For j = 1 To c
                                     Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -2201,40 +3860,62 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
 
-                            For j = 1 To c
-                                For i = 1 To r
+                            rng.ClearContents()
+                            rng.ClearFormats()
+
+                            rng2.ClearFormats()
+
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
-                                    x = (r * (j - 1)) + i
+                                    x = (r2 * (j - 1)) + i
                                     y = 1
                                     If x <= UBound(Arr, 1) + 1 Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
@@ -2252,23 +3933,126 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
                             Next
+
+                            If CheckBox1.Checked = True Then
+
+                                If TopBorder8 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                        rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                        rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopBorder9 = True Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                            rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                            rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopBorder7 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                        rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder10 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+
+                                    If MiddleBorder9 = True Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+
+                                    If MiddleBorder10 = True Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                            End If
+
                         End If
 
                     End If
@@ -2283,6 +4067,9 @@ Public Class Form7
 
                 If X7 And (X5 Or X6) Then
 
+                    Dim r2 As Integer
+                    Dim c2 As Integer
+
                     Dim BreakPoints() As Integer
                     BreakPoints = GetBreakPoints(rng, 1)
 
@@ -2290,29 +4077,32 @@ Public Class Form7
                     lengths = GetLengths(BreakPoints)
 
                     If X5 Then
-                        r = UBound(BreakPoints) + 1
-                        c = MaxValue(lengths)
+                        r2 = UBound(BreakPoints) + 1
+                        c2 = MaxValue(lengths)
                     ElseIf X6 Then
-                        c = UBound(BreakPoints) + 1
-                        r = MaxValue(lengths)
+                        c2 = UBound(BreakPoints) + 1
+                        r2 = MaxValue(lengths)
                     End If
 
-                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                    rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                     Dim rng2Address As String = rng2.Address
                     worksheet2.Activate()
                     rng2.Select()
 
                     If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
+
+                        rng2.ClearFormats()
+
                         If X5 Then
                             Dim iColumn As Integer
                             iColumn = 0
-                            For i = 1 To r
-                                For j = 1 To c
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
                                     y = iColumn + j
-                                    If y <= BreakPoints(i - 1) Then
+                                    If y < BreakPoints(i - 1) Then
                                         If CheckBox1.Checked = False Then
                                             rng2.Cells(i, j).Value = rng.Cells(x, y).Value
 
@@ -2333,13 +4123,13 @@ Public Class Form7
                         ElseIf X6 Then
                             Dim iColumn As Integer
                             iColumn = 0
-                            For j = 1 To c
-                                For i = 1 To r
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
                                     y = iColumn + i
-                                    If y <= BreakPoints(j - 1) Then
+                                    If y < BreakPoints(j - 1) Then
 
                                         If CheckBox1.Checked = False Then
                                             rng2.Cells(i, j).Value = rng.Cells(x, y).Value
@@ -2358,6 +4148,112 @@ Public Class Form7
                                 iColumn = BreakPoints(j - 1)
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+                        End If
+
+                        If CheckBox1.Checked = True Then
+                            Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                            If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                    rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                    rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                        rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                        rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                    rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                            If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+                                Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+                            End If
                         End If
 
                     Else
@@ -2374,6 +4270,125 @@ Public Class Form7
                         Dim blues1(r - 1, c - 1) As Integer
                         Dim blues2(r - 1, c - 1) As Integer
 
+                        Dim TopBorder7 As Boolean
+                        Dim TopBorder7L As Object
+                        Dim TopBorder7C As Object
+                        Dim TopBorder7W As Object
+
+                        Dim TopBorder8 As Boolean
+                        Dim TopBorder8L As Object
+                        Dim TopBorder8C As Object
+                        Dim TopBorder8W As Object
+
+                        Dim TopBorder9 As Boolean
+                        Dim TopBorder9L As Object
+                        Dim TopBorder9C As Object
+                        Dim TopBorder9W As Object
+
+                        Dim BottomBorder9 As Boolean
+                        Dim BottomBorder9L As Object
+                        Dim BottomBorder9C As Object
+                        Dim BottomBorder9W As Object
+
+                        Dim BottomBorder10 As Boolean
+                        Dim BottomBorder10L As Object
+                        Dim BottomBorder10C As Object
+                        Dim BottomBorder10W As Object
+
+                        Dim MiddleBorder9 As Boolean
+                        Dim MiddleBorder9L As Object
+                        Dim MiddleBorder9C As Object
+                        Dim MiddleBorder9W As Object
+
+                        Dim MiddleBorder10 As Boolean
+                        Dim MiddleBorder10L As Object
+                        Dim MiddleBorder10C As Object
+                        Dim MiddleBorder10W As Object
+
+                        If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder7 = True
+                            TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                            TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                            TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                        Else
+                            TopBorder7 = False
+                            TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                            TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                            TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                        End If
+
+                        If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder8 = True
+                            TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                            TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                            TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                        Else
+                            TopBorder8 = False
+                            TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                            TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                            TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                        End If
+
+                        If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            TopBorder9 = True
+                            TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                            TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                            TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                        Else
+                            TopBorder9 = False
+                            TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                            TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                            TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            BottomBorder9 = True
+                            BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                            BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                            BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                        Else
+                            BottomBorder9 = False
+                            BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                            BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                            BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            BottomBorder10 = True
+                            BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                            BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                            BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                        Else
+                            BottomBorder10 = False
+                            BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                            BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                            BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                        End If
+
+                        If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            MiddleBorder9 = True
+                            MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                            MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                            MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                        Else
+                            MiddleBorder9 = False
+                            MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                            MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                            MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                        End If
+
+                        If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                            MiddleBorder10 = True
+                            MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                            MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                            MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                        Else
+                            MiddleBorder10 = False
+                            MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                            MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                            MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                        End If
+
                         For i = 1 To r
                             For j = 1 To c
                                 Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -2386,46 +4401,68 @@ Public Class Form7
                                     Bolds(i - 1, j - 1) = cell.Font.Bold
                                     Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                    fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                    fontNames(i - 1, j - 1) = font.Name
 
-                                    If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                        reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                        greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                        blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                    If IsDBNull(font.Name) = False Then
+                                        fontNames(i - 1, j - 1) = font.Name
                                     Else
+                                        fontNames(i - 1, j - 1) = "Calibri"
+                                    End If
+
+                                    If IsDBNull(font.Size) = False Then
+                                        Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                        fontSizes(i - 1, j - 1) = fontSize
+                                    Else
+                                        fontSizes(i - 1, j - 1) = 11
+                                    End If
+
+                                    If IsDBNull(cell.Interior.Color) Then
                                         reds1(i - 1, j - 1) = 255
                                         greens1(i - 1, j - 1) = 255
                                         blues1(i - 1, j - 1) = 255
+                                    Else
+                                        Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                        Dim red1 As Integer = colorValue1 Mod 256
+                                        Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                        Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                        reds1(i - 1, j - 1) = red1
+                                        greens1(i - 1, j - 1) = green1
+                                        blues1(i - 1, j - 1) = blue1
                                     End If
 
-                                    If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                        reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                        greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                        blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                    If IsDBNull(cell.Font.Color) Then
+                                        reds2(i - 1, j - 1) = 0
+                                        greens2(i - 1, j - 1) = 0
+                                        blues2(i - 1, j - 1) = 0
                                     Else
-                                        reds2(i - 1, j - 1) = 255
-                                        greens2(i - 1, j - 1) = 255
-                                        blues2(i - 1, j - 1) = 255
+                                        Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                        Dim red2 As Integer = colorValue2 Mod 256
+                                        Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                        Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                        reds2(i - 1, j - 1) = red2
+                                        greens2(i - 1, j - 1) = green2
+                                        blues2(i - 1, j - 1) = blue2
                                     End If
                                 End If
 
                             Next
                         Next
 
+                        rng.ClearContents()
+                        rng.ClearFormats()
+
+                        rng2.ClearFormats()
+
                         If X5 Then
 
                             Dim iColumn As Integer
                             iColumn = 0
-                            For i = 1 To r
-                                For j = 1 To c
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
                                     y = iColumn + j
-                                    If y <= BreakPoints(i - 1) Then
+                                    If y < BreakPoints(i - 1) Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                         If CheckBox1.Checked = True Then
@@ -2441,19 +4478,15 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
@@ -2463,13 +4496,13 @@ Public Class Form7
                         ElseIf X6 Then
                             Dim iColumn As Integer
                             iColumn = 0
-                            For j = 1 To c
-                                For i = 1 To r
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
                                     y = iColumn + i
-                                    If y <= BreakPoints(j - 1) Then
+                                    If y < BreakPoints(j - 1) Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
                                         If CheckBox1.Checked = True Then
@@ -2485,49 +4518,158 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
+
                                         End If
                                     End If
                                 Next
                                 iColumn = BreakPoints(j - 1)
                             Next
                         End If
+
+                        If CheckBox1.Checked = True Then
+
+                            If TopBorder8 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                    rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                    rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng2.Rows.Count > 1 Then
+                                If TopBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                        rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                        rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+                            End If
+
+                            If TopBorder7 = True Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                    rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                    rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomBorder9 = True Then
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                    rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                Next
+                            Else
+                                For j = 1 To rng2.Columns.Count
+                                    rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If BottomBorder10 = True Then
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                Next
+                            Else
+                                For i = 1 To rng2.Rows.Count
+                                    rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                Next
+                            End If
+
+                            If rng.Rows.Count > 1 Then
+
+                                If MiddleBorder9 = True Then
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                            rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                            rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                        Next
+                                    Next
+                                Else
+                                    For i = 2 To rng2.Rows.Count - 1
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+
+                            End If
+
+                            If rng.Columns.Count > 1 Then
+
+                                If MiddleBorder10 = True Then
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                            rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                            rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                        Next
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count - 1
+                                        For i = 1 To rng2.Rows.Count
+                                            rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    Next
+                                End If
+
+                            End If
+
+                        End If
+
                     End If
 
                 ElseIf (X8 And TextBox2.Text <> "" And CanConvertToInt(TextBox2.Text) = True) And (X5 Or X6) Then
 
                     If X5 Then
+                        Dim r2 As Integer
+                        Dim c2 As Integer
                         If c Mod Int(TextBox2.Text) = 0 Then
-                            r = Int(c / Int(TextBox2.Text))
+                            r2 = Int(c / Int(TextBox2.Text))
                         Else
-                            r = Int(c / Int(TextBox2.Text)) + 1
+                            r2 = Int(c / Int(TextBox2.Text)) + 1
                         End If
-                        c = Int(TextBox2.Text)
+                        c2 = Int(TextBox2.Text)
 
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                         Dim rng2Address As String = rng2.Address
                         worksheet2.Activate()
                         rng2.Select()
 
                         If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
-                            For i = 1 To r
-                                For j = 1 To c
+
+                            rng2.ClearFormats()
+
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
-                                    y = (c * (i - 1)) + j
+                                    y = (c2 * (i - 1)) + j
 
                                     If y <= rng.Columns.Count Then
                                         If CheckBox1.Checked = False Then
@@ -2546,6 +4688,113 @@ Public Class Form7
                                 Next
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                            If CheckBox1.Checked = True Then
+                                Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                                If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                        rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                        rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                            rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                            rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                        rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                                If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                    If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                    If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+                            End If
+
                         Else
 
                             Dim Arr(r - 1, c - 1) As Object
@@ -2560,6 +4809,125 @@ Public Class Form7
                             Dim blues1(r - 1, c - 1) As Integer
                             Dim blues2(r - 1, c - 1) As Integer
 
+                            Dim TopBorder7 As Boolean
+                            Dim TopBorder7L As Object
+                            Dim TopBorder7C As Object
+                            Dim TopBorder7W As Object
+
+                            Dim TopBorder8 As Boolean
+                            Dim TopBorder8L As Object
+                            Dim TopBorder8C As Object
+                            Dim TopBorder8W As Object
+
+                            Dim TopBorder9 As Boolean
+                            Dim TopBorder9L As Object
+                            Dim TopBorder9C As Object
+                            Dim TopBorder9W As Object
+
+                            Dim BottomBorder9 As Boolean
+                            Dim BottomBorder9L As Object
+                            Dim BottomBorder9C As Object
+                            Dim BottomBorder9W As Object
+
+                            Dim BottomBorder10 As Boolean
+                            Dim BottomBorder10L As Object
+                            Dim BottomBorder10C As Object
+                            Dim BottomBorder10W As Object
+
+                            Dim MiddleBorder9 As Boolean
+                            Dim MiddleBorder9L As Object
+                            Dim MiddleBorder9C As Object
+                            Dim MiddleBorder9W As Object
+
+                            Dim MiddleBorder10 As Boolean
+                            Dim MiddleBorder10L As Object
+                            Dim MiddleBorder10C As Object
+                            Dim MiddleBorder10W As Object
+
+                            If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder7 = True
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            Else
+                                TopBorder7 = False
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder8 = True
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            Else
+                                TopBorder8 = False
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder9 = True
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            Else
+                                TopBorder9 = False
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder9 = True
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            Else
+                                BottomBorder9 = False
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder10 = True
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            Else
+                                BottomBorder10 = False
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            End If
+
+                            If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder9 = True
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            Else
+                                MiddleBorder9 = False
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder10 = True
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            Else
+                                MiddleBorder10 = False
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            End If
+
                             For i = 1 To r
                                 For j = 1 To c
                                     Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -2572,41 +4940,63 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
 
-                            For i = 1 To r
-                                For j = 1 To c
+                            rng.ClearContents()
+                            rng.ClearFormats()
+
+                            rng2.ClearFormats()
+
+                            For i = 1 To r2
+                                For j = 1 To c2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
-                                    y = (c * (i - 1)) + j
+                                    y = (c2 * (i - 1)) + j
                                     If y <= UBound(Arr, 2) + 1 Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
@@ -2623,46 +5013,153 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
                             Next
+
+                            If CheckBox1.Checked = True Then
+
+                                If TopBorder8 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                        rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                        rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopBorder9 = True Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                            rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                            rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopBorder7 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                        rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder10 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+
+                                    If MiddleBorder9 = True Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+
+                                    If MiddleBorder10 = True Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                            End If
+
                         End If
 
                     ElseIf X6 Then
+                        Dim r2 As Integer
+                        Dim c2 As Integer
                         If c Mod Int(TextBox2.Text) = 0 Then
-                            c = Int(c / Int(TextBox2.Text))
+                            c2 = Int(c / Int(TextBox2.Text))
                         Else
-                            c = Int(c / Int(TextBox2.Text)) + 1
+                            c2 = Int(c / Int(TextBox2.Text)) + 1
                         End If
-                        r = Int(TextBox2.Text)
+                        r2 = Int(TextBox2.Text)
 
-                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r, c))
+                        rng2 = worksheet2.Range(rng2.Cells(1, 1), rng2.Cells(r2, c2))
                         Dim rng2Address As String = rng2.Address
                         worksheet2.Activate()
                         rng2.Select()
 
                         If Overlap(excelApp, worksheet, worksheet2, rng, rng2) = False Then
 
-                            For j = 1 To c
-                                For i = 1 To r
+                            rng2.ClearFormats()
+
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
-                                    y = (r * (j - 1)) + i
+                                    y = (r2 * (j - 1)) + i
                                     If y <= rng.Columns.Count Then
                                         If CheckBox1.Checked = False Then
                                             rng2.Cells(i, j).Value = rng.Cells(x, y).Value
@@ -2679,6 +5176,112 @@ Public Class Form7
                                 Next
                             Next
                             excelApp.CutCopyMode = Excel.XlCutCopyMode.xlCopy
+
+                            If CheckBox1.Checked = True Then
+                                Dim TopCell As Excel.Range = rng.Cells(1, 1)
+
+                                If TopCell.Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopCell.Borders(8).LineStyle
+                                        rng2.Cells(1, j).Borders(8).Color = TopCell.Borders(8).Color
+                                        rng2.Cells(1, j).Borders(8).Weight = TopCell.Borders(8).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopCell.Borders(9).LineStyle
+                                            rng2.Cells(1, j).Borders(9).Color = TopCell.Borders(9).Color
+                                            rng2.Cells(1, j).Borders(9).Weight = TopCell.Borders(9).Weight
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopCell.Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopCell.Borders(7).LineStyle
+                                        rng2.Cells(i, 1).Borders(7).Color = TopCell.Borders(7).Color
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopCell.Borders(7).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                Dim BottomCell As Excel.Range = rng.Cells(r, c)
+
+                                If BottomCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomCell.Borders(9).LineStyle
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomCell.Borders(9).Color
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomCell.Borders(9).Weight
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = TopCell.Borders(10).LineStyle
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = TopCell.Borders(10).Color
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = TopCell.Borders(10).Weight
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(2, 1)
+                                    If MiddleCell.Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleCell.Borders(9).LineStyle
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleCell.Borders(9).Color
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleCell.Borders(9).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+                                    Dim MiddleCell As Excel.Range = rng.Cells(1, 2)
+                                    If MiddleCell.Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleCell.Borders(10).LineStyle
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleCell.Borders(10).Color
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleCell.Borders(10).Weight
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+                                End If
+                            End If
                         Else
 
                             Dim Arr(r - 1, c - 1) As Object
@@ -2693,6 +5296,125 @@ Public Class Form7
                             Dim blues1(r - 1, c - 1) As Integer
                             Dim blues2(r - 1, c - 1) As Integer
 
+                            Dim TopBorder7 As Boolean
+                            Dim TopBorder7L As Object
+                            Dim TopBorder7C As Object
+                            Dim TopBorder7W As Object
+
+                            Dim TopBorder8 As Boolean
+                            Dim TopBorder8L As Object
+                            Dim TopBorder8C As Object
+                            Dim TopBorder8W As Object
+
+                            Dim TopBorder9 As Boolean
+                            Dim TopBorder9L As Object
+                            Dim TopBorder9C As Object
+                            Dim TopBorder9W As Object
+
+                            Dim BottomBorder9 As Boolean
+                            Dim BottomBorder9L As Object
+                            Dim BottomBorder9C As Object
+                            Dim BottomBorder9W As Object
+
+                            Dim BottomBorder10 As Boolean
+                            Dim BottomBorder10L As Object
+                            Dim BottomBorder10C As Object
+                            Dim BottomBorder10W As Object
+
+                            Dim MiddleBorder9 As Boolean
+                            Dim MiddleBorder9L As Object
+                            Dim MiddleBorder9C As Object
+                            Dim MiddleBorder9W As Object
+
+                            Dim MiddleBorder10 As Boolean
+                            Dim MiddleBorder10L As Object
+                            Dim MiddleBorder10C As Object
+                            Dim MiddleBorder10W As Object
+
+                            If rng.Cells(1, 1).Borders(7).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder7 = True
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            Else
+                                TopBorder7 = False
+                                TopBorder7L = rng.Cells(1, 1).Borders(7).LineStyle
+                                TopBorder7C = rng.Cells(1, 1).Borders(7).Color
+                                TopBorder7W = rng.Cells(1, 1).Borders(7).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(8).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder8 = True
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            Else
+                                TopBorder8 = False
+                                TopBorder8L = rng.Cells(1, 1).Borders(8).LineStyle
+                                TopBorder8C = rng.Cells(1, 1).Borders(8).Color
+                                TopBorder8W = rng.Cells(1, 1).Borders(8).Weight
+                            End If
+
+                            If rng.Cells(1, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                TopBorder9 = True
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            Else
+                                TopBorder9 = False
+                                TopBorder9L = rng.Cells(1, 1).Borders(9).LineStyle
+                                TopBorder9C = rng.Cells(1, 1).Borders(9).Color
+                                TopBorder9W = rng.Cells(1, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder9 = True
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            Else
+                                BottomBorder9 = False
+                                BottomBorder9L = rng.Cells(r, c).Borders(9).LineStyle
+                                BottomBorder9C = rng.Cells(r, c).Borders(9).Color
+                                BottomBorder9W = rng.Cells(r, c).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(r, c).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                BottomBorder10 = True
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            Else
+                                BottomBorder10 = False
+                                BottomBorder10L = rng.Cells(r, c).Borders(10).LineStyle
+                                BottomBorder10C = rng.Cells(r, c).Borders(10).Color
+                                BottomBorder10W = rng.Cells(r, c).Borders(10).Weight
+                            End If
+
+                            If rng.Cells(2, 1).Borders(9).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder9 = True
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            Else
+                                MiddleBorder9 = False
+                                MiddleBorder9L = rng.Cells(2, 1).Borders(9).LineStyle
+                                MiddleBorder9C = rng.Cells(2, 1).Borders(9).Color
+                                MiddleBorder9W = rng.Cells(2, 1).Borders(9).Weight
+                            End If
+
+                            If rng.Cells(1, 2).Borders(10).LineStyle <> Excel.XlLineStyle.xlLineStyleNone Then
+                                MiddleBorder10 = True
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            Else
+                                MiddleBorder10 = False
+                                MiddleBorder10L = rng.Cells(1, 2).Borders(10).LineStyle
+                                MiddleBorder10C = rng.Cells(1, 2).Borders(10).Color
+                                MiddleBorder10W = rng.Cells(1, 2).Borders(10).Weight
+                            End If
+
                             For i = 1 To r
                                 For j = 1 To c
                                     Arr(i - 1, j - 1) = rng.Cells(i, j).Value
@@ -2705,41 +5427,63 @@ Public Class Form7
                                         Bolds(i - 1, j - 1) = cell.Font.Bold
                                         Italics(i - 1, j - 1) = cell.Font.Italic
 
-                                        fontSizes(i - 1, j - 1) = Convert.ToSingle(font.Size)
-                                        fontNames(i - 1, j - 1) = font.Name
 
-                                        If Not cell.Interior.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
-                                            reds1(i - 1, j - 1) = colorValue1 Mod 256
-                                            greens1(i - 1, j - 1) = (colorValue1 \ 256) Mod 256
-                                            blues1(i - 1, j - 1) = (colorValue1 \ 256 \ 256) Mod 256
+                                        If IsDBNull(font.Name) = False Then
+                                            fontNames(i - 1, j - 1) = font.Name
                                         Else
+                                            fontNames(i - 1, j - 1) = "Calibri"
+                                        End If
+
+                                        If IsDBNull(font.Size) = False Then
+                                            Dim fontSize As Single = Convert.ToSingle(font.Size)
+                                            fontSizes(i - 1, j - 1) = fontSize
+                                        Else
+                                            fontSizes(i - 1, j - 1) = 11
+                                        End If
+
+                                        If IsDBNull(cell.Interior.Color) Then
                                             reds1(i - 1, j - 1) = 255
                                             greens1(i - 1, j - 1) = 255
                                             blues1(i - 1, j - 1) = 255
+                                        Else
+                                            Dim colorValue1 As Long = CLng(cell.Interior.Color)
+                                            Dim red1 As Integer = colorValue1 Mod 256
+                                            Dim green1 As Integer = (colorValue1 \ 256) Mod 256
+                                            Dim blue1 As Integer = (colorValue1 \ 256 \ 256) Mod 256
+                                            reds1(i - 1, j - 1) = red1
+                                            greens1(i - 1, j - 1) = green1
+                                            blues1(i - 1, j - 1) = blue1
                                         End If
 
-                                        If Not cell.Font.ColorIndex = Excel.XlColorIndex.xlColorIndexNone Then
-                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
-                                            reds2(i - 1, j - 1) = colorValue2 Mod 256
-                                            greens2(i - 1, j - 1) = (colorValue2 \ 256) Mod 256
-                                            blues2(i - 1, j - 1) = (colorValue2 \ 256 \ 256) Mod 256
+                                        If IsDBNull(cell.Font.Color) Then
+                                            reds2(i - 1, j - 1) = 0
+                                            greens2(i - 1, j - 1) = 0
+                                            blues2(i - 1, j - 1) = 0
                                         Else
-                                            reds2(i - 1, j - 1) = 255
-                                            greens2(i - 1, j - 1) = 255
-                                            blues2(i - 1, j - 1) = 255
+                                            Dim colorValue2 As Long = CLng(cell.Font.Color)
+                                            Dim red2 As Integer = colorValue2 Mod 256
+                                            Dim green2 As Integer = (colorValue2 \ 256) Mod 256
+                                            Dim blue2 As Integer = (colorValue2 \ 256 \ 256) Mod 256
+                                            reds2(i - 1, j - 1) = red2
+                                            greens2(i - 1, j - 1) = green2
+                                            blues2(i - 1, j - 1) = blue2
                                         End If
                                     End If
 
                                 Next
                             Next
 
-                            For j = 1 To c
-                                For i = 1 To r
+                            rng.ClearContents()
+                            rng.ClearFormats()
+
+                            rng2.ClearFormats()
+
+                            For j = 1 To c2
+                                For i = 1 To r2
                                     Dim x As Integer
                                     Dim y As Integer
                                     x = 1
-                                    y = (r * (j - 1)) + i
+                                    y = (r2 * (j - 1)) + i
                                     If y <= UBound(Arr, 2) + 1 Then
                                         rng2.Cells(i, j).Value = Arr(x - 1, y - 1)
 
@@ -2756,23 +5500,125 @@ Public Class Form7
                                             If Bolds(x - 1, y - 1) Then rng2.Cells(i, j).Font.Bold = True
                                             If Italics(x - 1, y - 1) Then rng2.Cells(i, j).Font.Italic = True
 
-                                            If reds1(x - 1, y - 1) = 255 Then
-                                                Dim red1 As Integer = reds1(x - 1, y - 1)
-                                                Dim green1 As Integer = greens1(x - 1, y - 1)
-                                                Dim blue1 As Integer = blues1(x - 1, y - 1)
-                                                rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
-                                            End If
+                                            Dim red1 As Integer = reds1(x - 1, y - 1)
+                                            Dim green1 As Integer = greens1(x - 1, y - 1)
+                                            Dim blue1 As Integer = blues1(x - 1, y - 1)
+                                            rng2.Cells(i, j).Interior.Color = System.Drawing.Color.FromArgb(red1, green1, blue1)
 
-                                            If reds2(x - 1, y - 1) = 255 Then
-                                                Dim red2 As Integer = reds2(x - 1, y - 1)
-                                                Dim green2 As Integer = greens2(x - 1, y - 1)
-                                                Dim blue2 As Integer = blues2(x - 1, y - 1)
-                                                rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
-                                            End If
+                                            Dim red2 As Integer = reds2(x - 1, y - 1)
+                                            Dim green2 As Integer = greens2(x - 1, y - 1)
+                                            Dim blue2 As Integer = blues2(x - 1, y - 1)
+                                            rng2.Cells(i, j).Font.Color = System.Drawing.Color.FromArgb(red2, green2, blue2)
                                         End If
                                     End If
                                 Next
                             Next
+
+                            If CheckBox1.Checked = True Then
+
+                                If TopBorder8 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = TopBorder8L
+                                        rng2.Cells(1, j).Borders(8).Color = TopBorder8C
+                                        rng2.Cells(1, j).Borders(8).Weight = TopBorder8W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(1, j).Borders(8).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng2.Rows.Count > 1 Then
+                                    If TopBorder9 = True Then
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(1, j).Borders(9).LineStyle = TopBorder9L
+                                            rng2.Cells(1, j).Borders(9).Color = TopBorder9C
+                                            rng2.Cells(1, j).Borders(9).Weight = TopBorder9W
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count
+                                            rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                        Next
+                                    End If
+                                End If
+
+                                If TopBorder7 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = TopBorder7L
+                                        rng2.Cells(i, 1).Borders(7).Color = TopBorder7C
+                                        rng2.Cells(i, 1).Borders(7).Weight = TopBorder7W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, 1).Borders(7).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder9 = True Then
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).LineStyle = BottomBorder9L
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Color = BottomBorder9C
+                                        rng2.Cells(rng2.Rows.Count, j).Borders(9).Weight = BottomBorder9W
+                                    Next
+                                Else
+                                    For j = 1 To rng2.Columns.Count
+                                        rng2.Cells(rng2.Rows.Count, rng2.Columns.Count).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If BottomBorder10 = True Then
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = BottomBorder10L
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Color = BottomBorder10C
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).Weight = BottomBorder10W
+                                    Next
+                                Else
+                                    For i = 1 To rng2.Rows.Count
+                                        rng2.Cells(i, rng2.Columns.Count).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                    Next
+                                End If
+
+                                If rng.Rows.Count > 1 Then
+
+                                    If MiddleBorder9 = True Then
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = MiddleBorder9L
+                                                rng2.Cells(i, j).Borders(9).Color = MiddleBorder9C
+                                                rng2.Cells(i, j).Borders(9).Weight = MiddleBorder9W
+                                            Next
+                                        Next
+                                    Else
+                                        For i = 2 To rng2.Rows.Count - 1
+                                            For j = 1 To rng2.Columns.Count
+                                                rng2.Cells(i, j).Borders(9).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                                If rng.Columns.Count > 1 Then
+
+                                    If MiddleBorder10 = True Then
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = MiddleBorder10L
+                                                rng2.Cells(i, j).Borders(10).Color = MiddleBorder10C
+                                                rng2.Cells(i, j).Borders(10).Weight = MiddleBorder10W
+                                            Next
+                                        Next
+                                    Else
+                                        For j = 1 To rng2.Columns.Count - 1
+                                            For i = 1 To rng2.Rows.Count
+                                                rng2.Cells(i, j).Borders(10).LineStyle = Excel.XlLineStyle.xlLineStyleNone
+                                            Next
+                                        Next
+                                    End If
+
+                                End If
+
+                            End If
 
                         End If
                     End If
@@ -2787,6 +5633,14 @@ Public Class Form7
                 Exit Sub
             End If
 
+            For j = 1 To rng2.Columns.Count
+                rng2.Columns(j).Autofit
+            Next
+
+            Me.Close()
+
+            TextBoxChanged = False
+
         Catch ex As Exception
 
         End Try
@@ -2800,13 +5654,14 @@ Public Class Form7
             workbook = excelApp.ActiveWorkbook
             worksheet = workbook.ActiveSheet
 
-            rng = worksheet.Range(TextBox1.Text)
+            Dim rngArray() As String = Split(TextBox1.Text, "!")
+            Dim rngAddress As String = rngArray(UBound(rngArray))
+            rng = worksheet.Range(rngAddress)
+            TextBoxChanged = True
             rng.Select()
-
             Call Display()
-
             Call Setup()
-
+            TextBoxChanged = False
         Catch ex As Exception
 
         End Try
@@ -2823,6 +5678,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton3.CheckedChanged
@@ -2836,6 +5692,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
@@ -2848,9 +5705,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
+
         Try
             If RadioButton4.Checked = True Then
                 Call Display()
@@ -2859,18 +5718,22 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+
         Try
             Call Display()
             Call Setup()
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton5_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton5.CheckedChanged
+
         Try
             If RadioButton5.Checked = True Then
                 Call Display()
@@ -2879,9 +5742,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton6_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton6.CheckedChanged
+
         Try
             If RadioButton6.Checked = True Then
                 Call Display()
@@ -2890,9 +5755,11 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton7_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton7.CheckedChanged
+
         Try
             If RadioButton7.Checked = True Then
                 Call Display()
@@ -2901,6 +5768,7 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub RadioButton8_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton8.CheckedChanged
@@ -2913,52 +5781,81 @@ Public Class Form7
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+
         Try
             Call Display()
             Call Setup()
         Catch ex As Exception
 
         End Try
+
     End Sub
 
     Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
 
         Try
-
             FocusedTextBox = 1
 
-            Dim userInput As Excel.Range = excelApp.InputBox("Select a range", Type:=8)
-            rng = userInput
+            Dim activeRange As Excel.Range = excelApp.ActiveCell
 
-            Try
-                Dim sheetName As String
-                sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
-                sheetName = Split(sheetName, "!")(0)
+            Dim startRow As Integer = activeRange.Row
+            Dim startColumn As Integer = activeRange.Column
+            Dim endRow As Integer = activeRange.Row
+            Dim endColumn As Integer = activeRange.Column
 
-                If Mid(sheetName, Len(sheetName), 1) = "'" Then
-                    sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
-                End If
+            'Find the upper boundary
+            Do While startRow > 1 AndAlso Not IsNothing(worksheet.Cells(startRow - 1, startColumn).Value)
+                startRow -= 1
+            Loop
 
-                worksheet = workbook.Worksheets(sheetName)
-                worksheet.Activate()
+            'Find the lower boundary
+            Do While Not IsNothing(worksheet.Cells(endRow + 1, endColumn).Value)
+                endRow += 1
+            Loop
 
-            Catch ex As Exception
+            'Find the left boundary
+            Do While startColumn > 1 AndAlso Not IsNothing(worksheet.Cells(startRow, startColumn - 1).Value)
+                startColumn -= 1
+            Loop
 
-            End Try
+            'Find the right boundary
+            Do While Not IsNothing(worksheet.Cells(endRow, endColumn + 1).Value)
+                endColumn += 1
+            Loop
+
+            'Select the determined range
+            rng = worksheet.Range(worksheet.Cells(startRow, startColumn), worksheet.Cells(endRow, endColumn))
 
             rng.Select()
 
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlDown))
-            rng = excelApp.Range(rng, rng.End(Microsoft.Office.Interop.Excel.XlDirection.xlToRight))
+            Dim sheetName As String
 
-            rng.Select()
-            Me.TextBox1.Text = rng.Address
+            sheetName = Split(rng.Address(True, True, Excel.XlReferenceStyle.xlA1, True), "]")(1)
+            sheetName = Split(sheetName, "!")(0)
+
+            If Mid(sheetName, Len(sheetName), 1) = "'" Then
+                sheetName = Mid(sheetName, 1, Len(sheetName) - 1)
+            End If
+
+            worksheet = workbook.Worksheets(sheetName)
+            worksheet.Activate()
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
+
             Me.TextBox1.Focus()
 
         Catch ex As Exception
+
+            Me.Show()
+            TextBox1.Focus()
 
         End Try
 
@@ -2989,7 +5886,12 @@ Public Class Form7
 
             rng.Select()
 
-            TextBox1.Text = rng.Address
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBox1.Text = worksheet.Name & "!" & rng.Address
+            Else
+                TextBox1.Text = rng.Address
+            End If
+
             TextBox1.Focus()
 
         Catch ex As Exception
@@ -3100,9 +6002,19 @@ Public Class Form7
     Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
 
         Try
+            excelApp = Globals.ThisAddIn.Application
+            workbook2 = excelApp.ActiveWorkbook
             worksheet2 = workbook2.ActiveSheet
-            rng2 = worksheet2.Range(TextBox3.Text)
+
+            Dim rng2Array() As String = Split(TextBox3.Text, "!")
+            Dim rng2Address As String = rng2Array(UBound(rng2Array))
+            rng2 = worksheet2.Range(rng2Address)
+
+            TextBoxChanged = True
+
             rng2.Select()
+
+            TextBoxChanged = False
 
         Catch ex As Exception
 
@@ -3117,621 +6029,6 @@ Public Class Form7
                 worksheet2 = worksheet
                 rng2 = rng
             End If
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Button1_KeyDown(sender As Object, e As KeyEventArgs) Handles Button1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Button2_KeyDown(sender As Object, e As KeyEventArgs) Handles Button2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CheckBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CheckBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox10_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox10.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomGroupBox9_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomGroupBox9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomPanel1_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomPanel1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub CustomPanel2_KeyDown(sender As Object, e As KeyEventArgs) Handles CustomPanel2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label1_KeyDown(sender As Object, e As KeyEventArgs) Handles Label1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub Label2_KeyDown(sender As Object, e As KeyEventArgs) Handles Label2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox7_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub PictureBox8_KeyDown(sender As Object, e As KeyEventArgs) Handles PictureBox8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton1_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton10_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton10.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton2_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton3_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton4_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton4.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton5_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton5.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton6_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton6.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton7_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton7.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton8_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton8.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub RadioButton9_KeyDown(sender As Object, e As KeyEventArgs) Handles RadioButton9.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub TextBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox3.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
-
-    Private Sub VScrollBar1_KeyDown(sender As Object, e As KeyEventArgs) Handles VScrollBar1.KeyDown
-
-        Try
-            If e.KeyCode = Keys.Enter Then
-
-                Call Button2_Click(sender, e)
-
-            End If
-
         Catch ex As Exception
 
         End Try
@@ -4013,7 +6310,7 @@ Public Class Form7
 
     End Sub
 
-    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs) Handles PictureBox7.GotFocus
+    Private Sub PictureBox7_GotFocus(sender As Object, e As EventArgs)
 
         Try
             FocusedTextBox = 0
@@ -4206,4 +6503,68 @@ Public Class Form7
 
         End Try
     End Sub
+
+    Private Sub Form7_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Try
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Form7_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+
+        Try
+            Me.Focus()
+            Me.BringToFront()
+            Me.Activate()
+
+            Dim TextBoxText As String
+
+            If worksheet.Name <> OpenSheet.Name Then
+                TextBoxText = worksheet.Name & "!" & rng.Address
+            Else
+                TextBoxText = rng.Address
+            End If
+
+            Me.BeginInvoke(New System.Action(Sub()
+                                                 TextBox1.Text = TextBoxText
+                                                 SetWindowPos(Me.Handle, New IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOACTIVATE Or SWP_NOMOVE Or SWP_NOSIZE)
+                                             End Sub))
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Form7_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+
+        Try
+            form_flag = False
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Form7_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+
+        Try
+            If e.KeyCode = Keys.Enter Then
+
+                Button2.Focus()
+                Call Button2_Click(sender, e)
+
+            End If
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
 End Class

@@ -31,11 +31,7 @@ Partial Class Form12HideRanges
         Me.AutoSelection = New System.Windows.Forms.PictureBox()
         Me.txtSourceRange = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
-        Me.GB_Input_Range = New VSTO_Addins.CustomGroupBox()
-        Me.CP_Input_Range = New VSTO_Addins.CustomPanel()
-        Me.GB_Expected_Output = New VSTO_Addins.CustomGroupBox()
-        Me.CP_Output_Range = New VSTO_Addins.CustomPanel()
+        Me.GB_sample = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox3 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox6 = New VSTO_Addins.CustomGroupBox()
         Me.RB_Single_Range = New System.Windows.Forms.RadioButton()
@@ -47,9 +43,6 @@ Partial Class Form12HideRanges
         Me.RB_Column = New System.Windows.Forms.RadioButton()
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GB_Input_Range.SuspendLayout()
-        Me.GB_Expected_Output.SuspendLayout()
         Me.CustomGroupBox3.SuspendLayout()
         Me.CustomGroupBox6.SuspendLayout()
         Me.CustomGroupBox4.SuspendLayout()
@@ -74,7 +67,7 @@ Partial Class Form12HideRanges
         Me.btn_OK.BackColor = System.Drawing.Color.White
         Me.btn_OK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btn_OK.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_OK.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_OK.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.btn_OK.Location = New System.Drawing.Point(407, 338)
         Me.btn_OK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
@@ -90,9 +83,9 @@ Partial Class Form12HideRanges
         Me.btn_Cancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btn_Cancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_Cancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_Cancel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.btn_Cancel.Location = New System.Drawing.Point(484, 338)
+        Me.btn_Cancel.Location = New System.Drawing.Point(483, 338)
         Me.btn_Cancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btn_Cancel.Name = "btn_Cancel"
         Me.btn_Cancel.Size = New System.Drawing.Size(62, 26)
@@ -158,62 +151,17 @@ Partial Class Form12HideRanges
         Me.Label1.TabIndex = 117
         Me.Label1.Text = "Source Range:"
         '
-        'PictureBox7
+        'GB_sample
         '
-        Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(407, 150)
-        Me.PictureBox7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.PictureBox7.Name = "PictureBox7"
-        Me.PictureBox7.Size = New System.Drawing.Size(33, 37)
-        Me.PictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox7.TabIndex = 160
-        Me.PictureBox7.TabStop = False
-        '
-        'GB_Input_Range
-        '
-        Me.GB_Input_Range.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_Input_Range.Controls.Add(Me.CP_Input_Range)
-        Me.GB_Input_Range.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_Input_Range.Location = New System.Drawing.Point(295, 12)
-        Me.GB_Input_Range.Name = "GB_Input_Range"
-        Me.GB_Input_Range.Size = New System.Drawing.Size(252, 135)
-        Me.GB_Input_Range.TabIndex = 158
-        Me.GB_Input_Range.TabStop = False
-        Me.GB_Input_Range.Text = "Input Range"
-        '
-        'CP_Input_Range
-        '
-        Me.CP_Input_Range.BackColor = System.Drawing.Color.White
-        Me.CP_Input_Range.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CP_Input_Range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CP_Input_Range.BorderWidth = 1
-        Me.CP_Input_Range.Location = New System.Drawing.Point(1, 30)
-        Me.CP_Input_Range.Name = "CP_Input_Range"
-        Me.CP_Input_Range.Size = New System.Drawing.Size(250, 105)
-        Me.CP_Input_Range.TabIndex = 0
-        '
-        'GB_Expected_Output
-        '
-        Me.GB_Expected_Output.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.GB_Expected_Output.Controls.Add(Me.CP_Output_Range)
-        Me.GB_Expected_Output.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GB_Expected_Output.Location = New System.Drawing.Point(294, 186)
-        Me.GB_Expected_Output.Name = "GB_Expected_Output"
-        Me.GB_Expected_Output.Size = New System.Drawing.Size(252, 135)
-        Me.GB_Expected_Output.TabIndex = 159
-        Me.GB_Expected_Output.TabStop = False
-        Me.GB_Expected_Output.Text = "Expected Output"
-        '
-        'CP_Output_Range
-        '
-        Me.CP_Output_Range.BackColor = System.Drawing.Color.White
-        Me.CP_Output_Range.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
-        Me.CP_Output_Range.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CP_Output_Range.BorderWidth = 1
-        Me.CP_Output_Range.Location = New System.Drawing.Point(1, 30)
-        Me.CP_Output_Range.Name = "CP_Output_Range"
-        Me.CP_Output_Range.Size = New System.Drawing.Size(250, 105)
-        Me.CP_Output_Range.TabIndex = 11
+        Me.GB_sample.BackColor = System.Drawing.Color.White
+        Me.GB_sample.BorderColor = System.Drawing.Color.FromArgb(CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(191, Byte), Integer))
+        Me.GB_sample.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GB_sample.Location = New System.Drawing.Point(296, 15)
+        Me.GB_sample.Name = "GB_sample"
+        Me.GB_sample.Size = New System.Drawing.Size(249, 296)
+        Me.GB_sample.TabIndex = 399
+        Me.GB_sample.TabStop = False
+        Me.GB_sample.Text = "Sample Image"
         '
         'CustomGroupBox3
         '
@@ -340,10 +288,8 @@ Partial Class Form12HideRanges
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(565, 382)
-        Me.Controls.Add(Me.GB_Input_Range)
-        Me.Controls.Add(Me.GB_Expected_Output)
-        Me.Controls.Add(Me.PictureBox7)
+        Me.ClientSize = New System.Drawing.Size(565, 385)
+        Me.Controls.Add(Me.GB_sample)
         Me.Controls.Add(Me.CustomGroupBox3)
         Me.Controls.Add(Me.CustomGroupBox4)
         Me.Controls.Add(Me.Selection)
@@ -360,9 +306,6 @@ Partial Class Form12HideRanges
         Me.Text = "Hide Only the Selected Range"
         CType(Me.Selection, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.AutoSelection, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GB_Input_Range.ResumeLayout(False)
-        Me.GB_Expected_Output.ResumeLayout(False)
         Me.CustomGroupBox3.ResumeLayout(False)
         Me.CustomGroupBox6.ResumeLayout(False)
         Me.CustomGroupBox6.PerformLayout()
@@ -390,9 +333,5 @@ Partial Class Form12HideRanges
     Friend WithEvents txtSourceRange As Windows.Forms.TextBox
     Friend WithEvents Label1 As Windows.Forms.Label
     Friend WithEvents RB_bidirection As Windows.Forms.RadioButton
-    Friend WithEvents GB_Input_Range As CustomGroupBox
-    Friend WithEvents CP_Input_Range As CustomPanel
-    Friend WithEvents GB_Expected_Output As CustomGroupBox
-    Friend WithEvents CP_Output_Range As CustomPanel
-    Friend WithEvents PictureBox7 As Windows.Forms.PictureBox
+    Friend WithEvents GB_sample As CustomGroupBox
 End Class

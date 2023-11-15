@@ -22,25 +22,27 @@ Partial Class Form29_Simple_Drop_down_List
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form29_Simple_Drop_down_List))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Selection_destination = New System.Windows.Forms.PictureBox()
         Me.TB_dest_range = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.ListBox2 = New System.Windows.Forms.ListBox()
+        Me.List_Preview = New System.Windows.Forms.ListBox()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Btn_OK = New System.Windows.Forms.Button()
         Me.Btn_Cancel = New System.Windows.Forms.Button()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.CustomGroupBox2 = New VSTO_Addins.CustomGroupBox()
         Me.CustomGroupBox1 = New VSTO_Addins.CustomGroupBox()
+        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.Selection_Source = New System.Windows.Forms.PictureBox()
         Me.Info = New System.Windows.Forms.PictureBox()
         Me.TB_src_range = New System.Windows.Forms.TextBox()
@@ -57,9 +59,9 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(15, 15)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(126, 17)
+        Me.Label1.Size = New System.Drawing.Size(122, 17)
         Me.Label1.TabIndex = 342
-        Me.Label1.Text = "Destination Range :"
+        Me.Label1.Text = "Destination Range:"
         '
         'Selection_destination
         '
@@ -90,9 +92,9 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Label5.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(15, 348)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(141, 17)
+        Me.Label5.Size = New System.Drawing.Size(137, 17)
         Me.Label5.TabIndex = 347
-        Me.Label5.Text = "Total items in the list :"
+        Me.Label5.Text = "Total items in the list:"
         '
         'Label6
         '
@@ -100,20 +102,20 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Label6.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(15, 375)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(86, 17)
+        Me.Label6.Size = New System.Drawing.Size(82, 17)
         Me.Label6.TabIndex = 348
-        Me.Label6.Text = "List Preview :"
+        Me.Label6.Text = "List Preview:"
         '
-        'ListBox2
+        'List_Preview
         '
-        Me.ListBox2.BackColor = System.Drawing.SystemColors.Window
-        Me.ListBox2.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ListBox2.FormattingEnabled = True
-        Me.ListBox2.ItemHeight = 17
-        Me.ListBox2.Location = New System.Drawing.Point(15, 401)
-        Me.ListBox2.Name = "ListBox2"
-        Me.ListBox2.Size = New System.Drawing.Size(260, 89)
-        Me.ListBox2.TabIndex = 349
+        Me.List_Preview.BackColor = System.Drawing.SystemColors.Window
+        Me.List_Preview.Font = New System.Drawing.Font("Segoe UI", 9.38!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.List_Preview.FormattingEnabled = True
+        Me.List_Preview.ItemHeight = 17
+        Me.List_Preview.Location = New System.Drawing.Point(15, 401)
+        Me.List_Preview.Name = "List_Preview"
+        Me.List_Preview.Size = New System.Drawing.Size(260, 89)
+        Me.List_Preview.TabIndex = 349
         '
         'ComboBox2
         '
@@ -131,7 +133,7 @@ Partial Class Form29_Simple_Drop_down_List
         Me.Label7.BackColor = System.Drawing.SystemColors.Control
         Me.Label7.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Label7.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(158, 346)
+        Me.Label7.Location = New System.Drawing.Point(155, 348)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(46, 17)
         Me.Label7.TabIndex = 352
@@ -179,12 +181,12 @@ Partial Class Form29_Simple_Drop_down_List
         '
         Me.CustomGroupBox1.BackColor = System.Drawing.Color.White
         Me.CustomGroupBox1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.CustomGroupBox1.Controls.Add(Me.RadioButton3)
+        Me.CustomGroupBox1.Controls.Add(Me.RadioButton2)
+        Me.CustomGroupBox1.Controls.Add(Me.RadioButton1)
         Me.CustomGroupBox1.Controls.Add(Me.PictureBox1)
         Me.CustomGroupBox1.Controls.Add(Me.ComboBox1)
-        Me.CustomGroupBox1.Controls.Add(Me.Label4)
         Me.CustomGroupBox1.Controls.Add(Me.ListBox1)
-        Me.CustomGroupBox1.Controls.Add(Me.Label3)
-        Me.CustomGroupBox1.Controls.Add(Me.Label2)
         Me.CustomGroupBox1.Controls.Add(Me.Selection_Source)
         Me.CustomGroupBox1.Controls.Add(Me.Info)
         Me.CustomGroupBox1.Controls.Add(Me.TB_src_range)
@@ -196,10 +198,45 @@ Partial Class Form29_Simple_Drop_down_List
         Me.CustomGroupBox1.TabStop = False
         Me.CustomGroupBox1.Text = "Source Range"
         '
+        'RadioButton3
+        '
+        Me.RadioButton3.AutoSize = True
+        Me.RadioButton3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton3.Location = New System.Drawing.Point(15, 190)
+        Me.RadioButton3.Name = "RadioButton3"
+        Me.RadioButton3.Size = New System.Drawing.Size(94, 21)
+        Me.RadioButton3.TabIndex = 355
+        Me.RadioButton3.Text = "Other Lists:"
+        Me.RadioButton3.UseVisualStyleBackColor = True
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton2.Location = New System.Drawing.Point(14, 76)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(124, 21)
+        Me.RadioButton2.TabIndex = 354
+        Me.RadioButton2.Text = "Predefined Lists:"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Checked = True
+        Me.RadioButton1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RadioButton1.Location = New System.Drawing.Point(14, 20)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(103, 21)
+        Me.RadioButton1.TabIndex = 353
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "Enter Range:"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(94, 186)
+        Me.PictureBox1.Location = New System.Drawing.Point(116, 191)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(20, 20)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -209,55 +246,26 @@ Partial Class Form29_Simple_Drop_down_List
         'ComboBox1
         '
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(14, 213)
+        Me.ComboBox1.Location = New System.Drawing.Point(14, 217)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(230, 25)
         Me.ComboBox1.TabIndex = 351
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(14, 188)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(77, 17)
-        Me.Label4.TabIndex = 350
-        Me.Label4.Text = "Other lists :"
+        Me.ToolTip1.SetToolTip(Me.ComboBox1, "Please, Enter the items separated by Comma (,)")
         '
         'ListBox1
         '
         Me.ListBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.ListBox1.ColumnWidth = 10
+        Me.ListBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.ListBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ListBox1.FormattingEnabled = True
         Me.ListBox1.ImeMode = System.Windows.Forms.ImeMode.Off
-        Me.ListBox1.ItemHeight = 15
+        Me.ListBox1.ItemHeight = 20
         Me.ListBox1.Items.AddRange(New Object() {"Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday", "Sun,Mon,Tue,Wed,Thu,Fri,Sat", "January,February,March,April,May,June,July,August,September,October,November,Dece" &
                 "mber", "Jan,Feb,Mar,Apr,May,Jun,July,Aug,Sep,Oct,Nov,Dec", "1,2,3,4,5,6,7,8,9,10", "I,II,III,IV,V,VI,VII,VIII,IX,X", "One,Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten", "a,b,c ,d,e,f,g,h,i,j"})
         Me.ListBox1.Location = New System.Drawing.Point(15, 102)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(230, 77)
+        Me.ListBox1.Size = New System.Drawing.Size(230, 82)
         Me.ListBox1.TabIndex = 349
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(11, 80)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(107, 17)
-        Me.Label3.TabIndex = 348
-        Me.Label3.Text = "Predefined lists :"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(11, 21)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(89, 17)
-        Me.Label2.TabIndex = 345
-        Me.Label2.Text = "Enter Range :"
         '
         'Selection_Source
         '
@@ -275,7 +283,7 @@ Partial Class Form29_Simple_Drop_down_List
         'Info
         '
         Me.Info.Image = CType(resources.GetObject("Info.Image"), System.Drawing.Image)
-        Me.Info.Location = New System.Drawing.Point(103, 20)
+        Me.Info.Location = New System.Drawing.Point(121, 21)
         Me.Info.Name = "Info"
         Me.Info.Size = New System.Drawing.Size(20, 20)
         Me.Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -296,13 +304,14 @@ Partial Class Form29_Simple_Drop_down_List
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(650, 553)
         Me.Controls.Add(Me.Btn_OK)
         Me.Controls.Add(Me.Btn_Cancel)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.CustomGroupBox2)
         Me.Controls.Add(Me.ComboBox2)
-        Me.Controls.Add(Me.ListBox2)
+        Me.Controls.Add(Me.List_Preview)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.CustomGroupBox1)
@@ -330,15 +339,12 @@ Partial Class Form29_Simple_Drop_down_List
     Friend WithEvents TB_dest_range As Windows.Forms.TextBox
     Friend WithEvents CustomGroupBox1 As CustomGroupBox
     Friend WithEvents ComboBox1 As Windows.Forms.ComboBox
-    Friend WithEvents Label4 As Windows.Forms.Label
-    Friend WithEvents Label3 As Windows.Forms.Label
-    Friend WithEvents Label2 As Windows.Forms.Label
     Friend WithEvents Selection_Source As Windows.Forms.PictureBox
     Friend WithEvents Info As Windows.Forms.PictureBox
     Friend WithEvents TB_src_range As Windows.Forms.TextBox
     Friend WithEvents Label5 As Windows.Forms.Label
     Friend WithEvents Label6 As Windows.Forms.Label
-    Friend WithEvents ListBox2 As Windows.Forms.ListBox
+    Friend WithEvents List_Preview As Windows.Forms.ListBox
     Friend WithEvents ListBox1 As Windows.Forms.ListBox
     Friend WithEvents ComboBox2 As Windows.Forms.ComboBox
     Friend WithEvents CustomGroupBox2 As CustomGroupBox
@@ -346,4 +352,8 @@ Partial Class Form29_Simple_Drop_down_List
     Friend WithEvents Btn_OK As Windows.Forms.Button
     Friend WithEvents Btn_Cancel As Windows.Forms.Button
     Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
+    Friend WithEvents RadioButton3 As Windows.Forms.RadioButton
+    Friend WithEvents RadioButton2 As Windows.Forms.RadioButton
+    Friend WithEvents RadioButton1 As Windows.Forms.RadioButton
+    Friend WithEvents ToolTip1 As Windows.Forms.ToolTip
 End Class
