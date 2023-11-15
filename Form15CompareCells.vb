@@ -41,9 +41,6 @@ Public Class Form15CompareCells
 
     Private Sub txtSourceRange1_TextChanged(sender As Object, e As EventArgs) Handles txtSourceRange1.TextChanged
 
-
-
-
         Try
 
             excelApp = Globals.ThisAddIn.Application
@@ -60,23 +57,14 @@ Public Class Form15CompareCells
 
             firstInputRng.Select()
 
-
-
             firstRngRows = worksheet.Range(txtSourceRange1.Text).Rows.Count
             firstRngCols = worksheet.Range(txtSourceRange1.Text).Columns.Count
-
-
-
 
             If firstInputRng.Worksheet.Name <> initialWsName Then
 
                 txtSourceRange1.Text = firstInputRng.Worksheet.Name & "!" & firstInputRng.Address
 
-
             End If
-
-
-
 
             'If secondInputRng.Worksheet.Name <> firstInputRng.Worksheet.Name Then
 
@@ -88,14 +76,6 @@ Public Class Form15CompareCells
             '    lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
             'End If
 
-
-
-
-
-
-
-
-
         Catch ex As Exception
 
         End Try
@@ -104,9 +84,6 @@ Public Class Form15CompareCells
         txtChanged = False
 
         txtSourceRange1.Focus()
-
-
-
 
     End Sub
 
@@ -126,11 +103,7 @@ Public Class Form15CompareCells
 
             lblSourceRng2.Text = "2nd Source Range (" & secondInputRng.Rows.Count & " rows x " & secondInputRng.Columns.Count & " columns)"
 
-
-
             secondInputRng.Select()
-
-
 
             If secondInputRng.Worksheet.Name <> initialWsName Then
 
@@ -151,13 +124,6 @@ Public Class Form15CompareCells
 
             'End If
 
-
-
-
-
-
-
-
         Catch ex As Exception
 
         End Try
@@ -167,9 +133,6 @@ Public Class Form15CompareCells
         txtSourceRange2.Focus()
 
     End Sub
-
-
-
 
     Private Sub Form15CompareCells_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -188,8 +151,6 @@ Public Class Form15CompareCells
 
         Me.KeyPreview = True
 
-
-
     End Sub
 
     Private Sub rngSelection1_Click(sender As Object, e As EventArgs) Handles rngSelection1.Click
@@ -206,10 +167,7 @@ Public Class Form15CompareCells
             firstInputRng = excelApp.InputBox("Please Select the First Range", "First Range Selection", selectedRange.Address, Type:=8)
             Me.Show()
 
-
-
             firstInputRng.Worksheet.Activate()
-
 
             txtSourceRange1.Text = firstInputRng.Address
 
@@ -217,16 +175,11 @@ Public Class Form15CompareCells
 
             txtSourceRange1.Focus()
 
-
-
         Catch ex As Exception
 
             txtSourceRange1.Focus()
 
         End Try
-
-
-
 
     End Sub
 
@@ -250,19 +203,12 @@ Public Class Form15CompareCells
             secondInputRng.Select()
             txtSourceRange2.Focus()
 
-
-
-
         Catch ex As Exception
 
             txtSourceRange2.Focus()
 
         End Try
     End Sub
-
-
-
-
 
     Private Sub AutoSelection1_Click(sender As Object, e As EventArgs) Handles AutoSelection1.Click
 
