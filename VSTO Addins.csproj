@@ -18,17 +18,16 @@
       wrapped in this namespace at runtime.
   -->
   <PropertyGroup>
-    <ProjectTypeGuids>{BAA0C2D2-18E2-41B9-852F-F413020CAA33};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <ProjectTypeGuids>{BAA0C2D2-18E2-41B9-852F-F413020CAA33};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D39BA3E5-CFCE-4568-93CB-346E9D65D59C}</ProjectGuid>
+    <ProjectGuid>{61BF228E-0396-0A99-1193-FE10FFF2E13C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>VSTO_Addins</RootNamespace>
     <AssemblyName>VSTO Addins</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject></StartupObject>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>D:\Sudipta\Publish\</PublishUrl>
@@ -45,8 +44,11 @@
     <FriendlyName>VSTO Addins</FriendlyName>
     <OfficeApplicationDescription />
     <LoadBehavior>3</LoadBehavior>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
@@ -95,14 +97,12 @@
       Warning level for the compiler.
   -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
+    <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>VSTO Addins.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\VSTO Addins.xml</DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
@@ -124,14 +124,11 @@
       Warning level for the compiler.
   -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DefineConstants>
-    </DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
+    <DefineConstants>TRACE</DefineConstants>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>VSTO Addins.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\VSTO Addins.xml</DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
@@ -210,417 +207,420 @@
   -->
   <ItemGroup>
     <AppDesigner Include="My Project\" />
-    <Compile Include="CustomButton.vb">
+    <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
+    <Compile Include="My Project\MyNamespace.Static.2.Designer.cs" />
+    <Compile Include="My Project\MyNamespace.Static.3.Designer.cs" />
+    <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomGroupBox.vb">
+    <Compile Include="CustomGroupBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomLabel.vb">
+    <Compile Include="CustomLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomPanel.vb">
+    <Compile Include="CustomPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.vb">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form10Unmerge Cells with Value.designer.vb">
-      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+    <Compile Include="Form10Unmerge Cells with Value.designer.cs">
+      <DependentUpon>Form10Unmerge Cells with Value.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form10Unmerge Cells with Value.vb">
+    <Compile Include="Form10Unmerge Cells with Value.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form11SwapRanges.Designer.vb">
-      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+    <Compile Include="Form11SwapRanges.Designer.cs">
+      <DependentUpon>Form11SwapRanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form11SwapRanges.vb">
+    <Compile Include="Form11SwapRanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form12HideRanges.Designer.vb">
-      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+    <Compile Include="Form12HideRanges.Designer.cs">
+      <DependentUpon>Form12HideRanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form12HideRanges.vb">
+    <Compile Include="Form12HideRanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form13HideAllExceptSelectedRange.Designer.vb">
-      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+    <Compile Include="Form13HideAllExceptSelectedRange.Designer.cs">
+      <DependentUpon>Form13HideAllExceptSelectedRange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form13HideAllExceptSelectedRange.vb">
+    <Compile Include="Form13HideAllExceptSelectedRange.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form14SpecifyScrollArea.Designer.vb">
-      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+    <Compile Include="Form14SpecifyScrollArea.Designer.cs">
+      <DependentUpon>Form14SpecifyScrollArea.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form14SpecifyScrollArea.vb">
+    <Compile Include="Form14SpecifyScrollArea.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form15CompareCells.Designer.vb">
-      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+    <Compile Include="Form15CompareCells.Designer.cs">
+      <DependentUpon>Form15CompareCells.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form15CompareCells.vb">
+    <Compile Include="Form15CompareCells.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form16PasteintoVisibleRange.Designer.vb">
-      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+    <Compile Include="Form16PasteintoVisibleRange.Designer.cs">
+      <DependentUpon>Form16PasteintoVisibleRange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form16PasteintoVisibleRange.vb">
+    <Compile Include="Form16PasteintoVisibleRange.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form17DivideNames.designer.vb">
-      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+    <Compile Include="Form17DivideNames.designer.cs">
+      <DependentUpon>Form17DivideNames.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form17DivideNames.vb">
+    <Compile Include="Form17DivideNames.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form18_CombineRanges.designer.vb">
-      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+    <Compile Include="Form18_CombineRanges.designer.cs">
+      <DependentUpon>Form18_CombineRanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form18_CombineRanges.vb">
+    <Compile Include="Form18_CombineRanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form21FillEmtyCells.designer.vb">
-      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+    <Compile Include="Form21FillEmtyCells.designer.cs">
+      <DependentUpon>Form21FillEmtyCells.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form21FillEmtyCells.vb">
+    <Compile Include="Form21FillEmtyCells.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form22_Merge_Duplicate_Rows.designer.vb">
-      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+    <Compile Include="Form22_Merge_Duplicate_Rows.designer.cs">
+      <DependentUpon>Form22_Merge_Duplicate_Rows.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form22_Merge_Duplicate_Rows.vb">
+    <Compile Include="Form22_Merge_Duplicate_Rows.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form23_Merge_Duplicate_Columns.designer.vb">
-      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+    <Compile Include="Form23_Merge_Duplicate_Columns.designer.cs">
+      <DependentUpon>Form23_Merge_Duplicate_Columns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form23_Merge_Duplicate_Columns.vb">
+    <Compile Include="Form23_Merge_Duplicate_Columns.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form24_Split_Cells.designer.vb">
-      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+    <Compile Include="Form24_Split_Cells.designer.cs">
+      <DependentUpon>Form24_Split_Cells.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form24_Split_Cells.vb">
+    <Compile Include="Form24_Split_Cells.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form25_Split_Range.designer.vb">
-      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+    <Compile Include="Form25_Split_Range.designer.cs">
+      <DependentUpon>Form25_Split_Range.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form25_Split_Range.vb">
+    <Compile Include="Form25_Split_Range.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form26_split_text_bycharacters.designer.vb">
-      <DependentUpon>Form26_split_text_bycharacters.vb</DependentUpon>
+    <Compile Include="Form26_split_text_bycharacters.designer.cs">
+      <DependentUpon>Form26_split_text_bycharacters.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form26_split_text_bycharacters.vb">
+    <Compile Include="Form26_split_text_bycharacters.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form27_Split_text_bystrings.designer.vb">
-      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+    <Compile Include="Form27_Split_text_bystrings.designer.cs">
+      <DependentUpon>Form27_Split_text_bystrings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form27_Split_text_bystrings.vb">
+    <Compile Include="Form27_Split_text_bystrings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form28_Split_text_bypattern.Designer.vb">
-      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+    <Compile Include="Form28_Split_text_bypattern.Designer.cs">
+      <DependentUpon>Form28_Split_text_bypattern.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form28_Split_text_bypattern.vb">
+    <Compile Include="Form28_Split_text_bypattern.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form29_Simple_Drop-down_List.Designer.vb">
-      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+    <Compile Include="Form29_Simple_Drop-down_List.Designer.cs">
+      <DependentUpon>Form29_Simple_Drop-down_List.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form29_Simple_Drop-down_List.vb">
+    <Compile Include="Form29_Simple_Drop-down_List.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form3.Designer.vb">
-      <DependentUpon>Form3.vb</DependentUpon>
+    <Compile Include="Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form3.vb">
+    <Compile Include="Form3.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.designer.vb">
-      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.designer.cs">
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form30_Create_Dynamic_Drop-down_List.vb">
+    <Compile Include="Form30_Create_Dynamic_Drop-down_List.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form31_2_updated_selection.Designer.vb">
-      <DependentUpon>Form31_2_updated_selection.vb</DependentUpon>
+    <Compile Include="Form31_2_updated_selection.Designer.cs">
+      <DependentUpon>Form31_2_updated_selection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form31_2_updated_selection.vb">
+    <Compile Include="Form31_2_updated_selection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.vb">
-      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.Designer.cs">
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form31_Update_Dynamic_Drop-down_List.vb">
+    <Compile Include="Form31_Update_Dynamic_Drop-down_List.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form32_ExtendDropDownList.Designer.vb">
-      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+    <Compile Include="Form32_ExtendDropDownList.Designer.cs">
+      <DependentUpon>Form32_ExtendDropDownList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form32_ExtendDropDownList.vb">
+    <Compile Include="Form32_ExtendDropDownList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form33_ColorBasedDropDownList.Designer.vb">
-      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+    <Compile Include="Form33_ColorBasedDropDownList.Designer.cs">
+      <DependentUpon>Form33_ColorBasedDropDownList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form33_ColorBasedDropDownList.vb">
+    <Compile Include="Form33_ColorBasedDropDownList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form34_PictureBasedDropdownList.Designer.vb">
-      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+    <Compile Include="Form34_PictureBasedDropdownList.Designer.cs">
+      <DependentUpon>Form34_PictureBasedDropdownList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form34_PictureBasedDropdownList.vb">
+    <Compile Include="Form34_PictureBasedDropdownList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form35Multi SelectionbasedDropdown.designer.vb">
-      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+    <Compile Include="Form35Multi SelectionbasedDropdown.designer.cs">
+      <DependentUpon>Form35Multi SelectionbasedDropdown.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form35Multi SelectionbasedDropdown.vb">
+    <Compile Include="Form35Multi SelectionbasedDropdown.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form36.designer.vb">
-      <DependentUpon>Form36.vb</DependentUpon>
+    <Compile Include="Form36.designer.cs">
+      <DependentUpon>Form36.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form36.vb">
+    <Compile Include="Form36.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form37_MSDropDownCheckBox.designer.vb">
-      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+    <Compile Include="Form37_MSDropDownCheckBox.designer.cs">
+      <DependentUpon>Form37_MSDropDownCheckBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form37_MSDropDownCheckBox.vb">
+    <Compile Include="Form37_MSDropDownCheckBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form38.designer.vb">
-      <DependentUpon>Form38.vb</DependentUpon>
+    <Compile Include="Form38.designer.cs">
+      <DependentUpon>Form38.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form38.vb">
+    <Compile Include="Form38.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form39_DropdownlistwithSearchOption.designer.vb">
-      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+    <Compile Include="Form39_DropdownlistwithSearchOption.designer.cs">
+      <DependentUpon>Form39_DropdownlistwithSearchOption.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form39_DropdownlistwithSearchOption.vb">
+    <Compile Include="Form39_DropdownlistwithSearchOption.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form4.Designer.vb">
-      <DependentUpon>Form4.vb</DependentUpon>
+    <Compile Include="Form4.Designer.cs">
+      <DependentUpon>Form4.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form4.vb">
+    <Compile Include="Form4.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form40.designer.vb">
-      <DependentUpon>Form40.vb</DependentUpon>
+    <Compile Include="Form40.designer.cs">
+      <DependentUpon>Form40.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form40.vb">
+    <Compile Include="Form40.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form41_RemoveAdavancedDropdownList.designer.vb">
-      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+    <Compile Include="Form41_RemoveAdavancedDropdownList.designer.cs">
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form41_RemoveAdavancedDropdownList.vb">
+    <Compile Include="Form41_RemoveAdavancedDropdownList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form42.designer.vb">
-      <DependentUpon>Form42.vb</DependentUpon>
+    <Compile Include="Form42.designer.cs">
+      <DependentUpon>Form42.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form42.vb">
+    <Compile Include="Form42.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form43.Designer.vb">
-      <DependentUpon>Form43.vb</DependentUpon>
+    <Compile Include="Form43.Designer.cs">
+      <DependentUpon>Form43.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form43.vb">
+    <Compile Include="Form43.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form7.Designer.vb">
-      <DependentUpon>Form7.vb</DependentUpon>
+    <Compile Include="Form7.Designer.cs">
+      <DependentUpon>Form7.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form7.vb">
+    <Compile Include="Form7.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form8.Designer.vb">
-      <DependentUpon>Form8.vb</DependentUpon>
+    <Compile Include="Form8.Designer.cs">
+      <DependentUpon>Form8.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form8.vb">
+    <Compile Include="Form8.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GlobalModule.vb" />
-    <Compile Include="My Project\Resources.Designer.vb">
+    <Compile Include="GlobalModule.cs" />
+    <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Pro.Designer.vb">
-      <DependentUpon>Pro.vb</DependentUpon>
+    <Compile Include="Pro.Designer.cs">
+      <DependentUpon>Pro.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pro.vb">
+    <Compile Include="Pro.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Ribbon.vb">
+    <Compile Include="Ribbon.cs">
       <XmlRibbon>true</XmlRibbon>
     </Compile>
-    <Compile Include="Ribbon1.Designer.vb">
-      <DependentUpon>Ribbon1.vb</DependentUpon>
+    <Compile Include="Ribbon1.Designer.cs">
+      <DependentUpon>Ribbon1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Ribbon1.vb">
+    <Compile Include="Ribbon1.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ThisAddIn.vb">
+    <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="CustomButton.resx">
-      <DependentUpon>CustomButton.vb</DependentUpon>
+      <DependentUpon>CustomButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomGroupBox.resx">
-      <DependentUpon>CustomGroupBox.vb</DependentUpon>
+      <DependentUpon>CustomGroupBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form10Unmerge Cells with Value.resx">
-      <DependentUpon>Form10Unmerge Cells with Value.vb</DependentUpon>
+      <DependentUpon>Form10Unmerge Cells with Value.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form11SwapRanges.resx">
-      <DependentUpon>Form11SwapRanges.vb</DependentUpon>
+      <DependentUpon>Form11SwapRanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form12HideRanges.resx">
-      <DependentUpon>Form12HideRanges.vb</DependentUpon>
+      <DependentUpon>Form12HideRanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form13HideAllExceptSelectedRange.resx">
-      <DependentUpon>Form13HideAllExceptSelectedRange.vb</DependentUpon>
+      <DependentUpon>Form13HideAllExceptSelectedRange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form14SpecifyScrollArea.resx">
-      <DependentUpon>Form14SpecifyScrollArea.vb</DependentUpon>
+      <DependentUpon>Form14SpecifyScrollArea.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form15CompareCells.resx">
-      <DependentUpon>Form15CompareCells.vb</DependentUpon>
+      <DependentUpon>Form15CompareCells.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form16PasteintoVisibleRange.resx">
-      <DependentUpon>Form16PasteintoVisibleRange.vb</DependentUpon>
+      <DependentUpon>Form16PasteintoVisibleRange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form17DivideNames.resx">
-      <DependentUpon>Form17DivideNames.vb</DependentUpon>
+      <DependentUpon>Form17DivideNames.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form18_CombineRanges.resx">
-      <DependentUpon>Form18_CombineRanges.vb</DependentUpon>
+      <DependentUpon>Form18_CombineRanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form21FillEmtyCells.resx">
-      <DependentUpon>Form21FillEmtyCells.vb</DependentUpon>
+      <DependentUpon>Form21FillEmtyCells.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form22_Merge_Duplicate_Rows.resx">
-      <DependentUpon>Form22_Merge_Duplicate_Rows.vb</DependentUpon>
+      <DependentUpon>Form22_Merge_Duplicate_Rows.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form23_Merge_Duplicate_Columns.resx">
-      <DependentUpon>Form23_Merge_Duplicate_Columns.vb</DependentUpon>
+      <DependentUpon>Form23_Merge_Duplicate_Columns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form24_Split_Cells.resx">
-      <DependentUpon>Form24_Split_Cells.vb</DependentUpon>
+      <DependentUpon>Form24_Split_Cells.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form25_Split_Range.resx">
-      <DependentUpon>Form25_Split_Range.vb</DependentUpon>
+      <DependentUpon>Form25_Split_Range.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form26_split_text_bycharacters.resx">
-      <DependentUpon>Form26_split_text_bycharacters.vb</DependentUpon>
+      <DependentUpon>Form26_split_text_bycharacters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form27_Split_text_bystrings.resx">
-      <DependentUpon>Form27_Split_text_bystrings.vb</DependentUpon>
+      <DependentUpon>Form27_Split_text_bystrings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form28_Split_text_bypattern.resx">
-      <DependentUpon>Form28_Split_text_bypattern.vb</DependentUpon>
+      <DependentUpon>Form28_Split_text_bypattern.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form29_Simple_Drop-down_List.resx">
-      <DependentUpon>Form29_Simple_Drop-down_List.vb</DependentUpon>
+      <DependentUpon>Form29_Simple_Drop-down_List.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.vb</DependentUpon>
+      <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form30_Create_Dynamic_Drop-down_List.resx">
-      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.vb</DependentUpon>
+      <DependentUpon>Form30_Create_Dynamic_Drop-down_List.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form31_2_updated_selection.resx">
-      <DependentUpon>Form31_2_updated_selection.vb</DependentUpon>
+      <DependentUpon>Form31_2_updated_selection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form31_Update_Dynamic_Drop-down_List.resx">
-      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.vb</DependentUpon>
+      <DependentUpon>Form31_Update_Dynamic_Drop-down_List.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form32_ExtendDropDownList.resx">
-      <DependentUpon>Form32_ExtendDropDownList.vb</DependentUpon>
+      <DependentUpon>Form32_ExtendDropDownList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form33_ColorBasedDropDownList.resx">
-      <DependentUpon>Form33_ColorBasedDropDownList.vb</DependentUpon>
+      <DependentUpon>Form33_ColorBasedDropDownList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form34_PictureBasedDropdownList.resx">
-      <DependentUpon>Form34_PictureBasedDropdownList.vb</DependentUpon>
+      <DependentUpon>Form34_PictureBasedDropdownList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form35Multi SelectionbasedDropdown.resx">
-      <DependentUpon>Form35Multi SelectionbasedDropdown.vb</DependentUpon>
+      <DependentUpon>Form35Multi SelectionbasedDropdown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form36.resx">
-      <DependentUpon>Form36.vb</DependentUpon>
+      <DependentUpon>Form36.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form37_MSDropDownCheckBox.resx">
-      <DependentUpon>Form37_MSDropDownCheckBox.vb</DependentUpon>
+      <DependentUpon>Form37_MSDropDownCheckBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form38.resx">
-      <DependentUpon>Form38.vb</DependentUpon>
+      <DependentUpon>Form38.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form39_DropdownlistwithSearchOption.resx">
-      <DependentUpon>Form39_DropdownlistwithSearchOption.vb</DependentUpon>
+      <DependentUpon>Form39_DropdownlistwithSearchOption.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
-      <DependentUpon>Form4.vb</DependentUpon>
+      <DependentUpon>Form4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form40.resx">
-      <DependentUpon>Form40.vb</DependentUpon>
+      <DependentUpon>Form40.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form41_RemoveAdavancedDropdownList.resx">
-      <DependentUpon>Form41_RemoveAdavancedDropdownList.vb</DependentUpon>
+      <DependentUpon>Form41_RemoveAdavancedDropdownList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form42.resx">
-      <DependentUpon>Form42.vb</DependentUpon>
+      <DependentUpon>Form42.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form43.resx">
-      <DependentUpon>Form43.vb</DependentUpon>
+      <DependentUpon>Form43.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form7.resx">
-      <DependentUpon>Form7.vb</DependentUpon>
+      <DependentUpon>Form7.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form8.resx">
-      <DependentUpon>Form8.vb</DependentUpon>
+      <DependentUpon>Form8.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pro.resx">
-      <DependentUpon>Pro.vb</DependentUpon>
+      <DependentUpon>Pro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
-      <DependentUpon>Ribbon1.vb</DependentUpon>
+      <DependentUpon>Ribbon1.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="ThisAddIn.Designer.xml">
-      <DependentUpon>ThisAddIn.vb</DependentUpon>
+      <DependentUpon>ThisAddIn.cs</DependentUpon>
     </None>
-    <Compile Include="ThisAddIn.Designer.vb">
+    <Compile Include="ThisAddIn.Designer.cs">
       <DependentUpon>ThisAddIn.Designer.xml</DependentUpon>
     </Compile>
-    <Compile Include="My Project\AssemblyInfo.vb" />
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>VSTO_Addins.My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="My Project\Settings.Designer.vb">
+    <Compile Include="My Project\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -694,11 +694,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <!-- Include the build rules for a Visual Basic project. -->
-  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Include additional build rules for an Office application add-in. -->
   <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- This section defines VSTO properties that describe the host-changeable project properties. -->
@@ -707,7 +706,7 @@
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
         <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="vb" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{DCFE8D25-4715-4C33-9EAB-A34A9EBC9544}" />
         <Host Name="Excel" PublishedHash="69C324AB27932AA2FBF2B7EA72250886FF164DE6" IconIndex="0">
-          <HostItem Name="ThisAddIn" Code="ThisAddIn.vb" CanonicalName="AddIn" PublishedHash="501F60F3B8BAF1916C7D50AECC5342A51A6B73BE" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.vb" />
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" PublishedHash="501F60F3B8BAF1916C7D50AECC5342A51A6B73BE" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
         </Host>
       </FlavorProperties>
     </VisualStudio>
